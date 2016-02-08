@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "Log.h"
 #include "views/ViewController.h"
-#include "Gamelist.h"
+#include "SystemManager.h"
 
 #include "components/TextComponent.h"
 #include "components/ButtonComponent.h"
@@ -25,6 +25,9 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mCurrentGame = 0;
 	mTotalSuccessful = 0;
 	mTotalSkipped = 0;
+
+	// Disable gui sleep while scraping
+	mWindow->setAllowSleep(false);
 
 	// set up grid
 	mTitle = std::make_shared<TextComponent>(mWindow, "SCRAPING IN PROGRESS", Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
@@ -72,8 +75,11 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 GuiScraperMulti::~GuiScraperMulti()
 {
 	// view type probably changed (basic -> detailed)
-	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	for(auto it = SystemManager::getInstance()->getSystems().begin(); it != SystemManager::getInstance()->getSystems().end(); it++)
 		ViewController::get()->reloadGameListView(*it, false);
+
+	// Re-enable gui sleep
+	mWindow->setAllowSleep(true);
 }
 
 void GuiScraperMulti::onSizeChanged()
@@ -101,7 +107,7 @@ void GuiScraperMulti::doNextSearch()
 
 	// update subtitle
 	ss.str(""); // clear
-	ss << "GAME " << (mCurrentGame + 1) << " OF " << mTotalGames << " - " << strToUpper(mSearchQueue.front().game->getPath().filename().string());
+	ss << "GAME " << (mCurrentGame + 1) << " OF " << mTotalGames << " - " << strToUpper(mSearchQueue.front().game.getPath().filename().string());
 	mSubtitle->setText(ss.str());
 
 	mSearchComp->search(mSearchQueue.front());
@@ -111,8 +117,7 @@ void GuiScraperMulti::acceptResult(const ScraperSearchResult& result)
 {
 	ScraperSearchParams& search = mSearchQueue.front();
 
-	search.game->metadata = result.mdl;
-	updateGamelist(search.system);
+	search.game.set_metadata(result.metadata);
 
 	mSearchQueue.pop();
 	mCurrentGame++;
