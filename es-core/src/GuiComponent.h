@@ -42,9 +42,9 @@ public:
 	virtual void onPositionChanged() {};
 
 	Eigen::Vector2f getSize() const;
-    void setSize(const Eigen::Vector2f& size);
-    void setSize(float w, float h);
-    virtual void onSizeChanged() {};
+	void setSize(const Eigen::Vector2f& size);
+	void setSize(float w, float h);
+	virtual void onSizeChanged() {};
 	
 	void setParent(GuiComponent* parent);
 	GuiComponent* getParent() const;
@@ -89,6 +89,8 @@ public:
 	void updateHelpPrompts();
 	
 	virtual HelpStyle getHelpStyle();
+
+	virtual inline void setScrollDir(int dir) {}
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;

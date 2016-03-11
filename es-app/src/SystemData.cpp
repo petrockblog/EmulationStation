@@ -459,9 +459,9 @@ bool SystemData::hasGamelist() const
 	return (fs::exists(getGamelistPath(false)));
 }
 
-unsigned int SystemData::getGameCount() const
+unsigned int SystemData::getGameCount(bool filterHidden, bool filterFav, bool filterKid) const
 {
-	return mRootFolder->getFilesRecursive(GAME).size();
+	return mRootFolder->getFilesRecursive(GAME,filterHidden, filterFav, filterKid).size();
 }
 
 void SystemData::loadTheme()
@@ -476,9 +476,37 @@ void SystemData::loadTheme()
 	try
 	{
 		mTheme->loadFile(path);
+		mHasFavorites = mTheme->getHasFavoritesInTheme();
+		mHasKidGames = mTheme->getHasKidGamesInTheme();
 	} catch(ThemeException& e)
 	{
 		LOG(LogError) << e.what();
 		mTheme = std::make_shared<ThemeData>(); // reset to empty
 	}
+}
+
+SystemData* SystemData::getRandom(bool filterHidden, bool filterFav, bool filterKid) const
+{
+	LOG(LogDebug) << "SystemData::getRandom("<< filterHidden << filterFav << filterKid << ")";
+	//Get list of systems with # games > 0, given the filters
+	std::vector<SystemData*> validSystems;
+	for (auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
+	{
+		if((*it)->getGameCount(filterHidden, filterFav, filterKid) > 0)
+		{
+			validSystems.push_back(*it);
+		}
+	}
+	
+	const unsigned long n = validSystems.size();
+    LOG(LogDebug) << "   Valid systems: " << n;
+	
+	//Select random system
+	const unsigned long divisor = (RAND_MAX + 1) / n;
+    unsigned long k;
+    do { k = std::rand() / divisor; } while (k >= n); // pick the first within range
+	
+	LOG(LogDebug) << "   Picked system: " << validSystems.at(k)->getFullName();
+    
+	return validSystems.at(k);
 }

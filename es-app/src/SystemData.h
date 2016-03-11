@@ -21,7 +21,10 @@ public:
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
+	inline bool getHasFavorites() const { return mHasFavorites; }	
+	inline bool getHasKidGames() const { return mHasKidGames; }
 	inline const bool getDirectLaunch() const { return mDirectLaunch; }
+
 
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mPlatformIds; }
 	inline bool hasPlatformId(PlatformIds::PlatformId id) { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
@@ -32,8 +35,8 @@ public:
 	bool hasGamelist() const;
 	std::string getThemePath() const;
 	
-	unsigned int getGameCount() const;
-
+	unsigned int getGameCount(bool filterHidden, bool filterFav, bool filterKid) const;
+	
 	void launchGame(Window* window, FileData* game);
 
 	static void deleteSystems();
@@ -61,7 +64,9 @@ public:
 		if(it == sSystemVector.rend()) it = sSystemVector.rbegin();
 		return *it;
 	}
-
+	
+	SystemData* getRandom(bool filterHidden, bool filterFav, bool filterKid) const;
+	
 	// Load or re-load theme.
 	void loadTheme();
 
@@ -75,6 +80,9 @@ private:
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
 	bool mDirectLaunch;
+
+	bool mHasFavorites;
+	bool mHasKidGames;
 
 	void populateFolder(FileData* folder);
 

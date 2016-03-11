@@ -24,61 +24,87 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 
 	mSystemInfo.setSize(mSize.x(), mSystemInfo.getSize().y() * 1.333f);
 	mSystemInfo.setPosition(0, (mSize.y() + BAND_HEIGHT) / 2);
-
+		
 	populate();
 }
 
 void SystemView::populate()
 {
-	mEntries.clear();
+	LOG(LogDebug) << "SystemView::populate()";
+	bool filterHidden = false;
+	bool filterKid = false;
+	if (Settings::getInstance()->getString("UIMode") != "Full")
+	{
+		filterHidden = true;
+	}
+	if (Settings::getInstance()->getString("UIMode") == "Kid")
+	{
+		filterKid = true;
+	}
+	
+	bool filterFav = Settings::getInstance()->getBool("FavoritesOnly");
 
+	LOG(LogDebug) << "    Settings.UIMode  = " << Settings::getInstance()->getString("UIMode");
+	LOG(LogDebug) << "    Settings.FavoritesOnly  = " << Settings::getInstance()->getBool("FavoritesOnly");
+	LOG(LogDebug) << "    filterHidden = " << filterHidden;
+	LOG(LogDebug) << "    filterFav = " << filterFav;
+	LOG(LogDebug) << "    filterKid = " << filterKid;
+	
+	mEntries.clear();
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
-		const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
-
-		Entry e;
-		e.name = (*it)->getName();
-		e.object = *it;
-
-		// make logo
-		if(theme->getElement("system", "logo", "image"))
+		LOG(LogDebug) << "    System = " << (*it)->getName();
+		
+		if ((*it)->getGameCount(filterHidden, filterFav, filterKid) > 0)
 		{
-			ImageComponent* logo = new ImageComponent(mWindow);
-			logo->setMaxSize(Eigen::Vector2f(logoSize().x(), logoSize().y()));
-			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // center
-			e.data.logo = std::shared_ptr<GuiComponent>(logo);
+			LOG(LogDebug) << (*it)->getGameCount(filterHidden, filterFav, filterKid) << " games found, populating.";
+			
+			const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
 
-			ImageComponent* logoSelected = new ImageComponent(mWindow);
-			logoSelected->setMaxSize(Eigen::Vector2f(logoSize().x() * SELECTED_SCALE, logoSize().y() * SELECTED_SCALE * 0.70f));
-			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logoSelected->setPosition((logoSize().x() - logoSelected->getSize().x()) / 2, 
-				(logoSize().y() - logoSelected->getSize().y()) / 2); // center
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
-		}else{
-			// no logo in theme; use text
-			TextComponent* text = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get(FONT_SIZE_LARGE), 
-				0x000000FF, 
-				ALIGN_CENTER);
-			text->setSize(logoSize());
-			e.data.logo = std::shared_ptr<GuiComponent>(text);
+			Entry e;
+			e.name = (*it)->getName();
+			e.object = *it;
 
-			TextComponent* textSelected = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)), 
-				0x000000FF, 
-				ALIGN_CENTER);
-			textSelected->setSize(logoSize());
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
+			// make logo
+			if(theme->getElement("system", "logo", "image"))
+			{
+				ImageComponent* logo = new ImageComponent(mWindow);
+				logo->setMaxSize(Eigen::Vector2f(logoSize().x(), logoSize().y()));
+				logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+				logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // center
+				e.data.logo = std::shared_ptr<GuiComponent>(logo);
+
+				ImageComponent* logoSelected = new ImageComponent(mWindow);
+				logoSelected->setMaxSize(Eigen::Vector2f(logoSize().x() * SELECTED_SCALE, logoSize().y() * SELECTED_SCALE * 0.70f));
+				logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+				logoSelected->setPosition((logoSize().x() - logoSelected->getSize().x()) / 2, 
+					(logoSize().y() - logoSelected->getSize().y()) / 2); // center
+				e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
+			}else{
+				// no logo in theme; use text
+				TextComponent* text = new TextComponent(mWindow, 
+					(*it)->getName(), 
+					Font::get(FONT_SIZE_LARGE), 
+					0x000000FF, 
+					ALIGN_CENTER);
+				text->setSize(logoSize());
+				e.data.logo = std::shared_ptr<GuiComponent>(text);
+
+				TextComponent* textSelected = new TextComponent(mWindow, 
+					(*it)->getName(), 
+					Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)), 
+					0x000000FF, 
+					ALIGN_CENTER);
+				textSelected->setSize(logoSize());
+				e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
+			}
+
+			// make background extras
+			e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
+			e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
+
+			this->add(e);
 		}
-
-		// make background extras
-		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
-		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
-
-		this->add(e);
 	}
 }
 
@@ -96,7 +122,7 @@ bool SystemView::input(InputConfig* config, Input input)
 	{
 		if(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_r && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 		{
-			LOG(LogInfo) << " Reloading SystemList view";
+			LOG(LogInfo) << "    Reloading SystemList view";
 
 			// reload themes
 			for(auto it = mEntries.begin(); it != mEntries.end(); it++)
@@ -180,31 +206,118 @@ void SystemView::onCursorChanged(const CursorState& state)
 		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
 	}, (int)(infoStartOpacity * 150));
 
-	unsigned int gameCount = getSelected()->getGameCount();
 
+	/*unsigned int favoritesCount = getSelected()->getGameCount(false, true, false);
+	unsigned int kidgamesCount = getSelected()->getKidGamesCount();
+	unsigned int visibleCount = getSelected()->getVisibleCount();*/
+	
 	// also change the text after we've fully faded out
-	setAnimation(infoFadeOut, 0, [this, gameCount] {
+	setAnimation(infoFadeOut, 0, [this] {
 		std::stringstream ss;
-		
-		// only display a game count if there are at least 2 games
-		if(gameCount > 1)
-			ss << gameCount << " GAMES AVAILABLE";
 
-		mSystemInfo.setText(ss.str()); 
+		// only display a game count if there are at least 2 games - Full / Kiosk UI modes
+		LOG(LogDebug) << "System selected = " << getSelected()->getName() << ", UIMode = "<< Settings::getInstance()->getString("UIMode");
+		//LOG(LogDebug) << "getSelected()->getGameCount(false, false, false) = " << getSelected()->getGameCount(false, false, false);
+		//LOG(LogDebug) << "getSelected()->getGameCount(true, false, false) = " << getSelected()->getGameCount(true, false, false);
+		//LOG(LogDebug) << "getSelected()->getGameCount(false, true, false) = " << getSelected()->getGameCount(false, true, false);
+		//LOG(LogDebug) << "getSelected()->getGameCount(false, false, true) = " << getSelected()->getGameCount(false, false, true);
+		//LOG(LogDebug) << "getSelected()->getGameCount(true, true, false) = " << getSelected()->getGameCount(true, true, false);
+		//LOG(LogDebug) << "getSelected()->getGameCount(false, true, true) = " << getSelected()->getGameCount(false, true, true);
+
+		if(Settings::getInstance()->getString("UIMode") == "Full")
+		{
+			unsigned int gameCount = getSelected()->getGameCount(false, false, false);
+			if (gameCount == 1)
+			{
+				ss << gameCount << " GAME";
+			}
+			else if (gameCount > 1)
+			{
+				ss << gameCount << " GAMES";
+			}
+			unsigned int favoritesCount = getSelected()->getGameCount(false, true, false);
+			if (favoritesCount == 1)
+			{
+				ss << ", " << favoritesCount << " FAVORITE";
+			}
+			else if (favoritesCount > 1)
+			{
+				ss << ", " << favoritesCount << " FAVORITES";
+			}
+			unsigned int kidgamesCount = getSelected()->getGameCount(false, false, true);
+			if (kidgamesCount == 1)
+			{
+				ss << ", " << kidgamesCount << " KID-FRIENDLY GAME";
+			}
+			else if (kidgamesCount > 1)
+			{
+				ss << ", " << kidgamesCount << " KID-FRIENDLY GAMES";
+			}
+			ss << " AVAILABLE.";
+		}else if(Settings::getInstance()->getString("UIMode") == "Kiosk")
+		{
+			unsigned int gameCount = getSelected()->getGameCount(true, false, false);
+			if (gameCount == 1)
+			{
+				ss << gameCount << " GAME";
+			}
+			else if (gameCount > 1)
+			{
+				ss << gameCount << " GAMES";
+			}
+			unsigned int favoritesCount = getSelected()->getGameCount(true, true, false);
+			if (favoritesCount == 1)
+			{
+				ss << ", " << favoritesCount << " FAVORITE";
+			}
+			else if (favoritesCount > 1)
+			{
+				ss << ", " << favoritesCount << " FAVORITES";
+			}
+			unsigned int kidgamesCount = getSelected()->getGameCount(true, false, true);
+			if (kidgamesCount == 1)
+			{
+				ss << ", " << kidgamesCount << " KID-FRIENDLY GAME";
+			}
+			else if (kidgamesCount > 1)
+			{
+				ss << ", " << kidgamesCount << " KID-FRIENDLY GAMES";
+			}
+			ss << " AVAILABLE.";
+		}else if(Settings::getInstance()->getString("UIMode") == "Kid")
+		{
+			unsigned int kidgamesCount = getSelected()->getGameCount(true, false, true);
+			if (kidgamesCount == 1)
+			{
+				ss << kidgamesCount << " KID-FRIENDLY GAME";
+			}
+			else if (kidgamesCount > 1)
+			{
+				ss << kidgamesCount << " KID-FRIENDLY GAMES";
+			}
+			unsigned int favoritesCount = getSelected()->getGameCount(true, true, true);
+			if (favoritesCount == 1)
+			{
+				ss << ", " << favoritesCount << " FAVORITE";
+			}
+			else if (favoritesCount > 1)
+			{
+				ss << ", " << favoritesCount << " FAVORITES";
+			}
+			ss << " AVAILABLE.";
+		}
+
+		mSystemInfo.setText(ss.str());
 	}, false, 1);
 
-	// only display a game count if there are at least 2 games
-	if(gameCount > 1)
+	Animation* infoFadeIn = new LambdaAnimation(
+		[this](float t)
 	{
-		Animation* infoFadeIn = new LambdaAnimation(
-			[this](float t)
-		{
-			mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
-		}, 300);
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+	}, 300);
 
-		// wait 600ms to fade in
-		setAnimation(infoFadeIn, 2000, nullptr, false, 2);
-	}
+	// wait ms to fade in
+	setAnimation(infoFadeIn, 800, nullptr, false, 2);
 
 	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
 	if(endPos == mCamOffset && endPos == mExtrasCamOffset)

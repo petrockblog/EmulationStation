@@ -157,6 +157,8 @@ void onExit()
 
 int main(int argc, char* argv[])
 {
+	srand(time(NULL));
+	
 	unsigned int width = 0;
 	unsigned int height = 0;
 

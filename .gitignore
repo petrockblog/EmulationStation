@@ -29,3 +29,8 @@ CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
 Makefile
+
+#Netbeans files
+nbproject
+*.orig
+nbproject/private/private.xml

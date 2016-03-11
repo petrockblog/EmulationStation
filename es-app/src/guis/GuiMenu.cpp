@@ -33,7 +33,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// [version]
 
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
-	addEntry("SCRAPER", 0x777777FF, true, 
+	
+	if(Settings::getInstance()->getString("UIMode") == "Full")
+	{
+		addEntry("SCRAPER", 0x777777FF, true, 
 		[this, openScrapeNow] { 
 			auto s = new GuiSettings(mWindow, "SCRAPER");
 
@@ -65,30 +68,92 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addRow(row);
 
 			mWindow->pushGui(s);
-	});
+		});
+	}
 
 	addEntry("SOUND SETTINGS", 0x777777FF, true, 
-		[this] {
-			auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
+	[this] {
+		auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
 
-			// volume
-			auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
-			volume->setValue((float)VolumeControl::getInstance()->getVolume());
-			s->addWithLabel("SYSTEM VOLUME", volume);
-			s->addSaveFunc([volume] { VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); });
-			
-			// disable sounds
+		// volume
+		auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
+		volume->setValue((float)VolumeControl::getInstance()->getVolume());
+		s->addWithLabel("SYSTEM VOLUME", volume);
+		s->addSaveFunc([volume] { VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); });
+
+		if(Settings::getInstance()->getString("UIMode") == "Full")
+		{
+			// enable / disable sounds
 			auto sounds_enabled = std::make_shared<SwitchComponent>(mWindow);
 			sounds_enabled->setState(Settings::getInstance()->getBool("EnableSounds"));
 			s->addWithLabel("ENABLE SOUNDS", sounds_enabled);
 			s->addSaveFunc([sounds_enabled] { Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); });
-
-			mWindow->pushGui(s);
+		}
+		mWindow->pushGui(s);
 	});
 
-	addEntry("UI SETTINGS", 0x777777FF, true,
-		[this] {
+	if(Settings::getInstance()->getString("UIMode") == "Full")
+	{
+		addEntry("UI SETTINGS", 0x777777FF, true,
+		[this] {	
 			auto s = new GuiSettings(mWindow, "UI SETTINGS");
+			// UI mode
+			auto UImodeSelection = std::make_shared< OptionListComponent<std::string> >(mWindow, "UI MODE", false);
+			std::vector<std::string> UImodes;
+			UImodes.push_back("Full");
+			UImodes.push_back("Kiosk");
+			UImodes.push_back("Kid");
+			for(auto it = UImodes.begin(); it != UImodes.end(); it++)
+				UImodeSelection->add(*it, *it, Settings::getInstance()->getString("UIMode") == *it);
+			s->addWithLabel("UI MODE", UImodeSelection);
+			Window* window = mWindow;
+			s->addSaveFunc([UImodeSelection, window] 
+			{
+				LOG(LogDebug) << "Changing UI mode to" << UImodeSelection->getSelected();
+
+				bool needReload = false;
+				if(Settings::getInstance()->getString("UIMode") != UImodeSelection->getSelected())
+				{
+					needReload = true;
+					bool filterHidden = false;
+					bool filterKid = false;
+					bool filterFav = false;
+					if (UImodeSelection->getSelected() != "Full")
+					{
+						filterHidden = true;
+					}
+					if (UImodeSelection->getSelected() == "Kid")
+					{
+						filterKid = true;
+					}
+
+					LOG(LogDebug) << "Checking if the proposed UI mode has anything at all to show:";
+					int count = 0; 
+
+					for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+					{
+						//LOG(LogDebug) << "System = " << (*it)->getName() << ", "<< (*it)->getGameCount(filterHidden, filterFav, filterKid) << " games found";
+						count += (*it)->getGameCount(filterHidden, filterFav, filterKid);
+					}
+					if (count == 0)
+					{
+						LOG(LogDebug) << "Nothing to show in selected mode (" << UImodeSelection->getSelected() << "), resetting to full";
+						window->pushGui(new GuiMsgBox(window, "The selected view mode has nothing to show,\n returning to UI mode = FULL",
+								"OK", nullptr));
+						Settings::getInstance()->setString("UIMode", "Full");
+						needReload = false;
+					}else
+					{
+						Settings::getInstance()->setString("UIMode", UImodeSelection->getSelected());
+						Settings::getInstance()->setBool("FavoritesOnly", false); // reset favoritesOnly option upon mode change
+					}		
+				}
+				if(needReload)
+				{
+					ViewController::get()->reloadAll();
+					ViewController::get()->goToStart();
+				}
+			});
 
 			// screensaver time
 			auto screensaver_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
@@ -103,7 +168,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			screensavers.push_back("black");
 			for(auto it = screensavers.begin(); it != screensavers.end(); it++)
 				screensaver_behavior->add(*it, *it, Settings::getInstance()->getString("ScreenSaverBehavior") == *it);
-			s->addWithLabel("SCREENSAVER BEHAVIOR", screensaver_behavior);
+			s->addWithLabel("SCREENSAVER TYPE", screensaver_behavior);
 			s->addSaveFunc([screensaver_behavior] { Settings::getInstance()->setString("ScreenSaverBehavior", screensaver_behavior->getSelected()); });
 
 			// framerate
@@ -161,14 +226,14 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 						ViewController::get()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
 				});
 			}
-
 			mWindow->pushGui(s);
-	});
+		});
 
-	addEntry("CONFIGURE INPUT", 0x777777FF, true, 
-		[this] { 
-			mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
-	});
+		addEntry("CONFIGURE INPUT", 0x777777FF, true, 
+			[this] { 
+				mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
+		});
+	}
 
 	addEntry("QUIT", 0x777777FF, true, 
 		[this] {
@@ -209,7 +274,9 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			s->addRow(row);
 
-			if(Settings::getInstance()->getBool("ShowExit"))
+			if (Settings::getInstance()->getBool("ShowExit") &&
+				((Settings::getInstance()->getString("UIMode") == "Full") ||
+				 (Settings::getInstance()->getBool("Debug"))))
 			{
 				row.elements.clear();
 				row.makeAcceptInputHandler([window] {
