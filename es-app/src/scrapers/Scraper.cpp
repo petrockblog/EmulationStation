@@ -17,7 +17,8 @@ std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParam
 	const std::string& name = Settings::getInstance()->getString("Scraper");
 
 	std::unique_ptr<ScraperSearchHandle> handle(new ScraperSearchHandle());
-	scraper_request_funcs.at(name)(params, handle->mRequestQueue, handle->mResults);
+	//scraper_request_funcs.at(name)(params, handle->mRequestQueue, handle->mResults, true);
+	thegamesdb_generate_scraper_requests(params, handle->mRequestQueue, handle->mResults, true);
 	return handle;
 }
 
@@ -111,6 +112,14 @@ void ScraperHttpRequest::update()
 	// everything else is some sort of error
 	LOG(LogError) << "ScraperHttpRequest network error (status: " << status << ") - " << mReq->getErrorMsg();
 	setError(mReq->getErrorMsg());
+}
+
+void ScraperHttpRequest::setMetaData(ScraperSearchResult& result, std::string data, std::string metadata)
+{
+	if (!data.empty())
+	{
+		result.mdl.set(metadata, data);
+	}
 }
 
 
@@ -273,7 +282,8 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 	const std::string subdirectory = params.system->getName();
 	const std::string name = params.game->getPath().stem().generic_string() + "-" + suffix;
 
-	std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
+	//std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
+	std::string path = "C:/Users/Public/.emulationstation/downloaded_images/";
 
 	if(!boost::filesystem::exists(path))
 		boost::filesystem::create_directory(path);
@@ -291,3 +301,5 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 	path += name + ext;
 	return path;
 }
+
+

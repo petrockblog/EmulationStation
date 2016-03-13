@@ -51,6 +51,10 @@ public:
 	void onFocusGained() override;
 	void onFocusLost() override;
 
+	bool mBlockAccept;
+
+	BusyComponent mBusyAnim;
+
 private:
 	void updateViewStyle();
 	void updateThumbnail();
@@ -100,12 +104,11 @@ private:
 	std::function<void(const ScraperSearchResult&)> mAcceptCallback;
 	std::function<void()> mSkipCallback;
 	std::function<void()> mCancelCallback;
-	bool mBlockAccept;
+	
 
 	std::unique_ptr<ScraperSearchHandle> mSearchHandle;
 	std::unique_ptr<MDResolveHandle> mMDResolveHandle;
 	std::vector<ScraperSearchResult> mScraperResults;
 	std::unique_ptr<HttpReq> mThumbnailReq;
 
-	BusyComponent mBusyAnim;
 };

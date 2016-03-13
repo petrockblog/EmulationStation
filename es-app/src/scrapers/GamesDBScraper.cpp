@@ -65,38 +65,51 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 
 
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
-	std::vector<ScraperSearchResult>& results)
+	std::vector<ScraperSearchResult>& results, bool searchByID)
 {
 	std::string path = "thegamesdb.net/api/GetGame.php?";
 
-	std::string cleanName = params.nameOverride;
-	if(cleanName.empty())
-		cleanName = params.game->getCleanName();
-
-	path += "name=" + HttpReq::urlEncode(cleanName);
-
-	if(params.system->getPlatformIds().empty())
+	if (false)
 	{
-		// no platform specified, we're done
-		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
-	}else{
-		// go through the list, we need to split this into multiple requests 
-		// because TheGamesDB API either sucks or I don't know how to use it properly...
-		std::string urlBase = path;
-		auto& platforms = params.system->getPlatformIds();
-		for(auto platformIt = platforms.begin(); platformIt != platforms.end(); platformIt++)
+		if (params.game->metadata.get("id").compare("0") != 0)
 		{
-			path = urlBase;
-			auto mapIt = gamesdb_platformid_map.find(*platformIt);
-			if(mapIt != gamesdb_platformid_map.end())
-			{
-				path += "&platform=";
-				path += HttpReq::urlEncode(mapIt->second);
-			}else{
-				LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(*platformIt);
-			}
-
+			path += "id=" + params.game->metadata.get("id");
 			requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
+		}
+	}
+	else
+	{
+		std::string cleanName = params.nameOverride;
+		if (cleanName.empty())
+			cleanName = params.game->getCleanName();
+
+		path += "name=" + HttpReq::urlEncode(cleanName);
+
+		if (params.system->getPlatformIds().empty())
+		{
+			// no platform specified, we're done
+			requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
+		}
+		else{
+			// go through the list, we need to split this into multiple requests 
+			// because TheGamesDB API either sucks or I don't know how to use it properly...
+			std::string urlBase = path;
+			auto& platforms = params.system->getPlatformIds();
+			for (auto platformIt = platforms.begin(); platformIt != platforms.end(); platformIt++)
+			{
+				path = urlBase;
+				auto mapIt = gamesdb_platformid_map.find(*platformIt);
+				if (mapIt != gamesdb_platformid_map.end())
+				{
+					path += "&platform=";
+					path += HttpReq::urlEncode(mapIt->second);
+				}
+				else{
+					LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(*platformIt);
+				}
+
+				requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
+			}
 		}
 	}
 }
@@ -125,17 +138,33 @@ void TheGamesDBRequest::process(const std::unique_ptr<HttpReq>& req, std::vector
 	while(game && results.size() < MAX_SCRAPER_RESULTS)
 	{
 		ScraperSearchResult result;
+		setMetaData(result, game.child("GameTitle").text().get(), "name");
+		setMetaData(result, game.child("Overview").text().get(), "desc");
 
-		result.mdl.set("name", game.child("GameTitle").text().get());
-		result.mdl.set("desc", game.child("Overview").text().get());
-
-		boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
-		result.mdl.setTime("releasedate", rd);
-
-		result.mdl.set("developer", game.child("Developer").text().get());
-		result.mdl.set("publisher", game.child("Publisher").text().get());
-		result.mdl.set("genre", game.child("Genres").first_child().text().get());
-		result.mdl.set("players", game.child("Players").text().get());
+		std::string releaseDate = game.child("ReleaseDate").text().get();
+		if (std::count(releaseDate.begin(), releaseDate.end(), '/') == 2)
+		{
+			boost::posix_time::ptime rd = string_to_ptime(releaseDate, "%m/%d/%Y");
+			result.mdl.setTime("releasedate", rd);
+		}
+		else if (std::count(releaseDate.begin(), releaseDate.end(), '/') == 1)
+		{
+			boost::posix_time::ptime rd = string_to_ptime(releaseDate, "%m/%Y");
+			result.mdl.setTime("releasedate", rd);
+		}
+		else if(releaseDate.length() > 0)
+		{
+			boost::posix_time::ptime rd = string_to_ptime(releaseDate, "%Y");
+			result.mdl.setTime("releasedate", rd);
+		}
+		
+		setMetaData(result, game.child("Developer").text().get(), "developer");
+		setMetaData(result, game.child("Publisher").text().get(), "publisher");
+		setMetaData(result, game.child("Genres").first_child().text().get(), "genre");
+		setMetaData(result, game.child("Players").text().get(), "players");
+		setMetaData(result, game.child("id").text().get(), "id");
+		setMetaData(result, game.child("PlatformId").text().get(), "platformid");
+		result.mdl.set("source", "TheGamesDB");
 
 		if(Settings::getInstance()->getBool("ScrapeRatings") && game.child("Rating"))
 		{

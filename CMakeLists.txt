@@ -68,6 +68,7 @@ if(MSVC)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
+    add_definitions(-DCURL_STATICLIB)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)

@@ -235,7 +235,10 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 	//check if we are auto skipping results and if we did not receive a result
 	if (mAutoSkipType == AUTO_SKIP_NO_RESULTS && end == 0)
 	{
-		mSkipCallback();
+		ScraperSearchResult result;
+		result.mdl.set("id", "");
+		returnResult(result);
+		//mSkipCallback();
 	}
 	else
 	{
@@ -307,6 +310,16 @@ void ScraperSearchComponent::updateInfoPane()
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
 		ScraperSearchResult& res = mScraperResults.at(i);
+
+		ScraperSearchParams& search = mLastSearch;
+		if (search.game->metadata.get("name") != res.mdl.get("name"))
+		{
+			mMD_Developer->setColor(0xFF0000FF);
+			
+			mMD_Developer->setText(strToUpper(res.mdl.get("name")));
+		}
+
+
 		mResultName->setText(strToUpper(res.mdl.get("name")));
 		mResultDesc->setText(strToUpper(res.mdl.get("desc")));
 		mDescContainer->reset();

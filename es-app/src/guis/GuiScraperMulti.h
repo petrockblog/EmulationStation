@@ -40,4 +40,6 @@ private:
 	std::shared_ptr<TextComponent> mSubtitle;
 	std::shared_ptr<ScraperSearchComponent> mSearchComp;
 	std::shared_ptr<ComponentGrid> mButtonGrid;
+
+	std::vector<SystemData*> systemsToUpdate;
 };

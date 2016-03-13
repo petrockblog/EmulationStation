@@ -3,7 +3,7 @@
 #include "pugixml/pugixml.hpp"
 
 void thearchive_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests,
-	std::vector<ScraperSearchResult>& results)
+	std::vector<ScraperSearchResult>& results, bool searchByID)
 {
 	std::string path = "api.archive.vg/2.0/Archive.search/xml/7TTRM4MNTIKR2NNAGASURHJOZJ3QXQC5/";
 

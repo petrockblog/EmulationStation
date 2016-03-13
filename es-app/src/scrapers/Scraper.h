@@ -77,6 +77,7 @@ public:
 
 protected:
 	virtual void process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results) = 0;
+	void setMetaData(ScraperSearchResult& result, std::string data, std::string metadata);
 
 private:
 	std::unique_ptr<HttpReq> mReq;
@@ -104,7 +105,7 @@ std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParam
 // returns a list of valid scraper names
 std::vector<std::string> getScraperList();
 
-typedef void (*generate_scraper_requests_func)(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, std::vector<ScraperSearchResult>& results);
+typedef void (*generate_scraper_requests_func)(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, std::vector<ScraperSearchResult>& results, bool searchById);
 
 // -------------------------------------------------------------------------
 

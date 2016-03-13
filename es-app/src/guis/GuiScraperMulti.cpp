@@ -113,7 +113,10 @@ void GuiScraperMulti::acceptResult(const ScraperSearchResult& result)
 	ScraperSearchParams& search = mSearchQueue.front();
 
 	search.game->metadata = result.mdl;
-	updateGamelist(search.system);
+	if (std::find(systemsToUpdate.begin(), systemsToUpdate.end(), search.system) == systemsToUpdate.end())
+	{
+		systemsToUpdate.push_back(search.system);
+	}
 
 	mSearchQueue.pop();
 	mCurrentGame++;
@@ -136,6 +139,13 @@ void GuiScraperMulti::finish()
 	{
 		ss << "NO GAMES WERE SCRAPED.";
 	}else{
+		mSearchComp->mBusyAnim.update(100);
+		for (size_t i = 0; i < systemsToUpdate.size(); i++)
+		{
+			updateGamelist(systemsToUpdate.at(i));
+		}
+		mSearchComp->mBlockAccept = false;
+
 		ss << mTotalSuccessful << " GAME" << ((mTotalSuccessful > 1) ? "S" : "") << " SUCCESSFULLY SCRAPED!";
 
 		if(mTotalSkipped > 0)

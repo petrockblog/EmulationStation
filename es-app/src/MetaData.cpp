@@ -19,7 +19,10 @@ MetaDataDecl gameDecls[] = {
 	{"players",		MD_INT,					"1",				false,		"players",				"enter number of players"},
 	{"playcount",	MD_INT,					"0",				true,		"play count",			"enter number of times played"},
 	{"lastplayed",	MD_TIME,				"0", 				true,		"last played",			"enter last played date"},
-	{"favorite",	MD_STRING,				"no",				false,		"favorite",				"enter favorite"}
+	{"favorite",	MD_STRING,				"no",				false,		"favorite",				"enter favorite"},
+	{"id",         MD_INT,            "0",             true,       "id",        "enter game id"},
+	{"platformid", MD_INT,          "0",              true, "platform id", "enter platform id" },
+	{"source",   MD_STRING,         "",            true,       "scrapper source", "enter scrapper source" }
 };
 const std::vector<MetaDataDecl> gameMDD(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0]));
 

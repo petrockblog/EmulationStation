@@ -3,7 +3,7 @@
 #include "scrapers/Scraper.h"
 
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
-	std::vector<ScraperSearchResult>& results);
+	std::vector<ScraperSearchResult>& results, bool searchById);
 
 class TheGamesDBRequest : public ScraperHttpRequest
 {
