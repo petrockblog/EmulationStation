@@ -25,6 +25,7 @@ struct ScraperSearchResult
 	MetaDataList mdl;
 	std::string imageUrl;
 	std::string thumbnailUrl;
+	bool crcMatched;
 };
 
 // So let me explain why I've abstracted this so heavily.

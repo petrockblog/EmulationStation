@@ -266,7 +266,8 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 			returnResult(mScraperResults.front());
 	}else if(mSearchType == ALWAYS_ACCEPT_MATCHING_CRC)
 	{
-		// TODO
+		if(mScraperResults.size() != 0 && mScraperResults.front().crcMatched)
+			returnResult(mScraperResults.front());
 	}
 }
 
