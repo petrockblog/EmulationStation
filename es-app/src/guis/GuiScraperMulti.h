@@ -13,31 +13,31 @@ class TextComponent;
 class GuiScraperMulti : public GuiComponent
 {
 public:
-	GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults);
-	virtual ~GuiScraperMulti();
+    GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults);
+    virtual ~GuiScraperMulti();
 
-	void onSizeChanged() override;
-	std::vector<HelpPrompt> getHelpPrompts() override;
+    void onSizeChanged() override;
+    std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
-	void acceptResult(const ScraperSearchResult& result);
-	void skip();
-	void doNextSearch();
-	
-	void finish();
+    void acceptResult(const ScraperSearchResult& result);
+    void skip();
+    void doNextSearch();
 
-	unsigned int mTotalGames;
-	unsigned int mCurrentGame;
-	unsigned int mTotalSuccessful;
-	unsigned int mTotalSkipped;
-	std::queue<ScraperSearchParams> mSearchQueue;
+    void finish();
 
-	NinePatchComponent mBackground;
-	ComponentGrid mGrid;
+    unsigned int mTotalGames;
+    unsigned int mCurrentGame;
+    unsigned int mTotalSuccessful;
+    unsigned int mTotalSkipped;
+    std::queue<ScraperSearchParams> mSearchQueue;
 
-	std::shared_ptr<TextComponent> mTitle;
-	std::shared_ptr<TextComponent> mSystem;
-	std::shared_ptr<TextComponent> mSubtitle;
-	std::shared_ptr<ScraperSearchComponent> mSearchComp;
-	std::shared_ptr<ComponentGrid> mButtonGrid;
+    NinePatchComponent mBackground;
+    ComponentGrid mGrid;
+
+    std::shared_ptr<TextComponent> mTitle;
+    std::shared_ptr<TextComponent> mSystem;
+    std::shared_ptr<TextComponent> mSubtitle;
+    std::shared_ptr<ScraperSearchComponent> mSearchComp;
+    std::shared_ptr<ComponentGrid> mButtonGrid;
 };

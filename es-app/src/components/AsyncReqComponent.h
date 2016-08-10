@@ -5,7 +5,7 @@
 #include <functional>
 #include <memory>
 
-/* 
+/*
 	Used to asynchronously run an HTTP request.
 	Displays a simple animation on the UI to show the application hasn't frozen.  Can be canceled by the user pressing B.
 
@@ -29,17 +29,17 @@ class AsyncReqComponent : public GuiComponent
 {
 public:
 
-	AsyncReqComponent(Window* window, std::shared_ptr<HttpReq> req, std::function<void(std::shared_ptr<HttpReq>)> onSuccess, std::function<void()> onCancel = nullptr);
+    AsyncReqComponent(Window* window, std::shared_ptr<HttpReq> req, std::function<void(std::shared_ptr<HttpReq>)> onSuccess, std::function<void()> onCancel = nullptr);
 
-	bool input(InputConfig* config, Input input) override;
-	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
+    bool input(InputConfig* config, Input input) override;
+    void update(int deltaTime) override;
+    void render(const Eigen::Affine3f& parentTrans) override;
 
-	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+    virtual std::vector<HelpPrompt> getHelpPrompts() override;
 private:
-	std::function<void(std::shared_ptr<HttpReq>)> mSuccessFunc;
-	std::function<void()> mCancelFunc;
+    std::function<void(std::shared_ptr<HttpReq>)> mSuccessFunc;
+    std::function<void()> mCancelFunc;
 
-	unsigned int mTime;
-	std::shared_ptr<HttpReq> mRequest;
+    unsigned int mTime;
+    std::shared_ptr<HttpReq> mRequest;
 };

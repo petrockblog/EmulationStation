@@ -10,32 +10,32 @@ class Font;
 class SliderComponent : public GuiComponent
 {
 public:
-	//Minimum value (far left of the slider), maximum value (far right of the slider), increment size (how much just pressing L/R moves by), unit to display (optional).
-	SliderComponent(Window* window, float min, float max, float increment, const std::string& suffix = "");
+    //Minimum value (far left of the slider), maximum value (far right of the slider), increment size (how much just pressing L/R moves by), unit to display (optional).
+    SliderComponent(Window* window, float min, float max, float increment, const std::string& suffix = "");
 
-	void setValue(float val);
-	float getValue();
+    void setValue(float val);
+    float getValue();
 
-	bool input(InputConfig* config, Input input) override;
-	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
-	
-	void onSizeChanged() override;
-	
-	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+    bool input(InputConfig* config, Input input) override;
+    void update(int deltaTime) override;
+    void render(const Eigen::Affine3f& parentTrans) override;
+
+    void onSizeChanged() override;
+
+    virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
-	void onValueChanged();
+    void onValueChanged();
 
-	float mMin, mMax;
-	float mValue;
-	float mSingleIncrement;
-	float mMoveRate;
-	int mMoveAccumulator;
+    float mMin, mMax;
+    float mValue;
+    float mSingleIncrement;
+    float mMoveRate;
+    int mMoveAccumulator;
 
-	ImageComponent mKnob;
+    ImageComponent mKnob;
 
-	std::string mSuffix;
-	std::shared_ptr<Font> mFont;
-	std::shared_ptr<TextCache> mValueCache;
+    std::string mSuffix;
+    std::shared_ptr<Font> mFont;
+    std::shared_ptr<TextCache> mValueCache;
 };
