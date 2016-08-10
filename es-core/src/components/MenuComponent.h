@@ -17,39 +17,50 @@ std::shared_ptr<ImageComponent> makeArrow(Window* window);
 class MenuComponent : public GuiComponent
 {
 public:
-	MenuComponent(Window* window, const char* title, const std::shared_ptr<Font>& titleFont = Font::get(FONT_SIZE_LARGE));
+    MenuComponent(Window* window, const char* title, const std::shared_ptr<Font>& titleFont = Font::get(FONT_SIZE_LARGE));
 
-	void onSizeChanged() override;
+    void onSizeChanged() override;
 
-	inline void addRow(const ComponentListRow& row, bool setCursorHere = false) { mList->addRow(row, setCursorHere); updateSize(); }
+    inline void addRow(const ComponentListRow& row, bool setCursorHere = false)
+    {
+        mList->addRow(row, setCursorHere);
+        updateSize();
+    }
 
-	inline void addWithLabel(const std::string& label, const std::shared_ptr<GuiComponent>& comp, bool setCursorHere = false, bool invert_when_selected = true)
-	{
-		ComponentListRow row;
-		row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-		row.addElement(comp, false, invert_when_selected);
-		addRow(row, setCursorHere);
-	}
+    inline void addWithLabel(const std::string& label, const std::shared_ptr<GuiComponent>& comp, bool setCursorHere = false, bool invert_when_selected = true)
+    {
+        ComponentListRow row;
+        row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+        row.addElement(comp, false, invert_when_selected);
+        addRow(row, setCursorHere);
+    }
 
-	void addButton(const std::string& label, const std::string& helpText, const std::function<void()>& callback);
+    void addButton(const std::string& label, const std::string& helpText, const std::function<void()>& callback);
 
-	void setTitle(const char* title, const std::shared_ptr<Font>& font);
+    void setTitle(const char* title, const std::shared_ptr<Font>& font);
 
-	inline void setCursorToList() { mGrid.setCursorTo(mList); }
-	inline void setCursorToButtons() { assert(mButtonGrid); mGrid.setCursorTo(mButtonGrid); }
+    inline void setCursorToList()
+    {
+        mGrid.setCursorTo(mList);
+    }
+    inline void setCursorToButtons()
+    {
+        assert(mButtonGrid);
+        mGrid.setCursorTo(mButtonGrid);
+    }
 
-	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+    virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
-	void updateSize();
-	void updateGrid();
-	float getButtonGridHeight() const;
+    void updateSize();
+    void updateGrid();
+    float getButtonGridHeight() const;
 
-	NinePatchComponent mBackground;
-	ComponentGrid mGrid;
+    NinePatchComponent mBackground;
+    ComponentGrid mGrid;
 
-	std::shared_ptr<TextComponent> mTitle;
-	std::shared_ptr<ComponentList> mList;
-	std::shared_ptr<ComponentGrid> mButtonGrid;
-	std::vector< std::shared_ptr<ButtonComponent> > mButtons;
+    std::shared_ptr<TextComponent> mTitle;
+    std::shared_ptr<ComponentList> mList;
+    std::shared_ptr<ComponentGrid> mButtonGrid;
+    std::vector< std::shared_ptr<ButtonComponent> > mButtons;
 };

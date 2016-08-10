@@ -10,21 +10,19 @@
 
 #define MAX_SCRAPER_RESULTS 7
 
-struct ScraperSearchParams
-{
-	SystemData* system;
-	FileData* game;
+struct ScraperSearchParams {
+    SystemData* system;
+    FileData* game;
 
-	std::string nameOverride;
+    std::string nameOverride;
 };
 
-struct ScraperSearchResult
-{
-	ScraperSearchResult() : mdl(GAME_METADATA) {};
+struct ScraperSearchResult {
+    ScraperSearchResult() : mdl(GAME_METADATA) {};
 
-	MetaDataList mdl;
-	std::string imageUrl;
-	std::string thumbnailUrl;
+    MetaDataList mdl;
+    std::string imageUrl;
+    std::string thumbnailUrl;
 };
 
 // So let me explain why I've abstracted this so heavily.
@@ -44,8 +42,8 @@ struct ScraperSearchResult
 
 // We could do this if we used threads.  Right now ES doesn't because I'm pretty sure I'll fuck it up,
 // and I'm not sure of the performance of threads on the Pi (single-core ARM).
-// We could also do this if we used coroutines.  
-// I can't find a really good cross-platform coroutine library (x86/64/ARM Linux + Windows), 
+// We could also do this if we used coroutines.
+// I can't find a really good cross-platform coroutine library (x86/64/ARM Linux + Windows),
 // and I don't want to spend more time chasing libraries than just writing it the long way once.
 
 // So, I did it the "long" way.
@@ -58,13 +56,13 @@ struct ScraperSearchResult
 class ScraperRequest : public AsyncHandle
 {
 public:
-	ScraperRequest(std::vector<ScraperSearchResult>& resultsWrite);
+    ScraperRequest(std::vector<ScraperSearchResult>& resultsWrite);
 
-	// returns "true" once we're done
-	virtual void update() = 0;
-	
+    // returns "true" once we're done
+    virtual void update() = 0;
+
 protected:
-	std::vector<ScraperSearchResult>& mResults;
+    std::vector<ScraperSearchResult>& mResults;
 };
 
 
@@ -72,30 +70,34 @@ protected:
 class ScraperHttpRequest : public ScraperRequest
 {
 public:
-	ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url);
-	virtual void update() override;
+    ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url);
+    virtual void update() override;
 
 protected:
-	virtual void process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results) = 0;
+    virtual void process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results) = 0;
 
 private:
-	std::unique_ptr<HttpReq> mReq;
+    std::unique_ptr<HttpReq> mReq;
 };
 
 // a request to get a list of results
 class ScraperSearchHandle : public AsyncHandle
 {
 public:
-	ScraperSearchHandle();
+    ScraperSearchHandle();
 
-	void update();
-	inline const std::vector<ScraperSearchResult>& getResults() const { assert(mStatus != ASYNC_IN_PROGRESS); return mResults; }
+    void update();
+    inline const std::vector<ScraperSearchResult>& getResults() const
+    {
+        assert(mStatus != ASYNC_IN_PROGRESS);
+        return mResults;
+    }
 
 protected:
-	friend std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params);
+    friend std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params);
 
-	std::queue< std::unique_ptr<ScraperRequest> > mRequestQueue;
-	std::vector<ScraperSearchResult> mResults;
+    std::queue< std::unique_ptr<ScraperRequest> > mRequestQueue;
+    std::vector<ScraperSearchResult> mResults;
 };
 
 // will use the current scraper settings to pick the result source
@@ -114,30 +116,34 @@ typedef void (*generate_scraper_requests_func)(const ScraperSearchParams& params
 class MDResolveHandle : public AsyncHandle
 {
 public:
-	MDResolveHandle(const ScraperSearchResult& result, const ScraperSearchParams& search);
+    MDResolveHandle(const ScraperSearchResult& result, const ScraperSearchParams& search);
 
-	void update() override;
-	inline const ScraperSearchResult& getResult() const { assert(mStatus == ASYNC_DONE); return mResult; }
+    void update() override;
+    inline const ScraperSearchResult& getResult() const
+    {
+        assert(mStatus == ASYNC_DONE);
+        return mResult;
+    }
 
 private:
-	ScraperSearchResult mResult;
+    ScraperSearchResult mResult;
 
-	typedef std::pair< std::unique_ptr<AsyncHandle>, std::function<void()> > ResolvePair;
-	std::vector<ResolvePair> mFuncs;
+    typedef std::pair< std::unique_ptr<AsyncHandle>, std::function<void()> > ResolvePair;
+    std::vector<ResolvePair> mFuncs;
 };
 
 class ImageDownloadHandle : public AsyncHandle
 {
 public:
-	ImageDownloadHandle(const std::string& url, const std::string& path, int maxWidth, int maxHeight);
+    ImageDownloadHandle(const std::string& url, const std::string& path, int maxWidth, int maxHeight);
 
-	void update() override;
+    void update() override;
 
 private:
-	std::unique_ptr<HttpReq> mReq;
-	std::string mSavePath;
-	int mMaxWidth;
-	int mMaxHeight;
+    std::unique_ptr<HttpReq> mReq;
+    std::string mSavePath;
+    int mMaxWidth;
+    int mMaxHeight;
 };
 
 //About the same as "~/.emulationstation/downloaded_images/[system_name]/[game_name].[url's extension]".

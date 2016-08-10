@@ -17,38 +17,37 @@
 class NinePatchComponent : public GuiComponent
 {
 public:
-	NinePatchComponent(Window* window, const std::string& path = "", unsigned int edgeColor = 0xFFFFFFFF, unsigned int centerColor = 0xFFFFFFFF);
-	virtual ~NinePatchComponent();
+    NinePatchComponent(Window* window, const std::string& path = "", unsigned int edgeColor = 0xFFFFFFFF, unsigned int centerColor = 0xFFFFFFFF);
+    virtual ~NinePatchComponent();
 
-	void render(const Eigen::Affine3f& parentTrans) override;
+    void render(const Eigen::Affine3f& parentTrans) override;
 
-	void onSizeChanged() override;
+    void onSizeChanged() override;
 
-	void fitTo(Eigen::Vector2f size, Eigen::Vector3f position = Eigen::Vector3f::Zero(), Eigen::Vector2f padding = Eigen::Vector2f::Zero());
+    void fitTo(Eigen::Vector2f size, Eigen::Vector3f position = Eigen::Vector3f::Zero(), Eigen::Vector2f padding = Eigen::Vector2f::Zero());
 
-	void setImagePath(const std::string& path);
-	void setEdgeColor(unsigned int edgeColor); // Apply a color shift to the "edge" parts of the ninepatch.
-	void setCenterColor(unsigned int centerColor); // Apply a color shift to the "center" part of the ninepatch.
+    void setImagePath(const std::string& path);
+    void setEdgeColor(unsigned int edgeColor); // Apply a color shift to the "edge" parts of the ninepatch.
+    void setCenterColor(unsigned int centerColor); // Apply a color shift to the "center" part of the ninepatch.
 
-	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+    virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 private:
-	Eigen::Vector2f getCornerSize() const;
+    Eigen::Vector2f getCornerSize() const;
 
-	void buildVertices();
-	void updateColors();
+    void buildVertices();
+    void updateColors();
 
-	struct Vertex
-	{
-		Eigen::Vector2f pos;
-		Eigen::Vector2f tex;
-	};
+    struct Vertex {
+        Eigen::Vector2f pos;
+        Eigen::Vector2f tex;
+    };
 
-	Vertex* mVertices;
-	GLubyte* mColors;
+    Vertex* mVertices;
+    GLubyte* mColors;
 
-	std::string mPath;
-	unsigned int mEdgeColor;
-	unsigned int mCenterColor;
-	std::shared_ptr<TextureResource> mTexture;
+    std::string mPath;
+    unsigned int mEdgeColor;
+    unsigned int mCenterColor;
+    std::shared_ptr<TextureResource> mTexture;
 };

@@ -19,20 +19,20 @@ class SwitchComponent;
 class GuiScraperStart : public GuiComponent
 {
 public:
-	GuiScraperStart(Window* window);
+    GuiScraperStart(Window* window);
 
-	bool input(InputConfig* config, Input input) override;
+    bool input(InputConfig* config, Input input) override;
 
-	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+    virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
-	void pressedStart();
-	void start();
-	std::queue<ScraperSearchParams> getSearches(std::vector<SystemData*> systems, GameFilterFunc selector);
+    void pressedStart();
+    void start();
+    std::queue<ScraperSearchParams> getSearches(std::vector<SystemData*> systems, GameFilterFunc selector);
 
-	std::shared_ptr< OptionListComponent<GameFilterFunc> > mFilters;
-	std::shared_ptr< OptionListComponent<SystemData*> > mSystems;
-	std::shared_ptr<SwitchComponent> mApproveResults;
+    std::shared_ptr< OptionListComponent<GameFilterFunc> > mFilters;
+    std::shared_ptr< OptionListComponent<SystemData*> > mSystems;
+    std::shared_ptr<SwitchComponent> mApproveResults;
 
-	MenuComponent mMenu;
+    MenuComponent mMenu;
 };

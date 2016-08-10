@@ -9,27 +9,27 @@
 class GuiFastSelect : public GuiComponent
 {
 public:
-	GuiFastSelect(Window* window, IGameListView* gamelist);
+    GuiFastSelect(Window* window, IGameListView* gamelist);
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
+    bool input(InputConfig* config, Input input);
+    void update(int deltaTime);
 
 private:
-	void setScrollDir(int dir);
-	void scroll();
-	void updateGameListCursor();
-	void updateGameListSort();
-	void updateSortText();
+    void setScrollDir(int dir);
+    void scroll();
+    void updateGameListCursor();
+    void updateGameListSort();
+    void updateSortText();
 
-	int mSortId;
-	int mLetterId;
+    int mSortId;
+    int mLetterId;
 
-	int mScrollDir;
-	int mScrollAccumulator;
+    int mScrollDir;
+    int mScrollAccumulator;
 
-	NinePatchComponent mBackground;
-	TextComponent mSortText;
-	TextComponent mLetterText;
+    NinePatchComponent mBackground;
+    TextComponent mSortText;
+    TextComponent mLetterText;
 
-	IGameListView* mGameList;
+    IGameListView* mGameList;
 };
