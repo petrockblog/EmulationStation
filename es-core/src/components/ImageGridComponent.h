@@ -3,12 +3,14 @@
 #include "GuiComponent.h"
 #include "components/IList.h"
 #include "components/ImageComponent.h"
+#include "components/TextComponent.h"
 #include "Settings.h"
 #include "Log.h"
 
 struct ImageGridData
 {
 	std::shared_ptr<TextureResource> texture;
+	std::shared_ptr<TextComponent> title;
 };
 
 // Keeps track of which direction the user is moving.  ( for dynamic loading )
@@ -33,6 +35,7 @@ protected:
 	using IList<ImageGridData, T>::listUpdate;
 	using IList<ImageGridData, T>::listInput;
 	using IList<ImageGridData, T>::listRenderTitleOverlay;
+	using IList<ImageGridData, T>::listRenderFileTitle;
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
 	using IList<ImageGridData, T>::mCursor;
@@ -139,6 +142,7 @@ private:
 	int mCurrentDirection = MOVING_DOWN;
 
 	std::vector<ImageComponent> mImages;
+	std::vector<TextComponent> mTitles;
 };
 
 template<typename T>
@@ -180,6 +184,7 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	entry.strdata = imagePath;
 	if (loadTextureNow) entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
 	else entry.data.texture = TextureResource::get(":/frame.png");
+	entry.data.title = std::make_shared<TextComponent>(mWindow, name, Font::get(FONT_SIZE_MEDIUM), 0xAAAAAAFF);
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
 	mTotalEntrys++;
@@ -326,6 +331,8 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		if (i > 32) break;
 		i++;
 	}
+
+	listRenderTitleOverlay(trans);
 
 	GuiComponent::renderChildren(trans);
 }

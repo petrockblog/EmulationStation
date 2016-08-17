@@ -29,7 +29,7 @@ GridGameListView::GridGameListView(Window* window, SystemData* system) : ISimple
 	mGrid.setPosition(0, mSize.y() * 0.15f);
 	mGrid.setSize(mSize.x(), mSize.y() * 0.8f);
 	addChild(&mGrid);
-
+	
 	mSystem = system;
 
 	populateList(system->getRootFolder()->getChildren());
@@ -44,7 +44,7 @@ void GridGameListView::setCursor(FileData* file)
 {
 	if(!mGrid.setCursor(file) && mGrid.getEntryCount() > 0)
 	{
-		populateList(file->getParent()->getChildren());
+		//populateList(file->getParent()->getChildren());
 		mGrid.setCursor(file);
 		mTitle.setText(file->getName());
 	}
@@ -87,15 +87,20 @@ void GridGameListView::update(int deltatime) {
 	}
 
 	mLoadFrame++;
+
+	mGrid.update(deltatime);
 }
 
 void GridGameListView::populateList(const std::vector<FileData*>& files)
 {
-	// Load in gamelist and load in first game's art.
-	int b = 0;
-	for (auto it = files.begin(); it != files.end(); it++) {
-		mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it, b == 0);
-		b++;
+	// If list is already populated, return.
+	if (mGrid.getEntryCount() < files.size()) {
+		// Load in gamelist and load in first game's art.
+		int b = 0;
+		for (auto it = files.begin(); it != files.end(); it++) {
+			mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it, b == 0);
+			b++;
+		}
 	}
 }
 

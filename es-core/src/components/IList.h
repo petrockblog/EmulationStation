@@ -5,6 +5,7 @@
 #include <memory>
 #include "GuiComponent.h"
 #include "components/ImageComponent.h"
+#include "components/TextComponent.h"
 #include "resources/Font.h"
 #include "Renderer.h"
 
@@ -267,6 +268,12 @@ protected:
 		// actually perform the scrolling
 		for(int i = 0; i < scrollCount; i++)
 			scroll(mScrollVelocity);
+	}
+
+	void listRenderFileTitle(const Eigen::Affine3f& trans) {
+		for (int i = 0; i < mEntries.size(); i++) {
+			mEntries[i].data.title->render(trans);
+		}
 	}
 
 	void listRenderTitleOverlay(const Eigen::Affine3f& trans)
