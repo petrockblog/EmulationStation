@@ -7,8 +7,6 @@
 #include "Settings.h"
 #include "Log.h"
 
-#include "Renderer.h"
-
 struct ImageGridData
 {
 	std::shared_ptr<TextureResource> texture;
@@ -72,6 +70,7 @@ public:
 	void dynamicImageLoader();
 	void clearImageAt(int index);
 	void updateLoadRange();
+	void unloadTextures();
 
 private:
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
@@ -133,23 +132,25 @@ private:
 	bool mEntriesDirty;
 	bool mGameGrid = true;
 
-	int mTotalEntrys = 0;
+	int mTotalEntrys = 0;					// How many entries are loaded in from gamelist
 
-	float mGridMod = 1;
+	float mGridMod = 1;						// What size the tiles will be multiplied by (1 = .1)
+
+	const int MAX_TEXTURES = 80;			// The maximum amount of images that can be loaded at once
+	const int CURSOR_RANGE = 32;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
 
 	CursorRange mCursorRange;	
-	int mCurrentLoad = 0;			// The current loaded in texture
-	bool bLoading = false;			// Loading in textures in the cursor range.
-	bool bUnloaded = false;			// No longer loading and just finished unloading old textures.
+	int mCurrentLoad = 0;					// The current loaded in texture
+	bool bLoading = false;					// Loading in textures in the cursor range.
+	bool bUnloaded = false;					// No longer loading and just finished unloading old textures.
 
-	int mCursorUpdateDelay = 0;		// Holds how many frames have passed [ for waiting to update load range ]
+	int mCursorUpdateDelay = 0;				// Holds how many frames have passed [ for waiting to update load range ]
 
 	int mPrevIndex = 0;
-	int mCurrentDirection = MOVING_DOWN;
+	int mCurrentDirection = MOVING_DOWN;	// Which direction the user is moving (Orientation based on grid, not index)
 
-	std::vector<ImageComponent> mImages;
+	std::vector<ImageComponent> mImages;	
 	std::vector<TextComponent> mTitles;
-	std::vector<int> mLoadedTextureList;
 };
 
 template<typename T>
@@ -198,22 +199,28 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 }
 
 template<typename T>
-void ImageGridComponent<T>::dynamicImageLoader() {
+void ImageGridComponent<T>::unloadTextures() {
 	// If there are too many textures loaded, the user is likely out of
-	// Cursor range, so just delete every image not around the cursor
-	if (mTotalLoadedTextures > 80) {
-		for (int i = 1; i < mTotalEntrys - 1; i++)
-			clearImageAt(i);
-	}
+	// Cursor range, so just delete every image.
+	for (int i = 1; i < mTotalEntrys - 1; i++)
+		clearImageAt(i);
+	bLoading = true;		// Reload images now.
+}
+
+template<typename T>
+void ImageGridComponent<T>::dynamicImageLoader() {
+	if (mTotalLoadedTextures > MAX_TEXTURES) unloadTextures();
 
 	// if cursor is getting close to the ends of range; update
 	if (getCursorIndex() > mCursorRange.max - 5 && getCursorIndex() < mCursorRange.min + 5) updateLoadRange();
 
 	// Load in Texture per cycle.
 	if (bLoading && mScrollTier < 1) {
-		// Load image
-		if (mCurrentLoad < getEntryCount() && mCurrentLoad > 0)
+		// Make sure index is in range.
+		if (mCurrentLoad < getEntryCount() && mCurrentLoad > 0) {
+			if (mTotalLoadedTextures > MAX_TEXTURES) unloadTextures();
 			static_cast<IList <ImageGridData, T >*>(this)->loadTexture(mCurrentLoad);
+		}
 
 		// update images as they load in.
 		updateImages();
@@ -261,11 +268,11 @@ void ImageGridComponent<T>::updateLoadRange() {
 	if (cursor == mPrevIndex && mCursorRange.length > 0) return;
 
 	// Get minimum [ will stay at 0 until user moves past 12. ]
-	int rmin = cursor - 12;
+	int rmin = cursor - int(CURSOR_RANGE / 2);
 	if (rmin < 0) rmin += rmin * -1;
 
 	// get max [ will try to be just the viewable area based on mod size ]
-	int rmax = cursor + 25 - mGridMod;
+	int rmax = cursor + int(CURSOR_RANGE / 2);
 	if (rmax > mTotalEntrys) rmax = mTotalEntrys - 1;
 
 	// if there is only one game, set range 0-0
