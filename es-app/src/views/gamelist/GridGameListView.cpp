@@ -81,7 +81,7 @@ bool GridGameListView::input(InputConfig* config, Input input)
 void GridGameListView::update(int deltatime) {
 	// For Loading in game art as the user clicks on the system. 
 	// Loads one per frame, or if specified to load on frame x.
-	if (mLoadFrame >= mLoadFrameKey) {
+	if (mLoadFrame >= mLoadFrameKey -2) {
 		mGrid.dynamicImageLoader();
 		mLoadFrame = 0;
 	}

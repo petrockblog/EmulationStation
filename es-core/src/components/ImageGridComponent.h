@@ -7,6 +7,8 @@
 #include "Settings.h"
 #include "Log.h"
 
+#include "Renderer.h"
+
 struct ImageGridData
 {
 	std::shared_ptr<TextureResource> texture;
@@ -41,6 +43,8 @@ protected:
 	using IList<ImageGridData, T>::mCursor;
 	using IList<ImageGridData, T>::Entry;
 	using IList<ImageGridData, T>::mWindow;
+	using IList<ImageGridData, T>::mScrollTier;
+	using IList<ImageGridData, T>::mTotalLoadedTextures;
 
 public:
 	using IList<ImageGridData, T>::size;
@@ -138,11 +142,14 @@ private:
 	bool bLoading = false;			// Loading in textures in the cursor range.
 	bool bUnloaded = false;			// No longer loading and just finished unloading old textures.
 
+	int mCursorUpdateDelay = 0;		// Holds how many frames have passed [ for waiting to update load range ]
+
 	int mPrevIndex = 0;
 	int mCurrentDirection = MOVING_DOWN;
 
 	std::vector<ImageComponent> mImages;
 	std::vector<TextComponent> mTitles;
+	std::vector<int> mLoadedTextureList;
 };
 
 template<typename T>
@@ -192,9 +199,21 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 
 template<typename T>
 void ImageGridComponent<T>::dynamicImageLoader() {
-	if (bLoading) {
+	// If there are too many textures loaded, the user is likely out of
+	// Cursor range, so just delete every image not around the cursor
+	if (mTotalLoadedTextures > 80) {
+		for (int i = 1; i < mTotalEntrys - 1; i++)
+			clearImageAt(i);
+	}
+
+	// if cursor is getting close to the ends of range; update
+	if (getCursorIndex() > mCursorRange.max - 5 && getCursorIndex() < mCursorRange.min + 5) updateLoadRange();
+
+	// Load in Texture per cycle.
+	if (bLoading && mScrollTier < 1) {
 		// Load image
-		static_cast<IList <ImageGridData, T >*>(this)->loadTexture(mCurrentLoad);
+		if (mCurrentLoad < getEntryCount() && mCurrentLoad > 0)
+			static_cast<IList <ImageGridData, T >*>(this)->loadTexture(mCurrentLoad);
 
 		// update images as they load in.
 		updateImages();
@@ -226,21 +245,23 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 		}
 
 		bUnloaded = true;
-
 	}
 
 }
 
 template<typename T>
 void ImageGridComponent<T>::updateLoadRange() {
+	// Only update range if not loading and not within last built range
+	if (bLoading) return;
+
 	// Create a range based on cursor position
 	int cursor = getCursorIndex();
 
 	// return if index hasn't changed and range is setup
 	if (cursor == mPrevIndex && mCursorRange.length > 0) return;
 
-	// Get minimum [ will stay at 0 until user moves past 10. ]
-	int rmin = cursor - 10;
+	// Get minimum [ will stay at 0 until user moves past 12. ]
+	int rmin = cursor - 12;
 	if (rmin < 0) rmin += rmin * -1;
 
 	// get max [ will try to be just the viewable area based on mod size ]
@@ -380,7 +401,6 @@ void ImageGridComponent<T>::buildImages()
 		}
 	}
 }
-
 
 template<typename T>
 void ImageGridComponent<T>::updateImages()

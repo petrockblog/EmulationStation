@@ -79,6 +79,8 @@ protected:
 	const ListLoopType mLoopType;
 
 	std::vector<Entry> mEntries;
+
+	int mTotalLoadedTextures = 0;
 	
 public:
 	IList(Window* window, const ScrollTierList& tierList = LIST_SCROLL_STYLE_QUICK, const ListLoopType& loopType = LIST_PAUSE_AT_END) : GuiComponent(window), 
@@ -164,6 +166,9 @@ public:
 			mEntries[index].data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? 
 				TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
 			mEntries[index].isTextureLoaded = true;
+
+			// Increment LoadedTexture Count
+			mTotalLoadedTextures++;
 		}
 	}
 
@@ -172,6 +177,9 @@ public:
 		if (mEntries[index].isTextureLoaded) {
 			mEntries[index].data.texture = TextureResource::get(":/frame.png");
 			mEntries[index].isTextureLoaded = false;
+
+			// Subtract Loaded Texture Count
+			mTotalLoadedTextures--;
 		}
 	}
 	
