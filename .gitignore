@@ -34,3 +34,4 @@ Makefile
 .cproject
 .project
 .settings/
+data/resources/gridtile.png

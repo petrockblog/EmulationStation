@@ -79,6 +79,9 @@ void GridTileComponent::update(int deltaTime) {
 		if (mAnimation.frame < mAnimation.maxFrame) {
 			mAnimation.current.opacity += (mAnimation.selected.opacity - mAnimation.unselected.opacity) / mAnimation.maxFrame;
 			mAnimation.current.color += (mAnimation.selected.color - mAnimation.unselected.color) / mAnimation.maxFrame;
+			mAnimation.current.size += (mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame;
+			mAnimation.current.pos -= ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
+			mAnimation.zframe = 1;
 			mAnimation.frame++;
 		}
 	}
@@ -86,12 +89,19 @@ void GridTileComponent::update(int deltaTime) {
 		if (mAnimation.frame > 0) {
 			mAnimation.current.opacity -= (mAnimation.selected.opacity - mAnimation.unselected.opacity) / mAnimation.maxFrame;
 			mAnimation.current.color -= (mAnimation.selected.color - mAnimation.unselected.color) / mAnimation.maxFrame;
+			mAnimation.current.size -= (mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame;
+			mAnimation.current.pos += ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
+			mAnimation.zframe = 0;
 			mAnimation.frame--;
 		}
 	}
 
 	if (mAnimation.animateOpacity) setOpacity(mAnimation.current.opacity);
 	if (mAnimation.animateColor) mImage->setColorShift(mAnimation.current.color);
+	if (mAnimation.animateSize) {
+		setSize(mAnimation.current.size);
+		setPosition(mAnimation.current.pos.x(), mAnimation.current.pos.y(), mAnimation.zframe);
+	}
 }
 
 void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
@@ -117,16 +127,31 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	}
 
 	// Apply theme data to Struct: GridTile when NOT selected:
-	elem = theme->getElement("grid", "gridtile_unselected", "image");
+	elem = theme->getElement("grid", "gridtile", "image");
 	if (elem) {
 		if (elem->has("color")) {
 			mAnimation.unselected.color = elem->get<unsigned int>("color");
-			mAnimation.animateColor = true;
+			//mAnimation.animateColor = true;
 		}
 		if (elem->has("size")) {
 			mAnimation.unselected.size = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
-			mAnimation.animateSize = true;
+			mAnimation.current.size = mAnimation.unselected.size;
+			mAnimation.current.pos.x() = getPosition().x();
+			mAnimation.current.pos.y() = getPosition().y();
+			mAnimation.animateSizeFromDefault = false;
 		}
+	}
+
+	mAnimation.current.opacity = 0xAA;
+	mAnimation.unselected.opacity = 0xAA;
+
+	// Setup size for if themer didn't specify a size on unselected
+	if (mAnimation.animateSizeFromDefault) {
+		mAnimation.current.size = getSize();
+		mAnimation.unselected.size = getSize();
+		mAnimation.selected.size += getSize();
+		mAnimation.current.pos.x() = getPosition().x();
+		mAnimation.current.pos.y() = getPosition().y();
 	}
 
 	// Catch Ninepatch image path change

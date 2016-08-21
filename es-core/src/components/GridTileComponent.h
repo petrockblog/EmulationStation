@@ -7,28 +7,24 @@
 class TextComponent;
 class ImageComponent;
 
-struct CursorAnimation {
-	struct Selected {
-		Eigen::Vector2f size;
-		unsigned char opacity = 0xFF;
-		unsigned int color = 0xFFFFFFFF;
-	}; Selected selected;
-	
-	struct Unselected {
-		Eigen::Vector2f size;
-		unsigned char opacity = 0xAA;
-		unsigned int color = 0xEEEEEEAA;
-	}; Unselected unselected;
+struct KeyframeVariables {
+	Eigen::Vector2f size;
+	Eigen::Vector2f pos;
+	unsigned char opacity = 0xFF;
+	unsigned int color = 0xFFFFFFFF;
+};
 
-	struct Current {
-		Eigen::Vector2f size;
-		unsigned char opacity = 0xAA;
-		unsigned int color = 0xEEEEEEAA;
-	}; Current current;
+struct CursorAnimation {
+	KeyframeVariables selected;
+	KeyframeVariables unselected;
+	KeyframeVariables current;
 
 	bool animateColor = false;
 	bool animateOpacity = true;
-	bool animateSize = true;
+	bool animateSize = false;				// Animates a size change when selected ( from theme->(gridtile_selected:size) )
+	bool animateSizeFromDefault = true;		// Animates the size from the default squaresize ( Theme->(gridtile:size) will override )
+
+	int zframe = 0;
 
 	int maxFrame = 8;
 	int frame = 0;
