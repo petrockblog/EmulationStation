@@ -40,6 +40,8 @@ public:
 	void onPositionChanged() override;
 
 	void setSelected(bool isSelected);
+	void hide();
+	void show();
 
 	// Used to give custom theme control to all elements and for slight animation puroposes.
 	void setTheme(const std::shared_ptr<ThemeData>& theme);
@@ -66,6 +68,7 @@ private:
 
 	bool bThemeBackground = false;
 	bool bStretchImage = false;
+	bool bShow = true;
 
 	CursorAnimation mAnimation;
 	bool bSelected = false;

@@ -383,7 +383,10 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		i++;
 	}
 
+	i = 0;
 	for (auto ti = mTiles.begin(); ti != mTiles.end(); ti++) {
+		if (i > getEntryCount() - 1) break;
+		i++;
 		(*ti)->render(trans);
 	}
 
@@ -506,8 +509,11 @@ void ImageGridComponent<T>::updateImages()
 		if(i >= (unsigned int)size())
 		{
 			image.setImage("");
+			tile->hide();
 			continue;
 		}
+
+		tile->show();
 
 		Eigen::Vector2f squareSize = getSquareSize(mEntries.at(i).data.texture);
 		if(i == mCursor)

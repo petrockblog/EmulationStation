@@ -71,7 +71,7 @@ void GridTileComponent::setImageToFit(bool fit) {
 }
 
 void GridTileComponent::render(const Eigen::Affine3f& parentTrans) {
-	renderChildren(parentTrans);
+	if (bShow) renderChildren(parentTrans);
 }
 
 void GridTileComponent::update(int deltaTime) {
@@ -163,6 +163,14 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 
 }
 
+void GridTileComponent::hide() {
+	bShow = false;
+}
+
+void GridTileComponent::show() {
+	bShow = true;
+}
+
 // --- SETS FOR CHILDREN ---
 void GridTileComponent::setImage(std::string path, bool tile) {
 	mImage->setImage(path, tile);
@@ -189,5 +197,5 @@ void GridTileComponent::setUppercase(bool uppercase) {
 }
 
 void GridTileComponent::setBackgroundPath(const std::string& path) {
-	//if (!bThemeBackground) mBackground.setImagePath(path);
+	if (!bThemeBackground) mBackground.setImagePath(path);
 }
