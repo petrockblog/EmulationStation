@@ -1,9 +1,12 @@
 #pragma once
 
+#include "ThemeData.h"
 #include "GuiComponent.h"
 #include "components/IList.h"
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
+#include "components/NinePatchComponent.h"
+#include "components/GridTileComponent.h"
 #include "Settings.h"
 #include "Log.h"
 
@@ -63,6 +66,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+	void applyThemeToChildren(const std::shared_ptr<ThemeData>& theme);
 
 	int getEntryCount();
 	int getCursorIndex();
@@ -118,11 +122,14 @@ private:
 	Eigen::Vector2i getGridSize() const
 	{
 		Eigen::Vector2f squareSize = getMaxSquareSize();
+		if (!mTiles.empty()) squareSize = mTiles[0]->getSize();
+
 		Eigen::Vector2i gridSize(mSize.x() / (squareSize.x() + getPadding().x()), mSize.y() / (squareSize.y() + getPadding().y()));
 		return gridSize;
 	};
 
 	Eigen::Vector2f getPadding() const { return Eigen::Vector2f(24, 24); }
+	Eigen::Vector2f getMargin() const { return Eigen::Vector2f(24, 24); }
 	
 	void buildImages();
 	void updateImages();
@@ -151,6 +158,10 @@ private:
 
 	std::vector<ImageComponent> mImages;	
 	std::vector<TextComponent> mTitles;
+	std::vector< std::shared_ptr<GridTileComponent> > mTiles;
+
+	std::shared_ptr<ThemeData> mTheme;
+	bool bThemeLoaded = false;
 };
 
 template<typename T>
@@ -163,6 +174,7 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 template<typename T>
 ImageGridComponent<T>::~ImageGridComponent() {
 	mImages.clear();
+	mTiles.clear();
 }
 
 template<typename T>
@@ -332,6 +344,10 @@ template<typename T>
 void ImageGridComponent<T>::update(int deltaTime)
 {
 	listUpdate(deltaTime);
+
+	for (auto t = mTiles.begin(); t != mTiles.end(); t++) {
+		(*t)->update(deltaTime);
+	}
 }
 
 template<typename T>
@@ -360,9 +376,37 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		i++;
 	}
 
+	i = 0;
+	for (auto tx = mTitles.begin(); tx != mTitles.end(); tx++) {
+		if (i > getEntryCount() - 1) break;
+		tx->render(trans);
+		i++;
+	}
+
+	for (auto ti = mTiles.begin(); ti != mTiles.end(); ti++) {
+		(*ti)->render(trans);
+	}
+
 	listRenderTitleOverlay(trans);
 
 	GuiComponent::renderChildren(trans);
+}
+
+template<typename T>
+void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData>& theme) {
+	using namespace ThemeFlags;
+
+	for (int i = 0; i < mTitles.size(); i++) {
+		mTitles[i].applyTheme(theme, "grid", "mdGameTitle", ALL);
+	}
+
+	for (int i = 0; i < mImages.size(); i++) {
+		mImages[i].applyTheme(theme, "grid", "mdGameImage", ALL);
+	}
+
+	// Keep theme data pointer.
+	mTheme = theme;
+	bThemeLoaded = true;
 }
 
 template<typename T>
@@ -384,6 +428,7 @@ template<typename T>
 void ImageGridComponent<T>::buildImages()
 {
 	mImages.clear();
+	mTiles.clear();
 
 	Eigen::Vector2i gridSize = getGridSize();
 	Eigen::Vector2f squareSize = getMaxSquareSize();
@@ -398,6 +443,7 @@ void ImageGridComponent<T>::buildImages()
 	{
 		for(int x = 0; x < gridSize.x(); x++)
 		{
+			// Create Image
 			mImages.push_back(ImageComponent(mWindow));
 			ImageComponent& image = mImages.at(y * gridSize.x() + x);
 
@@ -405,6 +451,28 @@ void ImageGridComponent<T>::buildImages()
 			image.setOrigin(0.5f, 0.5f);
 			image.setResize(squareSize.x(), squareSize.y());
 			image.setImage("");
+
+			// Create Titles
+			mTitles.push_back(TextComponent(mWindow));
+			TextComponent& title = mTitles.at(y * gridSize.x() + x);
+
+			title.setPosition((squareSize.x() + padding.x()) * (x) + offset.x(), (squareSize.y() + padding.y()) * (y + 1.2) + offset.y());
+			title.setColor(0xEEEEFFBB);
+			title.setText("");
+			title.setAlignment(ALIGN_CENTER);
+			title.setFont(Font::get(FONT_SIZE_SMALL));
+
+			// Create tiles
+			auto tile = std::make_shared<GridTileComponent>(mWindow);
+			tile->setImageSize(squareSize.x(), squareSize.y());
+			Eigen::Vector2f newSquareSize = tile->getSize();	// Get new size because a square is built arount the image.
+			tile->setPosition((newSquareSize.x() + padding.x()) * (x + 0.0f) + offset.x() + (x * getMargin().x()), 
+				(newSquareSize.y() + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
+
+			if (bThemeLoaded) tile->setTheme(mTheme);
+			
+			mTiles.push_back(tile);
+
 		}
 	}
 }
@@ -432,7 +500,9 @@ void ImageGridComponent<T>::updateImages()
 	unsigned int i = (unsigned int)start;
 	for(unsigned int img = 0; img < mImages.size(); img++)
 	{
+		// SET IMAGE FROM TEXUTRE
 		ImageComponent& image = mImages.at(img);
+		auto tile = mTiles.at(img);
 		if(i >= (unsigned int)size())
 		{
 			image.setImage("");
@@ -442,14 +512,38 @@ void ImageGridComponent<T>::updateImages()
 		Eigen::Vector2f squareSize = getSquareSize(mEntries.at(i).data.texture);
 		if(i == mCursor)
 		{
+			tile->setSelected(true);
 			image.setColorShift(0xFFFFFFFF);
 			image.setResize(squareSize.x() + getPadding().x() * 0.95f, squareSize.y() + getPadding().y() * 0.95f);
 		}else{
+			tile->setSelected(false);
 			image.setColorShift(0xAAAAAABB);
 			image.setResize(squareSize.x(), squareSize.y());
 		}
 
-		image.setImage(mEntries.at(i).data.texture);
+		//image.setImage(mEntries.at(i).data.texture);
+		tile->setBackgroundPath(":/frame.png");
+		tile->setImage(mEntries.at(i).data.texture);
+		tile->setText(mEntries.at(i).name);
+		tile->setImageToFit(true);
+
+		// GET TITLE AND SET TEXT
+		TextComponent& title = mTitles.at(img);
+		if (i >= (unsigned int)size()) {
+			title.setText(" ");
+			continue;
+		}
+
+		//title.setText(mEntries.at(i).name);
+		if (i == mCursor) {
+			title.setSize(squareSize.x() + getPadding().x() * 0.95f, 24);
+			title.setColor(0xFFFFFFFF);
+		}
+		else {
+			title.setSize(squareSize.x(), 24);
+			title.setColor(0xAAAAFF88);
+		}
+
 		i++;
 	}
 }

@@ -148,11 +148,14 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	mTitle.applyTheme(theme, getName(), "md_title", ALL);
 	mGrid.applyTheme(theme, getName(), "md_grid", ALL);
 
+	mGrid.applyThemeToChildren(theme);
+
 }
 
 
 void GridGameListView::onFocusGained() {
 	mGrid.updateLoadRange();
+	LOG(LogError) << "Focus on: " << mSystem->getName();
 }
 
 void GridGameListView::onFocusLost() {
