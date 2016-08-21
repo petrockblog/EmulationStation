@@ -129,7 +129,8 @@ private:
 	};
 
 	Eigen::Vector2f getPadding() const { return Eigen::Vector2f(24, 24); }
-	Eigen::Vector2f getMargin() const { return Eigen::Vector2f(24, 24); }
+	Eigen::Vector2f getMargin() { return mMargin; }
+	void setMargin(Eigen::Vector2f marg) { mMargin = marg; }
 	
 	void buildImages();
 	void updateImages();
@@ -142,6 +143,7 @@ private:
 	int mTotalEntrys = 0;					// How many entries are loaded in from gamelist
 
 	float mGridMod = 1;						// What size the tiles will be multiplied by (1 = .1)
+	Eigen::Vector2f mMargin;
 
 	const int MAX_TEXTURES = 80;			// The maximum amount of images that can be loaded at once
 	const int CURSOR_RANGE = 32;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
@@ -169,6 +171,7 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 {
 	mEntriesDirty = true;
 	mGridMod = modGridSize;
+	setMargin(Eigen::Vector2f(24, 24));
 }
 
 template<typename T>
@@ -397,6 +400,7 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 
 template<typename T>
 void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData>& theme) {
+	Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	using namespace ThemeFlags;
 
 	for (int i = 0; i < mTitles.size(); i++) {
@@ -410,6 +414,14 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 	// Keep theme data pointer.
 	mTheme = theme;
 	bThemeLoaded = true;
+
+	// Get hacked-in theme stuff
+	// Margin:
+	auto elem = theme->getElement("grid", "md_grid_margin", "container");
+	if (elem) {
+		if (elem->has("size")) 
+			setMargin(elem->get<Eigen::Vector2f>("size").cwiseProduct(screen));
+	} 
 }
 
 template<typename T>
@@ -519,36 +531,14 @@ void ImageGridComponent<T>::updateImages()
 		if(i == mCursor)
 		{
 			tile->setSelected(true);
-			image.setColorShift(0xFFFFFFFF);
-			image.setResize(squareSize.x() + getPadding().x() * 0.95f, squareSize.y() + getPadding().y() * 0.95f);
 		}else{
 			tile->setSelected(false);
-			image.setColorShift(0xAAAAAABB);
-			image.setResize(squareSize.x(), squareSize.y());
 		}
 
-		//image.setImage(mEntries.at(i).data.texture);
 		tile->setBackgroundPath(":/frame.png");
 		tile->setImage(mEntries.at(i).data.texture);
 		tile->setText(mEntries.at(i).name);
 		tile->setImageToFit(true);
-
-		// GET TITLE AND SET TEXT
-		TextComponent& title = mTitles.at(img);
-		if (i >= (unsigned int)size()) {
-			title.setText(" ");
-			continue;
-		}
-
-		//title.setText(mEntries.at(i).name);
-		if (i == mCursor) {
-			title.setSize(squareSize.x() + getPadding().x() * 0.95f, 24);
-			title.setColor(0xFFFFFFFF);
-		}
-		else {
-			title.setSize(squareSize.x(), 24);
-			title.setColor(0xAAAAFF88);
-		}
 
 		i++;
 	}

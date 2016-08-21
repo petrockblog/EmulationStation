@@ -155,7 +155,6 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 void GridGameListView::onFocusGained() {
 	mGrid.updateLoadRange();
-	LOG(LogError) << "Focus on: " << mSystem->getName();
 }
 
 void GridGameListView::onFocusLost() {
