@@ -39,18 +39,12 @@ void GridTileComponent::onSizeChanged()
 	mText->setSize(0, textHeight);
 	const float textWidth = mText->getSize().x() + 4;
 
-	//mGrid.setColWidthPerc(0, mSize.x()); // animation is square
-	//mGrid.setColWidthPerc(2, middleSpacerWidth / mSize.x());
-	//mGrid.setColWidthPerc(3, textWidth / mSize.x());
-
 	mGrid.setRowHeightPerc(0, .9f);
 	mImage->setMaxSize(mSize.x(), mGrid.getRowHeight(0));
 
 	if (bStretchImage) {
 		mImage->setSize(mSize.x(), mGrid.getRowHeight(0));
 	}
-	
-	//mBackground.fitTo();
 }
 
 void GridTileComponent::onPositionChanged() {
@@ -107,6 +101,13 @@ void GridTileComponent::update(int deltaTime) {
 void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	using namespace ThemeFlags;
 
+	// Set animation settings to default if that theme element isn't defined.
+	mAnimation.unselected.size = getSize();
+	mAnimation.unselected.pos.x() = getPosition().x();
+	mAnimation.unselected.pos.y() = getPosition().y();
+	mAnimation.current.size = mAnimation.unselected.size;
+	mAnimation.current.pos = mAnimation.unselected.pos;
+
 	// Apply themedata to normal objects
 	mBackground.applyTheme(theme, "grid", "gridtile_background", ALL);
 	mText->applyTheme(theme, "grid", "gridtile_text", ALL);
@@ -156,9 +157,11 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 
 	// Catch Ninepatch image path change
 	elem = theme->getElement("grid", "gridtile_background", "ninepatch");
-	if (elem->has("path")) {
-		mBackground.setImagePath(elem->get<std::string>("path"));
-		bThemeBackground = true;
+	if (elem) {
+		if (elem->has("path")) {
+			mBackground.setImagePath(elem->get<std::string>("path"));
+			bThemeBackground = true;
+		}
 	}
 
 }
