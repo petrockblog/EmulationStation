@@ -71,6 +71,7 @@ public:
 	int getEntryCount();
 	int getCursorIndex();
 
+	void reloadTextures();
 	void dynamicImageLoader();
 	void clearImageAt(int index);
 	void updateLoadRange();
@@ -220,6 +221,14 @@ void ImageGridComponent<T>::unloadTextures() {
 	for (int i = 1; i < mTotalEntrys - 1; i++)
 		clearImageAt(i);
 	bLoading = true;		// Reload images now.
+}
+
+template<typename T>
+void ImageGridComponent<T>::reloadTextures() {
+	if (mEntries.size() > 0) {
+		bLoading = true;
+		mCurrentLoad = mCursorRange.min;
+	}
 }
 
 template<typename T>

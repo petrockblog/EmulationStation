@@ -155,6 +155,7 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 void GridGameListView::onFocusGained() {
 	mGrid.updateLoadRange();
+	mGrid.reloadTextures();
 }
 
 void GridGameListView::onFocusLost() {
