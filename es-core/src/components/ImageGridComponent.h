@@ -410,25 +410,23 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	}
 
 	int i = 0;
-	for(auto it = mImages.begin(); it != mImages.end(); it++)
-	{
-		it->render(trans);
-		if (i > 32) break;
-		i++;
-	}
-
-	i = 0;
-	for (auto tx = mTitles.begin(); tx != mTitles.end(); tx++) {
-		if (i > getEntryCount() - 1) break;
-		tx->render(trans);
-		i++;
-	}
-
-	i = 0;
+	std::shared_ptr<GridTileComponent> pTile;
+	bool bSelected = false;
 	for (auto ti = mTiles.begin(); ti != mTiles.end(); ti++) {
 		if (i > getEntryCount() - 1) break;
-		i++;
-		(*ti)->render(trans);
+		if ((*ti)->isSelected()) {
+			i++;
+			pTile = (*ti);
+			bSelected = true;
+		}
+		else {
+			i++;
+			(*ti)->render(trans);
+		}
+	}
+
+	if (bSelected) {
+		pTile->render(trans);
 	}
 
 	listRenderTitleOverlay(trans);
@@ -516,7 +514,7 @@ void ImageGridComponent<T>::buildImages()
 			title.setFont(Font::get(FONT_SIZE_SMALL));
 
 			// Create tiles
-			auto tile = std::make_shared<GridTileComponent>(mWindow);
+			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
 			Eigen::Vector2f newSquareSize = tile->getSize();	// Get new size because a square is built arount the image.
 			tile->setPosition((newSquareSize.x() + padding.x()) * (x + 0.0f) + offset.x() + (x * getMargin().x()), 

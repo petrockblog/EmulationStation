@@ -33,7 +33,7 @@ struct CursorAnimation {
 class GridTileComponent : public GuiComponent
 {
 public:
-	GridTileComponent(Window* window);
+	GridTileComponent(Window* window, int index);
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 	void update(int deltaTime) override;
@@ -42,6 +42,9 @@ public:
 	void setSelected(bool isSelected);
 	void hide();
 	void show();
+
+	int getIndex() { return mIndex; }
+	bool isSelected() { return bSelected; }
 
 	// Used to give custom theme control to all elements and for slight animation puroposes.
 	void setTheme(const std::shared_ptr<ThemeData>& theme);
@@ -61,6 +64,8 @@ public:
 	void onSizeChanged() override;
 
 private:
+	int mIndex = 0;
+
 	std::shared_ptr<TextComponent> mText;
 	std::shared_ptr<ImageComponent> mImage;
 	NinePatchComponent mBackground;

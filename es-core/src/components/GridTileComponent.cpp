@@ -6,7 +6,7 @@
 
 using namespace Eigen;
 
-GridTileComponent::GridTileComponent(Window* window) : GuiComponent(window), mGrid(window, Vector2i(1, 2)), mBackground(window)
+GridTileComponent::GridTileComponent(Window* window, int index) : GuiComponent(window), mGrid(window, Vector2i(1, 2)), mBackground(window)
 {
 	mText = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
 	mImage = std::make_shared<ImageComponent>(mWindow);
@@ -16,6 +16,8 @@ GridTileComponent::GridTileComponent(Window* window) : GuiComponent(window), mGr
 
 	addChild(&mBackground);
 	addChild(&mGrid);
+
+	mIndex = index;
 }
 
 void GridTileComponent::setSelected(bool isSelected) {
