@@ -81,7 +81,7 @@ bool GridGameListView::input(InputConfig* config, Input input)
 void GridGameListView::update(int deltatime) {
 	// For Loading in game art as the user clicks on the system. 
 	// Loads one per frame, or if specified to load on frame x.
-	if (mLoadFrame >= mLoadFrameKey -2) {
+	if (mLoadFrame >= mLoadFrameKey) {
 		mGrid.dynamicImageLoader();
 		mLoadFrame = 0;
 	}
@@ -159,9 +159,8 @@ void GridGameListView::onFocusGained() {
 }
 
 void GridGameListView::onFocusLost() {
-	for (int i = 1; i < mGrid.getEntryCount(); i++) {
-		mGrid.clearImageAt(i);
-	}
+	if (mGrid.getEntryCount() > 0)
+		mGrid.unloadTextures(true);
 }
 
 

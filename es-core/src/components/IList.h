@@ -81,6 +81,7 @@ protected:
 	std::vector<Entry> mEntries;
 
 	int mTotalLoadedTextures = 0;
+	std::list<int>mLoadedTextureList;
 	
 public:
 	IList(Window* window, const ScrollTierList& tierList = LIST_SCROLL_STYLE_QUICK, const ListLoopType& loopType = LIST_PAUSE_AT_END) : GuiComponent(window), 
@@ -166,6 +167,7 @@ public:
 			mEntries[index].data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? 
 				TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
 			mEntries[index].isTextureLoaded = true;
+			mLoadedTextureList.push_back(index);
 
 			// Increment LoadedTexture Count
 			mTotalLoadedTextures++;

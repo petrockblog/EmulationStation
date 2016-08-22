@@ -46,6 +46,7 @@ protected:
 	using IList<ImageGridData, T>::mWindow;
 	using IList<ImageGridData, T>::mScrollTier;
 	using IList<ImageGridData, T>::mTotalLoadedTextures;
+	using IList<ImageGridData, T>::mLoadedTextureList;
 
 public:
 	using IList<ImageGridData, T>::size;
@@ -75,7 +76,7 @@ public:
 	void dynamicImageLoader();
 	void clearImageAt(int index);
 	void updateLoadRange();
-	void unloadTextures();
+	void unloadTextures(bool unloadAll = false);
 
 private:
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
@@ -157,6 +158,7 @@ private:
 	int mCursorUpdateDelay = 0;				// Holds how many frames have passed [ for waiting to update load range ]
 
 	int mPrevIndex = 0;
+	int mPrevScrollTier = 0;
 	int mCurrentDirection = MOVING_DOWN;	// Which direction the user is moving (Orientation based on grid, not index)
 
 	std::vector<ImageComponent> mImages;	
@@ -215,11 +217,27 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 }
 
 template<typename T>
-void ImageGridComponent<T>::unloadTextures() {
-	// If there are too many textures loaded, the user is likely out of
-	// Cursor range, so just delete every image.
-	for (int i = 1; i < mTotalEntrys - 1; i++)
-		clearImageAt(i);
+void ImageGridComponent<T>::unloadTextures(bool unloadAll) {
+	// Phase 1: Go through and unload textures based on list of indexes
+	if (mLoadedTextureList.size() > 0) {
+		for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
+			// Ignore textures currently in range of cursor
+			if (!unloadAll)
+				if ((*i) > mCursorRange.min && (*i) < mCursorRange.max) continue;
+			clearImageAt((*i));
+			i = mLoadedTextureList.erase(i);
+		}
+	}
+
+	// Phase 2: If there are still too many textures.  Just remove all
+	if (mTotalLoadedTextures > MAX_TEXTURES) {
+		// If there are too many textures loaded, the user is likely out of
+		// Cursor range, so just delete every image.
+		for (int i = 1; i < mTotalEntrys - 1; i++)
+			clearImageAt(i);
+		mLoadedTextureList.clear();
+	}
+
 	bLoading = true;		// Reload images now.
 }
 
@@ -260,16 +278,20 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 		switch (mCurrentDirection) {
 		case MOVING_DOWN:
 			if (mCursorRange.min > 0) {
-				for (int i = 0; i < mCursorRange.min; i++) {
-					clearImageAt(i);
+				for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
+					if ((*i) >= mCursorRange.min) break;
+					clearImageAt((*i));
+					i = mLoadedTextureList.erase(i);
 				}
 			}
 			break;
 
 		case MOVING_UP:
 			if (mCursorRange.max < mTotalEntrys) {
-				for (int i = mTotalEntrys - 1; i > mCursorRange.max; i--) {
-					clearImageAt(i);
+				for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
+					if ((*i) <= mCursorRange.max) break;
+					clearImageAt((*i));
+					i = mLoadedTextureList.erase(i);
 				}
 			}
 			break;
@@ -278,6 +300,13 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 		bUnloaded = true;
 	}
 
+	// update and load after user exits out of fast scroll
+	if (mPrevScrollTier > 0 && mScrollTier == 0) {
+		bLoading = false;
+		updateLoadRange();
+	}
+
+	mPrevScrollTier = mScrollTier;
 }
 
 template<typename T>
