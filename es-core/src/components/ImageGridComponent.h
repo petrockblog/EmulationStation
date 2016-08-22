@@ -549,14 +549,12 @@ void ImageGridComponent<T>::updateImages()
 		start = 0;
 
 	unsigned int i = (unsigned int)start;
-	for(unsigned int img = 0; img < mImages.size(); img++)
+	for(unsigned int img = 0; img < mTiles.size(); img++)
 	{
 		// SET IMAGE FROM TEXUTRE
-		ImageComponent& image = mImages.at(img);
 		auto tile = mTiles.at(img);
 		if(i >= (unsigned int)size())
 		{
-			image.setImage("");
 			tile->hide();
 			continue;
 		}
