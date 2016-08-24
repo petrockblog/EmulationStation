@@ -2,6 +2,7 @@
 #include "components/TextComponent.h"
 #include "components/ImageComponent.h"
 #include "Log.h"
+#include "AnimationUtil.h"
 #include "Renderer.h"
 
 using namespace Eigen;
@@ -13,6 +14,14 @@ GridTileComponent::GridTileComponent(Window* window, int index) : GuiComponent(w
 
 	mGrid.setEntry(mImage, Vector2i(0, 0), false, true);
 	mGrid.setEntry(mText, Vector2i(0, 1), false, true);
+
+	// Default row heights
+	mTextContainerSize.y() = .15f;
+	mGrid.setRowHeightPerc(0, .85f);
+	mGrid.setRowHeightPerc(1, .15f);
+
+	backgroundPadding.x() = 0;
+	backgroundPadding.y() = 0;
 
 	addChild(&mBackground);
 	addChild(&mGrid);
@@ -26,23 +35,25 @@ void GridTileComponent::setSelected(bool isSelected) {
 
 void GridTileComponent::onSizeChanged()
 {
-	mGrid.setSize(mSize);
-	mBackground.fitTo(mSize, Vector3f(mPosition.x(), mPosition.y(), 0));
-	
-	mText->setPosition(0, mSize.y() * .85f);
-	mText->setSize(mSize.x(), mSize.y());
-
-
-	if(mSize.x() == 0 || mSize.y() == 0)
+	if (mSize.x() == 0 || mSize.y() == 0)
 		return;
 
-	const float middleSpacerWidth = 0.01f * Renderer::getScreenWidth();
-	const float textHeight = mText->getFont()->getLetterHeight();
-	mText->setSize(0, textHeight);
-	const float textWidth = mText->getSize().x() + 4;
+	if (mAnimation.animateTextContainer)
+		mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
 
-	mGrid.setRowHeightPerc(0, .9f);
+	Eigen::Vector2f newGridSize;
+	newGridSize.x() = mGrid.getSize().x();
+	newGridSize.y() = mImage->getSize().y() + mGrid.getRowHeight(1);
+
 	mImage->setMaxSize(mSize.x(), mGrid.getRowHeight(0));
+
+	mGrid.setSize(mSize);
+	if (mAnimation.animateBackgroundSize)
+		mBackground.fitTo(mAnimation.current.backgroundSize, Vector3f(mPosition.x(), mPosition.y(), 0), backgroundPadding);
+	else
+		mBackground.fitTo(newGridSize, Vector3f(mPosition.x(), mPosition.y(), 0), backgroundPadding);
+
+	mText->setSize(mSize.x(), mGrid.getRowHeight(1) * .9f);
 
 	if (bStretchImage) {
 		mImage->setSize(mSize.x(), mGrid.getRowHeight(0));
@@ -56,7 +67,9 @@ void GridTileComponent::onPositionChanged() {
 void GridTileComponent::setImageSize(float w, float h, bool fit) {
 	mImage->setSize(w, h);
 	mImage->setMaxSize(w, h);
-	setSize(w, h + mText->getFont()->getLetterHeight() );
+	mTextContainerSize.x() = w;
+	if (mAnimation.animateTextContainer) mTextContainerSize.y() = mAnimation.unselected.textContainerSize.y();
+	setSize(w, h);
 
 	//onSizeChanged();
 }
@@ -71,29 +84,39 @@ void GridTileComponent::render(const Eigen::Affine3f& parentTrans) {
 }
 
 void GridTileComponent::update(int deltaTime) {
+	bool bAnimateChange = false;
 	if (bSelected) {
 		if (mAnimation.frame < mAnimation.maxFrame) {
 			mAnimation.current.opacity += (mAnimation.selected.opacity - mAnimation.unselected.opacity) / mAnimation.maxFrame;
-			mAnimation.current.color += (mAnimation.selected.color - mAnimation.unselected.color) / mAnimation.maxFrame;
+			mAnimation.current.color = getColorTween(mAnimation.unselected.color, mAnimation.selected.color, mAnimation.frame, mAnimation.maxFrame);
 			mAnimation.current.size += (mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame;
+			mAnimation.current.backgroundSize.y() += (mAnimation.selected.backgroundSize.y()) / mAnimation.maxFrame;
+			mAnimation.current.textContainerSize.y() += (mAnimation.selected.textContainerSize.y() - mAnimation.unselected.textContainerSize.y()) / mAnimation.maxFrame;
 			mAnimation.current.pos -= ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
 			mAnimation.zframe = 1;
 			mAnimation.frame++;
+			bAnimateChange = true;
 		}
 	}
 	else {
 		if (mAnimation.frame > 0) {
 			mAnimation.current.opacity -= (mAnimation.selected.opacity - mAnimation.unselected.opacity) / mAnimation.maxFrame;
-			mAnimation.current.color -= (mAnimation.selected.color - mAnimation.unselected.color) / mAnimation.maxFrame;
+			mAnimation.current.color = getColorTween(mAnimation.selected.color, mAnimation.unselected.color, mAnimation.frame, mAnimation.maxFrame);
 			mAnimation.current.size -= (mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame;
+			mAnimation.current.backgroundSize -= (mAnimation.selected.backgroundSize) / mAnimation.maxFrame;
 			mAnimation.current.pos += ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
+			mAnimation.current.textContainerSize.y() -= (mAnimation.selected.textContainerSize.y() - mAnimation.unselected.textContainerSize.y()) / mAnimation.maxFrame;
 			mAnimation.zframe = 0;
 			mAnimation.frame--;
+			bAnimateChange = true;
 		}
 	}
 
+	if (!bAnimateChange) return;
+
 	if (mAnimation.animateOpacity) setOpacity(mAnimation.current.opacity);
-	if (mAnimation.animateColor) mImage->setColorShift(mAnimation.current.color);
+	if (mAnimation.animateTextContainer) mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
+	//if (mAnimation.animateColor) mImage->setColorShift(mAnimation.current.color);  // <- Doesn't work.
 	if (mAnimation.animateSize) {
 		setSize(mAnimation.current.size);
 		setPosition(mAnimation.current.pos.x(), mAnimation.current.pos.y(), mAnimation.zframe);
@@ -104,11 +127,15 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	using namespace ThemeFlags;
 
 	// Set animation settings to default if that theme element isn't defined.
+	mAnimation.unselected.backgroundSize = mSize;
+	mAnimation.current.backgroundSize = mSize;
 	mAnimation.unselected.size = getSize();
 	mAnimation.unselected.pos.x() = getPosition().x();
 	mAnimation.unselected.pos.y() = getPosition().y();
 	mAnimation.current.size = mAnimation.unselected.size;
 	mAnimation.current.pos = mAnimation.unselected.pos;
+	mAnimation.current.opacity = 0xAA;
+	mAnimation.unselected.opacity = 0xAA;
 
 	// Apply themedata to normal objects
 	mBackground.applyTheme(theme, "grid", "gridtile_background", ALL);
@@ -121,6 +148,7 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	if (elem) {
 		if (elem->has("color")) {
 			mAnimation.selected.color = elem->get<unsigned int>("color");
+			//mAnimation.selected.color = addAlpha(mAnimation.selected.color, 0xFF);
 			mAnimation.animateColor = true;
 		}
 		if (elem->has("size")) {
@@ -134,7 +162,9 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	if (elem) {
 		if (elem->has("color")) {
 			mAnimation.unselected.color = elem->get<unsigned int>("color");
-			//mAnimation.animateColor = true;
+			//mAnimation.unselected.color = addAlpha(mAnimation.current.color, 0xAA);
+			mAnimation.current.color = mAnimation.unselected.color;
+			mImage->setColorShift(mAnimation.current.color);
 		}
 		if (elem->has("size")) {
 			mAnimation.unselected.size = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
@@ -145,8 +175,40 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 		}
 	}
 
-	mAnimation.current.opacity = 0xAA;
-	mAnimation.unselected.opacity = 0xAA;
+	// Text Container size (selected)
+	elem = theme->getElement("grid", "gridtile_textRow_selected", "container");
+	if (elem) {
+		if (elem->has("size")) {
+			mAnimation.selected.textContainerSize = elem->get<Eigen::Vector2f>("size");
+			mAnimation.unselected.textContainerSize = mTextContainerSize;
+			mAnimation.current.textContainerSize = mTextContainerSize;
+			mAnimation.animateTextContainer = true;
+		}
+	}
+	// Text Container size
+	elem = theme->getElement("grid", "gridtile_textRow", "container");
+	if (elem) {
+		if (elem->has("size")) {
+			mAnimation.unselected.textContainerSize = elem->get<Eigen::Vector2f>("size");
+			mAnimation.current.textContainerSize = mAnimation.unselected.textContainerSize;
+			LOG(LogError) << "Setting row height to : " << mAnimation.current.textContainerSize.y();
+			mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
+		}
+	}
+
+	// Apply theme data to struct: Gridtile_background_selected:
+	elem = theme->getElement("grid", "gridtile_background_selected", "ninepatch");
+	if (elem) {
+		if (elem->has("size")) {
+			mAnimation.selected.backgroundSize = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
+			mAnimation.animateBackgroundSize = true;
+		}
+	}
+
+	if (mAnimation.animateColor) {
+		mAnimation.current.opacity = getAlpha(mAnimation.unselected.color);
+		mAnimation.unselected.opacity = mAnimation.current.opacity;
+	}
 
 	// Setup size for if themer didn't specify a size on unselected
 	if (mAnimation.animateSizeFromDefault) {
@@ -155,6 +217,7 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 		mAnimation.selected.size += getSize();
 		mAnimation.current.pos.x() = getPosition().x();
 		mAnimation.current.pos.y() = getPosition().y();
+		mAnimation.current.backgroundSize = mBackground.getSize();
 	}
 
 	// Catch Ninepatch image path change
@@ -163,6 +226,17 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 		if (elem->has("path")) {
 			mBackground.setImagePath(elem->get<std::string>("path"));
 			bThemeBackground = true;
+		}
+		if (elem->has("color")) {
+			mBackground.setEdgeColor(elem->get<unsigned int>("color"));
+			mBackground.setCenterColor(elem->get<unsigned int>("color"));
+		}
+		if (elem->has("color-center"))
+			mBackground.setCenterColor(elem->get<unsigned int>("color-center"));
+		if (elem->has("color-edge"))
+			mBackground.setEdgeColor(elem->get<unsigned int>("color-edge"));
+		if (elem->has("padding")) {
+			backgroundPadding = elem->get<Eigen::Vector2f>("padding").cwiseProduct(screen);
 		}
 	}
 

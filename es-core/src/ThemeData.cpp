@@ -62,6 +62,9 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("ninepatch", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
+		("padding", NORMALIZED_PAIR)
+		("color", COLOR)
+		("color-edge", COLOR)
 		("path", PATH)))
 	("datetime", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)

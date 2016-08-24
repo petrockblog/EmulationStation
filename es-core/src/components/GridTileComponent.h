@@ -10,6 +10,8 @@ class ImageComponent;
 struct KeyframeVariables {
 	Eigen::Vector2f size;
 	Eigen::Vector2f pos;
+	Eigen::Vector2f backgroundSize;
+	Eigen::Vector2f textContainerSize;
 	unsigned char opacity = 0xFF;
 	unsigned int color = 0xFFFFFFFF;
 };
@@ -23,6 +25,8 @@ struct CursorAnimation {
 	bool animateOpacity = true;
 	bool animateSize = false;				// Animates a size change when selected ( from theme->(gridtile_selected:size) )
 	bool animateSizeFromDefault = true;		// Animates the size from the default squaresize ( Theme->(gridtile:size) will override )
+	bool animateBackgroundSize = false;
+	bool animateTextContainer = false;
 
 	int zframe = 0;
 
@@ -71,9 +75,12 @@ private:
 	NinePatchComponent mBackground;
 	ComponentGrid mGrid;
 
+	Eigen::Vector2f backgroundPadding;
 	bool bThemeBackground = false;
 	bool bStretchImage = false;
 	bool bShow = true;
+
+	Eigen::Vector2f mTextContainerSize;
 
 	CursorAnimation mAnimation;
 	bool bSelected = false;
