@@ -3,8 +3,14 @@
 #include "platform.h"
 #include "Log.h"
 
-unsigned int getColorTween(unsigned int currentColor, unsigned int endColor, int frame, int endFrame)
+unsigned int getColorTween(unsigned int currentColor, unsigned int endColor, int frame, int endFrame, bool reverse)
 {
+	// Reversed frame
+	if (reverse) {
+		frame = endFrame - frame;
+		if (frame < 0) frame = 0;
+	}
+
 	// Get bytes of source and targer colors
 	unsigned char r = getRed(currentColor);
 	unsigned char g = getGreen(currentColor);
@@ -16,16 +22,16 @@ unsigned int getColorTween(unsigned int currentColor, unsigned int endColor, int
 	unsigned char ea = getAlpha(endColor);
 
 	// get Color differences and divide to get amount per frame
-	unsigned char tar = (unsigned char)(getColorDifference(r, er) / endFrame);
-	unsigned char tag = (unsigned char)(getColorDifference(g, eg) / endFrame);
-	unsigned char tab = (unsigned char)(getColorDifference(b, eb) / endFrame);
-	unsigned char tae = (unsigned char)(getColorDifference(a, ea) / endFrame);
+	int tar = (int)(getColorDifference(er, r) / endFrame);
+	int tag = (int)(getColorDifference(eg, g) / endFrame);
+	int tab = (int)(getColorDifference(eb, b) / endFrame);
+	int tae = (int)(getColorDifference(ea, a) / endFrame);
 
 	// Get per frame itteration
-	r += (tar * frame);
-	g += (tag * frame);
-	b += (tab * frame);
-	a += (tae * frame);
+	r = (unsigned char)(r + (tar * frame));
+	g = (unsigned char)(g + (tag * frame));
+	b = (unsigned char)(b + (tab * frame));
+	a = (unsigned char)(a + (tae * frame));
 
 	// shift back to color format and return (return target if at final frame)
 	if (frame == endFrame) return endColor;
@@ -70,7 +76,8 @@ unsigned int createColor(unsigned char r, unsigned char g, unsigned char b, unsi
 	return c;
 }
 
-unsigned char getColorDifference(unsigned char color, unsigned char compare) {
-	int diff = (compare - color);
+int getColorDifference(unsigned char color, unsigned char compare) {
+	int diff = (color - compare);
+	//if (diff < 0) diff *= -1;
 	return diff;
 }

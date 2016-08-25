@@ -93,6 +93,7 @@ void GridTileComponent::update(int deltaTime) {
 			mAnimation.current.backgroundSize.y() += (mAnimation.selected.backgroundSize.y()) / mAnimation.maxFrame;
 			mAnimation.current.textContainerSize.y() += (mAnimation.selected.textContainerSize.y() - mAnimation.unselected.textContainerSize.y()) / mAnimation.maxFrame;
 			mAnimation.current.pos -= ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
+			mAnimation.current.backgroundColor = getColorTween(mAnimation.unselected.backgroundColor, mAnimation.selected.backgroundColor, mAnimation.frame, mAnimation.maxFrame - 1);
 			mAnimation.zframe = 1;
 			mAnimation.frame++;
 			bAnimateChange = true;
@@ -106,6 +107,7 @@ void GridTileComponent::update(int deltaTime) {
 			mAnimation.current.backgroundSize -= (mAnimation.selected.backgroundSize) / mAnimation.maxFrame;
 			mAnimation.current.pos += ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
 			mAnimation.current.textContainerSize.y() -= (mAnimation.selected.textContainerSize.y() - mAnimation.unselected.textContainerSize.y()) / mAnimation.maxFrame;
+			mAnimation.current.backgroundColor = getColorTween(mAnimation.selected.backgroundColor, mAnimation.unselected.backgroundColor, mAnimation.frame - 1, mAnimation.maxFrame, true);
 			mAnimation.zframe = 0;
 			mAnimation.frame--;
 			bAnimateChange = true;
@@ -116,6 +118,10 @@ void GridTileComponent::update(int deltaTime) {
 
 	if (mAnimation.animateOpacity) setOpacity(mAnimation.current.opacity);
 	if (mAnimation.animateTextContainer) mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
+	if (mAnimation.animateBackgroundColor) {
+		mBackground.setCenterColor(mAnimation.current.backgroundColor);
+		mBackground.setEdgeColor(mAnimation.current.backgroundColor);
+	}
 	//if (mAnimation.animateColor) mImage->setColorShift(mAnimation.current.color);  // <- Doesn't work.
 	if (mAnimation.animateSize) {
 		setSize(mAnimation.current.size);
@@ -220,7 +226,17 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 		mAnimation.current.backgroundSize = mBackground.getSize();
 	}
 
-	// Catch Ninepatch image path change
+	// BACKGROUND :: SELECTED
+	elem = theme->getElement("grid", "gridtile_background_selected", "ninepatch");
+	if (elem) {
+		if (elem->has("color")) {
+			mAnimation.current.backgroundColor = elem->get<unsigned int>("color");
+			mAnimation.selected.backgroundColor = mAnimation.current.backgroundColor;
+			mAnimation.animateBackgroundColor = true;
+		}
+	}
+
+	// BACKGROUND :: UNSELECTED
 	elem = theme->getElement("grid", "gridtile_background", "ninepatch");
 	if (elem) {
 		if (elem->has("path")) {
@@ -228,6 +244,8 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 			bThemeBackground = true;
 		}
 		if (elem->has("color")) {
+			mAnimation.unselected.backgroundColor = (elem->get<unsigned int>("color"));
+			mAnimation.current.backgroundColor = mAnimation.unselected.backgroundColor;
 			mBackground.setEdgeColor(elem->get<unsigned int>("color"));
 			mBackground.setCenterColor(elem->get<unsigned int>("color"));
 		}

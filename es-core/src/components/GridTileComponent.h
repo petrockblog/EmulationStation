@@ -14,6 +14,7 @@ struct KeyframeVariables {
 	Eigen::Vector2f textContainerSize;
 	unsigned char opacity = 0xFF;
 	unsigned int color = 0xFFFFFFFF;
+	unsigned int backgroundColor = 0xFFFFFFFF;
 };
 
 struct CursorAnimation {
@@ -27,6 +28,7 @@ struct CursorAnimation {
 	bool animateSizeFromDefault = true;		// Animates the size from the default squaresize ( Theme->(gridtile:size) will override )
 	bool animateBackgroundSize = false;
 	bool animateTextContainer = false;
+	bool animateBackgroundColor = false;
 
 	int zframe = 0;
 
