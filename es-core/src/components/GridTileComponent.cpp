@@ -94,6 +94,7 @@ void GridTileComponent::update(int deltaTime) {
 			mAnimation.current.textContainerSize.y() += (mAnimation.selected.textContainerSize.y() - mAnimation.unselected.textContainerSize.y()) / mAnimation.maxFrame;
 			mAnimation.current.pos -= ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
 			mAnimation.current.backgroundColor = getColorTween(mAnimation.unselected.backgroundColor, mAnimation.selected.backgroundColor, mAnimation.frame, mAnimation.maxFrame - 1);
+			mAnimation.current.textColor = getColorTween(mAnimation.unselected.textColor, mAnimation.selected.textColor, mAnimation.frame, mAnimation.maxFrame - 1);
 			mAnimation.zframe = 1;
 			mAnimation.frame++;
 			bAnimateChange = true;
@@ -108,6 +109,7 @@ void GridTileComponent::update(int deltaTime) {
 			mAnimation.current.pos += ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
 			mAnimation.current.textContainerSize.y() -= (mAnimation.selected.textContainerSize.y() - mAnimation.unselected.textContainerSize.y()) / mAnimation.maxFrame;
 			mAnimation.current.backgroundColor = getColorTween(mAnimation.selected.backgroundColor, mAnimation.unselected.backgroundColor, mAnimation.frame - 1, mAnimation.maxFrame, true);
+			mAnimation.current.textColor = getColorTween(mAnimation.selected.textColor, mAnimation.unselected.textColor, mAnimation.frame - 1, mAnimation.maxFrame, true);
 			mAnimation.zframe = 0;
 			mAnimation.frame--;
 			bAnimateChange = true;
@@ -127,6 +129,7 @@ void GridTileComponent::update(int deltaTime) {
 		setSize(mAnimation.current.size);
 		setPosition(mAnimation.current.pos.x(), mAnimation.current.pos.y(), mAnimation.zframe);
 	}
+	if (mAnimation.animateTextColor) mText->setColor(mAnimation.current.textColor);
 }
 
 void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
@@ -255,6 +258,25 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 			mBackground.setEdgeColor(elem->get<unsigned int>("color-edge"));
 		if (elem->has("padding")) {
 			backgroundPadding = elem->get<Eigen::Vector2f>("padding").cwiseProduct(screen);
+		}
+	}
+
+	// TEXT :: SELECTED
+	elem = theme->getElement("grid", "gridtile_text_selected", "text");
+	if (elem) {
+		if (elem->has("color")) {
+			mAnimation.current.textColor = elem->get<unsigned int>("color");
+			mAnimation.selected.textColor = mAnimation.current.textColor;
+			mAnimation.unselected.textColor = mAnimation.current.textColor;
+			mAnimation.animateTextColor = true;
+		}
+	}
+
+	elem = theme->getElement("grid", "gridtile_text", "text");
+	if (elem) {
+		if (elem->has("color")) {
+			mAnimation.current.textColor = elem->get<unsigned int>("color");
+			mAnimation.unselected.textColor = mAnimation.current.textColor;
 		}
 	}
 

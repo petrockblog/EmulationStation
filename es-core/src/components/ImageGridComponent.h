@@ -429,6 +429,7 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		pTile->render(trans);
 	}
 
+
 	listRenderTitleOverlay(trans);
 
 	GuiComponent::renderChildren(trans);
@@ -503,22 +504,12 @@ void ImageGridComponent<T>::buildImages()
 			image.setResize(squareSize.x(), squareSize.y());
 			image.setImage("");
 
-			// Create Titles
-			mTitles.push_back(TextComponent(mWindow));
-			TextComponent& title = mTitles.at(y * gridSize.x() + x);
-
-			title.setPosition((squareSize.x() + padding.x()) * (x) + offset.x(), (squareSize.y() + padding.y()) * (y + 1.2) + offset.y());
-			title.setColor(0xEEEEFFBB);
-			title.setText("");
-			title.setAlignment(ALIGN_CENTER);
-			title.setFont(Font::get(FONT_SIZE_SMALL));
-
 			// Create tiles
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
 			Eigen::Vector2f newSquareSize = tile->getSize();	// Get new size because a square is built arount the image.
-			tile->setPosition((newSquareSize.x() + padding.x()) * (x + 0.0f) + offset.x() + (x * getMargin().x()), 
-				(newSquareSize.y() + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
+			tile->setPosition(((newSquareSize.x() + padding.x()) * (x + 0.0f)) + (x * getMargin().x()), 
+				(newSquareSize.y() + padding.y()) * (y + 0.0f) + (y * getMargin().y()));
 
 			if (bThemeLoaded) tile->setTheme(mTheme);
 			

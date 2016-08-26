@@ -15,6 +15,7 @@ struct KeyframeVariables {
 	unsigned char opacity = 0xFF;
 	unsigned int color = 0xFFFFFFFF;
 	unsigned int backgroundColor = 0xFFFFFFFF;
+	unsigned int textColor = 0xFFFFFFFF;
 };
 
 struct CursorAnimation {
@@ -29,6 +30,7 @@ struct CursorAnimation {
 	bool animateBackgroundSize = false;
 	bool animateTextContainer = false;
 	bool animateBackgroundColor = false;
+	bool animateTextColor = false;
 
 	int zframe = 0;
 
