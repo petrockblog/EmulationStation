@@ -256,6 +256,10 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 	// if cursor is getting close to the ends of range; update
 	if (getCursorIndex() > mCursorRange.max - 5 && getCursorIndex() < mCursorRange.min + 5) updateLoadRange();
 
+	// Update range if user is out of range and no loading/unloading is being performed.
+	if (bLoading == false && bUnloaded && getCursorIndex() > mCursorRange.max || getCursorIndex() < mCursorRange.min)
+		updateLoadRange();
+
 	// Load in Texture per cycle.
 	if (bLoading && mScrollTier < 1) {
 		// Make sure index is in range.
@@ -485,6 +489,8 @@ void ImageGridComponent<T>::buildImages()
 	Eigen::Vector2i gridSize = getGridSize();
 	Eigen::Vector2f squareSize = getMaxSquareSize();
 	Eigen::Vector2f padding = getPadding();
+	padding.x() = 0;
+	padding.y() = 0;
 
 	// attempt to center within our size
 	Eigen::Vector2f totalSize(gridSize.x() * (squareSize.x() + padding.x()), gridSize.y() * (squareSize.y() + padding.y()));

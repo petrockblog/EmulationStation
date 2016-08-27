@@ -48,5 +48,5 @@ protected:
 
 	int mNextLoad = 0;
 	int mLoadFrame = 0;
-	int mLoadFrameKey = 3;
+	int mLoadFrameKey = 2;
 };
