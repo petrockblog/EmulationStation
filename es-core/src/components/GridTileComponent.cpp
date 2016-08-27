@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "AnimationUtil.h"
 #include "Renderer.h"
+#include <boost/filesystem.hpp>
 
 using namespace Eigen;
 
@@ -243,7 +244,7 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	elem = theme->getElement("grid", "gridtile_background", "ninepatch");
 	if (elem) {
 		if (elem->has("path")) {
-			mBackground.setImagePath(elem->get<std::string>("path"));
+			setBackgroundPath(elem->get<std::string>("path"));
 			bThemeBackground = true;
 		}
 		if (elem->has("color")) {
@@ -316,5 +317,11 @@ void GridTileComponent::setUppercase(bool uppercase) {
 }
 
 void GridTileComponent::setBackgroundPath(const std::string& path) {
-	if (!bThemeBackground) mBackground.setImagePath(path);
+	if (boost::filesystem::exists(path) || ResourceManager::getInstance()->fileExists(path)) {
+		if (!bThemeBackground) mBackground.setImagePath(path);
+	}
+	else {
+		mBackground.setImagePath(":/frame.png");
+		return;
+	}
 }
