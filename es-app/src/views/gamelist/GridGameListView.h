@@ -1,6 +1,7 @@
 #pragma once
 
 #include "views/gamelist/ISimpleGameListView.h"
+#include "views/gamelist/DetailedGameListView.h"
 #include "components/ImageGridComponent.h"
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"

@@ -72,6 +72,8 @@ public:
 	int getEntryCount();
 	int getCursorIndex();
 
+	void setAlignmentCenter();
+
 	void reloadTextures();
 	void dynamicImageLoader();
 	void clearImageAt(int index);
@@ -123,6 +125,8 @@ private:
 
 	Eigen::Vector2i getGridSize() const
 	{
+		if (mDesiredGridSize.x() > 0) return mDesiredGridSize;
+
 		Eigen::Vector2f squareSize = getMaxSquareSize();
 		if (!mTiles.empty()) squareSize = mTiles[0]->getSize();
 
@@ -146,6 +150,7 @@ private:
 
 	float mGridMod = 1;						// What size the tiles will be multiplied by (1 = .1)
 	Eigen::Vector2f mMargin;
+	Eigen::Vector2i mDesiredGridSize;
 
 	const int MAX_TEXTURES = 80;			// The maximum amount of images that can be loaded at once
 	const int CURSOR_RANGE = 32;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
@@ -160,6 +165,7 @@ private:
 	int mPrevIndex = 0;
 	int mPrevScrollTier = 0;
 	int mCurrentDirection = MOVING_DOWN;	// Which direction the user is moving (Orientation based on grid, not index)
+	int mAlignment = ALIGN_LEFT;
 
 	std::vector<ImageComponent> mImages;	
 	std::vector<TextComponent> mTitles;
@@ -175,12 +181,19 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 	mEntriesDirty = true;
 	mGridMod = modGridSize;
 	setMargin(Eigen::Vector2f(24, 24));
+	mDesiredGridSize.x() = 0;
+	mDesiredGridSize.y() = 0;
 }
 
 template<typename T>
 ImageGridComponent<T>::~ImageGridComponent() {
 	mImages.clear();
 	mTiles.clear();
+}
+
+template<typename T>
+void ImageGridComponent<T>::setAlignmentCenter() {
+	mAlignment = ALIGN_CENTER;
 }
 
 template<typename T>
@@ -463,6 +476,16 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 		if (elem->has("size")) 
 			setMargin(elem->get<Eigen::Vector2f>("size").cwiseProduct(screen));
 	} 
+
+	// Grid Size (Columns and Rows)
+	elem = theme->getElement("grid", "gridRowsAndColumns", "container");
+	if (elem) {
+		if (elem->has("size")) {
+			Eigen::Vector2f DesiredGridSize = elem->get<Eigen::Vector2f>("size");
+			mDesiredGridSize.x() = (int)DesiredGridSize.x();
+			mDesiredGridSize.y() = (int)DesiredGridSize.y();
+		}
+	}
 }
 
 template<typename T>
@@ -497,6 +520,26 @@ void ImageGridComponent<T>::buildImages()
 	Eigen::Vector2f offset(mSize.x() - totalSize.x(), mSize.y() - totalSize.y());
 	offset /= 2;
 
+	// Adjust offset to 0 if set to align left.
+	if (mAlignment == ALIGN_LEFT) {
+		offset.x() = 0;
+		offset.y() = 0;
+	}
+
+	// Setup gridsize either by default or from theme
+	if (mDesiredGridSize.x() == 0) {
+		mDesiredGridSize.x() = 4;
+		mDesiredGridSize.y() = 2;
+	}
+
+	//gridSize = mDesiredGridSize;
+
+	// Get distance between tile points.
+	float tileDistanceX = (mSize.x() / mDesiredGridSize.x()) - getMargin().x();
+	float tileDistanceY = (mSize.y() / mDesiredGridSize.y()) - getMargin().y();
+	float smallestDistance = tileDistanceX;
+	if (tileDistanceY < tileDistanceX) smallestDistance = tileDistanceY;
+
 	for(int y = 0; y < gridSize.y(); y++)
 	{
 		for(int x = 0; x < gridSize.x(); x++)
@@ -514,8 +557,8 @@ void ImageGridComponent<T>::buildImages()
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
 			Eigen::Vector2f newSquareSize = tile->getSize();	// Get new size because a square is built arount the image.
-			tile->setPosition(((newSquareSize.x() + padding.x()) * (x + 0.0f)) + (x * getMargin().x()), 
-				(newSquareSize.y() + padding.y()) * (y + 0.0f) + (y * getMargin().y()));
+			tile->setPosition(((newSquareSize.x() + padding.x()) * (x + 0.0f)) + offset.x() + (x * getMargin().x()), 
+				(newSquareSize.y() + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
 
 			if (bThemeLoaded) tile->setTheme(mTheme);
 			

@@ -232,6 +232,7 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 
 	// BACKGROUND :: SELECTED
 	elem = theme->getElement("grid", "gridtile_background_selected", "ninepatch");
+	if (!elem) elem = theme->getElement("grid", "gridtile_background_selected", "image");
 	if (elem) {
 		if (elem->has("color")) {
 			mAnimation.current.backgroundColor = elem->get<unsigned int>("color");
@@ -242,6 +243,7 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 
 	// BACKGROUND :: UNSELECTED
 	elem = theme->getElement("grid", "gridtile_background", "ninepatch");
+	if (!elem) elem = theme->getElement("grid", "gridtile_background", "image");
 	if (elem) {
 		if (elem->has("path")) {
 			setBackgroundPath(elem->get<std::string>("path"));
