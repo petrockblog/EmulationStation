@@ -544,7 +544,13 @@ void ImageGridComponent<T>::buildImages()
 	float tileDistanceX = (mSize.x() / mDesiredGridSize.x()) - getMargin().x();
 	float tileDistanceY = (mSize.y() / mDesiredGridSize.y()) - getMargin().y();
 	float smallestDistance = tileDistanceX;
-	if (tileDistanceY < tileDistanceX) smallestDistance = tileDistanceY;
+	bool smallestIsX = true;
+	if (tileDistanceY < tileDistanceX) {
+		smallestDistance = tileDistanceY;
+		smallestIsX = false;
+	}
+
+	float imgExpandPerc = smallestDistance * .01;
 
 	for(int y = 0; y < gridSize.y(); y++)
 	{
@@ -561,10 +567,11 @@ void ImageGridComponent<T>::buildImages()
 
 			// Create tiles
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
-			tile->setImageSize(squareSize.x(), squareSize.y());
+			tile->setImageSize(squareSize.x(), squareSize.y(), smallestDistance, 0);
+			//tile->setImageResize(smallestDistance - getMargin().x(), 0);
 			Eigen::Vector2f newSquareSize = tile->getSize();	// Get new size because a square is built arount the image.
-			tile->setPosition(((newSquareSize.x() + padding.x()) * (x + 0.0f)) + offset.x() + (x * getMargin().x()), 
-				(newSquareSize.y() + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
+			tile->setPosition(((tileDistanceX + padding.x()) * (x + 0.0f)) + offset.x() + (x * getMargin().x()), 
+				(tileDistanceY + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
 
 			if (bThemeLoaded) tile->setTheme(mTheme);
 			

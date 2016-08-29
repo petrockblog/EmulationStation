@@ -59,7 +59,8 @@ public:
 
 	void setImage(const std::shared_ptr<TextureResource>& texture);
 	void setImage(std::string path, bool tile = false);
-	void setImageSize(float w, float h, bool fit = false);
+	void setImageSize(float w, float h, float enlargeScaleX = 0, float enlargeScaleY = 0);
+	void setImageResize(float w, float h);
 	void setImageToFit(bool fit);
 
 	void setText(const std::string& text);

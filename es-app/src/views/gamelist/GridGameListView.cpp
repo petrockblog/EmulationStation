@@ -242,7 +242,6 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 void GridGameListView::updateInfoPanel()
 {
 	FileData* file = (mGrid.size() == 0 || mGrid.isScrolling()) ? NULL : mGrid.getSelectedObject();
-	LOG(LogError) << "Index = " << mGrid.getCursorIndex() << " File Dev: " << file->metadata.get("developer");
 
 	bool fadingOut;
 	if (file == NULL)

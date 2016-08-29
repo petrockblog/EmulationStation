@@ -65,14 +65,19 @@ void GridTileComponent::onPositionChanged() {
 	mGrid.setPosition(mPosition);
 }
 
-void GridTileComponent::setImageSize(float w, float h, bool fit) {
-	mImage->setSize(w, h);
-	mImage->setMaxSize(w, h);
+void GridTileComponent::setImageSize(float w, float h, float enlargeScaleX, float enlargeScaleY) {
+	mImage->setResize(w, h);
+	if (enlargeScaleX > 0 || enlargeScaleY > 0) mImage->setResize(enlargeScaleX, enlargeScaleY);
+	//mImage->setMaxSize(w, h);
 	mTextContainerSize.x() = w;
 	if (mAnimation.animateTextContainer) mTextContainerSize.y() = mAnimation.unselected.textContainerSize.y();
 	setSize(w, h);
 
 	//onSizeChanged();
+}
+
+void GridTileComponent::setImageResize(float w, float h) {
+	mImage->setResize(w, h);
 }
 
 void GridTileComponent::setImageToFit(bool fit) {
