@@ -5,6 +5,9 @@
 #include "components/ImageGridComponent.h"
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
+#include "components/ScrollableContainer.h"
+#include "components/RatingComponent.h"
+#include "components/DateTimeComponent.h"
 #include "SystemData.h"
 #include <stack>
 
@@ -50,4 +53,28 @@ protected:
 	int mNextLoad = 0;
 	int mLoadFrame = 0;
 	int mLoadFrameKey = 2;
+
+private:
+	void updateInfoPanel();
+	void initMDLabels();
+	void initMDValues();
+
+	ScrollableContainer mDescContainer;
+	TextComponent mDescription;
+
+	ImageComponent mImage;
+
+	TextComponent mLblRating, mLblReleaseDate, mLblDeveloper, mLblPublisher, mLblGenre, mLblPlayers, mLblLastPlayed, mLblPlayCount;
+
+	RatingComponent mRating;
+	DateTimeComponent mReleaseDate;
+	TextComponent mDeveloper;
+	TextComponent mPublisher;
+	TextComponent mGenre;
+	TextComponent mPlayers;
+	DateTimeComponent mLastPlayed;
+	TextComponent mPlayCount;
+
+	std::vector<TextComponent*> getMDLabels();
+	std::vector<GuiComponent*> getMDValues();
 };

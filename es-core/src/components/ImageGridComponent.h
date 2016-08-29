@@ -71,6 +71,7 @@ public:
 
 	int getEntryCount();
 	int getCursorIndex();
+	FileData* getSelectedObject();
 
 	void setAlignmentCenter();
 
@@ -227,6 +228,11 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
 	mTotalEntrys++;
+}
+
+template<typename T>
+FileData* ImageGridComponent<T>::getSelectedObject() {
+	return mEntries.at(getCursorIndex()).object;
 }
 
 template<typename T>
