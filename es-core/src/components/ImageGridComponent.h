@@ -518,8 +518,6 @@ void ImageGridComponent<T>::buildImages()
 	Eigen::Vector2i gridSize = getGridSize();
 	Eigen::Vector2f squareSize = getMaxSquareSize();
 	Eigen::Vector2f padding = getPadding();
-	padding.x() = 0;
-	padding.y() = 0;
 
 	// attempt to center within our size
 	Eigen::Vector2f totalSize(gridSize.x() * (squareSize.x() + padding.x()), gridSize.y() * (squareSize.y() + padding.y()));
@@ -538,8 +536,6 @@ void ImageGridComponent<T>::buildImages()
 		mDesiredGridSize.y() = 2;
 	}
 
-	//gridSize = mDesiredGridSize;
-
 	// Get distance between tile points.
 	float tileDistanceX = (mSize.x() / mDesiredGridSize.x()) - getMargin().x();
 	float tileDistanceY = (mSize.y() / mDesiredGridSize.y()) - getMargin().y();
@@ -551,6 +547,19 @@ void ImageGridComponent<T>::buildImages()
 	}
 
 	float imgExpandPerc = smallestDistance * .01;
+	float absSmallestX = std::abs(squareSize.x() - smallestDistance);
+	float absSmallestY = std::abs(squareSize.y() - smallestDistance);
+
+	// Expand Tile until it hits the margin
+	if (smallestIsX) {
+		// Stretch image to x and add percentage to y based on aspect ratio
+		squareSize.x() += absSmallestX;
+		squareSize.y() += absSmallestY * squareSize.y() / squareSize.x();
+	} else {
+		// Stretch image to y then add to x based on aspect ratio
+		squareSize.x() += absSmallestX * squareSize.x() / squareSize.y();
+		squareSize.y() += absSmallestY;
+	}
 
 	for(int y = 0; y < gridSize.y(); y++)
 	{
@@ -567,11 +576,10 @@ void ImageGridComponent<T>::buildImages()
 
 			// Create tiles
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
-			tile->setImageSize(squareSize.x(), squareSize.y(), smallestDistance, 0);
-			//tile->setImageResize(smallestDistance - getMargin().x(), 0);
+			tile->setImageSize(squareSize.x(), squareSize.y());
 			Eigen::Vector2f newSquareSize = tile->getSize();	// Get new size because a square is built arount the image.
-			tile->setPosition(((tileDistanceX + padding.x()) * (x + 0.0f)) + offset.x() + (x * getMargin().x()), 
-				(tileDistanceY + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
+			tile->setPosition(((newSquareSize.x() + padding.x()) * (x + 0.0f)) + offset.x() + (x * getMargin().x()), 
+				(newSquareSize.y() + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
 
 			if (bThemeLoaded) tile->setTheme(mTheme);
 			
