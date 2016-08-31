@@ -5,7 +5,7 @@
 
 #if defined(__linux__)
     #ifdef _RPI_
-        const char * VolumeControl::mixerName = "PCM";
+        const char * VolumeControl::mixerName = "Digital";
     #else
     	const char * VolumeControl::mixerName = "Master";
     #endif
