@@ -26,7 +26,7 @@ private:
 
 	std::shared_ptr<SwitchComponent> systemEnable_switch;
 
-	std::shared_ptr<SliderComponent> gamegrid_tilesize;
+	std::shared_ptr<ViewList> gamegrid_size;
 	
 	SystemData* mSystem;
 

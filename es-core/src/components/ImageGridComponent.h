@@ -84,14 +84,6 @@ public:
 private:
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
 	{
-		// Get GameGrid TileSize from Settings
-		float gamegrid_sizemod = 1;
-
-		// Mod the size multiplier based on GridMod 5 -> .5
-		float modSize = 0;
-		if (mGridMod > 0) modSize = mGridMod / 10;
-		gamegrid_sizemod += modSize;
-
 		Eigen::Vector2f aspect(1, 1);
 
 		if(tex)
@@ -104,7 +96,7 @@ private:
 				aspect[1] = (float)texSize.y() / texSize.x();
 		}
 
-		return Eigen::Vector2f(gamegrid_sizemod * (156 * aspect.x()), gamegrid_sizemod * (156 * aspect.y() ) );
+		return Eigen::Vector2f((156 * aspect.x()), (156 * aspect.y() ) );
 	};
 
 	Eigen::Vector2f getMaxSquareSize() const
@@ -180,10 +172,10 @@ template<typename T>
 ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window)
 {
 	mEntriesDirty = true;
-	mGridMod = modGridSize;
 	setMargin(Eigen::Vector2f(24, 24));
 	mDesiredGridSize.x() = 0;
 	mDesiredGridSize.y() = 0;
+	mGridMod = modGridSize;
 }
 
 template<typename T>
@@ -484,7 +476,10 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 	} 
 
 	// Grid Size (Columns and Rows)
+	// Get the element acording to what size the user specified
 	elem = theme->getElement("grid", "gridRowsAndColumns", "container");
+	if (mGridMod == 0) elem = theme->getElement("grid", "gridRowsAndColumns-small", "container");
+	if (mGridMod == 2) elem = theme->getElement("grid", "gridRowsAndColumns-big", "container");
 	if (elem) {
 		if (elem->has("size")) {
 			Eigen::Vector2f DesiredGridSize = elem->get<Eigen::Vector2f>("size");

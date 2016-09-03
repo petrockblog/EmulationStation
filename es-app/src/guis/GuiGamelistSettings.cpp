@@ -52,11 +52,17 @@ GuiGamelistSettings::GuiGamelistSettings(Window* window, SystemData* system) : G
 	mMenu.addWithLabel("VIEW MODE", mViewList);
 
 	// GameGrid Tile Size ==============================================
-	gamegrid_tilesize = std::make_shared<SliderComponent>(mWindow, 0.f, 15.f, 1.f, "p");
-	gamegrid_tilesize->setValue((float)(system->getGridModSize()));
-	mMenu.addWithLabel("GRID TILE SIZE MOD", gamegrid_tilesize);
+	int gridsize = (int)system->getGridModSize();
+	if (gridsize > 2) gridsize = 2;
+	gamegrid_size = std::make_shared<ViewList>(mWindow, "GRID SIZE", false);
 
+	gamegrid_size->add("SMALL", "SMALL", 0 == gridsize);
+	gamegrid_size->add("NORMAL", "NORMAL", 1 == gridsize);
+	gamegrid_size->add("BIG", "BIG", 2 == gridsize);
 
+	mMenu.addWithLabel("GRID SIZE", gamegrid_size);
+
+	// VERSION AND FOOTER TEXT ==========================================
 	mVersion.setFont(Font::get(FONT_SIZE_SMALL));
 	mVersion.setColor(0x0044FFFF);
 	mVersion.setText("Additional settings in Menu->System->Emulators");
@@ -79,8 +85,14 @@ GuiGamelistSettings::~GuiGamelistSettings() {
 	if (mSaveLevel > 0) {
 		// Save Things
 		mSystem->SystemData::setSystemViewMode(mViewList->getSelected());
-		mSystem->setGridModSize(gamegrid_tilesize->getValue());
 		mSystem->setSystemEnabled(systemEnable_switch->getState());
+
+		// grab gridsize and convert to a simple int
+		int newsize = 1;
+		if (gamegrid_size->getSelected() == "SMALL") newsize = 0;
+		if (gamegrid_size->getSelected() == "BIG") newsize = 2;
+
+		mSystem->setGridModSize(newsize);
 
 		int saveinfo = SystemData::saveConfig();
 
