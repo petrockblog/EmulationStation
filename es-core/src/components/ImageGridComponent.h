@@ -549,8 +549,8 @@ void ImageGridComponent<T>::buildImages()
 		// IF TILES ARE ALREADY TOO BIG, SHRINK THEM:
 		if (smallestIsX) {
 			// Stretch image to x and add percentage to y based on aspect ratio
-			squareSize.x() -= absSmallestX;
 			squareSize.y() -= absSmallestY * squareSize.y() / squareSize.x();
+			squareSize.x() -= absSmallestX;
 		}
 		else {
 			// Stretch image to y then add to x based on aspect ratio
@@ -561,8 +561,8 @@ void ImageGridComponent<T>::buildImages()
 		// IF TILES ARE NOT BIG ENOUGH, EXPAND THEM:
 		if (smallestIsX) {
 			// Stretch image to x and add percentage to y based on aspect ratio
-			squareSize.x() += absSmallestX;
 			squareSize.y() += absSmallestY * squareSize.y() / squareSize.x();
+			squareSize.x() += absSmallestX;
 		}
 		else {
 			// Stretch image to y then add to x based on aspect ratio
