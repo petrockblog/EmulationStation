@@ -42,6 +42,10 @@ void GridTileComponent::onSizeChanged()
 	if (mAnimation.animateTextContainer)
 		mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
 
+	if (bStretchImage) {
+		mImage->setSize(mSize.x(), mGrid.getRowHeight(0));
+	}
+
 	Eigen::Vector2f newGridSize;
 	newGridSize.x() = mGrid.getSize().x();
 	newGridSize.y() = mImage->getSize().y() + mGrid.getRowHeight(1);
@@ -55,10 +59,6 @@ void GridTileComponent::onSizeChanged()
 		mBackground.fitTo(newGridSize, Vector3f(mPosition.x(), mPosition.y(), 0), backgroundPadding);
 
 	mText->setSize(mSize.x(), mGrid.getRowHeight(1) * .9f);
-
-	if (bStretchImage) {
-		mImage->setSize(mSize.x(), mGrid.getRowHeight(0));
-	}
 }
 
 void GridTileComponent::onPositionChanged() {
