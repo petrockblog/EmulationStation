@@ -6,8 +6,39 @@ change or become broken later.  Please be sure to post any problems in this proj
 issues.
 
 
-Quick Reference Guide
-=====================
+Quick Overview Guide
+====================
+**Detailed List View MetaData is now available in gridview**
+
+Display current selected game.
+```
+<text name="md_title"> <ALL>
+```
+
+Setup for the grid as a whole.
+```
+<text name="md_grid"> <pos> <size>						// Size and position for the whole grid.  pos origin is 0,0.
+<container name="md_grid_margin"> <size>				// The margin between grid tiles.
+<container name="gridRowsAndColumns"> <size> 			// sets the amount of rows and columns to fit into grid space.
+<container name="gridRowsAndColumns-small"> <size>		// Amount of rows/columns when user-defined size is small
+<container name="gridRowsAndColumns-big"> <size>		// Amount of rows/columns when user-defined size is big
+```
+
+Gridtile modification
+```
+<image name="gridtile"> <size> <color>					// Basic gridtile properties
+<image name="gridtile_selected"> <size> <color>			// When selected
+<text name="gridtile_text"> <ALL>
+<container name="gridtile_textRow"> <size> 				// Adjusts height of tile's text row.
+<container name="gridtile_textRow_selected"> <size>	
+
+<image name="gridtile_background"> <path> <color>
+<image name="gridtile_background_selected"> <path> <color>
+```
+
+
+Full Use Guide
+==============
 
 Here is a quick list of all Added theme options GridView has and that do something
 
@@ -58,5 +89,10 @@ Here is a quick list of all Added theme options GridView has and that do somethi
 	<size>
 	<pos>
 </text>
+
+// Set how many rows and columns a grid has
+<container name="gridRowsAndColumns"> [allows: -small, -big]
+	<size>column row</size>
+</container>
 ```
 
