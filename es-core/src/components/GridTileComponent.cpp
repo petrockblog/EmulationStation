@@ -94,7 +94,7 @@ void GridTileComponent::update(int deltaTime) {
 	if (bSelected) {
 		if (mAnimation.frame < mAnimation.maxFrame) {
 			mAnimation.current.opacity += (mAnimation.selected.opacity - mAnimation.unselected.opacity) / mAnimation.maxFrame;
-			mAnimation.current.color = getColorTween(mAnimation.unselected.color, mAnimation.selected.color, mAnimation.frame, mAnimation.maxFrame);
+			mAnimation.current.color = getColorTween(mAnimation.unselected.color, mAnimation.selected.color, mAnimation.frame, mAnimation.maxFrame - 1);
 			mAnimation.current.size += (mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame;
 			mAnimation.current.backgroundSize.y() += (mAnimation.selected.backgroundSize.y()) / mAnimation.maxFrame;
 			mAnimation.current.textContainerSize.y() += (mAnimation.selected.textContainerSize.y() - mAnimation.unselected.textContainerSize.y()) / mAnimation.maxFrame;
@@ -109,7 +109,7 @@ void GridTileComponent::update(int deltaTime) {
 	else {
 		if (mAnimation.frame > 0) {
 			mAnimation.current.opacity -= (mAnimation.selected.opacity - mAnimation.unselected.opacity) / mAnimation.maxFrame;
-			mAnimation.current.color = getColorTween(mAnimation.selected.color, mAnimation.unselected.color, mAnimation.frame, mAnimation.maxFrame);
+			mAnimation.current.color = getColorTween(mAnimation.selected.color, mAnimation.unselected.color, mAnimation.frame - 1, mAnimation.maxFrame, true);
 			mAnimation.current.size -= (mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame;
 			mAnimation.current.backgroundSize -= (mAnimation.selected.backgroundSize) / mAnimation.maxFrame;
 			mAnimation.current.pos += ((mAnimation.selected.size - mAnimation.unselected.size) / mAnimation.maxFrame) / 2;
@@ -124,13 +124,13 @@ void GridTileComponent::update(int deltaTime) {
 
 	if (!bAnimateChange) return;
 
-	if (mAnimation.animateOpacity) setOpacity(mAnimation.current.opacity);
+	//if (mAnimation.animateOpacity) setOpacity(mAnimation.current.opacity);
 	if (mAnimation.animateTextContainer) mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
 	if (mAnimation.animateBackgroundColor) {
 		mBackground.setCenterColor(mAnimation.current.backgroundColor);
 		mBackground.setEdgeColor(mAnimation.current.backgroundColor);
 	}
-	//if (mAnimation.animateColor) mImage->setColorShift(mAnimation.current.color);  // <- Doesn't work.
+	if (mAnimation.animateColor) mImage->setColorShift(mAnimation.current.color);  // <- Doesn't work.
 	if (mAnimation.animateSize) {
 		setSize(mAnimation.current.size);
 		setPosition(mAnimation.current.pos.x(), mAnimation.current.pos.y(), mAnimation.zframe);
