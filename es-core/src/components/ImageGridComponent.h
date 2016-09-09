@@ -613,7 +613,7 @@ void ImageGridComponent<T>::updateImages()
 		{
 			tile->setSelected(false);
 			tile->hide();
-			break;
+			continue;
 		}
 
 		tile->show();
