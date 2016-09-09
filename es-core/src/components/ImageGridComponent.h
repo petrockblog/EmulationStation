@@ -611,8 +611,9 @@ void ImageGridComponent<T>::updateImages()
 		auto tile = mTiles.at(img);
 		if(i >= (unsigned int)size())
 		{
+			tile->setSelected(false);
 			tile->hide();
-			continue;
+			break;
 		}
 
 		tile->show();
@@ -621,6 +622,7 @@ void ImageGridComponent<T>::updateImages()
 		if(i == mCursor)
 		{
 			tile->setSelected(true);
+			tile->show();
 		}else{
 			tile->setSelected(false);
 		}
