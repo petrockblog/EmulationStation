@@ -159,8 +159,7 @@ private:
 	int mPrevScrollTier = 0;
 	int mCurrentDirection = MOVING_DOWN;	// Which direction the user is moving (Orientation based on grid, not index)
 	int mAlignment = ALIGN_LEFT;
-
-	std::vector<ImageComponent> mImages;	
+	
 	std::vector<TextComponent> mTitles;
 	std::vector< std::shared_ptr<GridTileComponent> > mTiles;
 
@@ -180,7 +179,6 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 
 template<typename T>
 ImageGridComponent<T>::~ImageGridComponent() {
-	mImages.clear();
 	mTiles.clear();
 }
 
@@ -459,10 +457,6 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 		mTitles[i].applyTheme(theme, "grid", "mdGameTitle", ALL);
 	}
 
-	for (int i = 0; i < mImages.size(); i++) {
-		mImages[i].applyTheme(theme, "grid", "mdGameImage", ALL);
-	}
-
 	// Keep theme data pointer.
 	mTheme = theme;
 	bThemeLoaded = true;
@@ -507,7 +501,6 @@ void ImageGridComponent<T>::onSizeChanged()
 template<typename T>
 void ImageGridComponent<T>::buildImages()
 {
-	mImages.clear();
 	mTiles.clear();
 
 	Eigen::Vector2i gridSize = getGridSize();
@@ -576,15 +569,6 @@ void ImageGridComponent<T>::buildImages()
 	{
 		for(int x = 0; x < gridSize.x(); x++)
 		{
-			// Create Image
-			mImages.push_back(ImageComponent(mWindow));
-			ImageComponent& image = mImages.at(y * gridSize.x() + x);
-
-			image.setPosition((squareSize.x() + padding.x()) * (x + 0.5f) + offset.x(), (squareSize.y() + padding.y()) * (y + 0.5f) + offset.y());
-			image.setOrigin(0.5f, 0.5f);
-			image.setResize(squareSize.x(), squareSize.y());
-			image.setImage("");
-
 			// Create tiles
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
@@ -603,7 +587,7 @@ void ImageGridComponent<T>::buildImages()
 template<typename T>
 void ImageGridComponent<T>::updateImages()
 {
-	if(mImages.empty())
+	if (mTiles.empty())
 		buildImages();
 
 	Eigen::Vector2i gridSize = getGridSize();
