@@ -96,7 +96,7 @@ void GridGameListView::setCursor(FileData* file)
 {
 	if(!mGrid.setCursor(file) && mGrid.getEntryCount() > 0)
 	{
-		//populateList(file->getParent()->getChildren());
+		populateList(file->getParent()->getChildren());
 		mGrid.setCursor(file);
 		mTitle.setText(file->getName());
 	}
@@ -147,7 +147,8 @@ void GridGameListView::update(int deltatime) {
 void GridGameListView::populateList(const std::vector<FileData*>& files)
 {
 	// If list is already populated, return.
-	if (mGrid.getEntryCount() < files.size()) {
+	if (mGrid.getEntryCount() != files.size()) {
+		mGrid.clear();
 		// Load in gamelist and load in first game's art.
 		int b = 0;
 		for (auto it = files.begin(); it != files.end(); it++) {

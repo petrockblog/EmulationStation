@@ -111,7 +111,7 @@ public:
 		onCursorChanged(CURSOR_STOPPED);
 	}
 
-	void clear()
+	virtual void clear()
 	{
 		mEntries.clear();
 		mCursor = 0;

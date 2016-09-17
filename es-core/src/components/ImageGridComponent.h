@@ -66,6 +66,8 @@ public:
 	
 	void setModSize(float mod);
 
+	void clear() override;
+
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
@@ -184,6 +186,12 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 template<typename T>
 ImageGridComponent<T>::~ImageGridComponent() {
 	mTiles.clear();
+}
+
+template<typename T>
+void ImageGridComponent<T>::clear() {
+	mTotalEntrys = 0;
+	IList<ImageGridData, T>::clear();
 }
 
 template<typename T>
