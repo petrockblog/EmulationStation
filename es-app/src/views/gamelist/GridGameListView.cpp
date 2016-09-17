@@ -394,12 +394,14 @@ std::vector<GuiComponent*> GridGameListView::getMDValues()
 void GridGameListView::onFocusGained() {
 	mGrid.updateLoadRange();
 	mGrid.reloadTextures();
+	mGrid.setVisible(true);
 	bFocused = true;
 }
 
 void GridGameListView::onFocusLost() {
 	if (mGrid.getEntryCount() > 0)
 		mGrid.unloadTextures(true);
+	mGrid.setVisible(false);
 	bFocused = false;
 }
 
