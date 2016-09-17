@@ -8,6 +8,7 @@
 #include "components/NinePatchComponent.h"
 #include "components/GridTileComponent.h"
 #include "Settings.h"
+#include "Renderer.h"
 #include "Log.h"
 
 struct ImageGridData
@@ -41,6 +42,7 @@ protected:
 	using IList<ImageGridData, T>::listRenderFileTitle;
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
+	using IList<ImageGridData, T>::mPosition;
 	using IList<ImageGridData, T>::mCursor;
 	using IList<ImageGridData, T>::Entry;
 	using IList<ImageGridData, T>::mWindow;
@@ -68,6 +70,7 @@ public:
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 	void applyThemeToChildren(const std::shared_ptr<ThemeData>& theme);
+	void setVisible(bool visible);
 
 	int getEntryCount();
 	int getCursorIndex();
@@ -165,6 +168,7 @@ private:
 
 	std::shared_ptr<ThemeData> mTheme;
 	bool bThemeLoaded = false;
+	bool bVisible = false;
 };
 
 template<typename T>
@@ -411,8 +415,16 @@ void ImageGridComponent<T>::setModSize(float mod) {
 }
 
 template<typename T>
+void ImageGridComponent<T>::setVisible(bool visible) {
+	bVisible = visible;
+}
+
+template<typename T>
 void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
+	// If this grid isn't in focus, return and do not render
+	if (!bVisible) return;
+
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 
 	if(mEntriesDirty)
@@ -427,6 +439,7 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	bool bSelected = false;
 	for (auto ti = mTiles.begin(); ti != mTiles.end(); ti++) {
 		if (i > getEntryCount() - 1) break;
+		// Keep the selected tile and render it later (so it draws on top others)
 		if ((*ti)->isSelected()) {
 			i++;
 			pTile = (*ti);
@@ -582,6 +595,7 @@ void ImageGridComponent<T>::buildImages()
 
 		}
 	}
+
 }
 
 template<typename T>

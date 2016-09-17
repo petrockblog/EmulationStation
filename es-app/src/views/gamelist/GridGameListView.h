@@ -59,6 +59,8 @@ private:
 	void initMDLabels();
 	void initMDValues();
 
+	bool bFocused = false;
+
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;
 
