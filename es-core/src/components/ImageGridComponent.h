@@ -66,7 +66,7 @@ public:
 	
 	void setModSize(float mod);
 
-	void clear() override;
+	void clear(bool clearall = false) override;
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
@@ -144,8 +144,6 @@ private:
 	bool mEntriesDirty;
 	bool mGameGrid = true;
 
-	int mTotalEntrys = 0;					// How many entries are loaded in from gamelist
-
 	float mGridMod = 1;						// What size the tiles will be multiplied by (1 = .1)
 	Eigen::Vector2f mMargin;
 	Eigen::Vector2i mDesiredGridSize;
@@ -189,8 +187,10 @@ ImageGridComponent<T>::~ImageGridComponent() {
 }
 
 template<typename T>
-void ImageGridComponent<T>::clear() {
-	mTotalEntrys = 0;
+void ImageGridComponent<T>::clear(bool clearall) {
+	unloadTextures(clearall);
+	mEntriesDirty = true;
+	
 	IList<ImageGridData, T>::clear();
 }
 
@@ -201,7 +201,7 @@ void ImageGridComponent<T>::setAlignmentCenter() {
 
 template<typename T>
 int ImageGridComponent<T>::getEntryCount() {
-	return mTotalEntrys;
+	return mEntries.size();
 }
 
 template<typename T>
@@ -214,7 +214,6 @@ void ImageGridComponent<T>::remove() {
 	static_cast<IList< ImageGridData, T >*>(this)->pop_back();
 
 	mEntriesDirty = true;
-	mTotalEntrys--;
 }
 
 template<typename T>
@@ -229,7 +228,6 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	entry.data.title = std::make_shared<TextComponent>(mWindow, name, Font::get(FONT_SIZE_MEDIUM), 0xAAAAAAFF);
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
-	mTotalEntrys++;
 }
 
 template<typename T>
@@ -245,21 +243,23 @@ void ImageGridComponent<T>::unloadTextures(bool unloadAll) {
 			// Ignore textures currently in range of cursor
 			if (!unloadAll)
 				if ((*i) > mCursorRange.min && (*i) < mCursorRange.max) continue;
+			if ((*i) > mEntries.size()) continue;
 			clearImageAt((*i));
 			i = mLoadedTextureList.erase(i);
 		}
 	}
 
 	// Phase 2: If there are still too many textures.  Just remove all
-	if (mTotalLoadedTextures > MAX_TEXTURES) {
+	if (mLoadedTextureList.size() > MAX_TEXTURES) {
 		// If there are too many textures loaded, the user is likely out of
 		// Cursor range, so just delete every image.
-		for (int i = 1; i < mTotalEntrys - 1; i++)
+		for (int i = 1; i < getEntryCount() - 1; i++)
 			clearImageAt(i);
 		mLoadedTextureList.clear();
 	}
 
 	bLoading = true;		// Reload images now.
+	bUnloaded = false;
 }
 
 template<typename T>
@@ -272,7 +272,7 @@ void ImageGridComponent<T>::reloadTextures() {
 
 template<typename T>
 void ImageGridComponent<T>::dynamicImageLoader() {
-	if (mTotalLoadedTextures > MAX_TEXTURES) unloadTextures();
+	if (mLoadedTextureList.size() > MAX_TEXTURES) unloadTextures();
 
 	// if cursor is getting close to the ends of range; update
 	if (getCursorIndex() > mCursorRange.max - 5 && getCursorIndex() < mCursorRange.min + 5) updateLoadRange();
@@ -285,7 +285,7 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 	if (bLoading && mScrollTier < 1) {
 		// Make sure index is in range.
 		if (mCurrentLoad < getEntryCount() && mCurrentLoad > 0) {
-			if (mTotalLoadedTextures > MAX_TEXTURES) unloadTextures();
+			if (mLoadedTextureList.size() > MAX_TEXTURES) unloadTextures();
 			static_cast<IList <ImageGridData, T >*>(this)->loadTexture(mCurrentLoad);
 		}
 
@@ -312,7 +312,7 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 			break;
 
 		case MOVING_UP:
-			if (mCursorRange.max < mTotalEntrys) {
+			if (mCursorRange.max < getEntryCount()) {
 				for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
 					if ((*i) <= mCursorRange.max) break;
 					clearImageAt((*i));
@@ -351,10 +351,10 @@ void ImageGridComponent<T>::updateLoadRange() {
 
 	// get max [ will try to be just the viewable area based on mod size ]
 	int rmax = cursor + int(CURSOR_RANGE / 2);
-	if (rmax > mTotalEntrys) rmax = mTotalEntrys - 1;
+	if (rmax > getEntryCount()) rmax = getEntryCount() - 1;
 
 	// if there is only one game, set range 0-0
-	if (mTotalEntrys == 1) rmax = 0;
+	if (getEntryCount() == 1) rmax = 0;
 
 	mCursorRange.min = rmin;
 	mCursorRange.max = rmax;
@@ -640,7 +640,6 @@ void ImageGridComponent<T>::updateImages()
 
 		tile->show();
 
-		Eigen::Vector2f squareSize = getSquareSize(mEntries.at(i).data.texture);
 		if(i == mCursor)
 		{
 			tile->setSelected(true);
@@ -648,7 +647,6 @@ void ImageGridComponent<T>::updateImages()
 		}else{
 			tile->setSelected(false);
 		}
-
 		tile->setBackgroundPath(":/frame.png");
 		tile->setImage(mEntries.at(i).data.texture);
 		tile->setText(mEntries.at(i).name);

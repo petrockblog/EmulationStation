@@ -148,13 +148,17 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 {
 	// If list is already populated, return.
 	if (mGrid.getEntryCount() != files.size()) {
-		mGrid.clear();
+		mGrid.clear(true);
 		// Load in gamelist and load in first game's art.
 		int b = 0;
 		for (auto it = files.begin(); it != files.end(); it++) {
 			mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it, b == 0);
 			b++;
 		}
+
+		// Reload textures after folder change
+		mGrid.reloadTextures();
+		mLoadFrame = mLoadFrameKey;
 	}
 }
 
