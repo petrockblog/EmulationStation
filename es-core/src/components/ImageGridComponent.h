@@ -528,17 +528,6 @@ void ImageGridComponent<T>::buildImages()
 	Eigen::Vector2f squareSize = getMaxSquareSize();
 	Eigen::Vector2f padding = getPadding();
 
-	// attempt to center within our size
-	Eigen::Vector2f totalSize(gridSize.x() * (squareSize.x() + padding.x()), gridSize.y() * (squareSize.y() + padding.y()));
-	Eigen::Vector2f offset(mSize.x() - totalSize.x(), mSize.y() - totalSize.y());
-	offset /= 2;
-
-	// Adjust offset to 0 if set to align left.
-	if (mAlignment == ALIGN_LEFT) {
-		offset.x() = 0;
-		offset.y() = 0;
-	}
-
 	// Setup gridsize either by default or from theme
 	if (mDesiredGridSize.x() == 0) {
 		mDesiredGridSize.x() = 4;
@@ -555,9 +544,11 @@ void ImageGridComponent<T>::buildImages()
 		smallestIsX = false;
 	}
 
-	float imgExpandPerc = smallestDistance * .01;
 	float absSmallestX = std::abs(squareSize.x() - smallestDistance);
 	float absSmallestY = std::abs(squareSize.y() - smallestDistance);
+
+	// Keep a seperate padding to just keep tiles aligned after scaled.
+	Eigen::Vector2f inPadding = { 0, 0 };
 
 	if (smallestDistance < squareSize.x() && smallestDistance < squareSize.y()) {
 		// IF TILES ARE ALREADY TOO BIG, SHRINK THEM:
@@ -577,30 +568,42 @@ void ImageGridComponent<T>::buildImages()
 			// Stretch image to x and add percentage to y based on aspect ratio
 			squareSize.y() += absSmallestY * squareSize.y() / squareSize.x();
 			squareSize.x() += absSmallestX;
+			inPadding.y() = tileDistanceY - squareSize.y();
 		}
 		else {
 			// Stretch image to y then add to x based on aspect ratio
 			squareSize.x() += absSmallestX * squareSize.x() / squareSize.y();
 			squareSize.y() += absSmallestY;
+			inPadding.x() = std::abs(tileDistanceX - squareSize.x());
 		}
 
 	}
 
+	// The margin to add to have all tiles be evenly spaced and be flush with sides.
+	float realMargin = mSize.x() - (squareSize.x() * mDesiredGridSize.x());
+	realMargin /= mDesiredGridSize.x() - 1;
+
+	// Layout tile size and position
 	for(int y = 0; y < gridSize.y(); y++)
 	{
+		float tdx = 0;
 		for(int x = 0; x < gridSize.x(); x++)
 		{
 			// Create tiles
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
-			Eigen::Vector2f newSquareSize = tile->getSize();	// Get new size because a square is built arount the image.
-			tile->setPosition(((tileDistanceX + padding.x()) * (x + 0.0f)) + offset.x() + (x * getMargin().x()), 
-				(tileDistanceY + padding.y()) * (y + 0.0f) + offset.y() + (y * getMargin().y()));
+
+			Eigen::Vector2f tempPadding = inPadding;
+			if (y == 0) tempPadding.y() = 0;
+
+			tile->setPosition(tdx, (tileDistanceY * y) + tempPadding.y());
 
 			if (bThemeLoaded) tile->setTheme(mTheme);
 			
 			mTiles.push_back(tile);
 
+			// Increase X position
+			tdx += squareSize.x() + realMargin;
 		}
 	}
 
