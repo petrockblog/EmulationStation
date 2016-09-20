@@ -2,7 +2,7 @@
 
 #include "Resources.h"
 
-const size_t res2hNrOfFiles = 46;
+const size_t res2hNrOfFiles = 47;
 const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/scroll_gradient.png", scroll_gradient_png_size, scroll_gradient_png_data},
     {":/star_filled.svg", star_filled_svg_size, star_filled_svg_data},
@@ -49,7 +49,8 @@ const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/help/analog_thumb.svg", help_analog_thumb_svg_size, help_analog_thumb_svg_data},
     {":/help/analog_left.svg", help_analog_left_svg_size, help_analog_left_svg_data},
     {":/help/analog_right.svg", help_analog_right_svg_size, help_analog_right_svg_data},
-	{":/blank_game.png", blank_game_png_size, blank_game_png_data}
+	{":/blank_game.png", blank_game_png_size, blank_game_png_data},
+	{":/folder.png", folder_png_size, folder_png_data}
 };
 
 res2hMapType::value_type mapTemp[] = {
@@ -98,7 +99,8 @@ res2hMapType::value_type mapTemp[] = {
     std::make_pair(":/help/analog_thumb.svg", res2hFiles[42]),
     std::make_pair(":/help/analog_left.svg", res2hFiles[43]),
     std::make_pair(":/help/analog_right.svg", res2hFiles[44]),
-	std::make_pair(":/blank_game.png", res2hFiles[45])
+	std::make_pair(":/blank_game.png", res2hFiles[45]),
+	std::make_pair(":/folder.png", res2hFiles[46])
 };
 
 res2hMapType res2hMap(mapTemp, mapTemp + sizeof mapTemp / sizeof mapTemp[0]);

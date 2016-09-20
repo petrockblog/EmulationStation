@@ -223,8 +223,11 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	entry.name = name;
 	entry.object = obj;
 	entry.strdata = imagePath;
-	if (loadTextureNow) entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
-	else entry.data.texture = TextureResource::get(":/frame.png");
+	if (obj->getType() == 2) entry.data.texture = TextureResource::get(":/folder.png");
+	else {
+		if (loadTextureNow) entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
+		else entry.data.texture = TextureResource::get(":/frame.png");
+	}
 	entry.data.title = std::make_shared<TextComponent>(mWindow, name, Font::get(FONT_SIZE_MEDIUM), 0xAAAAAAFF);
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;

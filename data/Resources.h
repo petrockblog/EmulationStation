@@ -143,6 +143,9 @@ extern const unsigned char help_analog_right_svg_data[];
 extern const size_t blank_game_png_size;
 extern const unsigned char blank_game_png_data[];
 
+extern const size_t folder_png_size;
+extern const unsigned char folder_png_data[];
+
 struct Res2hEntry {
     const std::string relativeFileName;
     const size_t size;

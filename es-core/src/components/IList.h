@@ -164,8 +164,11 @@ public:
 	void loadTexture(int index) {
 		if (!mEntries[index].isTextureLoaded) {
 			std::string imagePath = mEntries[index].strdata;
-			mEntries[index].data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? 
-				TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
+			if (mEntries[index].object->getType() == 2) TextureResource::get(":/folder.png");
+			else {
+				mEntries[index].data.texture = ResourceManager::getInstance()->fileExists(imagePath) ?
+					TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
+			}
 			mEntries[index].isTextureLoaded = true;
 			mLoadedTextureList.push_back(index);
 
