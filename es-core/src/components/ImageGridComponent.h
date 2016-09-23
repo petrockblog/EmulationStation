@@ -149,7 +149,7 @@ private:
 	Eigen::Vector2i mDesiredGridSize;
 
 	const int MAX_TEXTURES = 80;			// The maximum amount of images that can be loaded at once
-	const int CURSOR_RANGE = 32;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
+	const int CURSOR_RANGE = 34;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
 
 	CursorRange mCursorRange;	
 	int mCurrentLoad = 0;					// The current loaded in texture
@@ -190,8 +190,16 @@ template<typename T>
 void ImageGridComponent<T>::clear(bool clearall) {
 	unloadTextures(clearall);
 	mEntriesDirty = true;
-	
+	mCurrentDirection = MOVING_DOWN;
+
+	mPrevIndex = 0;
+	mCursorUpdateDelay = 0;
+	bLoading = false;
+	bUnloaded = false;
+	mCurrentLoad = 0;
+
 	IList<ImageGridData, T>::clear();
+	mTiles.clear();
 }
 
 template<typename T>
@@ -253,7 +261,7 @@ void ImageGridComponent<T>::unloadTextures(bool unloadAll) {
 	}
 
 	// Phase 2: If there are still too many textures.  Just remove all
-	if (mLoadedTextureList.size() > MAX_TEXTURES) {
+	if (mLoadedTextureList.size() > MAX_TEXTURES || unloadAll) {
 		// If there are too many textures loaded, the user is likely out of
 		// Cursor range, so just delete every image.
 		for (int i = 1; i < getEntryCount() - 1; i++)
