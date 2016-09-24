@@ -139,6 +139,7 @@ void GridGameListView::update(int deltatime) {
 		mLoadFrame = 0;
 	}
 
+	mDescContainer.update(deltatime);
 	mLoadFrame++;
 
 	mGrid.update(deltatime);
