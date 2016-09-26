@@ -593,8 +593,11 @@ void ImageGridComponent<T>::buildImages()
 	// The margin to add to have all tiles be evenly spaced and be flush with sides.
 	float realMargin = mSize.x() - (squareSize.x() * mDesiredGridSize.x());
 	realMargin /= mDesiredGridSize.x() - 1;
+	float realMarginY = mSize.y() - (squareSize.y() * mDesiredGridSize.y());
+	realMarginY /= mDesiredGridSize.y() - 1;
 
 	// Layout tile size and position
+	float tdy = 0;
 	for(int y = 0; y < gridSize.y(); y++)
 	{
 		float tdx = 0;
@@ -604,18 +607,19 @@ void ImageGridComponent<T>::buildImages()
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
 
-			Eigen::Vector2f tempPadding = inPadding;
-			if (y == 0) tempPadding.y() = 0;
-
-			tile->setPosition(tdx, (tileDistanceY * y) + tempPadding.y());
+			//tile->setPosition(tdx, (tileDistanceY * y) + tempPadding.y());
+			tile->setPosition(tdx, tdy);
 
 			if (bThemeLoaded) tile->setTheme(mTheme);
-			
+
 			mTiles.push_back(tile);
 
 			// Increase X position
 			tdx += squareSize.x() + realMargin;
 		}
+
+		// Increase y position
+		tdy += squareSize.y() + realMarginY;
 	}
 
 }
