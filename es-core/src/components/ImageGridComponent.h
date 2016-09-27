@@ -607,7 +607,6 @@ void ImageGridComponent<T>::buildImages()
 			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
 
-			//tile->setPosition(tdx, (tileDistanceY * y) + tempPadding.y());
 			tile->setPosition(tdx, tdy);
 
 			if (bThemeLoaded) tile->setTheme(mTheme);

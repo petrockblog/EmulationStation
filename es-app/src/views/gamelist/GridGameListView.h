@@ -52,7 +52,7 @@ protected:
 
 	int mNextLoad = 0;
 	int mLoadFrame = 0;
-	int mLoadFrameKey = 2;
+	int mLoadFrameKey = 1;
 
 private:
 	void updateInfoPanel();
