@@ -14,7 +14,6 @@
 struct ImageGridData
 {
 	std::shared_ptr<TextureResource> texture;
-	std::shared_ptr<TextComponent> title;
 };
 
 // Keeps track of which direction the user is moving.  ( for dynamic loading )
@@ -163,7 +162,6 @@ private:
 	int mCurrentDirection = MOVING_DOWN;	// Which direction the user is moving (Orientation based on grid, not index)
 	int mAlignment = ALIGN_LEFT;
 	
-	std::vector<TextComponent> mTitles;
 	std::vector< std::shared_ptr<GridTileComponent> > mTiles;
 
 	std::shared_ptr<ThemeData> mTheme;
@@ -236,7 +234,7 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 		if (loadTextureNow) entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
 		else entry.data.texture = TextureResource::get(":/frame.png");
 	}
-	entry.data.title = std::make_shared<TextComponent>(mWindow, name, Font::get(FONT_SIZE_MEDIUM), 0xAAAAAAFF);
+
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
 }
@@ -350,6 +348,8 @@ void ImageGridComponent<T>::updateLoadRange() {
 	// Only update range if not loading and not within last built range
 	if (bLoading) return;
 
+	int cursorRange = CURSOR_RANGE;
+
 	// Create a range based on cursor position
 	int cursor = getCursorIndex();
 
@@ -357,11 +357,14 @@ void ImageGridComponent<T>::updateLoadRange() {
 	if (cursor == mPrevIndex && mCursorRange.length > 0) return;
 
 	// Get minimum [ will stay at 0 until user moves past 12. ]
-	int rmin = cursor - int(CURSOR_RANGE / 2);
+	int rmin = cursor - int(cursorRange / 2);
 	if (rmin < 0) rmin += rmin * -1;
 
 	// get max [ will try to be just the viewable area based on mod size ]
-	int rmax = cursor + int(CURSOR_RANGE / 2);
+	int rmax = 0;
+	if (rmin < cursorRange / 2)
+		rmax = cursor + int(cursorRange);
+	else rmax = cursor + int(cursorRange / 2);
 	if (rmax > getEntryCount()) rmax = getEntryCount() - 1;
 
 	// if there is only one game, set range 0-0
@@ -484,10 +487,6 @@ template<typename T>
 void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData>& theme) {
 	Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	using namespace ThemeFlags;
-
-	for (int i = 0; i < mTitles.size(); i++) {
-		mTitles[i].applyTheme(theme, "grid", "mdGameTitle", ALL);
-	}
 
 	// Keep theme data pointer.
 	mTheme = theme;
