@@ -73,6 +73,8 @@ public:
 	void onSizeChanged() override;
 
 private:
+	const float CELL_FOOTER_HEIGHT = .15f;
+
 	int mIndex = 0;
 
 	std::shared_ptr<TextComponent> mText;

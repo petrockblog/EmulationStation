@@ -180,7 +180,8 @@ public:
 	// Sets this image back to default texture.
 	void clearImage(int index) {
 		if (mEntries[index].isTextureLoaded) {
-			mEntries[index].data.texture = TextureResource::get(":/frame.png");
+			if (mEntries[index].object->getType() == 2) return;
+			else mEntries[index].data.texture = TextureResource::get(":/frame.png");
 			mEntries[index].isTextureLoaded = false;
 
 			// Subtract Loaded Texture Count

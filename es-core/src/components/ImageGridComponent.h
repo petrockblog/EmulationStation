@@ -536,7 +536,6 @@ void ImageGridComponent<T>::buildImages()
 
 	Eigen::Vector2i gridSize = getGridSize();
 	Eigen::Vector2f squareSize = getMaxSquareSize();
-	Eigen::Vector2f padding = getPadding();
 
 	// Setup gridsize either by default or from theme
 	if (mDesiredGridSize.x() == 0) {
@@ -547,48 +546,14 @@ void ImageGridComponent<T>::buildImages()
 	// Get distance between tile points.
 	float tileDistanceX = (mSize.x() / mDesiredGridSize.x()) - getMargin().x();
 	float tileDistanceY = (mSize.y() / mDesiredGridSize.y()) - getMargin().y();
-	float smallestDistance = tileDistanceX;
-	bool smallestIsX = true;
-	if (tileDistanceY < tileDistanceX) {
-		smallestDistance = tileDistanceY;
-		smallestIsX = false;
-	}
 
-	float absSmallestX = std::abs(squareSize.x() - smallestDistance);
-	float absSmallestY = std::abs(squareSize.y() - smallestDistance);
-
-	// Keep a seperate padding to just keep tiles aligned after scaled.
-	Eigen::Vector2f inPadding = { 0, 0 };
-
-	if (smallestDistance < squareSize.x() && smallestDistance < squareSize.y()) {
-		// IF TILES ARE ALREADY TOO BIG, SHRINK THEM:
-		if (smallestIsX) {
-			// Stretch image to x and add percentage to y based on aspect ratio
-			squareSize.y() -= absSmallestY * squareSize.y() / squareSize.x();
-			squareSize.x() -= absSmallestX;
-		}
-		else {
-			// Stretch image to y then add to x based on aspect ratio
-			squareSize.x() -= absSmallestX * squareSize.x() / squareSize.y();
-			squareSize.y() -= absSmallestY;
-		}
-	} else {
-		// IF TILES ARE NOT BIG ENOUGH, EXPAND THEM:
-		if (smallestIsX) {
-			// Stretch image to x and add percentage to y based on aspect ratio
-			squareSize.y() += absSmallestY * squareSize.y() / squareSize.x();
-			squareSize.x() += absSmallestX;
-			inPadding.y() = tileDistanceY - squareSize.y();
-		}
-		else {
-			// Stretch image to y then add to x based on aspect ratio
-			squareSize.x() += absSmallestX * squareSize.x() / squareSize.y();
-			squareSize.y() += absSmallestY;
-			inPadding.x() = std::abs(tileDistanceX - squareSize.x());
-		}
-
-	}
-
+	// Scale image by aspect ratio.
+	float ratioW = tileDistanceX / squareSize.x();
+	float ratioH = tileDistanceY / squareSize.y();
+	float ratio = ratioW < ratioH ? ratioW : ratioH;
+	squareSize.x() *= ratio;
+	squareSize.y() *= ratio;
+	
 	// The margin to add to have all tiles be evenly spaced and be flush with sides.
 	float realMargin = mSize.x() - (squareSize.x() * mDesiredGridSize.x());
 	realMargin /= mDesiredGridSize.x() - 1;

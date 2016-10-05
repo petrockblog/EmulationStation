@@ -17,9 +17,9 @@ GridTileComponent::GridTileComponent(Window* window, int index) : GuiComponent(w
 	mGrid.setEntry(mText, Vector2i(0, 1), false, true);
 
 	// Default row heights
-	mTextContainerSize.y() = .15f;
+	mTextContainerSize.y() = CELL_FOOTER_HEIGHT;
 	mGrid.setRowHeightPerc(0, .85f);
-	mGrid.setRowHeightPerc(1, .15f);
+	mGrid.setRowHeightPerc(1, CELL_FOOTER_HEIGHT);
 
 	backgroundPadding.x() = 0;
 	backgroundPadding.y() = 0;
@@ -66,14 +66,11 @@ void GridTileComponent::onPositionChanged() {
 }
 
 void GridTileComponent::setImageSize(float w, float h, float enlargeScaleX, float enlargeScaleY) {
-	mImage->setResize(w, h);
-	if (enlargeScaleX > 0 || enlargeScaleY > 0) mImage->setResize(enlargeScaleX, enlargeScaleY);
-	//mImage->setMaxSize(w, h);
+	mImage->setSize(w, h);
 	mTextContainerSize.x() = w;
 	if (mAnimation.animateTextContainer) mTextContainerSize.y() = mAnimation.unselected.textContainerSize.y();
+	h += h * CELL_FOOTER_HEIGHT;
 	setSize(w, h);
-
-	//onSizeChanged();
 }
 
 void GridTileComponent::setImageResize(float w, float h) {
