@@ -22,6 +22,7 @@ Setup for the grid as a whole.
 <container name="gridRowsAndColumns"> <size> 			// sets the amount of rows and columns to fit into grid space.
 <container name="gridRowsAndColumns-small"> <size>		// Amount of rows/columns when user-defined size is small
 <container name="gridRowsAndColumns-big"> <size>		// Amount of rows/columns when user-defined size is big
+<image name="missing_boxart"> <path>					// Changes the missing boxart texture.  (can be done per system)
 ```
 
 Gridtile modification
@@ -94,5 +95,10 @@ Here is a quick list of all Added theme options GridView has and that do somethi
 <container name="gridRowsAndColumns"> [allows: -small, -big]
 	<size>column row</size>
 </container>
+
+// Replace the missing boxart texture
+<image name="missing_boxart">
+	<path>new_path</path>
+</image>
 ```
 
