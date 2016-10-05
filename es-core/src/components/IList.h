@@ -82,6 +82,8 @@ protected:
 
 	int mTotalLoadedTextures = 0;
 	std::list<int>mLoadedTextureList;
+
+	std::shared_ptr<TextureResource> mMissingBoxartTexture;
 	
 public:
 	IList(Window* window, const ScrollTierList& tierList = LIST_SCROLL_STYLE_QUICK, const ListLoopType& loopType = LIST_PAUSE_AT_END) : GuiComponent(window), 
@@ -167,7 +169,7 @@ public:
 			if (mEntries[index].object->getType() == 2) TextureResource::get(":/folder.png");
 			else {
 				mEntries[index].data.texture = ResourceManager::getInstance()->fileExists(imagePath) ?
-					TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
+					TextureResource::get(imagePath) : mMissingBoxartTexture;
 			}
 			mEntries[index].isTextureLoaded = true;
 			mLoadedTextureList.push_back(index);

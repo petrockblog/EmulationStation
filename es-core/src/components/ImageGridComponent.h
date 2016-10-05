@@ -48,6 +48,7 @@ protected:
 	using IList<ImageGridData, T>::mScrollTier;
 	using IList<ImageGridData, T>::mTotalLoadedTextures;
 	using IList<ImageGridData, T>::mLoadedTextureList;
+	using IList<ImageGridData, T>::mMissingBoxartTexture;
 
 public:
 	using IList<ImageGridData, T>::size;
@@ -177,6 +178,7 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 	mDesiredGridSize.x() = 0;
 	mDesiredGridSize.y() = 0;
 	mGridMod = modGridSize;
+	mMissingBoxartTexture = TextureResource::get(":/blank_game.png");
 }
 
 template<typename T>
@@ -511,6 +513,16 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 			mDesiredGridSize.x() = (int)DesiredGridSize.x();
 			mDesiredGridSize.y() = (int)DesiredGridSize.y();
 		}
+	}
+
+	// Change default missing boxart icon
+	elem = theme->getElement("grid", "missing_boxart", "image");
+	if (elem) {
+		std::string path = elem->get<std::string>("path");
+		if (ResourceManager::getInstance()->fileExists(path))
+			mMissingBoxartTexture = TextureResource::get(path);
+		else
+			LOG(LogWarning) << "Could not replace MissingBoxart, check path: " << path;
 	}
 }
 
