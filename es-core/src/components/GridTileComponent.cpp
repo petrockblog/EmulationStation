@@ -8,7 +8,7 @@
 
 using namespace Eigen;
 
-GridTileComponent::GridTileComponent(Window* window, int index) : GuiComponent(window), mGrid(window, Vector2i(1, 2)), mBackground(window)
+GridTileComponent::GridTileComponent(Window* window, int index) : GuiComponent(window), mGrid(window, Vector2i(1, 2)), mBackground(window, ":/frame.png")
 {
 	mText = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
 	mImage = std::make_shared<ImageComponent>(mWindow);
@@ -150,7 +150,7 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	mAnimation.unselected.opacity = 0xAA;
 
 	// Apply themedata to normal objects
-	mBackground.applyTheme(theme, "grid", "gridtile_background", ALL);
+	//mBackground.applyTheme(theme, "grid", "gridtile_background", ALL);
 	mText->applyTheme(theme, "grid", "gridtile_text", ALL);
 
 	Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
@@ -203,17 +203,7 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 		if (elem->has("size")) {
 			mAnimation.unselected.textContainerSize = elem->get<Eigen::Vector2f>("size");
 			mAnimation.current.textContainerSize = mAnimation.unselected.textContainerSize;
-			LOG(LogError) << "Setting row height to : " << mAnimation.current.textContainerSize.y();
 			mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
-		}
-	}
-
-	// Apply theme data to struct: Gridtile_background_selected:
-	elem = theme->getElement("grid", "gridtile_background_selected", "ninepatch");
-	if (elem) {
-		if (elem->has("size")) {
-			mAnimation.selected.backgroundSize = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
-			mAnimation.animateBackgroundSize = true;
 		}
 	}
 
@@ -233,24 +223,27 @@ void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
 	}
 
 	// BACKGROUND :: SELECTED
-	elem = theme->getElement("grid", "gridtile_background_selected", "ninepatch");
-	if (!elem) elem = theme->getElement("grid", "gridtile_background_selected", "image");
+	elem = theme->getElement("grid", "gridtile_background_selected", "image");
 	if (elem) {
 		if (elem->has("color")) {
 			mAnimation.current.backgroundColor = elem->get<unsigned int>("color");
 			mAnimation.selected.backgroundColor = mAnimation.current.backgroundColor;
 			mAnimation.animateBackgroundColor = true;
 		}
+		if (elem->has("size")) {
+			mAnimation.selected.backgroundSize = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
+			mAnimation.animateBackgroundSize = true;
+		}
 	}
 
 	// BACKGROUND :: UNSELECTED
-	elem = theme->getElement("grid", "gridtile_background", "ninepatch");
-	if (!elem) elem = theme->getElement("grid", "gridtile_background", "image");
+	elem = theme->getElement("grid", "gridtile_background", "image");
 	if (elem) {
 		if (elem->has("path")) {
 			setBackgroundPath(elem->get<std::string>("path"));
 			bThemeBackground = true;
 		}
+
 		if (elem->has("color")) {
 			mAnimation.unselected.backgroundColor = (elem->get<unsigned int>("color"));
 			mAnimation.current.backgroundColor = mAnimation.unselected.backgroundColor;
