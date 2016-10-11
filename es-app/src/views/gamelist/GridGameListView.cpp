@@ -114,15 +114,19 @@ bool GridGameListView::input(InputConfig* config, Input input)
 	}
 
 	// Quick system change
-	if (config->isMappedTo("LeftShoulder", input) || config->isMappedTo("LeftTrigger", input)) {
-		if (Settings::getInstance()->getBool("QuickSystemSelect")) {
+	if (config->isMappedTo("LeftShoulder", input) || config->isMappedTo("LeftTrigger", input) ||
+		config->isMappedTo("LeftTop", input) || config->isMappedTo("LeftBottom", input)) {
+		if (Settings::getInstance()->getBool("QuickSystemSelect") && mSystemQuickChangeCoolDown > 10) {
+			onFocusLost();
 			ViewController::get()->goToPrevGameList();
 			return true;
 		}
 	}
 
-	if (config->isMappedTo("RightShoulder", input) || config->isMappedTo("RightTrigger", input)) {
-		if (Settings::getInstance()->getBool("QuickSystemSelect")) {
+	if (config->isMappedTo("RightShoulder", input) || config->isMappedTo("RightTrigger", input) ||
+		config->isMappedTo("RightBottom", input) || config->isMappedTo("RightTop", input)) {
+		if (Settings::getInstance()->getBool("QuickSystemSelect") && mSystemQuickChangeCoolDown > 10) {
+			onFocusLost();
 			ViewController::get()->goToNextGameList();
 			return true;
 		}
@@ -143,6 +147,8 @@ void GridGameListView::update(int deltatime) {
 	mLoadFrame++;
 
 	mGrid.update(deltatime);
+
+	if (mSystemQuickChangeCoolDown < 30) mSystemQuickChangeCoolDown++;
 }
 
 void GridGameListView::populateList(const std::vector<FileData*>& files)
@@ -402,6 +408,7 @@ void GridGameListView::onFocusGained() {
 	mGrid.reloadTextures();
 	mGrid.setVisible(true);
 	bFocused = true;
+	mSystemQuickChangeCoolDown = 0;
 }
 
 void GridGameListView::onFocusLost() {
@@ -409,6 +416,7 @@ void GridGameListView::onFocusLost() {
 		mGrid.unloadTextures(true);
 	mGrid.setVisible(false);
 	bFocused = false;
+	mSystemQuickChangeCoolDown = 0;
 }
 
 
@@ -416,8 +424,10 @@ std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
 	prompts.push_back(HelpPrompt("up/down/left/right", "scroll"));
-	prompts.push_back(HelpPrompt("l", "change system"));
-	prompts.push_back(HelpPrompt("r", "change system"));
+	if (Settings::getInstance()->getBool("QuickSystemSelect")) {
+		prompts.push_back(HelpPrompt("l", "change system"));
+		prompts.push_back(HelpPrompt("r", "change system"));
+	}
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
 	prompts.push_back(HelpPrompt("select", "Settings"));
