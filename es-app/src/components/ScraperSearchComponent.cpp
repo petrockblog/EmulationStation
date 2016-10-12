@@ -13,6 +13,7 @@
 #include "Log.h"
 #include "Util.h"
 #include "guis/GuiTextEditPopup.h"
+#include "guis/GuiTextEditPopupKeyboard.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
 	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
@@ -449,11 +450,22 @@ void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
 		search(params);
 	};
 
+	bool openOSK = Settings::getInstance()->getBool("UseOSK");
+
 	stop();
-	mWindow->pushGui(new GuiTextEditPopup(mWindow, "SEARCH FOR", 
-		// initial value is last search if there was one, otherwise the clean path name
-		params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride, 
-		searchForFunc, false, "SEARCH"));
+
+	if (openOSK) {
+		mWindow->pushGui(new GuiTextEditPopupKeyboard(mWindow, "SEARCH FOR",
+			// initial value is last search if there was one, otherwise the clean path name
+			params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride,
+			searchForFunc, false, "SEARCH"));
+	}
+	else {
+		mWindow->pushGui(new GuiTextEditPopup(mWindow, "SEARCH FOR",
+			// initial value is last search if there was one, otherwise the clean path name
+			params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride,
+			searchForFunc, false, "SEARCH"));
+	}
 }
 
 std::vector<HelpPrompt> ScraperSearchComponent::getHelpPrompts()

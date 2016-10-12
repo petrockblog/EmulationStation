@@ -124,6 +124,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("QUICK SYSTEM SELECT", quick_sys_select);
 			s->addSaveFunc([quick_sys_select] { Settings::getInstance()->setBool("QuickSystemSelect", quick_sys_select->getState()); });
 
+			// Enable OSK (On-Screen-Keyboard)
+			auto osk_enable = std::make_shared<SwitchComponent>(mWindow);
+			osk_enable->setState(Settings::getInstance()->getBool("UseOSK"));
+			s->addWithLabel("ON SCREEN KEYBOARD", osk_enable);
+			s->addSaveFunc([osk_enable] { Settings::getInstance()->setBool("UseOSK", osk_enable->getState()); } );
+
 			// transition style
 			auto transition_style = std::make_shared< OptionListComponent<std::string> >(mWindow, "TRANSITION STYLE", false);
 			std::vector<std::string> transitions;
