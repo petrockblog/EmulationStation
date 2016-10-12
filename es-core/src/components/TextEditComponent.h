@@ -32,9 +32,10 @@ public:
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
-private:
 	void startEditing();
 	void stopEditing();
+
+private:
 
 	void onTextChanged();
 	void onCursorChanged();
