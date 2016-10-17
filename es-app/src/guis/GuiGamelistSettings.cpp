@@ -97,7 +97,10 @@ GuiGamelistSettings::~GuiGamelistSettings() {
 		int saveinfo = SystemData::saveConfig();
 
 		// Reload if user hit save&apply
-		if (mSaveLevel > 1) ViewController::get()->reloadAll();
+		if (mSaveLevel > 1) {
+			ViewController::get()->reloadAll();
+			ViewController::get()->goToGameList(mSystem);
+		}
 	}
 }
 
