@@ -73,7 +73,7 @@ void Settings::setDefaults()
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
-	mStringMap["Scraper"] = "TheGamesDB";
+	mStringMap["Scraper"] = "sselph w/fallback";
 }
 
 template <typename K, typename V>

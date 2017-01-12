@@ -6,9 +6,12 @@
 #include <boost/assign.hpp>
 
 #include "GamesDBScraper.h"
+#include "SselphScraper.h"
 #include "TheArchiveScraper.h"
 
 const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
+	("sselph", &sselph_generate_scraper_requests)
+	("sselph w/fallback", &sselph_generate_fallback_scraper_requests)
 	("TheGamesDB", &thegamesdb_generate_scraper_requests)
 	("TheArchive", &thearchive_generate_scraper_requests);
 
