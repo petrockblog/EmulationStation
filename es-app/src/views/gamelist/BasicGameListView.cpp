@@ -116,7 +116,8 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 		prompts.push_back(HelpPrompt("left/right", "system"));
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "launch"));
-	prompts.push_back(HelpPrompt("b", "back"));
+	if(!Settings::getInstance()->getBool("HideSystemView"))
+	  prompts.push_back(HelpPrompt("b", "back"));
 	prompts.push_back(HelpPrompt("select", "options"));
 	return prompts;
 }
