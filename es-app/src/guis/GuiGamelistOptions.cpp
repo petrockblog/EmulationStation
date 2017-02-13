@@ -104,25 +104,12 @@ void GuiGamelistOptions::jumpToLetter()
 
 		if(checkLetter < letter)
 			min = mid + 1;
-		else if(checkLetter > letter)
+		else if(checkLetter > letter || (mid > 0 && (letter == toupper(files.at(mid - 1)->getName()[0]))))
 			max = mid - 1;
 		else
 			break; //exact match found
 	}
-
-	while(mid > 0)
-	{
-		if(files.at(mid - 1)->getName().empty())
-			break;
-
-		char prevLetter = toupper(files.at(mid - 1)->getName()[0]);
-
-		if(prevLetter != letter)
-			break;
-		else
-			mid = mid - 1;
-	}
-
+		
 	gamelist->setCursor(files.at(mid));
 
 	delete this;
