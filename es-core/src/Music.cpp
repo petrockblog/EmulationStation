@@ -75,6 +75,8 @@ void Music::play()
 {
     if(music == NULL)
 		return;
+	if(!Settings::getInstance()->getBool("audio.bgmusic"))
+		return;
 	if (!playing)
 	{
 		playing = true;
@@ -84,7 +86,4 @@ void Music::play()
         LOG(LogInfo) << "Mix_PlayMusic: " << Mix_GetError();
     }else {
     }
-	if(!repeat){
-		Mix_HookMusicFinished(callback);
-	}
 }
