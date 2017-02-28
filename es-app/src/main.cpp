@@ -169,8 +169,7 @@ int main(int argc, char* argv[])
 	unsigned int width = 0;
 	unsigned int height = 0;
 
-	std::locale::global(boost::locale::generator().generate(""));
-	boost::filesystem::path::imbue(std::locale());
+        std::locale::global(boost::locale::generator().generate(""));
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;
@@ -260,6 +259,9 @@ int main(int argc, char* argv[])
 			}));
 	}
 
+        // Setting in settings for better performance
+        Settings::getInstance()->setBool("audio.bgmusic", true);
+
 	//run the command line scraper then quit
 	if(scrape_cmdline)
 	{
@@ -268,6 +270,9 @@ int main(int argc, char* argv[])
 
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
+
+        // Initialize audio manager
+        AudioManager::getInstance()->init();
 
 	// preload what we can right away instead of waiting for the user to select it
 	// this makes for no delays when accessing content, but a longer startup time
