@@ -71,7 +71,7 @@ void Music::deinitMusic()
         }
 }
 
-void Music::play(bool repeat, void (* callback)())
+void Music::play()
 {
     if(music == NULL)
 		return;
@@ -80,9 +80,9 @@ void Music::play(bool repeat, void (* callback)())
 		playing = true;
 	}
     LOG(LogInfo) << "playing";
-    if(Mix_FadeInMusic(music, repeat ? -1 : 1, 1000) == -1){
+    if(Mix_FadeInMusic(music, -1, 1000) == -1){
         LOG(LogInfo) << "Mix_PlayMusic: " << Mix_GetError();
-		return;
+    }else {
     }
 	if(!repeat){
 		Mix_HookMusicFinished(callback);
