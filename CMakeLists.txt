@@ -47,6 +47,7 @@ endif()
 find_package(Freetype REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem date_time locale)
 find_package(Eigen3 REQUIRED)
 find_package(CURL REQUIRED)
@@ -151,6 +152,7 @@ set(COMMON_LIBRARIES
     ${FREETYPE_LIBRARIES}
     ${FreeImage_LIBRARIES}
 	${SDL2_LIBRARY}
+        ${SDL2_MIXER_LIBRARY}
     ${CURL_LIBRARIES}
     ${VLC_LIBRARIES}
     pugixml
