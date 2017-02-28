@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
 	}
 
         // Setting in settings for better performance
-        Settings::getInstance()->setBool("audio.bgmusic", trues);
+        Settings::getInstance()->setBool("audio.bgmusic", true);
 
 	//run the command line scraper then quit
 	if(scrape_cmdline)
@@ -291,8 +291,6 @@ int main(int argc, char* argv[])
 
 	int lastTime = SDL_GetTicks();
 	bool running = true;
-
-        Music::init();
 
 	while(running)
 	{
