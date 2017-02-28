@@ -18,6 +18,7 @@
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include <sstream>
+#include <boost/locale.hpp>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -67,7 +68,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			Settings::getInstance()->setBool("Windowed", true);
 		}else if(strcmp(argv[i], "--vsync") == 0)
 		{
-			bool vsync = (strcmp(argv[i + 1], "true") == 0 || strcmp(argv[i + 1], "1") == 0) ? true : false;
+			bool vsync = (strcmp(argv[i + 1], "on") == 0 || strcmp(argv[i + 1], "1") == 0) ? true : false;
 			Settings::getInstance()->setBool("VSync", vsync);
 			i++; // skip vsync value
 		}else if(strcmp(argv[i], "--scrape") == 0)
@@ -101,7 +102,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--debug				more logging, show console on Windows\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
-				"--vsync [1/true or 0/false]		turn vsync on or off (default is true)\n"
+				"--vsync [1/on or 0/off]		turn vsync on or off (default is on)\n"
 				"--max-vram [size]		Max VRAM to use in Mb before swapping. 0 for unlimited\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
@@ -167,6 +168,8 @@ int main(int argc, char* argv[])
 {
 	unsigned int width = 0;
 	unsigned int height = 0;
+
+        std::locale::global(boost::locale::generator().generate(""));
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;
