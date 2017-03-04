@@ -231,21 +231,11 @@ void ThemeData::parseFeatures(const pugi::xml_node& root)
 		if(!node.attribute("supported"))
 			throw error << "Feature missing \"supported\" attribute!";
 
-		const char* delim = " \t\r\n,";
-		const std::string nameAttr = node.attribute("supported").as_string();
-		size_t prevOff = nameAttr.find_first_not_of(delim, 0);
-		size_t off = nameAttr.find_first_of(delim, prevOff);
-		std::string supported;
-		while(off != std::string::npos || prevOff != std::string::npos)
-		{
-			supported = nameAttr.substr(prevOff, off - prevOff);
-			prevOff = nameAttr.find_first_not_of(delim, off);
-			off = nameAttr.find_first_of(delim, prevOff);
+		const std::string supportedAttr = node.attribute("supported").as_string();
 
-			if (std::find(sSupportedFeatures.begin(), sSupportedFeatures.end(), supported) != sSupportedFeatures.end())
-			{
-				parseViews(node);
-			}
+		if (std::find(sSupportedFeatures.begin(), sSupportedFeatures.end(), supportedAttr) != sSupportedFeatures.end())
+		{
+			parseViews(node);
 		}
 	}
 }
