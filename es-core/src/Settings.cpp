@@ -18,7 +18,8 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("VSync")
 	("HideConsole")
 	("IgnoreGamelist")
-	("SplashScreen");
+	("SplashScreen")
+        ("audio.bgmusic");
 
 Settings::Settings()
 {
@@ -54,7 +55,7 @@ void Settings::setDefaults()
 	mBoolMap["VSync"] = true;
 #endif
 
-	mBoolMap["EnableSounds"] = true;
+	mBoolMap["audio.bgmusic"] = true;
 	mBoolMap["ShowHelpPrompts"] = true;
 	mBoolMap["ScrapeRatings"] = true;
 	mBoolMap["IgnoreGamelist"] = false;

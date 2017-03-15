@@ -14,6 +14,8 @@
 #include "animations/LambdaAnimation.h"
 #include <SDL2/SDL.h>
 
+#include "AudioManager.h"
+
 ViewController* ViewController::sInstance = NULL;
 
 ViewController* ViewController::get()
@@ -80,6 +82,7 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
+        AudioManager::getInstance()->startMusic(system->getNext()->getTheme());
 	goToGameList(system->getNext());
 }
 
@@ -88,6 +91,7 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
+        AudioManager::getInstance()->startMusic(system->getPrev()->getTheme());
 	goToGameList(system->getPrev());
 }
 
