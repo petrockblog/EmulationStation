@@ -192,17 +192,17 @@ void DetailedGameListView::updateInfoPanel()
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
-		if(file->getType() == GAME)
-		{
-			mRating.setValue(file->metadata.get("rating"));
-			mReleaseDate.setValue(file->metadata.get("releasedate"));
-			mDeveloper.setValue(file->metadata.get("developer"));
-			mPublisher.setValue(file->metadata.get("publisher"));
-			mGenre.setValue(file->metadata.get("genre"));
-			mPlayers.setValue(file->metadata.get("players"));
-			mLastPlayed.setValue(file->metadata.get("lastplayed"));
-			mPlayCount.setValue(file->metadata.get("playcount"));
-		}
+		/*if(file->getType() == GAME)
+		{*/
+		mRating.setValue(file->metadata.get("rating"));
+		mReleaseDate.setValue(file->metadata.get("releasedate"));
+		mDeveloper.setValue(file->metadata.get("developer"));
+		mPublisher.setValue(file->metadata.get("publisher"));
+		mGenre.setValue(file->metadata.get("genre"));
+		mPlayers.setValue(file->metadata.get("players"));
+		mLastPlayed.setValue(file->metadata.get("lastplayed"));
+		mPlayCount.setValue(file->metadata.get("playcount"));
+		/*}*/
 		
 		fadingOut = false;
 	}
