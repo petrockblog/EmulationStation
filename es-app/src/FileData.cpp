@@ -83,28 +83,28 @@ const std::string& FileData::getThumbnailPath() const
 
 const std::string& FileData::getVideoPath() const
 {
-	if (mType == GAME)
-	{
-		return metadata.get("video");
-	}
+	/*if (mType == GAME)
+	{*/
+	return metadata.get("video");
+	/*}
 	else
 	{
 		static std::string empty;
 		return empty;
-	}
+	}*/
 }
 
 const std::string& FileData::getMarqueePath() const
 {
-	if (mType == GAME)
-	{
-		return metadata.get("marquee");
-	}
+	/*if (mType == GAME)
+	{*/
+	return metadata.get("marquee");
+	/*}
 	else
 	{
 		static std::string empty;
 		return empty;
-	}
+	}*/
 }
 
 
