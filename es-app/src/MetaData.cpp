@@ -30,7 +30,14 @@ MetaDataDecl folderDecls[] = {
 	{"image",		MD_PATH,				"", 	false},
 	{"thumbnail",	MD_PATH,				"", 	false},
 	{"video",	MD_PATH,				"", 	false},
-	{"marquee",	MD_PATH,				"", 	false}
+	{"marquee",	MD_PATH,				"", 	false},
+	{"thumbnail",	MD_PATH,				"", 				false},
+	{"rating",		MD_RATING,				"0.000000", 		false},
+	{"releasedate", MD_DATE,				"not-a-date-time", 	false},
+	{"developer",	MD_STRING,				"unknown",			false},
+	{"publisher",	MD_STRING,				"unknown",			false},
+	{"genre",		MD_STRING,				"unknown",			false},
+	{"players",		MD_INT,					"1",				false}
 };
 const std::vector<MetaDataDecl> folderMDD(folderDecls, folderDecls + sizeof(folderDecls) / sizeof(folderDecls[0]));
 
