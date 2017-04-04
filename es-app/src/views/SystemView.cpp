@@ -76,6 +76,15 @@ void SystemView::populate()
 		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
 		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
 
+				// Handle sound
+		const ThemeData::ThemeElement* elem = theme->getElement("system", "systemSound", "sound");
+		if (elem != NULL)
+		{
+			// Load the sound
+			std::string sound = elem->get<std::string>("path");
+			e.sound = Sound::get(sound);
+		}
+
 		this->add(e);
 	}
 }
