@@ -197,6 +197,110 @@ addEntry("APPS", 0x777777FF, true,
 			mWindow->pushGui(s);
 	});
 
+addEntry("DISPLAY SETTINGS", 0x777777FF, true,
+		[this] {
+			auto s = new GuiSettings(mWindow, "DISPLAY SETTINGS");
+			
+			Window* window = mWindow;
+
+			ComponentListRow row;
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 480i AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 0 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+					
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "480i", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 576i AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 1 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "576i", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 720P AND RESTART?", "YES",
+				[window] {
+					system("sudo h3disp -m 5 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "720P", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080P AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 10 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1080P", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080i AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 7 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1080i", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1024x768 AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 32 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1024x768", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1280x1024 AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 33 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1280x1024", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1360x768  AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 34 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1360x768 ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1440x900  AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 35 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1440x900 ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			mWindow->pushGui(s);
+	});
+
 	addEntry("OTHER SETTINGS", 0x777777FF, true,
 		[this] {
 			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
