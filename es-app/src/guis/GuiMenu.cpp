@@ -1,6 +1,5 @@
 #include "EmulationStation.h"
 #include "guis/GuiMenu.h"
-#include "guis/GuiSystemSettings.h"
 #include "Window.h"
 #include "Sound.h"
 #include "Log.h"
