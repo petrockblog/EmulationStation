@@ -1,5 +1,6 @@
 #include "EmulationStation.h"
 #include "guis/GuiMenu.h"
+#include "guis/GuiSystemSettings.h"
 #include "Window.h"
 #include "Sound.h"
 #include "Log.h"
@@ -17,11 +18,13 @@
 #include "components/OptionListComponent.h"
 #include "components/MenuComponent.h"
 #include "VolumeControl.h"
+#include "components/ProgressBarComponent.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
 	// MAIN MENU
 
+	// APPS >
 	// SCRAPER >
 	// SOUND SETTINGS >
 	// UI SETTINGS >
@@ -31,6 +34,38 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// [version]
 
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
+
+addEntry("APPS", 0x777777FF, true,
+		[this] {
+			auto s = new GuiSettings(mWindow, "APPS");
+			
+			Window* window = mWindow;
+
+			ComponentListRow row;
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY START ARMBIAN DESKTOP?", "YES", 
+				[] { 
+					system("export LD_LIBRARY_PATH=/usr/local && startx > /dev/null 2>&1");
+					
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "DESKTOP", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "ARE YOU SURE YOU WANT TO LAUNCH OPENELEC?", "YES", 
+				[] { 
+					system("sudo mkimage -C none -A arm -T script -d /boot/boot.kodi.cmd /boot/boot.scr >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "OPENELEC", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			mWindow->pushGui(s);
+	});
+	
 	addEntry("SCRAPER", 0x777777FF, true, 
 		[this, openScrapeNow] { 
 			auto s = new GuiSettings(mWindow, "SCRAPER");
