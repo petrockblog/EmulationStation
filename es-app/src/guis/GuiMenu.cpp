@@ -227,32 +227,60 @@ addEntry("DISPLAY SETTINGS", 0x777777FF, true,
 
 			row.elements.clear();
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 720P AND RESTART?", "YES",
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 720P 50HZ AND RESTART?", "YES",
+				[window] {
+					system("sudo h3disp -m 4 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "720P 50HZ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 720P 60HZ AND RESTART?", "YES",
 				[window] {
 					system("sudo h3disp -m 5 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
 				}, "NO", nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "720P", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			row.addElement(std::make_shared<TextComponent>(window, "720P 60HZ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			s->addRow(row);
 
 			row.elements.clear();
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080P AND RESTART?", "YES", 
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080P 50HZ AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 9 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1080P 50HZ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080P 60HZ AND RESTART?", "YES", 
 				[] { 
 					system("sudo h3disp -m 10 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
 				}, "NO", nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "1080P", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			row.addElement(std::make_shared<TextComponent>(window, "1080P 60HZ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			s->addRow(row);
 			row.elements.clear();
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080i AND RESTART?", "YES", 
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080i 50HZ AND RESTART?", "YES", 
+				[] { 
+					system("sudo h3disp -m 6 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "1080i 50HZ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SET RESOLUTION TO 1080i 60HZ AND RESTART?", "YES", 
 				[] { 
 					system("sudo h3disp -m 7 >/dev/null 2>&1 && sudo reboot >/dev/null 2>&1");
 
 				}, "NO", nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "1080i", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			row.addElement(std::make_shared<TextComponent>(window, "1080i 60HZ", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			s->addRow(row);
 
 			row.elements.clear();
