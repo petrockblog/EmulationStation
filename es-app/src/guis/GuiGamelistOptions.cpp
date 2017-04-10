@@ -3,8 +3,8 @@
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 
-GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
-	mSystem(system), 
+GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window),
+	mSystem(system),
 	mMenu(window, "OPTIONS")
 {
 	addChild(&mMenu);
@@ -74,8 +74,8 @@ void GuiGamelistOptions::openMetaDataEd()
 	ScraperSearchParams p;
 	p.game = file;
 	p.system = file->getSystem();
-	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(), 
-		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), [this, file] { 
+	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(),
+		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), [this, file] {
 			getGamelist()->remove(file);
 	}));
 }
@@ -87,7 +87,7 @@ void GuiGamelistOptions::jumpToLetter()
 
 	// this is a really shitty way to get a list of files
 	const std::vector<FileData*>& files = gamelist->getCursor()->getParent()->getChildren();
-	
+
 	long min = 0;
 	long max = files.size() - 1;
 	long mid = 0;
@@ -109,7 +109,7 @@ void GuiGamelistOptions::jumpToLetter()
 		else
 			break; //exact match found
 	}
-
+		
 	gamelist->setCursor(files.at(mid));
 
 	delete this;
