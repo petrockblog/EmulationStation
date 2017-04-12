@@ -115,6 +115,31 @@ addEntry("APPS", 0x777777FF, true,
 			s->addWithLabel("ENABLE SOUNDS", sounds_enabled);
 			s->addSaveFunc([sounds_enabled] { Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); });
 
+			Window* window = mWindow;
+
+			ComponentListRow row;
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY DISABLE BACKGROUND MUSIC?", "YES", 
+				[] { 
+					system("/home/pi/RetroPie/music/disablebgmusic.sh >/dev/null 2>&1");
+					
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "DISABLE BACKGROUND MUSIC", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY ENABLE BACKGROUND MUSIC?", "YES", 
+				[] { 
+					system("/home/pi/RetroPie/music/enablebgmusic.sh >/dev/null 2>&1");
+
+				}, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "ENABLE BACKGROUND MUSIC", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+
+			s->addRow(row);
+
 			mWindow->pushGui(s);
 	});
 
