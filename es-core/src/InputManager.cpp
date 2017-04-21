@@ -78,12 +78,22 @@ void InputManager::addJoystickByDeviceIndex(int id)
 	SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(joy), guid, 65);
 
 	// create the InputConfig
-	mInputConfigs[joyId] = new InputConfig(joyId, SDL_JoystickName(joy), guid);
+
+	const std::string& joystickName = SDL_JoystickName(joy);
+
+	// remove control characters from joystick name
+	std::string cleanJoystickName;
+	for(const char& c: joystickName) {
+		if(!std::iscntrl(c))
+			cleanJoystickName += c;
+	}
+
+	mInputConfigs[joyId] = new InputConfig(joyId, cleanJoystickName, guid);
 	if(!loadInputConfig(mInputConfigs[joyId]))
 	{
-		LOG(LogInfo) << "Added unconfigured joystick " << SDL_JoystickName(joy) << " (GUID: " << guid << ", instance ID: " << joyId << ", device index: " << id << ").";
+		LOG(LogInfo) << "Added unconfigured joystick " << cleanJoystickName << " (GUID: " << guid << ", instance ID: " << joyId << ", device index: " << id << ").";
 	}else{
-		LOG(LogInfo) << "Added known joystick " << SDL_JoystickName(joy) << " (instance ID: " << joyId << ", device index: " << id << ")";
+		LOG(LogInfo) << "Added known joystick " << cleanJoystickName << " (instance ID: " << joyId << ", device index: " << id << ")";
 	}
 
 	// set up the prevAxisValues
