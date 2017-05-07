@@ -41,13 +41,7 @@ namespace FileSorts
 
 	bool compareRating(const FileData* file1, const FileData* file2)
 	{
-		//only games have rating metadata
-		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
-		{
-			return file1->metadata.getFloat("rating") < file2->metadata.getFloat("rating");
-		}
-
-		return false;
+		return file1->metadata.getFloat("rating") < file2->metadata.getFloat("rating");
 	}
 
 	bool compareTimesPlayed(const FileData* file1, const FileData* file2)
@@ -74,24 +68,12 @@ namespace FileSorts
 
 	bool compareNumPlayers(const FileData* file1, const FileData* file2)
 	{
-		//only games have players metadata
-		if (file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
-		{
-			return (file1)->metadata.getInt("players") < (file2)->metadata.getInt("players");
-		}
-
-		return false;
+		return (file1)->metadata.getInt("players") < (file2)->metadata.getInt("players");
 	}
 
 	bool compareReleaseDate(const FileData* file1, const FileData* file2)
 	{
-		//only games have releasedate metadata
-		if (file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
-		{
-			return (file1)->metadata.getTime("releasedate") < (file2)->metadata.getTime("releasedate");
-		}
-
-		return false;
+		return (file1)->metadata.getTime("releasedate") < (file2)->metadata.getTime("releasedate");
 	}
 
 	bool compareGenre(const FileData* file1, const FileData* file2)
