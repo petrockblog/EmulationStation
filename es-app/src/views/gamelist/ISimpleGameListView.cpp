@@ -95,28 +95,28 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}
 
 			return true;
-        }else if (config->isMappedTo("y", input))
-        {
-            FileData* cursor = getCursor();
-        
-                if (cursor->getType() == GAME)
-                {
-                    MetaDataList* md = &cursor->metadata;
-                    std::string value = md->get("favourite");
-                    if (value.compare("no") == 0)
-                    {
-                        md->set("favourite", "yes");
-                    }
-                    else
-                    {
-                        md->set("favourite", "no");
-                    }
-                    FileData* cursor = getCursor();
-                    populateList(cursor->getParent()->getChildren());
-                    setCursor(cursor);
-                    updateInfoPanel();
-                }
-            
+		}else if (config->isMappedTo("y", input))
+		{
+			FileData* cursor = getCursor();
+		
+				if (cursor->getType() == GAME)
+				{
+					MetaDataList* md = &cursor->metadata;
+					std::string value = md->get("favourite");
+					if (value.compare("no") == 0)
+					{
+						md->set("favourite", "yes");
+					}
+					else
+					{
+						md->set("favourite", "no");
+					}
+					FileData* cursor = getCursor();
+					populateList(cursor->getParent()->getChildren());
+					setCursor(cursor);
+					updateInfoPanel();
+				}
+			
 		}else if(config->isMappedTo("right", input))
 		{
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))

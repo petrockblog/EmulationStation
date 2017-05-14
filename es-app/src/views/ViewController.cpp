@@ -103,7 +103,7 @@ void ViewController::goToGameList(SystemData* system)
 		offX = sysList->getPosition().x() - offX;
 		mCamera.translation().x() -= offX;
 	}
-    
+	
 	mState.viewing = GAME_LIST;
 	mState.system = system;
 

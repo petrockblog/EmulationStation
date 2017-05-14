@@ -23,8 +23,8 @@ protected:
 	virtual void launch(FileData* game) override;
 	
 	virtual void update(int deltaTime) override;
-    
-    virtual std::vector<HelpPrompt> getHelpPrompts() override;
+	
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
 	void updateInfoPanel();
@@ -46,15 +46,15 @@ private:
 	TextComponent mPlayers;
 	DateTimeComponent mLastPlayed;
 	TextComponent mPlayCount;
-    TextComponent mFavourite;
+	TextComponent mFavourite;
 
 	std::vector<TextComponent*> getMDLabels();
 	std::vector<GuiComponent*> getMDValues();
 
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;
-    
-    SystemData* mSystem;
+	
+	SystemData* mSystem;
 
 	bool		mVideoPlaying;
 

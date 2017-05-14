@@ -449,7 +449,7 @@ void SystemData::loadTheme()
 	try
 	{
 		mTheme->loadFile(path);
-        mHasFavourites = mTheme->getHasFavouritesInTheme();
+		mHasFavourites = mTheme->getHasFavouritesInTheme();
 	} catch(ThemeException& e)
 	{
 		LOG(LogError) << e.what();
