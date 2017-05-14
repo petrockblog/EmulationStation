@@ -103,7 +103,7 @@ void ViewController::goToGameList(SystemData* system)
 		offX = sysList->getPosition().x() - offX;
 		mCamera.translation().x() -= offX;
 	}
-
+    
 	mState.viewing = GAME_LIST;
 	mState.system = system;
 
@@ -294,10 +294,10 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	switch (selectedViewType)
 	{
 		case VIDEO:
-			view = std::shared_ptr<IGameListView>(new VideoGameListView(mWindow, system->getRootFolder()));
+			view = std::shared_ptr<IGameListView>(new VideoGameListView(mWindow, system->getRootFolder(), system));
 			break;
 		case DETAILED:
-			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder(), system));
 			break;
 		// case GRID placeholder for future implementation.
 		//		view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));

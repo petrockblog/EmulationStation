@@ -1,23 +1,25 @@
 #include "views/gamelist/VideoGameListView.h"
 #include "views/ViewController.h"
 #include "Window.h"
+#include "Settings.h"
 #include "animations/LambdaAnimation.h"
 #include <sys/stat.h>
 #include <fcntl.h>
 
-VideoGameListView::VideoGameListView(Window* window, FileData* root) :
+VideoGameListView::VideoGameListView(Window* window, FileData* root, SystemData* system) :
 	BasicGameListView(window, root), 
 	mDescContainer(window), mDescription(window), 
 	mMarquee(window),
 	mImage(window),
+    mSystem(system),
 	mVideo(window),
 	mVideoPlaying(false),
 
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window), 
-	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window),
+	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window), mLblFavourite(window),
 
 	mRating(window), mReleaseDate(window), mDeveloper(window), mPublisher(window), 
-	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window)
+	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window), mFavourite(window)
 {
 	const float padding = 0.01f;
 
@@ -82,6 +84,12 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	mLblPlayCount.setText("Times played: ");
 	addChild(&mLblPlayCount);
 	addChild(&mPlayCount);
+    if (system->getHasFavourites())
+    {
+        mLblFavourite.setText("Favourite: ");
+        addChild(&mLblFavourite);
+        addChild(&mFavourite);
+    }
 
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2*padding), mSize.y() - mDescContainer.getPosition().y());
@@ -111,30 +119,63 @@ void VideoGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
-	assert(labels.size() == 8);
-	const char* lblElements[8] = {
-		"md_lbl_rating", "md_lbl_releasedate", "md_lbl_developer", "md_lbl_publisher",
-		"md_lbl_genre", "md_lbl_players", "md_lbl_lastplayed", "md_lbl_playcount"
-	};
-
-	for(unsigned int i = 0; i < labels.size(); i++)
-	{
-		labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
-	}
-
-
+    if (mSystem->getHasFavourites())
+    {
+        assert(labels.size() == 9);
+        const char* lblElements[9] = {
+            "md_lbl_rating", "md_lbl_releasedate", "md_lbl_developer", "md_lbl_publisher",
+            "md_lbl_genre", "md_lbl_players", "md_lbl_lastplayed", "md_lbl_playcount","md_lbl_favourite"
+        };
+        
+        for(unsigned int i = 0; i < labels.size(); i++)
+        {
+            labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
+        }
+    }
+    else
+    {
+        assert(labels.size() == 8);
+        const char* lblElements[8] = {
+            "md_lbl_rating", "md_lbl_releasedate", "md_lbl_developer", "md_lbl_publisher",
+            "md_lbl_genre", "md_lbl_players", "md_lbl_lastplayed", "md_lbl_playcount"
+        };
+        
+        for(unsigned int i = 0; i < labels.size(); i++)
+        {
+            labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
+        }
+    }
+    
 	initMDValues();
 	std::vector<GuiComponent*> values = getMDValues();
-	assert(values.size() == 8);
-	const char* valElements[8] = {
-		"md_rating", "md_releasedate", "md_developer", "md_publisher",
-		"md_genre", "md_players", "md_lastplayed", "md_playcount"
-	};
-
-	for(unsigned int i = 0; i < values.size(); i++)
-	{
-		values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
-	}
+    
+    if (mSystem->getHasFavourites())
+    {
+        assert(values.size() == 9);
+        const char* valElements[9] = {
+            "md_rating", "md_releasedate", "md_developer", "md_publisher",
+            "md_genre", "md_players", "md_lastplayed", "md_playcount", "md_favourite"
+        };
+        
+        for(unsigned int i = 0; i < values.size(); i++)
+        {
+            values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
+        }
+    }
+    else
+    {
+        assert(values.size() == 8);
+        const char* valElements[8] = {
+            "md_rating", "md_releasedate", "md_developer", "md_publisher",
+            "md_genre", "md_players", "md_lastplayed", "md_playcount"
+        };
+        
+        for(unsigned int i = 0; i < values.size(); i++)
+        {
+            values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
+        }
+    }
+	
 
 	mDescContainer.applyTheme(theme, getName(), "md_description", POSITION | ThemeFlags::SIZE);
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
@@ -189,6 +230,7 @@ void VideoGameListView::initMDValues()
 	mPlayers.setFont(defaultFont);
 	mLastPlayed.setFont(defaultFont);
 	mPlayCount.setFont(defaultFont);
+    mFavourite.setFont(defaultFont);
 
 	float bottom = 0.0f;
 
@@ -271,6 +313,7 @@ void VideoGameListView::updateInfoPanel()
 		{
 			mLastPlayed.setValue(file->metadata.get("lastplayed"));
 			mPlayCount.setValue(file->metadata.get("playcount"));
+            mFavourite.setValue(file->metadata.get("favourite"));
 		}
 		
 		fadingOut = false;
@@ -323,7 +366,30 @@ std::vector<TextComponent*> VideoGameListView::getMDLabels()
 	ret.push_back(&mLblPlayers);
 	ret.push_back(&mLblLastPlayed);
 	ret.push_back(&mLblPlayCount);
+    if (mSystem->getHasFavourites())
+    {
+        ret.push_back(&mLblFavourite);
+    }
 	return ret;
+}
+
+std::vector<HelpPrompt> VideoGameListView::getHelpPrompts()
+{
+    std::vector<HelpPrompt> prompts;
+    
+    if (Settings::getInstance()->getBool("QuickSystemSelect"))
+    {
+        prompts.push_back(HelpPrompt("left/right", "system"));
+    }
+    prompts.push_back(HelpPrompt("up/down", "choose"));
+    prompts.push_back(HelpPrompt("a", "launch"));
+    prompts.push_back(HelpPrompt("b", "back"));
+    if (mSystem->getHasFavourites())
+    {
+        prompts.push_back(HelpPrompt("y", "toggle favourite"));
+    }
+    prompts.push_back(HelpPrompt("select", "options"));
+    return prompts;
 }
 
 std::vector<GuiComponent*> VideoGameListView::getMDValues()
@@ -337,6 +403,10 @@ std::vector<GuiComponent*> VideoGameListView::getMDValues()
 	ret.push_back(&mPlayers);
 	ret.push_back(&mLastPlayed);
 	ret.push_back(&mPlayCount);
+    if (mSystem->getHasFavourites())
+    {
+        ret.push_back(&mFavourite);
+    }
 	return ret;
 }
 

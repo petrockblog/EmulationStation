@@ -20,7 +20,8 @@ MetaDataDecl gameDecls[] = {
 	{"genre",		MD_STRING,				"unknown",			false,		"genre",				"enter game genre"},
 	{"players",		MD_INT,					"1",				false,		"players",				"enter number of players"},
 	{"playcount",	MD_INT,					"0",				true,		"play count",			"enter number of times played"},
-	{"lastplayed",	MD_TIME,				"0", 				true,		"last played",			"enter last played date"}
+	{"lastplayed",	MD_TIME,				"0", 				true,		"last played",			"enter last played date"},
+    {"favourite",	MD_STRING,				"no",				false,		"favourite",				"enter favourite"}
 };
 const std::vector<MetaDataDecl> gameMDD(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0]));
 
@@ -128,7 +129,7 @@ void MetaDataList::setTime(const std::string& key, const boost::posix_time::ptim
 
 const std::string& MetaDataList::get(const std::string& key) const
 {
-	return mMap.at(key);
+    return mMap.at(key);
 }
 
 int MetaDataList::getInt(const std::string& key) const
