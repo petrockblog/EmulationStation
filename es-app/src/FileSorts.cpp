@@ -36,7 +36,11 @@ namespace FileSorts
 	//returns if file1 should come before file2
 	bool compareFileName(const FileData* file1, const FileData* file2)
 	{
-		return file1->getName().compare(file2->getName()) < 0;
+		std::string name1 = file1->getName();
+		std::string name2 = file2->getName();
+		transform(name1.begin(), name1.end(), name1.begin(), std::toupper);
+		transform(name2.begin(), name2.end(), name2.begin(), std::toupper);
+		return name1.compare(name2) < 0;
 	}
 
 	bool compareRating(const FileData* file1, const FileData* file2)
@@ -78,16 +82,28 @@ namespace FileSorts
 
 	bool compareGenre(const FileData* file1, const FileData* file2)
 	{
-		return file1->metadata.get("genre").compare(file2->metadata.get("genre")) < 0;
+		std::string genre1 = file1->metadata.get("genre");
+		std::string genre2 = file2->metadata.get("genre");
+		transform(genre1.begin(), genre1.end(), genre1.begin(), std::toupper);
+		transform(genre2.begin(), genre2.end(), genre2.begin(), std::toupper);
+		return genre1.compare(genre2) < 0;
 	}
 
 	bool compareDeveloper(const FileData* file1, const FileData* file2)
 	{
-		return file1->metadata.get("developer").compare(file2->metadata.get("developer")) < 0;
+		std::string developer1 = file1->metadata.get("developer");
+		std::string developer2 = file2->metadata.get("developer");
+		transform(developer1.begin(), developer1.end(), developer1.begin(), std::toupper);
+		transform(developer2.begin(), developer2.end(), developer2.begin(), std::toupper);
+		return developer1.compare(developer2) < 0;
 	}
 
 	bool comparePublisher(const FileData* file1, const FileData* file2)
 	{
-		return file1->metadata.get("publisher").compare(file2->metadata.get("publisher")) < 0;
+		std::string publisher1 = file1->metadata.get("publisher");
+		std::string publisher2 = file2->metadata.get("publisher");
+		transform(publisher1.begin(), publisher1.end(), publisher1.begin(), std::toupper);
+		transform(publisher2.begin(), publisher2.end(), publisher2.begin(), std::toupper);
+		return publisher1.compare(publisher2) < 0;
 	}
 };
