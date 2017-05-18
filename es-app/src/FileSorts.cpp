@@ -84,8 +84,8 @@ namespace FileSorts
 	{
 		std::string genre1 = file1->metadata.get("genre");
 		std::string genre2 = file2->metadata.get("genre");
-		transform(genre1.begin(), genre1.end(), genre1.begin(), std::toupper);
-		transform(genre2.begin(), genre2.end(), genre2.begin(), std::toupper);
+		transform(genre1.begin(), genre1.end(), genre1.begin(), ::toupper);
+		transform(genre2.begin(), genre2.end(), genre2.begin(), ::toupper);
 		return genre1.compare(genre2) < 0;
 	}
 
@@ -93,8 +93,8 @@ namespace FileSorts
 	{
 		std::string developer1 = file1->metadata.get("developer");
 		std::string developer2 = file2->metadata.get("developer");
-		transform(developer1.begin(), developer1.end(), developer1.begin(), std::toupper);
-		transform(developer2.begin(), developer2.end(), developer2.begin(), std::toupper);
+		transform(developer1.begin(), developer1.end(), developer1.begin(), ::toupper);
+		transform(developer2.begin(), developer2.end(), developer2.begin(), ::toupper);
 		return developer1.compare(developer2) < 0;
 	}
 
@@ -102,8 +102,8 @@ namespace FileSorts
 	{
 		std::string publisher1 = file1->metadata.get("publisher");
 		std::string publisher2 = file2->metadata.get("publisher");
-		transform(publisher1.begin(), publisher1.end(), publisher1.begin(), std::toupper);
-		transform(publisher2.begin(), publisher2.end(), publisher2.begin(), std::toupper);
+		transform(publisher1.begin(), publisher1.end(), publisher1.begin(), ::toupper);
+		transform(publisher2.begin(), publisher2.end(), publisher2.begin(), ::toupper);
 		return publisher1.compare(publisher2) < 0;
 	}
 };
