@@ -38,8 +38,8 @@ namespace FileSorts
 	{
 		std::string name1 = file1->getName();
 		std::string name2 = file2->getName();
-		transform(name1.begin(), name1.end(), name1.begin(), std::toupper);
-		transform(name2.begin(), name2.end(), name2.begin(), std::toupper);
+		transform(name1.begin(), name1.end(), name1.begin(), ::toupper);
+		transform(name2.begin(), name2.end(), name2.begin(), ::toupper);
 		return name1.compare(name2) < 0;
 	}
 
