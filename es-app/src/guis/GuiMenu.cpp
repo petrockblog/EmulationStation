@@ -81,6 +81,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("ENABLE NAVIGATION SOUNDS", sounds_enabled);
 			s->addSaveFunc([sounds_enabled] { Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); });
 
+			// video sound 
+			auto video_audio = std::make_shared<SwitchComponent>(mWindow);
+			video_audio->setState(Settings::getInstance()->getBool("VideoAudio"));
+			s->addWithLabel("ENABLE VIDEO AUDIO", video_audio);
+			s->addSaveFunc([video_audio] { Settings::getInstance()->setBool("VideoAudio", video_audio->getState()); });
+
 			mWindow->pushGui(s);
 	});
 
@@ -183,9 +189,9 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(s);
 	});
 
-	addEntry("VIDEO PLAYER SETTINGS", 0x777777FF, true,
+	addEntry("OTHER SETTINGS", 0x777777FF, true,
 		[this] {
-			auto s = new GuiSettings(mWindow, "VIDEO PLAYER SETTINGS");
+			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
 
 #ifdef _RPI_
 			// Video Player - VideoOmxPlayer
@@ -205,17 +211,6 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 					ViewController::get()->reloadAll();
 			});
 #endif
-			auto video_audio = std::make_shared<SwitchComponent>(mWindow);
-			video_audio->setState(Settings::getInstance()->getBool("VideoAudio"));
-			s->addWithLabel("ENABLE VIDEO AUDIO", video_audio);
-			s->addSaveFunc([video_audio] { Settings::getInstance()->setBool("VideoAudio", video_audio->getState()); });
-
-			mWindow->pushGui(s);
-	});
-
-	addEntry("OTHER SETTINGS", 0x777777FF, true,
-		[this] {
-			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
 
 			// gamelists
 			auto save_gamelists = std::make_shared<SwitchComponent>(mWindow);
