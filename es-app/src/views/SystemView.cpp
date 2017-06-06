@@ -89,6 +89,15 @@ void SystemView::populate()
 			return b->getZIndex() > a->getZIndex();
 		});
 
+				// Handle sound
+		const ThemeData::ThemeElement* elem = theme->getElement("system", "systemSound", "sound");
+		if (elem != NULL)
+		{
+			// Load the sound
+			std::string sound = elem->get<std::string>("path");
+			e.sound = Sound::get(sound);
+		}
+
 		this->add(e);
 	}
 }
