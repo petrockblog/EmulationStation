@@ -2,6 +2,7 @@
 #include "ThemeData.h"
 #include "Window.h"
 #include "views/ViewController.h"
+#include "Settings.h"
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
 	mGrid(window)
@@ -54,6 +55,7 @@ std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 	prompts.push_back(HelpPrompt("up/down/left/right", "scroll"));
 	prompts.push_back(HelpPrompt("a", "launch"));
-	prompts.push_back(HelpPrompt("b", "back"));
+	if(!Settings::getInstance()->getBool("HideSystemView"))
+	  prompts.push_back(HelpPrompt("b", "back"));
 	return prompts;
 }

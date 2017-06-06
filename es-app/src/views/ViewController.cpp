@@ -46,7 +46,10 @@ void ViewController::goToStart()
 	/* mState.viewing = START_SCREEN;
 	mCurrentView.reset();
 	playViewTransition(); */
-	goToSystemView(SystemData::sSystemVector.at(0));
+	if (Settings::getInstance()->getBool("HideSystemView"))
+	  goToGameList(SystemData::sSystemVector.at(0));
+	else
+	  goToSystemView(SystemData::sSystemVector.at(0));
 }
 
 int ViewController::getSystemId(SystemData* system)

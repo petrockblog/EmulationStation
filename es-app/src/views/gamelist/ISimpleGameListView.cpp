@@ -103,7 +103,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				setCursor(mCursorStack.top());
 				mCursorStack.pop();
 				Sound::getFromTheme(getTheme(), getName(), "back")->play();
-			}else{
+			}else if (!Settings::getInstance()->getBool("HideSystemView")) {
 				onFocusLost();
 				ViewController::get()->goToSystemView(getCursor()->getSystem());
 			}
