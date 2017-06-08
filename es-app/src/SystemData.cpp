@@ -1,6 +1,7 @@
 #include "SystemData.h"
 #include "Gamelist.h"
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 #include <stdlib.h>
 #include <SDL_joystick.h>
@@ -187,7 +188,8 @@ void SystemData::populateFolder(FileData* folder)
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
 
 		isGame = false;
-		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
+		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end()
+		   && (fs::is_directory(filePath) || !boost::starts_with(filePath.filename().string(), "._")))
 		{
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), this);
 			folder->addChild(newGame);
