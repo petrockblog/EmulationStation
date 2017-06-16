@@ -39,7 +39,7 @@ public:
 	void addToIndex(FileData* game);
 	void removeFromIndex(FileData* game);
 	void setFilter(FilterIndexType type, std::vector<std::string>* values);
-	void clearAllFilters();	
+	void clearAllFilters();
 	void debugPrintIndexes();
 	bool showFile(FileData* game);
 	bool isFiltered() { return (filterByGenre || filterByPlayers || filterByFavourites || filterByPubDev || filterByRatings); };
@@ -50,7 +50,7 @@ public:
 private:
 	std::vector<FilterDataDecl> filterDataDecl;
 	std::string getIndexableKey(FileData* game, FilterIndexType type, bool getSecondary);
-	
+
 	void manageGenreEntryInIndex(FileData* game, bool remove = false);
 	void managePlayerEntryInIndex(FileData* game, bool remove = false);
 	void manageFavouritesEntryInIndex(FileData* game, bool remove = false);

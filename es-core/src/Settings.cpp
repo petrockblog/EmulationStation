@@ -47,7 +47,7 @@ void Settings::setDefaults()
 	mBoolMap["SplashScreen"] = true;
 
 #ifdef _RPI_
-	// don't enable VSync by default on the Pi, since it already 
+	// don't enable VSync by default on the Pi, since it already
 	// has trouble trying to render things at 60fps in certain menus
 	mBoolMap["VSync"] = false;
 #else
@@ -76,6 +76,33 @@ void Settings::setDefaults()
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
 	mStringMap["GamelistViewStyle"] = "automatic";
+
+	mBoolMap["ScreenSaverControls"] = true;
+	mStringMap["ScreenSaverGameInfo"] = "never";
+	mBoolMap["StretchVideoOnScreenSaver"] = false;
+
+	// This setting only applies to raspberry pi but set it for all platforms so
+	// we don't get a warning if we encounter it on a different platform
+	mBoolMap["VideoOmxPlayer"] = false;
+	#ifdef _RPI_
+		// we're defaulting to OMX Player for full screen video on the Pi
+		mBoolMap["ScreenSaverOmxPlayer"] = true;
+	#else
+		mBoolMap["ScreenSaverOmxPlayer"] = false;
+	#endif
+
+	mBoolMap["VideoAudio"] = true;
+	mBoolMap["CaptionsCompatibility"] = true;
+	// Audio out device for Video playback using OMX player.
+	mStringMap["OMXAudioDev"] = "both";
+
+	// Audio out device for volume control
+	#ifdef _RPI_
+		mStringMap["AudioDevice"] = "PCM";
+	#else
+		mStringMap["AudioDevice"] = "Master";
+	#endif
+
 }
 
 template <typename K, typename V>

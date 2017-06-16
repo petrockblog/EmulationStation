@@ -17,7 +17,6 @@ public:
 	
 	virtual void updateInfoPanel() override;
 
-protected:
 	virtual void launch(FileData* game) override;
 	
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;

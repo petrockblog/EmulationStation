@@ -43,6 +43,8 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoPlayerComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoVlcComponent.h
 
 	# Guis
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.h
@@ -99,6 +101,8 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoPlayerComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoVlcComponent.cpp
 
 	# Guis
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.cpp
@@ -138,6 +142,7 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_hotkey_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp

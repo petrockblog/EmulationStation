@@ -19,14 +19,10 @@ public:
 	virtual const char* getName() const override { return "basic"; }
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
-
-	virtual void populateList(const std::vector<FileData*>& files) override;
-	
-	virtual inline void updateInfoPanel() override {}
-	
-protected:
-	
 	virtual void launch(FileData* game) override;
+
+protected:
+	virtual void populateList(const std::vector<FileData*>& files) override;
 	virtual void remove(FileData* game) override;
 
 	TextListComponent<FileData*> mList;

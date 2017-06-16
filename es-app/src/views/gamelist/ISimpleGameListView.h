@@ -23,18 +23,16 @@ public:
 	virtual void setCursor(FileData*) = 0;
 
 	virtual bool input(InputConfig* config, Input input) override;
-	
-	virtual inline void updateInfoPanel() override {}
-	virtual void populateList(const std::vector<FileData*>& files) = 0;
+	virtual void launch(FileData* game) = 0;
 
 protected:
-	virtual void launch(FileData* game) = 0;
+	virtual void populateList(const std::vector<FileData*>& files) = 0;
 
 	TextComponent mHeaderText;
 	ImageComponent mHeaderImage;
 	ImageComponent mBackground;
-	
-	ThemeExtras mThemeExtras;
+
+	std::vector<GuiComponent*> mThemeExtras;
 
 	std::stack<FileData*> mCursorStack;
 };

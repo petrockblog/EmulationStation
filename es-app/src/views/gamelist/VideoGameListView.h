@@ -18,10 +18,9 @@ public:
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
 	virtual const char* getName() const override { return "video"; }
+	virtual void launch(FileData* game) override;
 
 protected:
-	virtual void launch(FileData* game) override;
-	
 	virtual void update(int deltaTime) override;
 	
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
@@ -33,7 +32,7 @@ private:
 	void initMDValues();
 
 	ImageComponent mMarquee;
-	VideoComponent mVideo;
+	VideoComponent* mVideo;
 	ImageComponent mImage;
 
 	TextComponent mLblRating, mLblReleaseDate, mLblDeveloper, mLblPublisher, mLblGenre, mLblPlayers, mLblLastPlayed, mLblPlayCount, mLblFavourite;
