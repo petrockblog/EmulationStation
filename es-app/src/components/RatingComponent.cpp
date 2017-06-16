@@ -3,13 +3,14 @@
 #include "Window.h"
 #include "Util.h"
 
-RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
+RatingComponent::RatingComponent(Window* window) : GuiComponent(window), mColorShift(0xFFFFFFFF)
 {
 	mFilledTexture = TextureResource::get(":/star_filled.svg", true);
 	mUnfilledTexture = TextureResource::get(":/star_unfilled.svg", true);
 	mValue = 0.5f;
 	mSize << 64 * NUM_RATING_STARS, 64;
 	updateVertices();
+	updateColors();
 }
 
 void RatingComponent::setValue(const std::string& value)
@@ -35,6 +36,22 @@ std::string RatingComponent::getValue() const
 	std::stringstream ss;
 	ss << mValue;
 	return ss.str();
+}
+
+void RatingComponent::setOpacity(unsigned char opacity)
+{
+	mOpacity = opacity;
+	mColorShift = (mColorShift >> 8 << 8) | mOpacity;
+	updateColors();
+}
+
+void RatingComponent::setColorShift(unsigned int color)
+{
+	mColorShift = color;
+	// Grab the opacity from the color shift because we may need to apply it if
+	// fading textures in
+	mOpacity = color & 0xff;
+	updateColors();
 }
 
 void RatingComponent::onSizeChanged()
@@ -87,6 +104,11 @@ void RatingComponent::updateVertices()
 	mVertices[11] = mVertices[7];
 }
 
+void RatingComponent::updateColors()
+{
+	Renderer::buildGLColorArray(mColors, mColorShift, 12);
+}
+
 void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
@@ -96,13 +118,13 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glColor4ub(255, 255, 255, getOpacity());
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
 	
 	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
 	
 	mFilledTexture->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -112,11 +134,10 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
 	
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-
-	glColor4ub(255, 255, 255, 255);
 
 	renderChildren(trans);
 }
@@ -156,6 +177,10 @@ void RatingComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const 
 		mUnfilledTexture = TextureResource::get(elem->get<std::string>("unfilledPath"), true);
 		imgChanged = true;
 	}
+
+
+	if(properties & COLOR && elem->has("color"))
+		setColorShift(elem->get<unsigned int>("color"));
 
 	if(imgChanged)
 		onSizeChanged();

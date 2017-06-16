@@ -35,8 +35,11 @@ public:
 	virtual void remove(FileData* game) = 0;
 
 	virtual const char* getName() const = 0;
+	virtual void launch(FileData* game) = 0;
 
 	virtual HelpStyle getHelpStyle() override;
+
+	void render(const Eigen::Affine3f& parentTrans) override;
 protected:
 	FileData* mRoot;
 	std::shared_ptr<ThemeData> mTheme;

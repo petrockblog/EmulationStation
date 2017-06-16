@@ -9,6 +9,10 @@
 #include "Settings.h"
 #include "Util.h"
 
+// buffer values for scrolling velocity (left, stopped, right)
+const int logoBuffersLeft[] = { -5, -2, -1 };
+const int logoBuffersRight[] = { 1, 2, 5 };
+
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
 										 mViewNeedsReload(true),
 										 mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
@@ -39,42 +43,51 @@ void SystemView::populate()
 		// make logo
 		if(theme->getElement("system", "logo", "image"))
 		{
-			ImageComponent* logo = new ImageComponent(mWindow);
+			ImageComponent* logo = new ImageComponent(mWindow, false, false);
 			logo->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x(), mCarousel.logoSize.y()));
 			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
 			logo->setPosition((mCarousel.logoSize.x() - logo->getSize().x()) / 2,
 				(mCarousel.logoSize.y() - logo->getSize().y()) / 2); // center
 			e.data.logo = std::shared_ptr<GuiComponent>(logo);
 
-			ImageComponent* logoSelected = new ImageComponent(mWindow);
+			ImageComponent* logoSelected = new ImageComponent(mWindow, false, false);
 			logoSelected->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x() * mCarousel.logoScale, mCarousel.logoSize.y() * mCarousel.logoScale));
 			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
 			logoSelected->setPosition((mCarousel.logoSize.x() - logoSelected->getSize().x()) / 2,
 				(mCarousel.logoSize.y() - logoSelected->getSize().y()) / 2); // center
 			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
-			
+
 		}else{
 			// no logo in theme; use text
-			TextComponent* text = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get(FONT_SIZE_LARGE), 
-				0x000000FF, 
+			TextComponent* text = new TextComponent(mWindow,
+				(*it)->getName(),
+				Font::get(FONT_SIZE_LARGE),
+				0x000000FF,
 				ALIGN_CENTER);
 			text->setSize(mCarousel.logoSize);
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 
-			TextComponent* textSelected = new TextComponent(mWindow, 
-				(*it)->getName(), 
+			TextComponent* textSelected = new TextComponent(mWindow,
+				(*it)->getName(),
 				Font::get((int)(FONT_SIZE_LARGE * 1.5)),
-				0x000000FF, 
+				0x000000FF,
 				ALIGN_CENTER);
 			textSelected->setSize(mCarousel.logoSize);
 			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
 		}
 
+		// delete any existing extras
+		for (auto extra : e.data.backgroundExtras)
+			delete extra;
+		e.data.backgroundExtras.clear();
+
 		// make background extras
-		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
-		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
+		e.data.backgroundExtras = ThemeData::makeExtras((*it)->getTheme(), "system", mWindow);
+
+		// sort the extras by z-index
+		std:stable_sort(e.data.backgroundExtras.begin(), e.data.backgroundExtras.end(),  [](GuiComponent* a, GuiComponent* b) {
+			return b->getZIndex() > a->getZIndex();
+		});
 
 		this->add(e);
 	}
@@ -140,11 +153,17 @@ bool SystemView::input(InputConfig* config, Input input)
 			return true;
 		}
 	}else{
-		if(config->isMappedTo("left", input) || 
+		if(config->isMappedTo("left", input) ||
 			config->isMappedTo("right", input) ||
-			config->isMappedTo("up", input) || 
+			config->isMappedTo("up", input) ||
 			config->isMappedTo("down", input))
 			listInput(0);
+		if(config->isMappedTo("select", input) && Settings::getInstance()->getBool("ScreenSaverControls"))
+		{
+			mWindow->startScreenSaver();
+			mWindow->renderScreenSaver();
+			return true;
+		}
 	}
 
 	return GuiComponent::input(config, input);
@@ -171,13 +190,13 @@ void SystemView::onCursorChanged(const CursorState& state)
 
 	float endPos = target; // directly
 	float dist = abs(endPos - startPos);
-	
+
 	if(abs(target + posMax - startPos) < dist)
 		endPos = target + posMax; // loop around the end (0 -> max)
 	if(abs(target - posMax - startPos) < dist)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
-	
+
 	// animate mSystemInfo's opacity (fade out, wait, fade back in)
 
 	cancelAnimation(1);
@@ -191,19 +210,19 @@ void SystemView::onCursorChanged(const CursorState& state)
 		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
 	}, (int)(infoStartOpacity * 150));
 
-	unsigned int gameCount = getSelected()->getGameCount();
+	unsigned int gameCount = getSelected()->getDisplayedGameCount();
 
 	// also change the text after we've fully faded out
 	setAnimation(infoFadeOut, 0, [this, gameCount] {
 		std::stringstream ss;
-		
+
 		if (getSelected()->getName() == "retropie")
 			ss << "CONFIGURATION";
 		// only display a game count if there are at least 2 games
 		else if(gameCount > 1)
 			ss << gameCount << " GAMES AVAILABLE";
 
-		mSystemInfo.setText(ss.str()); 
+		mSystemInfo.setText(ss.str());
 	}, false, 1);
 
 	// only display a game count if there are at least 2 games
@@ -224,7 +243,8 @@ void SystemView::onCursorChanged(const CursorState& state)
 		return;
 
 	Animation* anim;
-	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
+	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
+	if(transition_style == "fade")
 	{
 		float startExtrasFade = mExtrasFadeOpacity;
 		anim = new LambdaAnimation(
@@ -251,10 +271,10 @@ void SystemView::onCursorChanged(const CursorState& state)
 				this->mExtrasCamOffset = endPos;
 
 		}, 500);
-	}
-	else{ // slide
+	} else if (transition_style == "slide") {
+		// slide
 		anim = new LambdaAnimation(
-			[startPos, endPos, posMax, this](float t)
+			[this, startPos, endPos, posMax](float t)
 		{
 			t -= 1;
 			float f = lerp<float>(startPos, endPos, t*t*t + 1);
@@ -266,7 +286,31 @@ void SystemView::onCursorChanged(const CursorState& state)
 			this->mCamOffset = f;
 			this->mExtrasCamOffset = f;
 		}, 500);
+	} else if (transition_style == "simple slide") {
+		// simple slide
+		anim = new LambdaAnimation(
+			[this, startPos, endPos, posMax](float t)
+		{
+			t -= 1;
+			float f = lerp<float>(startPos, endPos, t*t*t + 1);
+			if(f < 0)
+				f += posMax;
+			if(f >= posMax)
+				f -= posMax;
+
+			this->mCamOffset = f;
+			this->mExtrasCamOffset = endPos;
+		}, 500);
+	} else {
+		// instant
+		anim = new LambdaAnimation(
+			[this, endPos](float t)
+		{
+			this->mCamOffset = endPos;
+			this->mExtrasCamOffset = endPos;
+		}, 1);
 	}
+
 
 	setAnimation(anim, 0, nullptr, false, 0);
 }
@@ -275,12 +319,30 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 {
 	if(size() == 0)
 		return;  // nothing to render
-	
+
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 
-	renderExtras(trans);
-	renderCarousel(trans);
-	renderInfoBar(trans);
+	auto systemInfoZIndex = mSystemInfo.getZIndex();
+	auto minMax = std::minmax(mCarousel.zIndex, systemInfoZIndex);
+
+	renderExtras(trans, INT16_MIN, minMax.first);
+	renderFade(trans);
+
+	if (mCarousel.zIndex > mSystemInfo.getZIndex()) {
+		renderInfoBar(trans);
+	} else {
+		renderCarousel(trans);
+	}
+
+	renderExtras(trans, minMax.first, minMax.second);
+
+	if (mCarousel.zIndex > mSystemInfo.getZIndex()) {
+		renderCarousel(trans);
+	} else {
+		renderInfoBar(trans);
+	}
+
+	renderExtras(trans, minMax.second, INT16_MAX);
 }
 
 std::vector<HelpPrompt> SystemView::getHelpPrompts()
@@ -292,6 +354,10 @@ std::vector<HelpPrompt> SystemView::getHelpPrompts()
 		prompts.push_back(HelpPrompt("left/right", "choose"));
 	prompts.push_back(HelpPrompt("a", "select"));
 	prompts.push_back(HelpPrompt("x", "random"));
+
+	if (Settings::getInstance()->getBool("ScreenSaverControls"))
+		prompts.push_back(HelpPrompt("select", "launch screensaver"));
+
 	return prompts;
 }
 
@@ -364,9 +430,12 @@ void SystemView::renderCarousel(const Eigen::Affine3f& trans)
 
 	Eigen::Affine3f logoTrans = trans;
 	int center = (int)(mCamOffset);
-	int logoCount = std::min(mCarousel.maxLogoCount, (int)mEntries.size()) + 2;
+	int logoCount = std::min(mCarousel.maxLogoCount, (int)mEntries.size());
 
-	for (int i = center - logoCount / 2; i < center + logoCount / 2 + 1; i++)
+	// Adding texture loading buffers depending on scrolling speed and status
+	int bufferIndex = getScrollingVelocity() + 1;
+
+	for (int i = center - logoCount / 2 + logoBuffersLeft[bufferIndex]; i <= center + logoCount / 2 + logoBuffersRight[bufferIndex]; i++)
 	{
 		int index = i;
 		while (index < 0)
@@ -398,11 +467,16 @@ void SystemView::renderInfoBar(const Eigen::Affine3f& trans)
 }
 
 // Draw background extras
-void SystemView::renderExtras(const Eigen::Affine3f& trans)
+void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float upper)
 {
-	Eigen::Affine3f extrasTrans = trans;
 	int extrasCenter = (int)mExtrasCamOffset;
-	for (int i = extrasCenter - 1; i < extrasCenter + 2; i++)
+
+	// Adding texture loading buffers depending on scrolling speed and status
+	int bufferIndex = getScrollingVelocity() + 1;
+
+	Renderer::pushClipRect(Eigen::Vector2i(0, 0), mSize.cast<int>());
+
+	for (int i = extrasCenter + logoBuffersLeft[bufferIndex]; i <= extrasCenter + logoBuffersRight[bufferIndex]; i++)
 	{
 		int index = i;
 		while (index < 0)
@@ -410,14 +484,28 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans)
 		while (index >= (int)mEntries.size())
 			index -= mEntries.size();
 
-		extrasTrans.translation() = trans.translation() + Eigen::Vector3f((i - mExtrasCamOffset) * mSize.x(), 0, 0);
+		Eigen::Affine3f extrasTrans = trans;
+		if (mCarousel.type == HORIZONTAL)
+			extrasTrans.translate(Eigen::Vector3f((i - mExtrasCamOffset) * mSize.x(), 0, 0));
+		else
+			extrasTrans.translate(Eigen::Vector3f(0, (i - mExtrasCamOffset) * mSize.y(), 0));
 
-		Eigen::Vector2i clipRect = Eigen::Vector2i((int)((i - mExtrasCamOffset) * mSize.x()), 0);
-		Renderer::pushClipRect(clipRect, mSize.cast<int>());
-		mEntries.at(index).data.backgroundExtras->render(extrasTrans);
+		Renderer::pushClipRect(Eigen::Vector2i(extrasTrans.translation()[0], extrasTrans.translation()[1]), mSize.cast<int>());
+		SystemViewData data = mEntries.at(index).data;
+		for(unsigned int j = 0; j < data.backgroundExtras.size(); j++)
+		{
+			GuiComponent* extra = data.backgroundExtras[j];
+			if (extra->getZIndex() >= lower && extra->getZIndex() < upper) {
+				extra->render(extrasTrans);
+			}
+		}
 		Renderer::popClipRect();
 	}
+	Renderer::popClipRect();
+}
 
+void SystemView::renderFade(const Eigen::Affine3f& trans)
+{
 	// fade extras if necessary
 	if (mExtrasFadeOpacity)
 	{
@@ -440,6 +528,7 @@ void  SystemView::getDefaultElements(void)
 	mCarousel.logoSize.x() = 0.25f * mSize.x();
 	mCarousel.logoSize.y() = 0.155f * mSize.y();
 	mCarousel.maxLogoCount = 3;
+	mCarousel.zIndex = 40;
 
 	// System Info Bar
 	mSystemInfo.setSize(mSize.x(), mSystemInfo.getFont()->getLetterHeight()*2.2f);
@@ -448,6 +537,8 @@ void  SystemView::getDefaultElements(void)
 	mSystemInfo.setRenderBackground(true);
 	mSystemInfo.setFont(Font::get((int)(0.035f * mSize.y()), Font::getDefaultPath()));
 	mSystemInfo.setColor(0x000000FF);
+	mSystemInfo.setZIndex(50);
+	mSystemInfo.setDefaultZIndex(50);
 }
 
 void SystemView::getCarouselFromTheme(const ThemeData::ThemeElement* elem)
@@ -466,4 +557,6 @@ void SystemView::getCarouselFromTheme(const ThemeData::ThemeElement* elem)
 		mCarousel.logoSize = elem->get<Eigen::Vector2f>("logoSize").cwiseProduct(mSize);
 	if (elem->has("maxLogoCount"))
 		mCarousel.maxLogoCount = std::round(elem->get<float>("maxLogoCount"));
+	if (elem->has("zIndex"))
+		mCarousel.zIndex = elem->get<float>("zIndex");
 }

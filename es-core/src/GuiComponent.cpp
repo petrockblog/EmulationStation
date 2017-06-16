@@ -5,7 +5,7 @@
 #include "animations/AnimationController.h"
 #include "ThemeData.h"
 
-GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
+GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255),
 	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity()),
 	mIsProcessing(false)
 {
@@ -105,6 +105,26 @@ void GuiComponent::setSize(float w, float h)
     onSizeChanged();
 }
 
+float GuiComponent::getZIndex() const
+{
+	return mZIndex;
+}
+
+void GuiComponent::setZIndex(float z)
+{
+	mZIndex = z;
+}
+
+float GuiComponent::getDefaultZIndex() const
+{
+	return mDefaultZIndex;
+}
+
+void GuiComponent::setDefaultZIndex(float z)
+{
+	mDefaultZIndex = z;
+}
+
 //Children stuff.
 void GuiComponent::addChild(GuiComponent* cmp)
 {
@@ -141,6 +161,13 @@ void GuiComponent::removeChild(GuiComponent* cmp)
 void GuiComponent::clearChildren()
 {
 	mChildren.clear();
+}
+
+void GuiComponent::sortChildren()
+{
+	std:stable_sort(mChildren.begin(), mChildren.end(),  [](GuiComponent* a, GuiComponent* b) {
+		return b->getZIndex() > a->getZIndex();
+	});
 }
 
 unsigned int GuiComponent::getChildCount() const
@@ -320,6 +347,11 @@ void GuiComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std
 
 	if(properties & ThemeFlags::SIZE && elem->has("size"))
 		setSize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
+
+	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
+		setZIndex(elem->get<float>("zIndex"));
+	else
+		setZIndex(getDefaultZIndex());
 }
 
 void GuiComponent::updateHelpPrompts()
@@ -358,4 +390,20 @@ void GuiComponent::onHide()
 		getChild(i)->onHide();
 }
 
+void GuiComponent::onScreenSaverActivate()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onScreenSaverActivate();
+}
 
+void GuiComponent::onScreenSaverDeactivate()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onScreenSaverDeactivate();
+}
+
+void GuiComponent::topWindow(bool isTop)
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->topWindow(isTop);
+}

@@ -3,11 +3,11 @@
 #include "SystemData.h"
 
 // This is just a really simple template for a GUI that calls some save functions when closed.
-class GuiSettings : public GuiComponent
+class GuiScreensaverOptions : public GuiComponent
 {
 public:
-	GuiSettings(Window* window, const char* title);
-	virtual ~GuiSettings(); // just calls save();
+	GuiScreensaverOptions(Window* window, const char* title);
+	virtual ~GuiScreensaverOptions(); // just calls save();
 
 	void save();
 	inline void addRow(const ComponentListRow& row) { mMenu.addRow(row); };

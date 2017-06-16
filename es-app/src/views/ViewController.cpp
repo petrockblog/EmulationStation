@@ -127,10 +127,10 @@ void ViewController::goToRandomGame()
 		if ((*it)->getName() != "retropie")
 			total += (*it)->getDisplayedGameCount();
 	}
-	
+
 	// get random number in range
 	int target = std::round(((double)std::rand() / (double)RAND_MAX) * total);
-	
+
 	for (auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
 		if ((*it)->getName() != "retropie")
@@ -153,14 +153,15 @@ void ViewController::goToRandomGame()
 void ViewController::playViewTransition()
 {
 	Eigen::Vector3f target(Eigen::Vector3f::Identity());
-	if(mCurrentView) 
+	if(mCurrentView)
 		target = mCurrentView->getPosition();
 
 	// no need to animate, we're not going anywhere (probably goToNextGamelist() or goToPrevGamelist() when there's only 1 system)
 	if(target == -mCamera.translation() && !isAnimationPlaying(0))
 		return;
 
-	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
+	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
+	if(transition_style == "fade")
 	{
 		// fade
 		// stop whatever's currently playing, leaving mFadeOpacity wherever it is
@@ -188,10 +189,18 @@ void ViewController::playViewTransition()
 		}else{
 			advanceAnimation(0, (int)(mFadeOpacity * FADE_DURATION));
 		}
-	}else{
-		// slide
+	} else if (transition_style == "slide" || transition_style == "simple slide"){
+		// slide or simple slide
 		setAnimation(new MoveCameraAnimation(mCamera, target));
 		updateHelpPrompts(); // update help prompts immediately
+	} else {
+		// instant
+		setAnimation(new LambdaAnimation(
+			[this, target](float t)
+		{
+			this->mCamera.translation() = -target;
+		}, 1));
+		updateHelpPrompts();
 	}
 }
 
@@ -221,7 +230,8 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 	stopAnimation(1); // make sure the fade in isn't still playing
 	mLockInput = true;
 
-	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
+	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
+	if(transition_style == "fade")
 	{
 		// fade out, launch game, fade back in
 		auto fadeFunc = [this](float t) {
@@ -236,14 +246,23 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, nullptr, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
 		});
-	}else{
+	} else if (transition_style == "slide" || transition_style == "simple slide"){
 		// move camera to zoom in on center + fade out, launch game, come back in
-		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game] 
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game]
 		{
 			game->getSystem()->launchGame(mWindow, game);
 			mCamera = origCamera;
 			mLockInput = false;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, nullptr, true);
+			this->onFileChanged(game, FILE_METADATA_CHANGED);
+		});
+	} else {
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, [this, origCamera, center, game]
+		{
+			game->getSystem()->launchGame(mWindow, game);
+			mCamera = origCamera;
+			mLockInput = false;
+			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, nullptr, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
 		});
 	}
@@ -372,7 +391,7 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 	// draw systemview
 	getSystemListView()->render(trans);
-	
+
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -477,7 +496,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 	if(!mCurrentView)
 		return prompts;
-	
+
 	prompts = mCurrentView->getHelpPrompts();
 	prompts.push_back(HelpPrompt("start", "menu"));
 

@@ -45,13 +45,20 @@ public:
     void setSize(const Eigen::Vector2f& size);
     void setSize(float w, float h);
     virtual void onSizeChanged() {};
-	
+
+    float getZIndex() const;
+    void setZIndex(float zIndex);
+
+    float getDefaultZIndex() const;
+    void setDefaultZIndex(float zIndex);
+
 	void setParent(GuiComponent* parent);
 	GuiComponent* getParent() const;
 
 	void addChild(GuiComponent* cmp);
 	void removeChild(GuiComponent* cmp);
 	void clearChildren();
+	void sortChildren();
 	unsigned int getChildCount() const;
 	GuiComponent* getChild(unsigned int i) const;
 
@@ -77,9 +84,13 @@ public:
 
 	virtual void onFocusGained() {};
 	virtual void onFocusLost() {};
-	
+
 	virtual void onShow();
 	virtual void onHide();
+
+	virtual void onScreenSaverActivate();
+	virtual void onScreenSaverDeactivate();
+	virtual void topWindow(bool isTop);
 
 	// Default implementation just handles <pos> and <size> tags as normalized float pairs.
 	// You probably want to keep this behavior for any derived classes as well as add your own.
@@ -90,7 +101,7 @@ public:
 
 	// Called whenever help prompts change.
 	void updateHelpPrompts();
-	
+
 	virtual HelpStyle getHelpStyle();
 
 	// Returns true if the component is busy doing background processing (e.g. HTTP downloads)
@@ -109,6 +120,9 @@ protected:
 
 	Eigen::Vector3f mPosition;
 	Eigen::Vector2f mSize;
+
+	float mDefaultZIndex = 0;
+	float mZIndex = 0;
 
 	bool mIsProcessing;
 
