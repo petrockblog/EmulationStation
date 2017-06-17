@@ -176,6 +176,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			transitions.push_back("fade");
 			transitions.push_back("slide");
 			transitions.push_back("simple slide");
+			transitions.push_back("carousel slide");
 			transitions.push_back("instant");
 			for(auto it = transitions.begin(); it != transitions.end(); it++)
 				transition_style->add(*it, *it, Settings::getInstance()->getString("TransitionStyle") == *it);
