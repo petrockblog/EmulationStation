@@ -286,8 +286,8 @@ void SystemView::onCursorChanged(const CursorState& state)
 			this->mCamOffset = f;
 			this->mExtrasCamOffset = f;
 		}, 500);
-	} else if (transition_style == "simple slide") {
-		// simple slide
+	} else if (transition_style == "simple slide" || transition_style == "carousel slide") {
+		// simple & carousel slide
 		anim = new LambdaAnimation(
 			[this, startPos, endPos, posMax](float t)
 		{
