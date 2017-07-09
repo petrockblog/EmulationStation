@@ -84,6 +84,14 @@ void Settings::setDefaults()
 	mBoolMap["StretchVideoOnScreenSaver"] = false;
 	mStringMap["PowerSaverMode"] = "default";
 
+	mFloatMap["SlideshowScreenSaverImageSec"] = 10.0f;
+	mBoolMap["SlideshowScreenSaverStretch"] = false;
+	mStringMap["SlideshowScreenSaverBackgroundAudioFile"] = getHomePath() + "/.emulationstation/slideshow/audio/slideshow_bg.wav";
+	mStringMap["SlideshowScreenSaverImageSource"] = "game list";
+	mStringMap["SlideshowScreenSaverImageDir"] = getHomePath() + "/.emulationstation/slideshow/image";
+	mStringMap["SlideshowScreenSaverImageFilter"] = ".png,.jpg";
+	mBoolMap["SlideshowScreenSaverRecurse"] = false;
+
 	// This setting only applies to raspberry pi but set it for all platforms so
 	// we don't get a warning if we encounter it on a different platform
 	mBoolMap["VideoOmxPlayer"] = false;
