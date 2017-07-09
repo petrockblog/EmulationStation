@@ -6,7 +6,8 @@
 #include "Settings.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
-#include "guis/GuiScreensaverOptions.h"
+#include "guis/GuiVideoScreensaverOptions.h"
+#include "guis/GuiSlideshowScreensaverOptions.h"
 #include "guis/GuiCollectionSystemsOptions.h"
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
@@ -143,6 +144,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			screensavers.push_back("dim");
 			screensavers.push_back("black");
 			screensavers.push_back("random video");
+			screensavers.push_back("slideshow");
 			for(auto it = screensavers.begin(); it != screensavers.end(); it++)
 				screensaver_behavior->add(*it, *it, Settings::getInstance()->getString("ScreenSaverBehavior") == *it);
 			s->addWithLabel("SCREENSAVER BEHAVIOR", screensaver_behavior);
@@ -162,7 +164,13 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			row.elements.clear();
 			row.addElement(std::make_shared<TextComponent>(mWindow, "VIDEO SCREENSAVER SETTINGS", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			row.addElement(makeArrow(mWindow), false);
-			row.makeAcceptInputHandler(std::bind(&GuiMenu::openScreensaverOptions, this));
+			row.makeAcceptInputHandler(std::bind(&GuiMenu::openVideoScreensaverOptions, this));
+			s->addRow(row);
+
+			row.elements.clear();
+			row.addElement(std::make_shared<TextComponent>(mWindow, "SLIDESHOW SCREENSAVER SETTINGS", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			row.addElement(makeArrow(mWindow), false);
+			row.makeAcceptInputHandler(std::bind(&GuiMenu::openSlideshowScreensaverOptions, this));
 			s->addRow(row);
 
 			// quick system select (left/right in game list view)
@@ -381,8 +389,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.13f);
 }
 
-void GuiMenu::openScreensaverOptions() {
-	mWindow->pushGui(new GuiScreensaverOptions(mWindow, "VIDEO SCREENSAVER"));
+void GuiMenu::openVideoScreensaverOptions() {
+	mWindow->pushGui(new GuiVideoScreensaverOptions(mWindow, "VIDEO SCREENSAVER"));
+}
+
+void GuiMenu::openSlideshowScreensaverOptions() {
+    mWindow->pushGui(new GuiSlideshowScreensaverOptions(mWindow, "SLIDESHOW SCREENSAVER"));
 }
 
 void GuiMenu::openCollectionSystemSettings() {

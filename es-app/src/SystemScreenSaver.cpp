@@ -3,6 +3,7 @@
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
+#include "components/ImageComponent.h"
 #include "platform.h"
 #include "Renderer.h"
 #include "Settings.h"
@@ -11,6 +12,8 @@
 #include "Log.h"
 #include "views/ViewController.h"
 #include "views/gamelist/IGameListView.h"
+#include "AudioManager.h"
+#include "Sound.h"
 #include <stdio.h>
 
 #define FADE_TIME 			300
@@ -18,6 +21,7 @@
 
 SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mVideoScreensaver(NULL),
+	mImageScreensaver(NULL),
 	mWindow(window),
 	mCounted(false),
 	mVideoCount(0),
@@ -26,7 +30,8 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mTimer(0),
 	mSystemName(""),
 	mGameName(""),
-	mCurrentGame(NULL)
+	mCurrentGame(NULL),
+	mStopBackgroundAudio(true)
 {
 	mWindow->setScreenSaver(this);
 	std::string path = getTitleFolder();
@@ -41,12 +46,13 @@ SystemScreenSaver::~SystemScreenSaver()
 	remove(getTitlePath().c_str());
 	mCurrentGame = NULL;
 	delete mVideoScreensaver;
+	delete mImageScreensaver;
 }
 
 bool SystemScreenSaver::allowSleep()
 {
 	//return false;
-	return (mVideoScreensaver == NULL);
+	return ((mVideoScreensaver == NULL) && (mImageScreensaver == NULL));
 }
 
 bool SystemScreenSaver::isScreenSaverActive()
@@ -75,7 +81,7 @@ void SystemScreenSaver::startScreenSaver()
 
 		if (!path.empty() && boost::filesystem::exists(path))
 		{
-		// Create the correct type of video component
+			// Create the correct type of video component
 
 #ifdef _RPI_
 			if (Settings::getInstance()->getBool("ScreenSaverOmxPlayer"))
@@ -104,6 +110,50 @@ void SystemScreenSaver::startScreenSaver()
 			return;
 		}
 	}
+	else if (Settings::getInstance()->getString("ScreenSaverBehavior") == "slideshow")
+	{
+		// Configure to fade out the windows
+		mState = STATE_FADE_OUT_WINDOW;
+		mOpacity = 0.0f;
+
+		// Load a random video
+		std::string path = "";
+		pickRandomImage(path);
+
+		if (!mImageScreensaver)
+		{
+			mImageScreensaver = new ImageComponent(mWindow, false, false);
+		}
+
+		mCurrentGame = NULL;
+
+		mTimer = 0;
+
+		mImageScreensaver->setImage(path);
+		mImageScreensaver->setOrigin(0.5f, 0.5f);
+		mImageScreensaver->setPosition(Renderer::getScreenWidth()/2, Renderer::getScreenHeight()/2);
+
+		if (Settings::getInstance()->getBool("SlideshowScreenSaverStretch"))
+		{
+			mImageScreensaver->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+		}
+		else
+		{
+			mImageScreensaver->setMaxSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+		}
+
+		if ((!mBackgroundAudio) && (Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile") != ""))
+		{
+			if (boost::filesystem::exists(Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile")))
+			{
+				mBackgroundAudio = Sound::get(Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile"));
+				mBackgroundAudio->play();
+			}
+		}
+
+		mTimer = 0;
+		return;
+	}
 	// No videos. Just use a standard screensaver
 	mState = STATE_SCREENSAVER_ACTIVE;
 	mCurrentGame = NULL;
@@ -111,8 +161,20 @@ void SystemScreenSaver::startScreenSaver()
 
 void SystemScreenSaver::stopScreenSaver()
 {
+	if ((mBackgroundAudio) && (mStopBackgroundAudio))
+	{
+		mBackgroundAudio->stop();
+		mBackgroundAudio.reset();
+	}
+
+	// so that we stop the background audio next time, unless we're restarting the screensaver
+	mStopBackgroundAudio = true;
+
 	delete mVideoScreensaver;
 	mVideoScreensaver = NULL;
+	delete mImageScreensaver;
+	mImageScreensaver = NULL;
+
 	mState = STATE_INACTIVE;
 }
 
@@ -129,6 +191,33 @@ void SystemScreenSaver::renderScreenSaver()
 		{
 			Eigen::Affine3f transform = Eigen::Affine3f::Identity();
 			mVideoScreensaver->render(transform);
+		}
+	}
+	else if (mImageScreensaver && Settings::getInstance()->getString("ScreenSaverBehavior") == "slideshow")
+	{
+		// Render black background
+		Renderer::setMatrix(Eigen::Affine3f::Identity());
+		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), (unsigned char)(255));
+
+		// Only render the video if the state requires it
+		if ((int)mState >= STATE_FADE_IN_VIDEO)
+		{
+			if (mImageScreensaver->hasImage())
+			{
+				mImageScreensaver->setOpacity(255-mOpacity);
+
+				Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+				mImageScreensaver->render(transform);
+			}
+		}
+
+		// Check if we need to restart the background audio
+		if ((mBackgroundAudio) && (Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile") != ""))
+		{
+			if (!mBackgroundAudio->isPlaying())
+			{
+				mBackgroundAudio->play();
+			}
 		}
 	}
 	else if (mState != STATE_INACTIVE)
@@ -258,6 +347,73 @@ void SystemScreenSaver::pickRandomVideo(std::string& path)
 	}
 }
 
+void SystemScreenSaver::pickRandomImage(std::string& path)
+{
+	std::string imageDir = Settings::getInstance()->getString("SlideshowScreenSaverImageDir");
+	if ((imageDir != "") && (boost::filesystem::exists(imageDir)))
+	{
+		std::string imageFilter = Settings::getInstance()->getString("SlideshowScreenSaverImageFilter");
+
+		std::vector<std::string> matchingFiles;
+
+		if (Settings::getInstance()->getBool("SlideshowScreenSaverRecurse"))
+		{
+			boost::filesystem::recursive_directory_iterator end_iter;
+			boost::filesystem::recursive_directory_iterator iter(imageDir);
+
+			// TODO: Figure out how to remove this duplication in the else block
+			for (iter; iter != end_iter; ++iter)
+			{
+				if (boost::filesystem::is_regular_file(iter->status()))
+				{
+					// If the image filter is empty, or the file extension is in the filter string,
+					//  add it to the matching files list
+					if ((imageFilter.length() <= 0) ||
+						(imageFilter.find(iter->path().extension().string()) != std::string::npos))
+					{
+						matchingFiles.push_back(iter->path().string());
+					}
+				}
+			}
+		}
+		else
+		{
+			boost::filesystem::directory_iterator end_iter;
+			boost::filesystem::directory_iterator iter(imageDir);
+
+			for (iter; iter != end_iter; ++iter)
+			{
+				if (boost::filesystem::is_regular_file(iter->status()))
+				{
+					// If the image filter is empty, or the file extension is in the filter string,
+					//  add it to the matching files list
+					if ((imageFilter.length() <= 0) ||
+						(imageFilter.find(iter->path().extension().string()) != std::string::npos))
+					{
+						matchingFiles.push_back(iter->path().string());
+					}
+				}
+			}
+		}
+
+		int fileCount = matchingFiles.size();
+		if (fileCount > 0)
+		{
+			// get a random index in the range 0 to fileCount (exclusive)
+			int randomIndex = rand() % fileCount;
+			path = matchingFiles[randomIndex];
+		}
+		else
+		{
+			LOG(LogError) << "Slideshow Screensaver - No image files found\n";
+		}
+	}
+	else
+	{
+		LOG(LogError) << "Slideshow Screensaver - Image directory does not exist: " << imageDir << "\n";
+	}
+}
+
 void SystemScreenSaver::update(int deltaTime)
 {
 	// Use this to update the fade value for the current fade stage
@@ -286,18 +442,31 @@ void SystemScreenSaver::update(int deltaTime)
 	{
 		// Update the timer that swaps the videos
 		mTimer += deltaTime;
-		if (mTimer > SWAP_VIDEO_TIMEOUT)
+
+		if ((Settings::getInstance()->getString("ScreenSaverBehavior") == "random video") &&
+			(mTimer > SWAP_VIDEO_TIMEOUT))
 		{
 			nextVideo();
+		}
+		else if (Settings::getInstance()->getString("ScreenSaverBehavior") == "slideshow")
+		{
+			int imageSec = (int)Settings::getInstance()->getFloat("SlideshowScreenSaverImageSec") * 1000;
+			if (mTimer > imageSec)
+			{
+				nextVideo();
+			}
 		}
 	}
 
 	// If we have a loaded video then update it
 	if (mVideoScreensaver)
 		mVideoScreensaver->update(deltaTime);
+	if (mImageScreensaver)
+		mImageScreensaver->update(deltaTime);
 }
 
 void SystemScreenSaver::nextVideo() {
+	mStopBackgroundAudio = false;
 	stopScreenSaver();
 	startScreenSaver();
 	mState = STATE_SCREENSAVER_ACTIVE;
@@ -310,12 +479,15 @@ FileData* SystemScreenSaver::getCurrentGame()
 
 void SystemScreenSaver::launchGame()
 {
-	// launching Game
-	ViewController::get()->goToGameList(mCurrentGame->getSystem());
-	IGameListView* view = ViewController::get()->getGameListView(mCurrentGame->getSystem()).get();
- 	view->setCursor(mCurrentGame);
- 	if (Settings::getInstance()->getBool("ScreenSaverControls"))
- 	{
- 		view->launch(mCurrentGame);
- 	}
+	if (mCurrentGame != NULL)
+	{
+		// launching Game
+		ViewController::get()->goToGameList(mCurrentGame->getSystem());
+		IGameListView* view = ViewController::get()->getGameListView(mCurrentGame->getSystem()).get();
+		view->setCursor(mCurrentGame);
+		if (Settings::getInstance()->getBool("ScreenSaverControls"))
+		{
+			view->launch(mCurrentGame);
+		}
+	}
 }
