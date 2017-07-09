@@ -25,9 +25,13 @@ public:
 	virtual void launchGame();
 
 private:
-	void	countVideos();
-	void	pickRandomVideo(std::string& path);
-	void	pickRandomImage(std::string& path);
+	unsigned long	countGameListNodes(const char *nodeName);
+	void			countVideos();
+	void			countImages();
+	void			pickGameListNode(unsigned long index, const char *nodeName, std::string& path);
+	void			pickRandomVideo(std::string& path);
+	void			pickRandomGameListImage(std::string& path);
+	void			pickRandomCustomImage(std::string& path);
 
 	void input(InputConfig* config, Input input);
 
@@ -39,9 +43,11 @@ private:
 	};
 
 private:
-	bool					mCounted;
+	bool					mVideosCounted;
 	unsigned long			mVideoCount;
 	VideoComponent*			mVideoScreensaver;
+	bool					mImagesCounted;
+	unsigned long			mImageCount;
 	ImageComponent*			mImageScreensaver;
 	Window*					mWindow;
 	STATE					mState;

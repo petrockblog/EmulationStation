@@ -83,11 +83,12 @@ void Settings::setDefaults()
 	mBoolMap["StretchVideoOnScreenSaver"] = false;
 
 	mFloatMap["SlideshowScreenSaverImageSec"] = 10.0f;
-	mStringMap["SlideshowScreenSaverImageDir"] = getHomePath() + "/.emulationstation/slideshow";
+	mBoolMap["SlideshowScreenSaverStretch"] = true;
+	mStringMap["SlideshowScreenSaverBackgroundAudioFile"] = getHomePath() + "/.emulationstation/slideshow/audio/slideshow_bg.wav";
+	mBoolMap["SlideshowScreenSaverCustomImages"] = false;
+	mStringMap["SlideshowScreenSaverImageDir"] = getHomePath() + "/.emulationstation/slideshow/image";
 	mStringMap["SlideshowScreenSaverImageFilter"] = ".png,.jpg";
 	mBoolMap["SlideshowScreenSaverRecurse"] = false;
-	mBoolMap["SlideshowScreenSaverStretch"] = true;
-	mStringMap["SlideshowScreenSaverBackgroundAudioFile"] = getHomePath() + "/.emulationstation/audio/slideshow_bg.wav";
 
 	// This setting only applies to raspberry pi but set it for all platforms so
 	// we don't get a warning if we encounter it on a different platform

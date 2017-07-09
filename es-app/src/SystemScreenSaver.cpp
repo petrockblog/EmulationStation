@@ -23,8 +23,10 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mVideoScreensaver(NULL),
 	mImageScreensaver(NULL),
 	mWindow(window),
-	mCounted(false),
+	mVideosCounted(false),
 	mVideoCount(0),
+	mImagesCounted(false),
+	mImageCount(0),
 	mState(STATE_INACTIVE),
 	mOpacity(0.0f),
 	mTimer(0),
@@ -118,14 +120,21 @@ void SystemScreenSaver::startScreenSaver()
 
 		// Load a random video
 		std::string path = "";
-		pickRandomImage(path);
+		if (Settings::getInstance()->getBool("SlideshowScreenSaverCustomImages"))
+		{
+			pickRandomCustomImage(path);
+			// Custom images are not tied to the game list
+			mCurrentGame = NULL;
+		}
+		else
+		{
+			pickRandomGameListImage(path);
+		}
 
 		if (!mImageScreensaver)
 		{
 			mImageScreensaver = new ImageComponent(mWindow, false, false);
 		}
-
-		mCurrentGame = NULL;
 
 		mTimer = 0;
 
@@ -228,51 +237,14 @@ void SystemScreenSaver::renderScreenSaver()
 	}
 }
 
-void SystemScreenSaver::countVideos()
+unsigned long SystemScreenSaver::countGameListNodes(const char *nodeName)
 {
-	if (!mCounted)
+	unsigned long nodeCount = 0;
+	std::vector<SystemData*>:: iterator it;
+	for (it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); ++it)
 	{
-		mVideoCount = 0;
-		mCounted = true;
-		std::vector<SystemData*>:: iterator it;
-		for (it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); ++it)
-		{
-			if (!(*it)->isCollection())
-			{
-				pugi::xml_document doc;
-				pugi::xml_node root;
-				std::string xmlReadPath = (*it)->getGamelistPath(false);
-
-				if(boost::filesystem::exists(xmlReadPath))
-				{
-					pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
-					if (!result)
-						continue;
-					root = doc.child("gameList");
-					if (!root)
-						continue;
-					for(pugi::xml_node fileNode = root.child("game"); fileNode; fileNode = fileNode.next_sibling("game"))
-					{
-						pugi::xml_node videoNode = fileNode.child("video");
-						if (videoNode)
-							++mVideoCount;
-					}
-				}
-			}
-		}
-	}
-}
-
-void SystemScreenSaver::pickRandomVideo(std::string& path)
-{
-	countVideos();
-	mCurrentGame = NULL;
-	if (mVideoCount > 0)
-	{
-		int video = (int)(((float)rand() / float(RAND_MAX)) * (float)mVideoCount);
-
-		std::vector<SystemData*>:: iterator it;
-		for (it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); ++it)
+		// We only want images and videos from game systems that are not collections
+		if (!(*it)->isCollection() && (*it)->isGameSystem())
 		{
 			pugi::xml_document doc;
 			pugi::xml_node root;
@@ -288,58 +260,109 @@ void SystemScreenSaver::pickRandomVideo(std::string& path)
 					continue;
 				for(pugi::xml_node fileNode = root.child("game"); fileNode; fileNode = fileNode.next_sibling("game"))
 				{
-					pugi::xml_node videoNode = fileNode.child("video");
-					if (videoNode)
+					pugi::xml_node node = fileNode.child(nodeName);
+					if (node)
+						++nodeCount;
+				}
+			}
+		}
+	}
+	return nodeCount;
+}
+
+void SystemScreenSaver::countVideos()
+{
+	if (!mVideosCounted)
+	{
+		mVideoCount = countGameListNodes("video");
+		mVideosCounted = true;
+	}
+}
+
+void SystemScreenSaver::countImages()
+{
+	if (!mImagesCounted)
+	{
+		mImageCount = countGameListNodes("image");
+		mImagesCounted = true;
+	}
+}
+
+void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeName, std::string& path)
+{
+	std::vector<SystemData*>:: iterator it;
+	for (it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); ++it)
+	{
+		pugi::xml_document doc;
+		pugi::xml_node root;
+
+		// We only want images from game systems
+		if (!(*it)->isGameSystem())
+			continue;
+
+		std::string xmlReadPath = (*it)->getGamelistPath(false);
+
+		if(boost::filesystem::exists(xmlReadPath))
+		{
+			pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
+			if (!result)
+				continue;
+			root = doc.child("gameList");
+			if (!root)
+				continue;
+			for(pugi::xml_node fileNode = root.child("game"); fileNode; fileNode = fileNode.next_sibling("game"))
+			{
+				pugi::xml_node node = fileNode.child(nodeName);
+				if (node)
+				{
+					// See if this is the desired index
+					if (index-- == 0)
 					{
-						// See if this is the randomly selected video
-						if (video-- == 0)
+						// Yes. Resolve to a full path
+						path = resolvePath(node.text().get(), (*it)->getStartPath(), true).generic_string();
+						mSystemName = (*it)->getFullName();
+						mGameName = fileNode.child("name").text().get();
+
+						// getting corresponding FileData
+
+						// try the easy way. Should work for the majority of cases, unless in subfolders
+						FileData* rootFileData = (*it)->getRootFolder();
+						std::string gamePath = resolvePath(fileNode.child("path").text().get(), (*it)->getStartPath(), false).string();
+
+						std::string shortPath = gamePath;
+						shortPath = shortPath.replace(0, (*it)->getStartPath().length()+1, "");
+
+						const std::unordered_map<std::string, FileData*>& children = rootFileData->getChildrenByFilename();
+						std::unordered_map<std::string, FileData*>::const_iterator screenSaverGame = children.find(shortPath);
+
+						if (screenSaverGame != children.end())
 						{
-							// Yes. Resolve to a full path
-							path = resolvePath(videoNode.text().get(), (*it)->getStartPath(), true).generic_string();
-							mSystemName = (*it)->getFullName();
-							mGameName = fileNode.child("name").text().get();
+							// Found the corresponding FileData
+							mCurrentGame = screenSaverGame->second;
+						}
+						else
+						{
+							// Couldn't find FileData. Going for the full iteration.
+							// iterate on children
+							FileType type = GAME;
+							std::vector<FileData*> allFiles = rootFileData->getFilesRecursive(type);
+							std::vector<FileData*>::iterator itf;  // declare an iterator to a vector of strings
 
-							// getting corresponding FileData
-
-							// try the easy way. Should work for the majority of cases, unless in subfolders
-							FileData* rootFileData = (*it)->getRootFolder();
-							std::string gamePath = resolvePath(fileNode.child("path").text().get(), (*it)->getStartPath(), false).string();
-
-							std::string shortPath = gamePath;
-							shortPath = shortPath.replace(0, (*it)->getStartPath().length()+1, "");
-
-							const std::unordered_map<std::string, FileData*>& children = rootFileData->getChildrenByFilename();
-							std::unordered_map<std::string, FileData*>::const_iterator screenSaverGame = children.find(shortPath);
-
-							if (screenSaverGame != children.end())
-							{
-								// Found the corresponding FileData
-								mCurrentGame = screenSaverGame->second;
-							}
-							else
-							{
-								// Couldn't find FileData. Going for the full iteration.
-								// iterate on children
-								FileType type = GAME;
-								std::vector<FileData*> allFiles = rootFileData->getFilesRecursive(type);
-								std::vector<FileData*>::iterator itf;  // declare an iterator to a vector of strings
-
-								int i = 0;
-								for(itf=allFiles.begin() ; itf < allFiles.end(); itf++,i++ ) {
-									if ((*itf)->getPath() == gamePath)
-									{
-										mCurrentGame = (*itf);
-										break;
-									}
+							int i = 0;
+							for(itf=allFiles.begin() ; itf < allFiles.end(); itf++,i++ ) {
+								if ((*itf)->getPath() == gamePath)
+								{
+									mCurrentGame = (*itf);
+									break;
 								}
 							}
-
-							// end of getting FileData
-							if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
-								writeSubtitle(mGameName.c_str(), mSystemName.c_str(),
-									(Settings::getInstance()->getString("ScreenSaverGameInfo") == "always"));
-							return;
 						}
+
+						// end of getting FileData
+						if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
+							writeSubtitle(mGameName.c_str(), mSystemName.c_str(),
+								(Settings::getInstance()->getString("ScreenSaverGameInfo") == "always"));
+						return;
 					}
 				}
 			}
@@ -347,7 +370,31 @@ void SystemScreenSaver::pickRandomVideo(std::string& path)
 	}
 }
 
-void SystemScreenSaver::pickRandomImage(std::string& path)
+void SystemScreenSaver::pickRandomVideo(std::string& path)
+{
+	countVideos();
+	mCurrentGame = NULL;
+	if (mVideoCount > 0)
+	{
+		int video = (int)(((float)rand() / float(RAND_MAX)) * (float)mVideoCount);
+
+		pickGameListNode(video, "video", path);
+	}
+}
+
+void SystemScreenSaver::pickRandomGameListImage(std::string& path)
+{
+	countImages();
+	mCurrentGame = NULL;
+	if (mImageCount > 0)
+	{
+		int image = (int)(((float)rand() / float(RAND_MAX)) * (float)mImageCount);
+
+		pickGameListNode(image, "image", path);
+	}
+}
+
+void SystemScreenSaver::pickRandomCustomImage(std::string& path)
 {
 	std::string imageDir = Settings::getInstance()->getString("SlideshowScreenSaverImageDir");
 	if ((imageDir != "") && (boost::filesystem::exists(imageDir)))
