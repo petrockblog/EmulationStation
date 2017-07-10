@@ -301,8 +301,8 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 		pugi::xml_document doc;
 		pugi::xml_node root;
 
-		// We only want images from game systems
-		if (!(*it)->isGameSystem())
+		// We only want nodes from game systems that are not collections
+		if (!(*it)->isGameSystem() || (*it)->isCollection())
 			continue;
 
 		std::string xmlReadPath = (*it)->getGamelistPath(false);
