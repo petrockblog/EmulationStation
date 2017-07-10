@@ -120,7 +120,12 @@ void SystemScreenSaver::startScreenSaver()
 
 		// Load a random video
 		std::string path = "";
-		if (Settings::getInstance()->getBool("SlideshowScreenSaverCustomImages"))
+		std::string img_src = Settings::getInstance()->getString("SlideshowScreenSaverImageSource");
+		if (img_src == "game list")
+		{
+			pickRandomGameListImage(path);
+		}
+		else if (img_src == "custom")
 		{
 			pickRandomCustomImage(path);
 			// Custom images are not tied to the game list
@@ -128,7 +133,7 @@ void SystemScreenSaver::startScreenSaver()
 		}
 		else
 		{
-			pickRandomGameListImage(path);
+			LOG(LogError) << "Slideshow Screensaver - Invalid image source: " << img_src << "\n";
 		}
 
 		if (!mImageScreensaver)

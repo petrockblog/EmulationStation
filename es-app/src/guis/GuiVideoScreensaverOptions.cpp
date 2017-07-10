@@ -3,10 +3,7 @@
 #include "Settings.h"
 #include "views/ViewController.h"
 
-#include "components/ButtonComponent.h"
 #include "components/SwitchComponent.h"
-#include "components/SliderComponent.h"
-#include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
 #include "components/MenuComponent.h"
 #include "guis/GuiMsgBox.h"

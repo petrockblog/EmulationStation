@@ -83,9 +83,9 @@ void Settings::setDefaults()
 	mBoolMap["StretchVideoOnScreenSaver"] = false;
 
 	mFloatMap["SlideshowScreenSaverImageSec"] = 10.0f;
-	mBoolMap["SlideshowScreenSaverStretch"] = true;
+	mBoolMap["SlideshowScreenSaverStretch"] = false;
 	mStringMap["SlideshowScreenSaverBackgroundAudioFile"] = getHomePath() + "/.emulationstation/slideshow/audio/slideshow_bg.wav";
-	mBoolMap["SlideshowScreenSaverCustomImages"] = false;
+	mStringMap["SlideshowScreenSaverImageSource"] = "game list";
 	mStringMap["SlideshowScreenSaverImageDir"] = getHomePath() + "/.emulationstation/slideshow/image";
 	mStringMap["SlideshowScreenSaverImageFilter"] = ".png,.jpg";
 	mBoolMap["SlideshowScreenSaverRecurse"] = false;
