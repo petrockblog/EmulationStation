@@ -271,7 +271,9 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 			}
 		}else{
 			if(config->isMappedTo("down", input) || config->isMappedTo("up", input) || 
-				config->isMappedTo("pagedown", input) || config->isMappedTo("pageup", input))
+				config->isMappedTo("pagedown", input) || config->isMappedTo("pageup", input) ||
+				((config->isMappedTo("rightshoulder", input) || config->isMappedTo("leftshoulder", input)) &&
+				 Settings::getInstance()->getBool("UseShoulderForPaging")))
 			{
 				stopScrolling();
 			}
