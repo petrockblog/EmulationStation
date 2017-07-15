@@ -235,12 +235,6 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 					ViewController::get()->reloadAll();
 			});
 
-			// option to use leftshoulder/rightshoulder as pageup/pagedown
-			auto shoulder_for_paging = std::make_shared<SwitchComponent>(mWindow);
-			shoulder_for_paging->setState(Settings::getInstance()->getBool("UseShoulderForPaging"));
-			s->addWithLabel("USE SHOULDER BUTTONS FOR PAGING", shoulder_for_paging);
-			s->addSaveFunc([shoulder_for_paging] { Settings::getInstance()->setBool("UseShoulderForPaging", shoulder_for_paging->getState()); });
-
 			// show help
 			auto show_help = std::make_shared<SwitchComponent>(mWindow);
 			show_help->setState(Settings::getInstance()->getBool("ShowHelpPrompts"));

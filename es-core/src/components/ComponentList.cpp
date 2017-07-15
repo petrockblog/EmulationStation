@@ -1,7 +1,6 @@
 #include "components/ComponentList.h"
 #include "Util.h"
 #include "Log.h"
-#include "Settings.h"
 
 #define TOTAL_HORIZONTAL_PADDING_PX 20
 
@@ -83,12 +82,10 @@ bool ComponentList::input(InputConfig* config, Input input)
 	{
 		return listInput(input.value != 0 ? 1 : 0);
 
-	}else if((config->isMappedTo("pageup", input)) ||
-		((config->isMappedTo("leftshoulder", input)) && (Settings::getInstance()->getBool("UseShoulderForPaging"))))
+	}else if(config->isMappedTo("pageup", input) || config->isMappedTo("leftshoulder", input))
 	{
 		return listInput(input.value != 0 ? -6 : 0);
-	}else if((config->isMappedTo("pagedown", input)) ||
-		((config->isMappedTo("rightshoulder", input)) && (Settings::getInstance()->getBool("UseShoulderForPaging"))))
+	}else if(config->isMappedTo("pagedown", input) || config->isMappedTo("rightshoulder", input))
 	{
 		return listInput(input.value != 0 ? 6 : 0);
 	}
