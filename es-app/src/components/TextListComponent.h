@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "ThemeData.h"
 #include "Util.h"
+#include "Settings.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -255,13 +256,15 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 				listInput(-1);
 				return true;
 			}
-			if(config->isMappedTo("pagedown", input))
+			if((config->isMappedTo("pagedown", input)) ||
+				((config->isMappedTo("rightshoulder", input)) && (Settings::getInstance()->getBool("UseShoulderForPaging"))))
 			{
 				listInput(10);
 				return true;
 			}
 
-			if(config->isMappedTo("pageup", input))
+			if((config->isMappedTo("pageup", input)) ||
+				((config->isMappedTo("leftshoulder", input)) && (Settings::getInstance()->getBool("UseShoulderForPaging"))))
 			{
 				listInput(-10);
 				return true;
