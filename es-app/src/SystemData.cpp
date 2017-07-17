@@ -63,6 +63,22 @@ void SystemData::setIsGameSystemStatus()
 	mIsGameSystem = (mName != "retropie");
 }
 
+// test to see if a file or folder is hidden in *nix(dot-prefixed)
+// could be expanded to check for Windows hidden attribute
+bool isHidden(const fs::path &filePath)
+{
+	fs::path::string_type name = filePath.filename().string();
+	if(name != ".." &&
+		name != "."  &&
+		name[0] == '.')
+	{
+		LOG(LogWarning) << "File or folder \"" << name << "\" is hidden. Ignoring it.";
+		return true;
+	}
+
+	return false;
+}
+
 void SystemData::populateFolder(FileData* folder)
 {
 	const fs::path& folderPath = folder->getPath();
@@ -103,7 +119,8 @@ void SystemData::populateFolder(FileData* folder)
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
 
 		isGame = false;
-		if(std::find(mEnvData->mSearchExtensions.begin(), mEnvData->mSearchExtensions.end(), extension) != mEnvData->mSearchExtensions.end())
+		// skip hidden files
+		if(std::find(mEnvData->mSearchExtensions.begin(), mEnvData->mSearchExtensions.end(), extension) != mEnvData->mSearchExtensions.end() && !isHidden(filePath))
 		{
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), mEnvData, this);
 			folder->addChild(newGame);
@@ -111,7 +128,8 @@ void SystemData::populateFolder(FileData* folder)
 		}
 
 		//add directories that also do not match an extension as folders
-		if(!isGame && fs::is_directory(filePath))
+		//skip hidden directories
+		if(!isGame && fs::is_directory(filePath) && !isHidden(filePath))
 		{
 			FileData* newFolder = new FileData(FOLDER, filePath.generic_string(), mEnvData, this);
 			populateFolder(newFolder);
