@@ -31,8 +31,7 @@ public:
 	using IList<ImageGridData, T>::isScrolling;
 	using IList<ImageGridData, T>::stopScrolling;
 
-	//ImageGridComponent(Window* window);
-	ImageGridComponent(Window* window, int modGridSize = 3); 
+	ImageGridComponent(Window* window, int modGridSize = 1); 
 	~ImageGridComponent(); 
 
 	void remove(); 
@@ -61,8 +60,7 @@ private:
 		// Get GameGrid TileSize from Settings 
 		float gamegrid_sizemod = 1; 
 
-		// Mod the size multiplier based on GridMod 5 -> .5 
-
+		// Mod the size multiplier based on GridMod 5 -> .5
 		float modSize = 0; 
 		if (mGridMod > 0)
 			modSize = mGridMod / 10; 
@@ -80,7 +78,6 @@ private:
 				aspect[1] = (float)texSize.y() / texSize.x();
 		}
 
-		//return Eigen::Vector2f(156 * aspect.x(), 156 * aspect.y());
 		return Eigen::Vector2f(gamegrid_sizemod * (156 * aspect.x()), gamegrid_sizemod * (156 * aspect.y()));
 	};
 
@@ -126,8 +123,7 @@ private:
 };
 
 template<typename T>
-ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window) 
-//ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData, T>(window)
+ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window)
 {
 	mEntriesDirty = true;
 	mGridMod = modGridSize; 

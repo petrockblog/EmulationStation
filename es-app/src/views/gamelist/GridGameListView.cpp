@@ -22,9 +22,6 @@
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root), 
   mGrid(window, 1 /* TODO NOT THIS*/), mBackgroundImage(window), mTitle(window)  // mgrid (true) sets to gamegrid 
 { 
-//GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
-//	mGrid(window)
-//{
 	mTitle.setFont(Font::get(FONT_SIZE_MEDIUM));
 	mTitle.setPosition(0, mSize.y() * 0.05f);
 	mTitle.setColor(0xAAAAAAFF);
@@ -36,12 +33,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mGrid.setSize(mSize.x(), mSize.y() * 0.8f);
 	addChild(&mGrid);
 
-	//populateList(root->getChildrenListToDisplay());
-	//mSystem = system;
 	mRootFolder = root;
- 
-	// Load in just the first game to keep ES from crashing if ReloadAll() is called. 
-	InitGrid(root->getChildren());
 }
 
 FileData* GridGameListView::getCursor()
@@ -52,10 +44,8 @@ FileData* GridGameListView::getCursor()
 void GridGameListView::setCursor(FileData* file)
 {
 	if(!mGrid.setCursor(file) && mGrid.getEntryCount() > 0)
-	//if(!mGrid.setCursor(file))
 	{
 		populateList(file->getParent()->getChildren());
-		//populateList(file->getParent()->getChildrenListToDisplay());
 		mGrid.setCursor(file);
 		mTitle.setText(file->getName()); 
 
@@ -110,12 +100,8 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
     	if (mGrid.getEntryCount() > 0) mNextLoad = mGrid.getEntryCount();
 			mHeaderText.setColor(0xFFFFFFFF);
 	}
-}
 
-void GridGameListView::InitGrid(const std::vector<FileData*>& files)
-{ 
-	auto it = files.at(0);
-	mGrid.add(it->getName(), it->getThumbnailPath(), it);
+
 }
 
 void GridGameListView::launch(FileData* game)
@@ -159,7 +145,7 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
  
 void GridGameListView::onFocusGained()
 {
-	//populateList(mSystem->getRootFolder()->getChildren());
+	populateList(mRootFolder->getChildren());
 }
 
 void GridGameListView::onFocusLost()
