@@ -31,7 +31,8 @@ protected:
 	virtual void launch(FileData* game) override; 
 	virtual void remove(FileData* game, bool deleteFile) override; 
  
-	int mImageCacheAmount = 6; 
+	void InitGrid(const std::vector<FileData*>& files);  
+	int mImageCacheAmount = 12; 
 
 	ImageGridComponent<FileData*> mGrid;
 
@@ -41,11 +42,10 @@ protected:
 
 	FileData* mRootFolder;
  
-	//SystemData* mSystem; 
- 
 	bool mNeedsRefresh = true; 
 	bool mReloading = true; 
 	int mNextLoad = 0; 
 	int mLoadFrame = 0; 
 	int mLoadFrameKey = 4; 
+	int mInit = false;
 };

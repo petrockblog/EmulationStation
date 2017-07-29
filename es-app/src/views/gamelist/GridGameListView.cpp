@@ -20,7 +20,7 @@
 // ============================================================================ 
  
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root), 
-  mGrid(window, 1 /* TODO NOT THIS*/), mBackgroundImage(window), mTitle(window)  // mgrid (true) sets to gamegrid 
+  mGrid(window, 1), mBackgroundImage(window), mTitle(window)  // mgrid (true) sets to gamegrid 
 { 
 	mTitle.setFont(Font::get(FONT_SIZE_MEDIUM));
 	mTitle.setPosition(0, mSize.y() * 0.05f);
@@ -34,7 +34,17 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	addChild(&mGrid);
 
 	mRootFolder = root;
+
+	// Load in just the first game to keep ES from crashing if ReloadAll() is called.  
+	InitGrid(root->getChildren());
 }
+
+void GridGameListView::InitGrid(const std::vector<FileData*>& files) 
+{  
+  auto it = files.at(0);
+  mGrid.add(it->getName(), it->getThumbnailPath(), it);
+  mInit = true;
+} 
 
 FileData* GridGameListView::getCursor()
 {
@@ -76,7 +86,9 @@ void GridGameListView::update(int deltatime) {
 			auto file = mRootFolder->getChildren();
 			auto it = file.at(mNextLoad);
 
-			mGrid.add(it->getName(), it->getThumbnailPath(), it);
+			if (mInit == false) // Dirty fix for not loading first game twice
+				mGrid.add(it->getName(), it->getThumbnailPath(), it);
+			mInit = false;
 			mNextLoad++;
 		} else
 		{
@@ -97,11 +109,10 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 	    mReloading = true;
 
     	// If grid has some games still in it, continue after them
-    	if (mGrid.getEntryCount() > 0) mNextLoad = mGrid.getEntryCount();
-			mHeaderText.setColor(0xFFFFFFFF);
+    	if (mGrid.getEntryCount() > 0)
+    		mNextLoad = mGrid.getEntryCount();
+		mHeaderText.setColor(0xFFFFFFFF);
 	}
-
-
 }
 
 void GridGameListView::launch(FileData* game)
@@ -150,9 +161,9 @@ void GridGameListView::onFocusGained()
 
 void GridGameListView::onFocusLost()
 {
-	while (mGrid.getEntryCount() > mImageCacheAmount)
-		mGrid.remove();
-	mNeedsRefresh = true;
+	//while (mGrid.getEntryCount() > mImageCacheAmount)
+	//	mGrid.remove();
+	//mNeedsRefresh = true;
 }
 
 std::vector<HelpPrompt> GridGameListView::getHelpPrompts()

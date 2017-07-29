@@ -224,7 +224,8 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	for(auto it = mImages.begin(); it != mImages.end(); it++)
 	{
 		it->render(trans);
-		if (i > 26) break;
+		if (i > 26)
+			break;
 		i++;
 	}
 
