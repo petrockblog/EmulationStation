@@ -55,7 +55,6 @@ public:
 	struct Entry
 	{
 		std::string name;
-		std::string strdata;
 		UserData object;
 		EntryData data;
 	};
@@ -173,12 +172,6 @@ public:
 		}
 
 		return false;
-	}
-
-	void pop_back() {
-		mCursor = 0;
-		if (mEntries.size() > 1)
-			mEntries.pop_back();
 	}
 
 	inline int size() const { return mEntries.size(); }
