@@ -41,6 +41,9 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, Sys
 	}
 	setIsGameSystemStatus();
 	loadTheme();
+
+	// TODO add menu slider to set grid mod size
+	setGridModSize(1);
 }
 
 SystemData::~SystemData()
@@ -310,6 +313,11 @@ void SystemData::deleteSystems()
 		delete sSystemVector.at(i);
 	}
 	sSystemVector.clear();
+}
+
+/// Set modifier size for GameGrid
+void SystemData::setGridModSize(int s) {
+	mGridModSize = s;
 }
 
 std::string SystemData::getConfigPath(bool forWrite)

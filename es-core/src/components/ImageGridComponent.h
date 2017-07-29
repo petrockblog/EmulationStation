@@ -3,6 +3,7 @@
 #include "GuiComponent.h"
 #include "components/IList.h"
 #include "components/ImageComponent.h"
+#include "Settings.h"
 #include "Log.h"
 
 struct ImageGridData
@@ -29,19 +30,37 @@ public:
 	using IList<ImageGridData, T>::isScrolling;
 	using IList<ImageGridData, T>::stopScrolling;
 
-	ImageGridComponent(Window* window);
+	//ImageGridComponent(Window* window);
+	ImageGridComponent(Window* window, int modGridSize = 1); 
+	~ImageGridComponent(); 
+
+	void remove(); 
 
 	void add(const std::string& name, const std::string& imagePath, const T& obj);
 	
 	void onSizeChanged() override;
 
+	void setModSize(float mod); 
+
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
+	int getEntryCount(); 
+
 private:
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
 	{
+		// Get GameGrid TileSize from Settings 
+		float gamegrid_sizemod = 1; 
+
+		// Mod the size multiplier based on GridMod 5 -> .5 
+
+		float modSize = 0; 
+		if (mGridMod > 0)
+			modSize = mGridMod / 10; 
+		gamegrid_sizemod += modSize; 
+
 		Eigen::Vector2f aspect(1, 1);
 
 		if(tex)
@@ -54,7 +73,8 @@ private:
 				aspect[1] = (float)texSize.y() / texSize.x();
 		}
 
-		return Eigen::Vector2f(156 * aspect.x(), 156 * aspect.y());
+		//return Eigen::Vector2f(156 * aspect.x(), 156 * aspect.y());
+		return Eigen::Vector2f(gamegrid_sizemod * (156 * aspect.x()), gamegrid_sizemod * (156 * aspect.y()));
 	};
 
 	Eigen::Vector2f getMaxSquareSize() const
@@ -89,14 +109,40 @@ private:
 	virtual void onCursorChanged(const CursorState& state);
 
 	bool mEntriesDirty;
+	bool mGameGrid = true; 
+ 
+	int mTotalEntrys = 0; 
+ 
+	float mGridMod = 1; 
 
 	std::vector<ImageComponent> mImages;
 };
 
 template<typename T>
-ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData, T>(window)
+ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window) 
+//ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData, T>(window)
 {
 	mEntriesDirty = true;
+	mGridMod = modGridSize; 
+} 
+ 
+template<typename T> 
+ImageGridComponent<T>::~ImageGridComponent() { 
+	mImages.clear(); 
+} 
+ 
+
+template<typename T> 
+int ImageGridComponent<T>::getEntryCount() { 
+	return mTotalEntrys; 
+} 
+ 
+template<typename T> 
+void ImageGridComponent<T>::remove() { 
+	static_cast<IList< ImageGridData, T >*>(this)->pop_back(); 
+ 
+	mEntriesDirty = true; 
+	mTotalEntrys--; 
 }
 
 template<typename T>
@@ -105,9 +151,12 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	typename IList<ImageGridData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
+	//entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png");
+	entry.strdata = imagePath; 
 	entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png");
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
+	mTotalEntrys++;
 }
 
 template<typename T>
@@ -147,6 +196,12 @@ void ImageGridComponent<T>::update(int deltaTime)
 }
 
 template<typename T>
+void ImageGridComponent<T>::setModSize(float mod) {
+	mGridMod = mod;
+	mEntriesDirty = true;
+}
+ 
+template<typename T> 
 void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = getTransform() * parentTrans;
@@ -158,9 +213,12 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		mEntriesDirty = false;
 	}
 
+	int i = 0;
 	for(auto it = mImages.begin(); it != mImages.end(); it++)
 	{
 		it->render(trans);
+		if (i > 26) break;
+		i++;
 	}
 
 	GuiComponent::renderChildren(trans);
