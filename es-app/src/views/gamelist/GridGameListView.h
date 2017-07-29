@@ -20,7 +20,7 @@ public:
 	virtual bool input(InputConfig* config, Input input) override;
 	virtual void update(int deltatime) override; 
 
-	virtual const char* getName() const override { return "basic"; } 
+	virtual const char* getName() const override { return "grid"; } 
  
   	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme); 
 

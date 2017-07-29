@@ -64,12 +64,10 @@ void GridGameListView::setCursor(FileData* file)
 
 bool GridGameListView::input(InputConfig* config, Input input)
 {
-	//if(config->isMappedTo("left", input) || config->isMappedTo("right", input))
 	if (config->isMappedTo("left", input) || config->isMappedTo("right", input) || config->isMappedTo("up", input) || config->isMappedTo("down", input))
 	{ 
     	// Quick and dirty way of changing header title without doing in update() 
     	mTitle.setText(mGrid.getSelectedName()); 
-
  
     	// Destroy dpad input so mGrid can use it. 
 		return GuiComponent::input(config, input);

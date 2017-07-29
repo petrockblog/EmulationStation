@@ -5,6 +5,7 @@
 #include "components/ImageComponent.h"
 #include "Settings.h"
 #include "Log.h"
+#include "Sound.h"
 
 struct ImageGridData
 {
@@ -31,7 +32,7 @@ public:
 	using IList<ImageGridData, T>::stopScrolling;
 
 	//ImageGridComponent(Window* window);
-	ImageGridComponent(Window* window, int modGridSize = 1); 
+	ImageGridComponent(Window* window, int modGridSize = 3); 
 	~ImageGridComponent(); 
 
 	void remove(); 
@@ -42,13 +43,19 @@ public:
 
 	void setModSize(float mod); 
 
+	inline void setScrollSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
+
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
-	int getEntryCount(); 
+	int getEntryCount();
+	virtual void onScroll(int amt) { std::cout << "scrolling1" << std::endl; if(mScrollSound) mScrollSound->play(); }
 
 private:
+	std::shared_ptr<Sound> mScrollSound;
+
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
 	{
 		// Get GameGrid TileSize from Settings 
@@ -174,6 +181,11 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 		else if(config->isMappedTo("right", input))
 			dir[0] = 1;
 
+		if(config->isMappedTo("up", input) || config->isMappedTo("down", input) || config->isMappedTo("left", input) || config->isMappedTo("right", input))
+		{
+			onScroll(1);
+		}
+
 		if(dir != Eigen::Vector2i::Zero())
 		{
 			listInput(dir.x() + dir.y() * getGridSize().x());
@@ -222,6 +234,22 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	}
 
 	GuiComponent::renderChildren(trans);
+}
+
+template <typename T>
+void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "gamegrid");
+	if(!elem)
+		return;
+
+	using namespace ThemeFlags;
+
+	// TODO more options + update theme wiki
+	if(properties & SOUND && elem->has("scrollSound"))
+		setScrollSound(Sound::get(elem->get<std::string>("scrollSound")));
 }
 
 template<typename T>
