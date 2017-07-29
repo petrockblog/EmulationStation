@@ -120,7 +120,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("logoSize", NORMALIZED_PAIR)
 		("maxLogoCount", FLOAT)
 		("zIndex", FLOAT)))
-	("gamegrid", makeMap(boost::assign::map_list_of
+	("imagegrid", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("scrollSound", PATH)));

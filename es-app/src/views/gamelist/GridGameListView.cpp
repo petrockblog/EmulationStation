@@ -153,7 +153,7 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 	// Add custom theme stuff below here.
 	mTitle.applyTheme(theme, getName(), "md_title", ALL ^ (POSITION | ThemeFlags::SIZE | TEXT));
-	mGrid.applyTheme(theme, getName(), "md_grid", ALL ^ (POSITION | ThemeFlags::SIZE | ALIGNMENT | POSITION | ORIGIN)); 
+	mGrid.applyTheme(theme, getName(), "gamegrid", ALL ^ (POSITION | ThemeFlags::SIZE | ALIGNMENT | POSITION | ORIGIN)); 
 } 
  
  
