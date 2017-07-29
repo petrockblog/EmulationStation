@@ -123,6 +123,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("imagegrid", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
+		("padding", NORMALIZED_PAIR)
 		("scrollSound", PATH)));
 
 namespace fs = boost::filesystem;

@@ -31,7 +31,7 @@ public:
 	using IList<ImageGridData, T>::isScrolling;
 	using IList<ImageGridData, T>::stopScrolling;
 
-	ImageGridComponent(Window* window, int modGridSize = 1); 
+	ImageGridComponent(Window* window, int modGridSize = 1);
 	~ImageGridComponent(); 
 
 	void remove(); 
@@ -53,6 +53,7 @@ public:
 	virtual void onScroll(int amt) { std::cout << "scrolling1" << std::endl; if(mScrollSound) mScrollSound->play(); }
 
 private:
+	Eigen::Vector2f mPadding;
 	std::shared_ptr<Sound> mScrollSound;
 
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
@@ -105,7 +106,15 @@ private:
 		return gridSize;
 	};
 
-	Eigen::Vector2f getPadding() const { return Eigen::Vector2f(24, 24); }
+	Eigen::Vector2f getPadding() const
+	{
+		return mPadding;
+	}
+
+	void setPadding(Eigen::Vector2f padding)
+	{
+		mPadding = padding;
+	}
 	
 	void buildImages();
 	void updateImages();
@@ -125,6 +134,7 @@ private:
 template<typename T>
 ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window)
 {
+	mPadding = Eigen::Vector2f(24, 24);
 	mEntriesDirty = true;
 	mGridMod = modGridSize; 
 } 
@@ -245,6 +255,11 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 	// TODO more options + update theme wiki
 	if(properties & SOUND && elem->has("scrollSound"))
 		setScrollSound(Sound::get(elem->get<std::string>("scrollSound")));
+
+	Eigen::Vector2f scale = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+	if(properties & PADDING && elem->has("padding"))
+		setPadding(elem->get<Eigen::Vector2f>("padding"));
 }
 
 template<typename T>
