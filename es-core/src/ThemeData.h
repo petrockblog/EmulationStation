@@ -40,6 +40,7 @@ namespace ThemeFlags
 		LINE_SPACING = 2048,
 		DELAY = 4096,
 		Z_INDEX = 8192,
+		PADDING = 16384,
 
 		ALL = 0xFFFFFFFF
 	};

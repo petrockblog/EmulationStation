@@ -241,6 +241,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			styles.push_back("automatic");
 			styles.push_back("basic");
 			styles.push_back("detailed");
+			styles.push_back("grid");
 			styles.push_back("video");
 			for (auto it = styles.begin(); it != styles.end(); it++)
 				gamelist_style->add(*it, *it, Settings::getInstance()->getString("GamelistViewStyle") == *it);

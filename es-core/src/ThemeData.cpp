@@ -24,7 +24,7 @@ ElementMapType makeMap(const T& mapInit)
 	return m;
 }
 
-std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("video");
+std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("grid")("video");
 std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video")("carousel")("z-index");
 
 std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of
@@ -119,7 +119,12 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("logoScale", FLOAT)
 		("logoSize", NORMALIZED_PAIR)
 		("maxLogoCount", FLOAT)
-		("zIndex", FLOAT)));
+		("zIndex", FLOAT)))
+	("imagegrid", makeMap(boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("padding", NORMALIZED_PAIR)
+		("scrollSound", PATH)));
 
 namespace fs = boost::filesystem;
 
