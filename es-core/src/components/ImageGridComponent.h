@@ -50,7 +50,7 @@ public:
 	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	int getEntryCount();
-	virtual void onScroll(int amt) { std::cout << "scrolling1" << std::endl; if(mScrollSound) mScrollSound->play(); }
+	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
 
 private:
 	Eigen::Vector2f mPadding;
