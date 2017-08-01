@@ -100,10 +100,16 @@ void VideoPlayerComponent::startVideo()
 
 				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf, "--no-ghost-box", "", "", "", "", NULL };
 
-				// check if we want to mute the audio
+				// check if we want to mute the audio else set volume
 				if (!Settings::getInstance()->getBool("VideoAudio"))
 				{
 					argv[8] = "-1000000";
+				}
+				else
+				{
+					// Range of parameter is probably "-6000" to "0"
+					int volume = VolumeControl::getInstance()->getVolume();
+					argv[8] = (volume * 60) - 6000;
 				}
 
 				// test if there's a path for possible subtitles, meaning we're a screensaver video
