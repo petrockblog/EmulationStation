@@ -11,10 +11,10 @@
 #include "Log.h"
 #include "views/ViewController.h"
 #include "views/gamelist/IGameListView.h"
+#include "PowerSaver.h"
 #include <stdio.h>
 
 #define FADE_TIME 			300
-#define SWAP_VIDEO_TIMEOUT	30000
 
 SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mVideoScreensaver(NULL),
@@ -33,6 +33,7 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	if(!boost::filesystem::exists(path))
 		boost::filesystem::create_directory(path);
 	srand((unsigned int)time(NULL));
+	mVideoChangeTime = 30000;
 }
 
 SystemScreenSaver::~SystemScreenSaver()
@@ -58,6 +59,9 @@ void SystemScreenSaver::startScreenSaver()
 {
 	if (!mVideoScreensaver && (Settings::getInstance()->getString("ScreenSaverBehavior") == "random video"))
 	{
+		mVideoChangeTime = Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout");
+		// we need this to loop through different videos
+		PowerSaver::setState(false);
 		// Configure to fade out the windows
 		mState = STATE_FADE_OUT_WINDOW;
 		mOpacity = 0.0f;
@@ -113,6 +117,8 @@ void SystemScreenSaver::stopScreenSaver()
 {
 	delete mVideoScreensaver;
 	mVideoScreensaver = NULL;
+	// we need this to loop through different videos
+	PowerSaver::setState(true);
 	mState = STATE_INACTIVE;
 }
 
@@ -286,7 +292,7 @@ void SystemScreenSaver::update(int deltaTime)
 	{
 		// Update the timer that swaps the videos
 		mTimer += deltaTime;
-		if (mTimer > SWAP_VIDEO_TIMEOUT)
+		if (mTimer > mVideoChangeTime)
 		{
 			nextVideo();
 		}
