@@ -54,9 +54,9 @@ public:
 	{
 		AUTOMATIC,
 		BASIC,
+		GRID,
 		DETAILED,
 		VIDEO
-		// GRID TODO!
 	};
 
 	struct State

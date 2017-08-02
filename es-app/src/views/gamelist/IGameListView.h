@@ -24,7 +24,7 @@ public:
 	
 	// Called whenever the theme changes.
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) = 0;
-
+	
 	void setTheme(const std::shared_ptr<ThemeData>& theme);
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 

@@ -3,7 +3,9 @@
 #include "GuiComponent.h"
 #include "components/IList.h"
 #include "components/ImageComponent.h"
+#include "Settings.h"
 #include "Log.h"
+#include "Sound.h"
 
 struct ImageGridData
 {
@@ -29,19 +31,42 @@ public:
 	using IList<ImageGridData, T>::isScrolling;
 	using IList<ImageGridData, T>::stopScrolling;
 
-	ImageGridComponent(Window* window);
+	ImageGridComponent(Window* window, int modGridSize = 1);
+	~ImageGridComponent(); 
+
+	void remove(); 
 
 	void add(const std::string& name, const std::string& imagePath, const T& obj);
 	
 	void onSizeChanged() override;
 
+	void setModSize(float mod); 
+
+	inline void setScrollSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
+
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+
+	int getEntryCount();
+	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
 
 private:
+	Eigen::Vector2f mPadding;
+	std::shared_ptr<Sound> mScrollSound;
+
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
 	{
+		// Get GameGrid TileSize from Settings 
+		float gamegrid_sizemod = 1; 
+
+		// Mod the size multiplier based on GridMod 5 -> .5
+		float modSize = 0; 
+		if (mGridMod > 0)
+			modSize = mGridMod / 10; 
+		gamegrid_sizemod += modSize; 
+
 		Eigen::Vector2f aspect(1, 1);
 
 		if(tex)
@@ -54,7 +79,7 @@ private:
 				aspect[1] = (float)texSize.y() / texSize.x();
 		}
 
-		return Eigen::Vector2f(156 * aspect.x(), 156 * aspect.y());
+		return Eigen::Vector2f(gamegrid_sizemod * (156 * aspect.x()), gamegrid_sizemod * (156 * aspect.y()));
 	};
 
 	Eigen::Vector2f getMaxSquareSize() const
@@ -81,7 +106,15 @@ private:
 		return gridSize;
 	};
 
-	Eigen::Vector2f getPadding() const { return Eigen::Vector2f(24, 24); }
+	Eigen::Vector2f getPadding() const
+	{
+		return mPadding;
+	}
+
+	void setPadding(Eigen::Vector2f padding)
+	{
+		mPadding = padding;
+	}
 	
 	void buildImages();
 	void updateImages();
@@ -89,14 +122,40 @@ private:
 	virtual void onCursorChanged(const CursorState& state);
 
 	bool mEntriesDirty;
+	bool mGameGrid = true; 
+ 
+	int mTotalEntrys = 0; 
+ 
+	float mGridMod = 1; 
 
 	std::vector<ImageComponent> mImages;
 };
 
 template<typename T>
-ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData, T>(window)
+ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window)
 {
+	mPadding = Eigen::Vector2f(24, 24);
 	mEntriesDirty = true;
+	mGridMod = modGridSize; 
+} 
+ 
+template<typename T> 
+ImageGridComponent<T>::~ImageGridComponent() { 
+	mImages.clear(); 
+} 
+ 
+
+template<typename T> 
+int ImageGridComponent<T>::getEntryCount() { 
+	return mTotalEntrys; 
+} 
+ 
+template<typename T> 
+void ImageGridComponent<T>::remove() { 
+	static_cast<IList< ImageGridData, T >*>(this)->pop_back(); 
+ 
+	mEntriesDirty = true; 
+	mTotalEntrys--; 
 }
 
 template<typename T>
@@ -105,9 +164,10 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	typename IList<ImageGridData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
-	entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png");
+	entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
+	mTotalEntrys++;
 }
 
 template<typename T>
@@ -124,6 +184,11 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 			dir[0] = -1;
 		else if(config->isMappedTo("right", input))
 			dir[0] = 1;
+
+		if(config->isMappedTo("up", input) || config->isMappedTo("down", input) || config->isMappedTo("left", input) || config->isMappedTo("right", input))
+		{
+			onScroll(1);
+		}
 
 		if(dir != Eigen::Vector2i::Zero())
 		{
@@ -147,6 +212,12 @@ void ImageGridComponent<T>::update(int deltaTime)
 }
 
 template<typename T>
+void ImageGridComponent<T>::setModSize(float mod) {
+	mGridMod = mod;
+	mEntriesDirty = true;
+}
+ 
+template<typename T> 
 void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = getTransform() * parentTrans;
@@ -158,12 +229,37 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		mEntriesDirty = false;
 	}
 
+	int i = 0;
 	for(auto it = mImages.begin(); it != mImages.end(); it++)
 	{
 		it->render(trans);
+		if (i > 26)
+			break;
+		i++;
 	}
 
 	GuiComponent::renderChildren(trans);
+}
+
+template <typename T>
+void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "imagegrid");
+	if(!elem)
+		return;
+
+	using namespace ThemeFlags;
+
+	// TODO more options + update theme wiki
+	if(properties & SOUND && elem->has("scrollSound"))
+		setScrollSound(Sound::get(elem->get<std::string>("scrollSound")));
+
+	Eigen::Vector2f scale = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+	if(properties & PADDING && elem->has("padding"))
+		setPadding(elem->get<Eigen::Vector2f>("padding"));
 }
 
 template<typename T>

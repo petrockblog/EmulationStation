@@ -30,6 +30,8 @@ public:
 	inline const std::string& getStartPath() const { return mEnvData->mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mEnvData->mSearchExtensions; }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
+	inline const int getGridModSize() const { return mGridModSize; }
+	void setGridModSize(int s);
 	inline SystemEnvironmentData* getSystemEnvData() const { return mEnvData; }
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mEnvData->mPlatformIds; }
 	inline bool hasPlatformId(PlatformIds::PlatformId id) { if (!mEnvData) return false; return std::find(mEnvData->mPlatformIds.begin(), mEnvData->mPlatformIds.end(), id) != mEnvData->mPlatformIds.end(); }
@@ -86,6 +88,7 @@ private:
 	SystemEnvironmentData* mEnvData;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+	int mGridModSize;
 
 	void populateFolder(FileData* folder);
 	void setIsGameSystemStatus();
