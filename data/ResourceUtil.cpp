@@ -2,9 +2,10 @@
 
 #include "Resources.h"
 
-const size_t res2hNrOfFiles = 46;
+const size_t res2hNrOfFiles = 47;
 const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/busy_2.svg", busy_2_svg_size, busy_2_svg_data},
+    {":/blank_game.png", blank_game_png_size, blank_game_png_data},
     {":/frame.png", frame_png_size, frame_png_data},
     {":/scroll_gradient.png", scroll_gradient_png_size, scroll_gradient_png_data},
     {":/busy_0.svg", busy_0_svg_size, busy_0_svg_data},

@@ -24,7 +24,7 @@ ElementMapType makeMap(const T& mapInit)
 	return m;
 }
 
-std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("video");
+std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("grid")("video");
 std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video")("carousel")("z-index");
 
 std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of

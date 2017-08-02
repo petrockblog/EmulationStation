@@ -2,6 +2,7 @@ project("core")
 
 set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/AsyncHandle.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/AnimationUtil.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/HelpStyle.h
@@ -32,6 +33,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentList.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/GridTileComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/IList.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageGridComponent.h
@@ -82,6 +84,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ThemeData.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Util.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/AnimationUtil.cpp
 
 	# Animations
 	${CMAKE_CURRENT_SOURCE_DIR}/src/animations/AnimationController.cpp
@@ -94,6 +97,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentList.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/GridTileComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/MenuComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
@@ -171,6 +175,8 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/busy_1_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/busy_2_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/busy_3_svg.cpp
+
+    ${emulationstation-all_SOURCE_DIR}/data/converted/blank_game_png.cpp
 )
 
 list(APPEND CORE_SOURCES ${EMBEDDED_ASSET_SOURCES})

@@ -112,11 +112,13 @@ void ViewController::goToGameList(SystemData* system)
 	if (mCurrentView)
 	{
 		mCurrentView->onHide();
+		mCurrentView->onFocusLost();
 	}
 	mCurrentView = getGameListView(system);
 	if (mCurrentView)
 	{
 		mCurrentView->onShow();
+		mCurrentView->onFocusGained();
 	}
 	playViewTransition();
 }
@@ -291,6 +293,8 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 		selectedViewType = BASIC;
 	if (viewPreference.compare("detailed") == 0)
 		selectedViewType = DETAILED;
+	if (viewPreference.compare("grid") == 0)
+		selectedViewType = GRID;
 	if (viewPreference.compare("video") == 0)
 		selectedViewType = VIDEO;
 
@@ -321,9 +325,9 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 		case DETAILED:
 			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
 			break;
-		// case GRID placeholder for future implementation.
-		//		view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
-		//		break;
+		case GRID:
+			view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
+			break;
 		case BASIC:
 		default:
 			view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));

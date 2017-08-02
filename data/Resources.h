@@ -11,6 +11,8 @@ extern const unsigned char busy_2_svg_data[];
 extern const size_t frame_png_size;
 extern const unsigned char frame_png_data[];
 
+extern const uint16_t blank_game_png_size;
+extern const uint8_t blank_game_png_data[];
 extern const size_t scroll_gradient_png_size;
 extern const unsigned char scroll_gradient_png_data[];
 
