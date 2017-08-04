@@ -51,6 +51,11 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
 		{
 			Settings::getInstance()->setBool("IgnoreGamelist", true);
+#ifndef WIN32
+		}else if(strcmp(argv[i], "--show-hidden-files") == 0)
+		{
+			Settings::getInstance()->setBool("ShowHiddenFiles", true);			
+#endif
 		}else if(strcmp(argv[i], "--draw-framerate") == 0)
 		{
 			Settings::getInstance()->setBool("DrawFramerate", true);
@@ -217,6 +222,7 @@ int main(int argc, char* argv[])
 		return 1;
 
 	//start the logger
+	Log::init();
 	Log::open();
 	LOG(LogInfo) << "EmulationStation - v" << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING;
 
