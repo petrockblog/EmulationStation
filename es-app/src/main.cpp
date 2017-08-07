@@ -62,10 +62,31 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--no-exit") == 0)
 		{
 			Settings::getInstance()->setBool("ShowExit", false);
-		}else if(strcmp(argv[i], "--no-splash") == 0)
+		}
+ 		else if(strcmp(argv[i], "--no-scraper") == 0)
+                {       
+                        Settings::getInstance()->setBool("ShowScraper", false);
+                }
+		else if(strcmp(argv[i], "--no-ui-settings") == 0)
+                {  
+                        Settings::getInstance()->setBool("ShowUISettings", false);
+                }
+		else if(strcmp(argv[i], "--no-configure-input") == 0)
+		{
+                        Settings::getInstance()->setBool("ShowConfigureInput", false);
+                }
+		else if(strcmp(argv[i], "--no-sound-settings") == 0)
+                {
+                        Settings::getInstance()->setBool("ShowSoundSettings", false);
+                }
+		else if(strcmp(argv[i], "--no-edit-metadata") == 0)
+                {       
+                        Settings::getInstance()->setBool("ShowEditMetadata", false);
+                }else if(strcmp(argv[i], "--no-splash") == 0)
 		{
 			Settings::getInstance()->setBool("SplashScreen", false);
-		}else if(strcmp(argv[i], "--debug") == 0)
+		}
+		else if(strcmp(argv[i], "--debug") == 0)
 		{
 			Settings::getInstance()->setBool("Debug", true);
 			Settings::getInstance()->setBool("HideConsole", false);
@@ -106,6 +127,11 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--draw-framerate		display the framerate\n"
 				"--no-exit			don't show the exit option in the menu\n"
 				"--no-splash			don't show the splash screen\n"
+				"--no-scraper			don't show the \"Scraper option\" in the Main Menu\n"
+				"--no-ui-settings		don't show the \"UI Settings\" option in the Main Menu\n"
+				"--no-sound-settings		don't show the \"Sound Settings\" option the Main Menu\n"
+				"--no-configure-input		don't show the \"Configure Input\" option in the Main Menu\n"
+				"--no-edit-metadata		don't show the \"Edit This Game's Metadata\" option in the game Options menu\n"
 				"--debug				more logging, show console on Windows\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
