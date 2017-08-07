@@ -1,3 +1,4 @@
+#include "Settings.h"
 #include "GuiGamelistOptions.h"
 #include "GuiMetaDataEd.h"
 #include "views/gamelist/IGameListView.h"
@@ -55,7 +56,9 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 		mMenu.addWithLabel("SORT GAMES BY", mListSort);
 
-		row.elements.clear();
+	// edit game metadata
+        if(Settings::getInstance()->getBool("ShowEditMetadata"))
+        {	row.elements.clear();
 		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(makeArrow(mWindow), false);
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
@@ -131,7 +134,12 @@ void GuiGamelistOptions::openMetaDataEd()
 	}
 
 	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(),
-		std::bind(&IGameListView::onFileChanged, ViewController::get()->getGameListView(file->getSystem()).get(), file, FILE_METADATA_CHANGED), deleteBtnFunc));
+		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), [this, file] { 
+			boost::filesystem::remove(file->getPath()); //actually delete the file on the filesystem
+			file->getParent()->removeChild(file); //unlink it so list repopulations triggered from onFileChanged won't see it
+			getGamelist()->onFileChanged(file, FILE_REMOVED); //tell the view
+			delete file; //free it
+	}));
 }
 
 void GuiGamelistOptions::jumpToLetter()

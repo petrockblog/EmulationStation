@@ -33,6 +33,8 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
 	// [version]
 
+       if(Settings::getInstance()->getBool("ShowScraper"))	
+       {
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 	addEntry("SCRAPER", 0x777777FF, true,
 		[this, openScrapeNow] {
@@ -66,8 +68,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addRow(row);
 
 			mWindow->pushGui(s);
-	});
-
+		});
+	}
+       if(Settings::getInstance()->getBool("ShowSoundSettings"))          
+       {
 	addEntry("SOUND SETTINGS", 0x777777FF, true,
 		[this] {
 			auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
@@ -127,7 +131,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
 			mWindow->pushGui(s);
 	});
+	}
 
+       if(Settings::getInstance()->getBool("ShowUISettings"))
+       {
 	addEntry("UI SETTINGS", 0x777777FF, true,
 		[this] {
 			auto s = new GuiSettings(mWindow, "UI SETTINGS");
