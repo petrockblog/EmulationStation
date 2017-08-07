@@ -13,7 +13,13 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
 	("DebugText")
+	("ParseGamelistOnly")
 	("ShowExit")
+	("ShowScraper")
+	("ShowUISettings")
+	("ShowConfigureInput")
+	("ShowSoundSettings")
+	("ShowEditMetadata")
 	("Windowed")
 	("VSync")
 	("HideConsole")
@@ -44,6 +50,11 @@ void Settings::setDefaults()
 	mBoolMap["ShowHiddenFiles"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
+	mBoolMap["ShowScraper"] = true;
+	mBoolMap["ShowUISettings"] = true;
+	mBoolMap["ShowConfigureInput"] = true;
+	mBoolMap["ShowSoundSettings"] = true;
+	mBoolMap["ShowEditMetadata"] = true;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["SplashScreen"] = true;
 
