@@ -5,7 +5,9 @@
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Settings.h"
+#include "VolumeControl.h"
 #include "Util.h"
+#include <string>
 #include <signal.h>
 #include <wait.h>
 #include <sys/types.h>
@@ -100,10 +102,16 @@ void VideoPlayerComponent::startVideo()
 
 				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf, "--no-ghost-box", "", "", "", "", NULL };
 
-				// check if we want to mute the audio
+				// check if we want to mute the audio else set volume
 				if (!Settings::getInstance()->getBool("VideoAudio"))
 				{
 					argv[8] = "-1000000";
+				}
+				else
+				{
+					// Range of parameter is probably "-6000" to "0"
+					int volume = (VolumeControl::getInstance()->getVolume() * 60) - 6000;
+					argv[8] = std::to_string(volume).c_str();
 				}
 
 				// test if there's a path for possible subtitles, meaning we're a screensaver video
@@ -187,4 +195,3 @@ void VideoPlayerComponent::stopVideo()
 }
 
 #endif
-
