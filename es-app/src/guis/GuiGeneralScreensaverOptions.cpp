@@ -1,6 +1,7 @@
 #include "guis/GuiGeneralScreensaverOptions.h"
 #include "Window.h"
 #include "Settings.h"
+#include "PowerSaver.h"
 #include "views/ViewController.h"
 
 #include "components/ButtonComponent.h"
