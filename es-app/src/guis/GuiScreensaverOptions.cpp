@@ -51,7 +51,7 @@ GuiScreensaverOptions::GuiScreensaverOptions(Window* window, const char* title) 
 	addWithLabel("STRETCH VIDEO ON SCREENSAVER", stretch_screensaver);
 	addSaveFunc([stretch_screensaver] { Settings::getInstance()->setBool("StretchVideoOnScreenSaver", stretch_screensaver->getState()); });
 
-	mMenu.addButton("BACK", "go back", [this] { delete this; });
+	mMenu.addButton(_("BACK"), "go back", [this] { delete this; });
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
