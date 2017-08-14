@@ -3,9 +3,7 @@
 #include "FileSorts.h"
 #include "SystemData.h"
 
-static const std::string LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiComponent(window), 
+GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiComponent(window),
 	mBackground(window), mSortText(window), mLetterText(window), mGameList(gamelist)
 {
 	setPosition(Renderer::getScreenWidth() * 0.2f, Renderer::getScreenHeight() * 0.2f);
@@ -34,7 +32,7 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	mSortId = 0; // TODO
 	updateSortText();
 
-	mLetterId = LETTERS.find(mGameList->getCursor()->getName()[0]);
+	mLetterId = getLetters().find(mGameList->getCursor()->getName()[0]);
 	if(mLetterId == std::string::npos)
 		mLetterId = 0;
 
@@ -114,11 +112,11 @@ void GuiFastSelect::scroll()
 {
 	mLetterId += mScrollDir;
 	if(mLetterId < 0)
-		mLetterId += LETTERS.length();
-	else if(mLetterId >= (int)LETTERS.length())
-		mLetterId -= LETTERS.length();
+		mLetterId += getLetters().length();
+	else if(mLetterId >= (int)getLetters().length())
+		mLetterId -= getLetters().length();
 
-	mLetterText.setText(LETTERS.substr(mLetterId, 1));
+	mLetterText.setText(getLetters().substr(mLetterId, 1));
 }
 
 void GuiFastSelect::updateSortText()
@@ -151,10 +149,10 @@ void GuiFastSelect::updateGameListCursor()
 	// find the first entry in the list that either exactly matches our target letter or is beyond our target letter
 	for(auto it = list.cbegin(); it != list.cend(); it++)
 	{
-		char check = (*it)->getName().empty() ? 'A' : (*it)->getName()[0];
+		char check = (*it)->getName().empty() ? getLetters().front() : (*it)->getName()[0];
 
 		// if there's an exact match or we've passed it, set the cursor to this one
-		if(check == LETTERS[mLetterId] || (sort.ascending && check > LETTERS[mLetterId]) || (!sort.ascending && check < LETTERS[mLetterId]))
+		if(check == getLetters()[mLetterId] || (sort.ascending && check > getLetters()[mLetterId]) || (!sort.ascending && check < getLetters()[mLetterId]))
 		{
 			mGameList->setCursor(*it);
 			break;

@@ -3,9 +3,10 @@
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
+#include "GuiFastSelect.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window),
-	mSystem(system), mMenu(window, "OPTIONS"), fromPlaceholder(false), mFiltersChanged(false)
+	mSystem(system), mMenu(window, _("OPTIONS").c_str()), fromPlaceholder(false), mFiltersChanged(false)
 {
 	addChild(&mMenu);
 
@@ -21,14 +22,14 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 			// jump to letter
 			row.elements.clear();
 			char curChar = toupper(getGamelist()->getCursor()->getName()[0]);
-			if(curChar < 'A' || curChar > 'Z')
-				curChar = 'A';
+			if(curChar < GuiFastSelect::getLetters().front() || curChar > GuiFastSelect::getLetters().back())
+				curChar = GuiFastSelect::getLetters().front();
 
-			mJumpToLetterList = std::make_shared<LetterList>(mWindow, "JUMP TO LETTER", false);
-			for(char c = 'A'; c <= 'Z'; c++)
+			mJumpToLetterList = std::make_shared<LetterList>(mWindow, _("JUMP TO LETTER"), false);
+			for(char c = GuiFastSelect::getLetters().front(); c <= GuiFastSelect::getLetters().back(); c++)
 				mJumpToLetterList->add(std::string(1, c), c, c == curChar);
 
-			row.addElement(std::make_shared<TextComponent>(mWindow, "JUMP TO LETTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			row.addElement(std::make_shared<TextComponent>(mWindow, _("JUMP TO LETTER"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			row.addElement(mJumpToLetterList, false);
 			row.input_handler = [&](InputConfig* config, Input input) {
 				if(config->isMappedTo("a", input) && input.value)
@@ -46,17 +47,17 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		}
 
 		// sort list by
-		mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
+		mListSort = std::make_shared<SortList>(mWindow, _("SORT GAMES BY"), false);
 		for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
 		{
 			const FileData::SortType& sort = FileSorts::SortTypes.at(i);
 			mListSort->add(sort.description, &sort, i == 0); // TODO - actually make the sort type persistent
 		}
 
-		mMenu.addWithLabel("SORT GAMES BY", mListSort);
+		mMenu.addWithLabel(_("SORT GAMES BY"), mListSort);
 
 		row.elements.clear();
-		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.addElement(std::make_shared<TextComponent>(mWindow, _("EDIT THIS GAME'S METADATA"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(makeArrow(mWindow), false);
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 		mMenu.addRow(row);
@@ -64,7 +65,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 	// show filtered menu
 	row.elements.clear();
-	row.addElement(std::make_shared<TextComponent>(mWindow, "FILTER GAMELIST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.addElement(std::make_shared<TextComponent>(mWindow, _("FILTER GAMELIST"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	row.addElement(makeArrow(mWindow), false);
 	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openGamelistFilter, this));
 	mMenu.addRow(row);
@@ -190,7 +191,7 @@ HelpStyle GuiGamelistOptions::getHelpStyle()
 std::vector<HelpPrompt> GuiGamelistOptions::getHelpPrompts()
 {
 	auto prompts = mMenu.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "close"));
+	prompts.push_back(HelpPrompt("b", _("close")));
 	return prompts;
 }
 

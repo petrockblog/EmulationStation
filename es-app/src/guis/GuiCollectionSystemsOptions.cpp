@@ -6,7 +6,7 @@
 #include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
 
-GuiCollectionSystemsOptions::GuiCollectionSystemsOptions(Window* window) : GuiComponent(window), mMenu(window, "GAME COLLECTION SETTINGS")
+GuiCollectionSystemsOptions::GuiCollectionSystemsOptions(Window* window) : GuiComponent(window), mMenu(window, _("GAME COLLECTION SETTINGS").c_str())
 {
 	initializeMenu();
 }
@@ -34,7 +34,7 @@ void GuiCollectionSystemsOptions::addSystemsToMenu()
 
 	std::map<std::string, CollectionSystemData> vSystems = CollectionSystemManager::get()->getCollectionSystems();
 
-	autoOptionList = std::make_shared< OptionListComponent<std::string> >(mWindow, "SELECT COLLECTIONS", true);
+	autoOptionList = std::make_shared< OptionListComponent<std::string> >(mWindow, _("SELECT COLLECTIONS"), true);
 
 	// add Systems
 	ComponentListRow row;
@@ -43,7 +43,7 @@ void GuiCollectionSystemsOptions::addSystemsToMenu()
 	{
 		autoOptionList->add(it->second.decl.longName, it->second.decl.name, it->second.isEnabled);
 	}
-	mMenu.addWithLabel("AUTOMATIC COLLECTIONS", autoOptionList);
+	mMenu.addWithLabel(_("AUTOMATIC COLLECTIONS"), autoOptionList);
 }
 
 void GuiCollectionSystemsOptions::applySettings()
@@ -53,14 +53,14 @@ void GuiCollectionSystemsOptions::applySettings()
 	if (out != "" && !CollectionSystemManager::get()->isThemeAutoCompatible())
 	{
 		mWindow->pushGui(new GuiMsgBox(mWindow,
-			"Your theme does not support game collections. Please update your theme, or ensure that you use a theme that contains the folders:\n\n• auto-favorites\n• auto-lastplayed\n• auto-allgames\n\nDo you still want to enable collections?",
-				"YES", [this, out, prev] {
+			_("Your theme does not support game collections. Please update your theme, or ensure that you use a theme that contains the folders:\n\n• auto-favorites\n• auto-lastplayed\n• auto-allgames\n\nDo you still want to enable collections?"),
+				_("YES"), [this, out, prev] {
 					if (prev != out)
 					{
 						updateSettings(out);
 					}
 					delete this; },
-				"NO", [this] { delete this; }));
+				_("NO"), [this] { delete this; }));
 	}
 	else
 	{
@@ -100,6 +100,6 @@ bool GuiCollectionSystemsOptions::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiCollectionSystemsOptions::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("b", _("back")));
 	return prompts;
 }

@@ -73,33 +73,33 @@ static const bool inputSkippable[inputCount] =
 	true,
 	true
 };
-static const char* inputDispName[inputCount] =
+static std::string inputDispName[inputCount] =
 {
-	"D-PAD UP",
-	"D-PAD DOWN",
-	"D-PAD LEFT",
-	"D-PAD RIGHT",
-	"START",
-	"SELECT",
+	_("D-PAD UP"),
+	_("D-PAD DOWN"),
+	_("D-PAD LEFT"),
+	_("D-PAD RIGHT"),
+	_("START"),
+	_("SELECT"),
 	"A",
 	"B",
 	"X",
 	"Y",
-	"LEFT SHOULDER",
-	"RIGHT SHOULDER",
-	"LEFT TRIGGER",
-	"RIGHT TRIGGER",
-	"LEFT THUMB",
-	"RIGHT THUMB",
-	"LEFT ANALOG UP",
-	"LEFT ANALOG DOWN",
-	"LEFT ANALOG LEFT",
-	"LEFT ANALOG RIGHT",
-	"RIGHT ANALOG UP",
-	"RIGHT ANALOG DOWN",
-	"RIGHT ANALOG LEFT",
-	"RIGHT ANALOG RIGHT",
-	"HOTKEY ENABLE"
+	_("LEFT SHOULDER"),
+	_("RIGHT SHOULDER"),
+	_("LEFT TRIGGER"),
+	_("RIGHT TRIGGER"),
+	_("LEFT THUMB"),
+	_("RIGHT THUMB"),
+	_("LEFT ANALOG UP"),
+	_("LEFT ANALOG DOWN"),
+	_("LEFT ANALOG LEFT"),
+	_("LEFT ANALOG RIGHT"),
+	_("RIGHT ANALOG UP"),
+	_("RIGHT ANALOG DOWN"),
+	_("RIGHT ANALOG LEFT"),
+	_("RIGHT ANALOG RIGHT"),
+	_("HOTKEY ENABLE")
 };
 static const char* inputIcon[inputCount] =
 {
