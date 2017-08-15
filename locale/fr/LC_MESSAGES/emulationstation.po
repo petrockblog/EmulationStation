@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-15 01:31+0200\n"
-"PO-Revision-Date: 2017-08-15 01:31+0200\n"
+"POT-Creation-Date: 2017-08-15 01:34+0200\n"
+"PO-Revision-Date: 2017-08-15 01:34+0200\n"
 "Last-Translator: Benji <benji@benji>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -17,179 +17,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: es-app/src/guis/GuiScraperMulti.cpp:108
-msgid " OF "
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:355
-msgid "ARE YOU SURE YOU WANT TO CONFIGURE INPUT?"
-msgstr ""
-
-#. volume control device
-#: es-app/src/guis/GuiMenu.cpp:84 es-app/src/guis/GuiMenu.cpp:91
-msgid "AUDIO DEVICE"
-msgstr ""
-
-#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:46
-msgid "AUTOMATIC COLLECTIONS"
-msgstr ""
-
-#: es-app/src/guis/GuiScraperStart.cpp:18
-msgid "All Games"
-msgstr ""
-
-#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:22
-#: es-app/src/guis/GuiScraperStart.cpp:38
-#: es-app/src/guis/GuiGamelistFilter.cpp:33 es-app/src/guis/GuiSettings.cpp:11
-#: es-app/src/guis/GuiScreensaverOptions.cpp:54
-msgid "BACK"
-msgstr ""
-
 #: es-core/src/guis/GuiTextEditPopup.cpp:24
 #: es-app/src/guis/GuiMetaDataEd.cpp:144 es-app/src/guis/GuiGameScraper.cpp:48
 msgid "CANCEL"
-msgstr ""
+msgstr "ANNULER"
 
-#: es-app/src/guis/GuiMenu.cpp:182
-msgid "CAROUSEL TRANSITIONS"
-msgstr ""
+#: es-core/src/guis/GuiTextEditPopup.cpp:71
+#: es-app/src/views/gamelist/BasicGameListView.cpp:144
+#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:103
+#: es-app/src/guis/GuiMetaDataEd.cpp:277
+#: es-app/src/guis/GuiScraperStart.cpp:125
+#: es-app/src/guis/GuiGamelistFilter.cpp:111 es-app/src/guis/GuiSettings.cpp:64
+#: es-app/src/guis/GuiScreensaverOptions.cpp:121
+msgid "back"
+msgstr "Retour"
+
+#. title
+#: es-core/src/guis/GuiDetectDevice.cpp:32
+msgid "WELCOME"
+msgstr "BIENVENU"
 
 #: es-core/src/guis/GuiDetectDevice.cpp:32 es-app/src/guis/GuiMenu.cpp:352
 msgid "CONFIGURE INPUT"
-msgstr ""
+msgstr "CONFIGURER LES TOUCHES"
 
-#: es-core/src/guis/GuiInputConfig.cpp:79
-msgid "D-PAD DOWN"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:80
-msgid "D-PAD LEFT"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:81
-msgid "D-PAD RIGHT"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:78
-msgid "D-PAD UP"
-msgstr ""
-
-#: es-app/src/guis/GuiMetaDataEd.cpp:150
-msgid "DELETE"
-msgstr ""
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:41
-#: es-app/src/views/gamelist/VideoGameListView.cpp:74
-msgid "Developer"
-msgstr ""
-
-#: es-app/src/guis/GuiMetaDataEd.cpp:36
-msgid "EDIT METADATA"
-msgstr ""
-
-#: es-app/src/guis/GuiGamelistOptions.cpp:60
-msgid "EDIT THIS GAME'S METADATA"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:421
-msgid "EMULATIONSTATION V"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:102
-msgid "ENABLE NAVIGATION SOUNDS"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:107
-msgid "ENABLE VIDEO AUDIO"
-msgstr ""
-
-#: es-app/src/guis/GuiGamelistOptions.cpp:68
-msgid "FILTER GAMELIST"
-msgstr ""
-
-#: es-app/src/guis/GuiScraperStart.cpp:22
-msgid "Filter"
-msgstr ""
-
-#. update subtitle
-#. clear
-#: es-app/src/guis/GuiScraperMulti.cpp:108
-msgid "GAME "
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:270
-#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:9
-msgid "GAME COLLECTION SETTINGS"
-msgstr ""
-
-#. GameList view style
-#: es-app/src/guis/GuiMenu.cpp:243 es-app/src/guis/GuiMenu.cpp:251
-msgid "GAMELIST VIEW STYLE"
-msgstr ""
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:47
-#: es-app/src/views/gamelist/VideoGameListView.cpp:80
-msgid "Genre"
-msgstr ""
+#: es-core/src/guis/GuiDetectDevice.cpp:43
+msgid "NO GAMEPADS DETECTED"
+msgstr "AUCUNE MANETTE DETECTEE"
 
 #. message
 #: es-core/src/guis/GuiDetectDevice.cpp:48
 msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr ""
+msgstr "MAINTENEZ UN BOUTON DE LA MANETTE POUR LA CONFIGURER"
 
-#: es-core/src/guis/GuiInputConfig.cpp:102
-msgid "HOTKEY ENABLE"
-msgstr ""
+#: es-core/src/guis/GuiDetectDevice.cpp:51
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "APPUYEZ SUR F4 POUR QUITTER A N'IMPORTE QUEL MOMENT"
 
-#: es-app/src/guis/GuiScraperMulti.cpp:54 es-app/src/guis/GuiGameScraper.cpp:44
-msgid "INPUT"
-msgstr ""
+#: es-core/src/guis/GuiDetectDevice.cpp:51
+msgid "PRESS ESC TO CANCEL."
+msgstr "APPUYEZ SUR ECHAP POUR ANNULER"
 
-#: es-app/src/guis/GuiGamelistOptions.cpp:28
-#: es-app/src/guis/GuiGamelistOptions.cpp:32
-msgid "JUMP TO LETTER"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:95
-msgid "LEFT ANALOG DOWN"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:96
-msgid "LEFT ANALOG LEFT"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:97
-msgid "LEFT ANALOG RIGHT"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:94
-msgid "LEFT ANALOG UP"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:88
-msgid "LEFT SHOULDER"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:92
-msgid "LEFT THUMB"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:90
-msgid "LEFT TRIGGER"
-msgstr ""
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:53
-#: es-app/src/views/gamelist/VideoGameListView.cpp:86
-msgid "Last played"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:25
-msgid "MAIN MENU"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:88
-msgid "Master"
-msgstr ""
+#: es-core/src/guis/GuiMsgBox.cpp:37 es-app/src/guis/GuiMenu.cpp:159
+#: es-app/src/guis/GuiScraperMulti.cpp:149
+msgid "OK"
+msgstr "OK"
 
 #: es-core/src/guis/GuiMsgBox.cpp:37 es-app/src/guis/GuiMenu.cpp:358
 #: es-app/src/guis/GuiMenu.cpp:374 es-app/src/guis/GuiMenu.cpp:385
@@ -198,299 +70,254 @@ msgstr ""
 #: es-app/src/guis/GuiMetaDataEd.cpp:149 es-app/src/guis/GuiMetaDataEd.cpp:252
 #: es-app/src/guis/GuiScraperStart.cpp:53
 msgid "NO"
-msgstr ""
+msgstr "NON"
 
-#: es-core/src/guis/GuiDetectDevice.cpp:43
-msgid "NO GAMEPADS DETECTED"
-msgstr ""
+#: es-core/src/guis/GuiInputConfig.cpp:78
+msgid "D-PAD UP"
+msgstr "CROIX DIRECTIONNEL HAUT"
 
-#: es-app/src/guis/GuiScraperStart.cpp:68
-msgid "NO GAMES FIT THAT CRITERIA."
-msgstr ""
+#: es-core/src/guis/GuiInputConfig.cpp:79
+msgid "D-PAD DOWN"
+msgstr "CROIX DIRECTIONNEL BAS"
 
-#: es-app/src/guis/GuiScraperMulti.cpp:140
-msgid "NO GAMES WERE SCRAPED."
-msgstr ""
+#: es-core/src/guis/GuiInputConfig.cpp:80
+msgid "D-PAD LEFT"
+msgstr "CROIX DIRECTIONNEL GAUCHE"
 
-#: es-core/src/guis/GuiMsgBox.cpp:37 es-app/src/guis/GuiMenu.cpp:159
-#: es-app/src/guis/GuiScraperMulti.cpp:149
-msgid "OK"
-msgstr ""
-
-#. OMX player Audio Device
-#: es-app/src/guis/GuiMenu.cpp:112 es-app/src/guis/GuiMenu.cpp:122
-msgid "OMX PLAYER AUDIO DEVICE"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:264
-msgid "ON-SCREEN HELP"
-msgstr ""
-
-#: es-app/src/guis/GuiGamelistOptions.cpp:9
-msgid "OPTIONS"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:274 es-app/src/guis/GuiMenu.cpp:276
-msgid "OTHER SETTINGS"
-msgstr ""
-
-#: es-app/src/guis/GuiScraperStart.cpp:20
-msgid "Only missing image"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:311
-msgid "PARSE GAMESLISTS ONLY"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:86
-msgid "PCM"
-msgstr ""
-
-#. power saver
-#: es-app/src/guis/GuiMenu.cpp:285 es-app/src/guis/GuiMenu.cpp:293
-msgid "POWER SAVER MODES"
-msgstr ""
-
-#: es-core/src/guis/GuiDetectDevice.cpp:51
-msgid "PRESS ESC TO CANCEL."
-msgstr ""
-
-#: es-core/src/guis/GuiDetectDevice.cpp:51
-msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr ""
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:50
-#: es-app/src/views/gamelist/VideoGameListView.cpp:83
-msgid "Players"
-msgstr ""
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:44
-#: es-app/src/views/gamelist/VideoGameListView.cpp:77
-msgid "Publisher"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:176
-msgid "QUICK SYSTEM SELECT"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:362 es-app/src/guis/GuiMenu.cpp:364
-msgid "QUIT"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:412
-msgid "QUIT EMULATIONSTATION"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:405
-msgid "REALLY QUIT?"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:370 es-app/src/guis/GuiMenu.cpp:381
-msgid "REALLY RESTART?"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:392
-msgid "REALLY SHUTDOWN?"
-msgstr ""
-
-#: es-app/src/guis/GuiGamelistFilter.cpp:26
-msgid "RESET ALL FILTERS"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:376
-msgid "RESTART EMULATIONSTATION"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:387
-msgid "RESTART SYSTEM"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:99
-msgid "RIGHT ANALOG DOWN"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:100
-msgid "RIGHT ANALOG LEFT"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:101
-msgid "RIGHT ANALOG RIGHT"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:98
-msgid "RIGHT ANALOG UP"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:89
-msgid "RIGHT SHOULDER"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:93
-msgid "RIGHT THUMB"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:91
-msgid "RIGHT TRIGGER"
-msgstr ""
-
-#. metadata labels + values
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:35
-#: es-app/src/views/gamelist/VideoGameListView.cpp:68
-msgid "Rating"
-msgstr ""
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:38
-#: es-app/src/views/gamelist/VideoGameListView.cpp:71
-msgid "Released"
-msgstr ""
-
-#: es-app/src/guis/GuiMetaDataEd.cpp:143
-msgid "SAVE"
-msgstr ""
-
-#: es-app/src/guis/GuiMetaDataEd.cpp:250
-msgid "SAVE CHANGES?"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:306
-msgid "SAVE METADATA ON EXIT"
-msgstr ""
-
-#: es-app/src/guis/GuiMetaDataEd.cpp:141
-msgid "SCRAPE"
-msgstr ""
-
-#. scrape from
-#: es-app/src/guis/GuiMenu.cpp:43 es-app/src/guis/GuiMenu.cpp:48
-msgid "SCRAPE FROM"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:63 es-app/src/guis/GuiScraperStart.cpp:12
-msgid "SCRAPE NOW"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:54
-msgid "SCRAPE RATINGS"
-msgstr ""
-
-#. add filters (with first one selected)
-#: es-app/src/guis/GuiScraperStart.cpp:17
-msgid "SCRAPE THESE GAMES"
-msgstr ""
-
-#. add systems (all with a platformid specified selected)
-#: es-app/src/guis/GuiScraperStart.cpp:25
-msgid "SCRAPE THESE SYSTEMS"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:38 es-app/src/guis/GuiMenu.cpp:40
-msgid "SCRAPER"
-msgstr ""
-
-#. set up grid
-#: es-app/src/guis/GuiScraperMulti.cpp:34
-msgid "SCRAPING IN PROGRESS"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:139
-msgid "SCREENSAVER AFTER"
-msgstr ""
-
-#. screensaver behavior
-#: es-app/src/guis/GuiMenu.cpp:146 es-app/src/guis/GuiMenu.cpp:153
-msgid "SCREENSAVER BEHAVIOR"
-msgstr ""
-
-#: es-app/src/guis/GuiScreensaverOptions.cpp:28
-msgid "SCREENSAVER CONTROLS"
-msgstr ""
-
-#: es-core/src/guis/GuiInputConfig.cpp:83
-msgid "SELECT"
-msgstr ""
-
-#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:37
-msgid "SELECT COLLECTIONS"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:345
-msgid "SHOW FRAMERATE"
-msgstr ""
-
-#. Render Video Game Name as subtitles
-#: es-app/src/guis/GuiScreensaverOptions.cpp:32
-msgid "SHOW GAME INFO"
-msgstr ""
-
-#: es-app/src/guis/GuiScreensaverOptions.cpp:39
-msgid "SHOW GAME INFO ON SCREENSAVER"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:318
-msgid "SHOW HIDDEN FILES"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:398
-msgid "SHUTDOWN SYSTEM"
-msgstr ""
-
-#: es-app/src/guis/GuiScraperMulti.cpp:59
-msgid "SKIP"
-msgstr ""
-
-#. sort list by
-#: es-app/src/guis/GuiGamelistOptions.cpp:50
-#: es-app/src/guis/GuiGamelistOptions.cpp:57
-msgid "SORT GAMES BY"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:72 es-app/src/guis/GuiMenu.cpp:74
-msgid "SOUND SETTINGS"
-msgstr ""
+#: es-core/src/guis/GuiInputConfig.cpp:81
+msgid "D-PAD RIGHT"
+msgstr "CROIX DIRECTIONNEL DROITE"
 
 #: es-core/src/guis/GuiInputConfig.cpp:82
 #: es-app/src/guis/GuiScraperStart.cpp:37
 msgid "START"
 msgstr ""
 
-#: es-app/src/guis/GuiScraperMulti.cpp:65
-msgid "STOP"
+#: es-core/src/guis/GuiInputConfig.cpp:83
+msgid "SELECT"
 msgstr ""
 
-#: es-app/src/guis/GuiScreensaverOptions.cpp:51
-msgid "STRETCH VIDEO ON SCREENSAVER"
-msgstr ""
+#: es-core/src/guis/GuiInputConfig.cpp:88
+msgid "LEFT SHOULDER"
+msgstr "BOUTON GAUCHE"
 
-#: es-app/src/guis/GuiScraperMulti.cpp:37
-msgid "SYSTEM"
-msgstr ""
+#: es-core/src/guis/GuiInputConfig.cpp:89
+msgid "RIGHT SHOULDER"
+msgstr "BOUTON DROIT"
+
+#: es-core/src/guis/GuiInputConfig.cpp:90
+msgid "LEFT TRIGGER"
+msgstr "GACHETTE GAUCHE"
+
+#: es-core/src/guis/GuiInputConfig.cpp:91
+msgid "RIGHT TRIGGER"
+msgstr "GACHETTE DROITE"
+
+#: es-core/src/guis/GuiInputConfig.cpp:92
+msgid "LEFT THUMB"
+msgstr "POUCE GAUCHE"
+
+#: es-core/src/guis/GuiInputConfig.cpp:93
+msgid "RIGHT THUMB"
+msgstr "POUCE DROIT"
+
+#: es-core/src/guis/GuiInputConfig.cpp:94
+msgid "LEFT ANALOG UP"
+msgstr "ANALOG GAUCHE HAUT"
+
+#: es-core/src/guis/GuiInputConfig.cpp:95
+msgid "LEFT ANALOG DOWN"
+msgstr "ANALOG GAUCHE BAS"
+
+#: es-core/src/guis/GuiInputConfig.cpp:96
+msgid "LEFT ANALOG LEFT"
+msgstr "ANALOG GAUCHE GAUCHE"
+
+#: es-core/src/guis/GuiInputConfig.cpp:97
+msgid "LEFT ANALOG RIGHT"
+msgstr "ANALOG GAUCHE DROITE"
+
+#: es-core/src/guis/GuiInputConfig.cpp:98
+msgid "RIGHT ANALOG UP"
+msgstr "ANALOG DROIT HAUT"
+
+#: es-core/src/guis/GuiInputConfig.cpp:99
+msgid "RIGHT ANALOG DOWN"
+msgstr "ANALOG DROIT BAS"
+
+#: es-core/src/guis/GuiInputConfig.cpp:100
+msgid "RIGHT ANALOG LEFT"
+msgstr "ANALOG DROIT GAUCHE"
+
+#: es-core/src/guis/GuiInputConfig.cpp:101
+msgid "RIGHT ANALOG RIGHT"
+msgstr "ANALOG DROIT DROITE"
+
+#: es-core/src/guis/GuiInputConfig.cpp:102
+msgid "HOTKEY ENABLE"
+msgstr "ACTIVER HOTKEY"
+
+#. metadata labels + values
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:35
+#: es-app/src/views/gamelist/VideoGameListView.cpp:68
+msgid "Rating"
+msgstr "Note "
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:38
+#: es-app/src/views/gamelist/VideoGameListView.cpp:71
+msgid "Released"
+msgstr "Date de sortie "
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:41
+#: es-app/src/views/gamelist/VideoGameListView.cpp:74
+msgid "Developer"
+msgstr "Développeur "
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:44
+#: es-app/src/views/gamelist/VideoGameListView.cpp:77
+msgid "Publisher"
+msgstr "Éditeur "
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:47
+#: es-app/src/views/gamelist/VideoGameListView.cpp:80
+msgid "Genre"
+msgstr "Genre "
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:50
+#: es-app/src/views/gamelist/VideoGameListView.cpp:83
+msgid "Players"
+msgstr "Joueurs "
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:53
+#: es-app/src/views/gamelist/VideoGameListView.cpp:86
+msgid "Last played"
+msgstr "Dernière partie"
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp:57
+#: es-app/src/views/gamelist/VideoGameListView.cpp:90
+msgid "Times played"
+msgstr "Nombre de parties"
+
+#: es-app/src/views/gamelist/BasicGameListView.cpp:141
+msgid "system"
+msgstr "système"
+
+#: es-app/src/views/gamelist/BasicGameListView.cpp:142
+#: es-app/src/guis/GuiMenu.cpp:488
+msgid "choose"
+msgstr "sélectionner"
+
+#: es-app/src/views/gamelist/BasicGameListView.cpp:143
+msgid "launch"
+msgstr "lancer"
+
+#: es-app/src/views/gamelist/BasicGameListView.cpp:145
+msgid "options"
+msgstr "options"
+
+#: es-app/src/views/gamelist/BasicGameListView.cpp:146
+msgid "random"
+msgstr "aléatoire"
+
+#: es-app/src/views/gamelist/BasicGameListView.cpp:148
+msgid "favorite"
+msgstr "favori"
+
+#: es-app/src/guis/GuiMenu.cpp:25
+msgid "MAIN MENU"
+msgstr "MENU PRINCIPAL"
+
+#: es-app/src/guis/GuiMenu.cpp:38 es-app/src/guis/GuiMenu.cpp:40
+msgid "SCRAPER"
+msgstr "SCRAPER"
+
+#. scrape from
+#: es-app/src/guis/GuiMenu.cpp:43 es-app/src/guis/GuiMenu.cpp:48
+msgid "SCRAPE FROM"
+msgstr "SCRAPE DEPUIS"
+
+#: es-app/src/guis/GuiMenu.cpp:54
+msgid "SCRAPE RATINGS"
+msgstr "SCRAPE NOTES"
+
+#: es-app/src/guis/GuiMenu.cpp:63 es-app/src/guis/GuiScraperStart.cpp:12
+msgid "SCRAPE NOW"
+msgstr "SCRAPE MAINTENANT"
+
+#: es-app/src/guis/GuiMenu.cpp:72 es-app/src/guis/GuiMenu.cpp:74
+msgid "SOUND SETTINGS"
+msgstr "Options de son"
 
 #: es-app/src/guis/GuiMenu.cpp:79
 msgid "SYSTEM VOLUME"
+msgstr "Volume principal"
+
+#. volume control device
+#: es-app/src/guis/GuiMenu.cpp:84 es-app/src/guis/GuiMenu.cpp:91
+msgid "AUDIO DEVICE"
 msgstr ""
+
+#: es-app/src/guis/GuiMenu.cpp:86
+msgid "PCM"
+msgstr "PCM"
 
 #: es-app/src/guis/GuiMenu.cpp:87
 msgid "Speaker"
+msgstr "Haut-parleur"
+
+#: es-app/src/guis/GuiMenu.cpp:88
+msgid "Master"
+msgstr "Maitre"
+
+#: es-app/src/guis/GuiMenu.cpp:102
+msgid "ENABLE NAVIGATION SOUNDS"
+msgstr "Activer les sons de navigation"
+
+#: es-app/src/guis/GuiMenu.cpp:107
+msgid "ENABLE VIDEO AUDIO"
+msgstr "Activer les sons des vidéos"
+
+#. OMX player Audio Device
+#: es-app/src/guis/GuiMenu.cpp:112 es-app/src/guis/GuiMenu.cpp:122
+msgid "OMX PLAYER AUDIO DEVICE"
 msgstr ""
 
-#: es-app/src/guis/GuiScraperStart.cpp:31
-msgid "Systems"
+#: es-app/src/guis/GuiMenu.cpp:114
+msgid "local"
+msgstr "local"
+
+#: es-app/src/guis/GuiMenu.cpp:115
+msgid "hdmi"
+msgstr "hdmi"
+
+#: es-app/src/guis/GuiMenu.cpp:116
+msgid "both"
+msgstr "les deux"
+
+#: es-app/src/guis/GuiMenu.cpp:132 es-app/src/guis/GuiMenu.cpp:134
+msgid "UI SETTINGS"
 msgstr ""
 
-#: es-app/src/guis/GuiMenu.cpp:223 es-app/src/guis/GuiMenu.cpp:226
-msgid "THEME SET"
+#: es-app/src/guis/GuiMenu.cpp:139
+msgid "SCREENSAVER AFTER"
+msgstr "Activer l'économiseur d'écran après"
+
+#. screensaver behavior
+#: es-app/src/guis/GuiMenu.cpp:146 es-app/src/guis/GuiMenu.cpp:153
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "Type d'économiseur d'écran"
+
+#: es-app/src/guis/GuiMenu.cpp:148
+msgid "dim"
 msgstr ""
 
-#: es-app/src/guis/GuiMetaDataEd.cpp:149
-msgid ""
-"THIS WILL DELETE A FILE!\n"
-"ARE YOU SURE?"
-msgstr ""
+#: es-app/src/guis/GuiMenu.cpp:149
+msgid "black"
+msgstr "écran noir"
 
-#. transition style
-#: es-app/src/guis/GuiMenu.cpp:195 es-app/src/guis/GuiMenu.cpp:202
-msgid "TRANSITION STYLE"
-msgstr ""
+#: es-app/src/guis/GuiMenu.cpp:150
+msgid "random video"
+msgstr "vidéo aléatoire"
 
 #: es-app/src/guis/GuiMenu.cpp:158
 msgid ""
@@ -501,51 +328,124 @@ msgid ""
 "\n"
 "More options in the \"UI Settings\" > \"Video Screensaver\" menu."
 msgstr ""
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp:57
-#: es-app/src/views/gamelist/VideoGameListView.cpp:90
-msgid "Times played"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:132 es-app/src/guis/GuiMenu.cpp:134
-msgid "UI SETTINGS"
-msgstr ""
-
-#: es-app/src/guis/GuiScreensaverOptions.cpp:45
-msgid "USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:326
-msgid "USE OMX PLAYER (HW ACCELERATED))"
-msgstr ""
-
-#: es-app/src/guis/GuiScraperStart.cpp:35
-msgid "User decides on conflicts"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:432
-msgid "VIDEO SCREENSAVER"
-msgstr ""
+"L'option \"vidéo aléatoire\" montre des vidéos de votre liste de jeux.\n"
+"\n"
+"Si vous ne possédez pas de vidéo, ou après plusieurs jeux sans vidéo"
+" l'écran deviendras noir\n"
+"\n"
+"Plus d'options dans le menu \"Paramètres de l'interface\" > \"Économiseur d'écran vidéo\"."
 
 #: es-app/src/guis/GuiMenu.cpp:168
 msgid "VIDEO SCREENSAVER SETTINGS"
+msgstr "Économiseur d'écran vidéo"
+
+#: es-app/src/guis/GuiMenu.cpp:176
+msgid "QUICK SYSTEM SELECT"
+msgstr "Changement de système rapide"
+
+#: es-app/src/guis/GuiMenu.cpp:182
+msgid "CAROUSEL TRANSITIONS"
 msgstr ""
+
+#. transition style
+#: es-app/src/guis/GuiMenu.cpp:195 es-app/src/guis/GuiMenu.cpp:202
+msgid "TRANSITION STYLE"
+msgstr "Style des transitions"
+
+#: es-app/src/guis/GuiMenu.cpp:197
+msgid "fade"
+msgstr "fondu"
+
+#: es-app/src/guis/GuiMenu.cpp:198
+msgid "slide"
+msgstr "glisser"
+
+#: es-app/src/guis/GuiMenu.cpp:199 es-app/src/guis/GuiMenu.cpp:290
+msgid "instant"
+msgstr "instantané"
+
+#: es-app/src/guis/GuiMenu.cpp:223 es-app/src/guis/GuiMenu.cpp:226
+msgid "THEME SET"
+msgstr ""
+
+#. GameList view style
+#: es-app/src/guis/GuiMenu.cpp:243 es-app/src/guis/GuiMenu.cpp:251
+msgid "GAMELIST VIEW STYLE"
+msgstr "Style de la liste de jeux"
+
+#: es-app/src/guis/GuiMenu.cpp:245
+msgid "automatic"
+msgstr "automatique"
+
+#: es-app/src/guis/GuiMenu.cpp:246
+msgid "basic"
+msgstr "basique"
+
+#: es-app/src/guis/GuiMenu.cpp:247
+msgid "detailed"
+msgstr "détaillé"
+
+#: es-app/src/guis/GuiMenu.cpp:248
+msgid "video"
+msgstr "vidéo"
+
+#: es-app/src/guis/GuiMenu.cpp:264
+msgid "ON-SCREEN HELP"
+msgstr ""
+
+#: es-app/src/guis/GuiMenu.cpp:270
+#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:9
+msgid "GAME COLLECTION SETTINGS"
+msgstr "Paramètres de la collection de jeux"
+
+#: es-app/src/guis/GuiMenu.cpp:274 es-app/src/guis/GuiMenu.cpp:276
+msgid "OTHER SETTINGS"
+msgstr "Autres paramètres"
 
 #: es-app/src/guis/GuiMenu.cpp:281
 msgid "VRAM LIMIT"
-msgstr ""
+msgstr "LIMITE DE VRAM"
 
-#. title
-#: es-core/src/guis/GuiDetectDevice.cpp:32
-msgid "WELCOME"
-msgstr ""
+#. power saver
+#: es-app/src/guis/GuiMenu.cpp:285 es-app/src/guis/GuiMenu.cpp:293
+msgid "POWER SAVER MODES"
+msgstr "Mode économie d'énergie"
 
-#: es-app/src/guis/GuiScraperStart.cpp:51
-msgid ""
-"Warning: some of your selected systems do not have a platform set. Results "
-"may be even more inaccurate than usual!\n"
-"Continue anyway?"
-msgstr ""
+#: es-app/src/guis/GuiMenu.cpp:287
+msgid "disabled"
+msgstr "désactivé"
+
+#: es-app/src/guis/GuiMenu.cpp:288
+msgid "default"
+msgstr "défaut"
+
+#: es-app/src/guis/GuiMenu.cpp:289
+msgid "enhanced"
+msgstr "amélioré"
+
+#: es-app/src/guis/GuiMenu.cpp:306
+msgid "SAVE METADATA ON EXIT"
+msgstr "Sauvegarder les métadonnées lorsqu'on quitte"
+
+#: es-app/src/guis/GuiMenu.cpp:311
+msgid "PARSE GAMESLISTS ONLY"
+msgstr "Analyzer la liste de jeux uniquement"
+
+#: es-app/src/guis/GuiMenu.cpp:318
+msgid "SHOW HIDDEN FILES"
+msgstr "Montrer les fichiers cachés"
+
+#: es-app/src/guis/GuiMenu.cpp:326
+msgid "USE OMX PLAYER (HW ACCELERATED))"
+msgstr "Utilisez le lecteur OMX (accélération matérielle)"
+
+#: es-app/src/guis/GuiMenu.cpp:345
+msgid "SHOW FRAMERATE"
+msgstr "Afficher le framerate"
+
+#: es-app/src/guis/GuiMenu.cpp:355
+msgid "ARE YOU SURE YOU WANT TO CONFIGURE INPUT?"
+msgstr "Est-vous sure de vouloir configurer les touches"
 
 #: es-app/src/guis/GuiMenu.cpp:355 es-app/src/guis/GuiMenu.cpp:370
 #: es-app/src/guis/GuiMenu.cpp:381 es-app/src/guis/GuiMenu.cpp:392
@@ -554,6 +454,107 @@ msgstr ""
 #: es-app/src/guis/GuiMetaDataEd.cpp:149 es-app/src/guis/GuiMetaDataEd.cpp:251
 #: es-app/src/guis/GuiScraperStart.cpp:52
 msgid "YES"
+msgstr "Oui"
+
+#: es-app/src/guis/GuiMenu.cpp:362 es-app/src/guis/GuiMenu.cpp:364
+msgid "QUIT"
+msgstr "Quitter"
+
+#: es-app/src/guis/GuiMenu.cpp:370 es-app/src/guis/GuiMenu.cpp:381
+msgid "REALLY RESTART?"
+msgstr "Est-vous sure de vouloir redémarrer ?"
+
+#: es-app/src/guis/GuiMenu.cpp:376
+msgid "RESTART EMULATIONSTATION"
+msgstr "Redémarrer emulationstation"
+
+#: es-app/src/guis/GuiMenu.cpp:387
+msgid "RESTART SYSTEM"
+msgstr "Redémarrer le système"
+
+#: es-app/src/guis/GuiMenu.cpp:392
+msgid "REALLY SHUTDOWN?"
+msgstr "Est-vous sure de vouloir arrêter ?"
+
+#: es-app/src/guis/GuiMenu.cpp:398
+msgid "SHUTDOWN SYSTEM"
+msgstr "Arrêter le système"
+
+#: es-app/src/guis/GuiMenu.cpp:405
+msgid "REALLY QUIT?"
+msgstr "Est-vous sure de vouloir quitter emulationstation ?"
+
+#: es-app/src/guis/GuiMenu.cpp:412
+msgid "QUIT EMULATIONSTATION"
+msgstr "Quitter emulationstation"
+
+#: es-app/src/guis/GuiMenu.cpp:421
+msgid "EMULATIONSTATION V"
+msgstr ""
+
+#: es-app/src/guis/GuiMenu.cpp:432
+msgid "VIDEO SCREENSAVER"
+msgstr "Économiseur d'écran vidéo"
+
+#: es-app/src/guis/GuiMenu.cpp:489
+msgid "select"
+msgstr "sélectionner"
+
+#: es-app/src/guis/GuiMenu.cpp:490 es-app/src/guis/GuiMetaDataEd.cpp:278
+#: es-app/src/guis/GuiScraperStart.cpp:126 es-app/src/guis/GuiSettings.cpp:65
+#: es-app/src/guis/GuiScreensaverOptions.cpp:122
+#: es-app/src/guis/GuiGamelistOptions.cpp:194
+msgid "close"
+msgstr "fermer"
+
+#. set up grid
+#: es-app/src/guis/GuiScraperMulti.cpp:34
+msgid "SCRAPING IN PROGRESS"
+msgstr "SCRAPING EN COURS"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:37
+msgid "SYSTEM"
+msgstr "système"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:54 es-app/src/guis/GuiGameScraper.cpp:44
+msgid "INPUT"
+msgstr "touches"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:59
+msgid "SKIP"
+msgstr "passer"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:65
+msgid "STOP"
+msgstr "arrêter"
+
+#. update subtitle
+#. clear
+#: es-app/src/guis/GuiScraperMulti.cpp:108
+msgid "GAME "
+msgstr "jeu "
+
+#: es-app/src/guis/GuiScraperMulti.cpp:108
+msgid " OF "
+msgstr " sur "
+
+#: es-app/src/guis/GuiScraperMulti.cpp:140
+msgid "NO GAMES WERE SCRAPED."
+msgstr "Aucun jeu n'as été scrape"
+
+#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:22
+#: es-app/src/guis/GuiScraperStart.cpp:38
+#: es-app/src/guis/GuiGamelistFilter.cpp:33 es-app/src/guis/GuiSettings.cpp:11
+#: es-app/src/guis/GuiScreensaverOptions.cpp:54
+msgid "BACK"
+msgstr "retour"
+
+#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:37
+msgid "SELECT COLLECTIONS"
+msgstr "Selectionner la collection"
+
+#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:46
+msgid "AUTOMATIC COLLECTIONS"
 msgstr ""
 
 #: es-app/src/guis/GuiCollectionSystemsOptions.cpp:56
@@ -568,124 +569,129 @@ msgid ""
 "Do you still want to enable collections?"
 msgstr ""
 
+#: es-app/src/guis/GuiMetaDataEd.cpp:36
+msgid "EDIT METADATA"
+msgstr "Éditer les métadonnées"
+
+#: es-app/src/guis/GuiMetaDataEd.cpp:141
+msgid "SCRAPE"
+msgstr ""
+
+#: es-app/src/guis/GuiMetaDataEd.cpp:143
+msgid "SAVE"
+msgstr "Sauvegarder"
+
+#: es-app/src/guis/GuiMetaDataEd.cpp:149
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+
+#: es-app/src/guis/GuiMetaDataEd.cpp:150
+msgid "DELETE"
+msgstr "Supprimer"
+
+#: es-app/src/guis/GuiMetaDataEd.cpp:250
+msgid "SAVE CHANGES?"
+msgstr "Sauvegarder les changements"
+
+#. add filters (with first one selected)
+#: es-app/src/guis/GuiScraperStart.cpp:17
+msgid "SCRAPE THESE GAMES"
+msgstr "Scrape ces jeux"
+
+#: es-app/src/guis/GuiScraperStart.cpp:18
+msgid "All Games"
+msgstr "Tous les jeux"
+
+#: es-app/src/guis/GuiScraperStart.cpp:20
+msgid "Only missing image"
+msgstr "Uniquement les images manquantes"
+
+#: es-app/src/guis/GuiScraperStart.cpp:22
+msgid "Filter"
+msgstr "Filtrer"
+
+#. add systems (all with a platformid specified selected)
+#: es-app/src/guis/GuiScraperStart.cpp:25
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "Scrape ces systèmes"
+
+#: es-app/src/guis/GuiScraperStart.cpp:31
+msgid "Systems"
+msgstr "Systèmes"
+
+#: es-app/src/guis/GuiScraperStart.cpp:35
+msgid "User decides on conflicts"
+msgstr "Décider en cas de conflits"
+
+#: es-app/src/guis/GuiScraperStart.cpp:51
+msgid ""
+"Warning: some of your selected systems do not have a platform set. Results "
+"may be even more inaccurate than usual!\n"
+"Continue anyway?"
+msgstr ""
+
+#: es-app/src/guis/GuiScraperStart.cpp:68
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr ""
+
+#: es-app/src/guis/GuiGamelistFilter.cpp:26
+msgid "RESET ALL FILTERS"
+msgstr "Réinitialiser les filtres"
+
+#: es-app/src/guis/GuiScreensaverOptions.cpp:28
+msgid "SCREENSAVER CONTROLS"
+msgstr ""
+
+#. Render Video Game Name as subtitles
+#: es-app/src/guis/GuiScreensaverOptions.cpp:32
+msgid "SHOW GAME INFO"
+msgstr ""
+
 #: es-app/src/guis/GuiScreensaverOptions.cpp:34
 msgid "always"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:245
-msgid "automatic"
-msgstr ""
-
-#: es-core/src/guis/GuiTextEditPopup.cpp:71
-#: es-app/src/views/gamelist/BasicGameListView.cpp:144
-#: es-app/src/guis/GuiCollectionSystemsOptions.cpp:103
-#: es-app/src/guis/GuiMetaDataEd.cpp:277
-#: es-app/src/guis/GuiScraperStart.cpp:125
-#: es-app/src/guis/GuiGamelistFilter.cpp:111 es-app/src/guis/GuiSettings.cpp:64
-#: es-app/src/guis/GuiScreensaverOptions.cpp:121
-msgid "back"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:246
-msgid "basic"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:149
-msgid "black"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:116
-msgid "both"
-msgstr ""
-
-#: es-app/src/views/gamelist/BasicGameListView.cpp:142
-#: es-app/src/guis/GuiMenu.cpp:488
-msgid "choose"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:490 es-app/src/guis/GuiMetaDataEd.cpp:278
-#: es-app/src/guis/GuiScraperStart.cpp:126 es-app/src/guis/GuiSettings.cpp:65
-#: es-app/src/guis/GuiScreensaverOptions.cpp:122
-#: es-app/src/guis/GuiGamelistOptions.cpp:194
-msgid "close"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:288
-msgid "default"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:247
-msgid "detailed"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:148
-msgid "dim"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:287
-msgid "disabled"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:289
-msgid "enhanced"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:197
-msgid "fade"
-msgstr ""
-
-#: es-app/src/views/gamelist/BasicGameListView.cpp:148
-msgid "favorite"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:115
-msgid "hdmi"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:199 es-app/src/guis/GuiMenu.cpp:290
-msgid "instant"
-msgstr ""
-
-#: es-app/src/views/gamelist/BasicGameListView.cpp:143
-msgid "launch"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:114
-msgid "local"
-msgstr ""
-
-#: es-app/src/guis/GuiScreensaverOptions.cpp:36
-msgid "never"
-msgstr ""
-
-#: es-app/src/views/gamelist/BasicGameListView.cpp:145
-msgid "options"
-msgstr ""
-
-#: es-app/src/views/gamelist/BasicGameListView.cpp:146
-msgid "random"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:150
-msgid "random video"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:489
-msgid "select"
-msgstr ""
-
-#: es-app/src/guis/GuiMenu.cpp:198
-msgid "slide"
-msgstr ""
+msgstr "toujours"
 
 #: es-app/src/guis/GuiScreensaverOptions.cpp:35
 msgid "start & end"
+msgstr "début & fin"
+
+#: es-app/src/guis/GuiScreensaverOptions.cpp:36
+msgid "never"
+msgstr "jamais"
+
+#: es-app/src/guis/GuiScreensaverOptions.cpp:39
+msgid "SHOW GAME INFO ON SCREENSAVER"
 msgstr ""
 
-#: es-app/src/views/gamelist/BasicGameListView.cpp:141
-msgid "system"
+#: es-app/src/guis/GuiScreensaverOptions.cpp:45
+msgid "USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS"
 msgstr ""
 
-#: es-app/src/guis/GuiMenu.cpp:248
-msgid "video"
+#: es-app/src/guis/GuiScreensaverOptions.cpp:51
+msgid "STRETCH VIDEO ON SCREENSAVER"
 msgstr ""
+
+#: es-app/src/guis/GuiGamelistOptions.cpp:9
+msgid "OPTIONS"
+msgstr "Options"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp:28
+#: es-app/src/guis/GuiGamelistOptions.cpp:32
+msgid "JUMP TO LETTER"
+msgstr "Aller à la lettre"
+
+#. sort list by
+#: es-app/src/guis/GuiGamelistOptions.cpp:50
+#: es-app/src/guis/GuiGamelistOptions.cpp:57
+msgid "SORT GAMES BY"
+msgstr "Trier la liste des jeux par"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp:60
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "Éditer les métadonnées de ce jeu"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp:68
+msgid "FILTER GAMELIST"
+msgstr "Filtrer la liste de jeux"
