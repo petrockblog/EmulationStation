@@ -6,6 +6,7 @@
 #include "SystemData.h"
 #include "Settings.h"
 #include "FileFilterIndex.h"
+#include "Localization.h"
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
@@ -137,13 +138,13 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 
 	if(Settings::getInstance()->getBool("QuickSystemSelect"))
-		prompts.push_back(HelpPrompt("left/right", "system"));
-	prompts.push_back(HelpPrompt("up/down", "choose"));
-	prompts.push_back(HelpPrompt("a", "launch"));
-	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("select", "options"));
-	prompts.push_back(HelpPrompt("x", "random"));
+		prompts.push_back(HelpPrompt("left/right", _("system")));
+	prompts.push_back(HelpPrompt("up/down", _("choose")));
+	prompts.push_back(HelpPrompt("a", _("launch")));
+	prompts.push_back(HelpPrompt("b", _("back")));
+	prompts.push_back(HelpPrompt("select", _("options")));
+	prompts.push_back(HelpPrompt("x", _("random")));
 	if(Settings::getInstance()->getString("CollectionSystemsAuto").find("favorites") != std::string::npos && mRoot->getSystem()->isGameSystem())
-		prompts.push_back(HelpPrompt("y", "favorite"));
+		prompts.push_back(HelpPrompt("y", _("favorite")));
 	return prompts;
 }

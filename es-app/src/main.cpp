@@ -175,11 +175,16 @@ int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 
+	// Create local generator
+	boost::locale::generator generator;
+	generator.add_messages_path("locale");
+	generator.add_messages_domain("emulationstation");
+
+	std::locale::global(generator(""));
+	//boost::filesystem::path::imbue(std::locale());
+
 	unsigned int width = 0;
 	unsigned int height = 0;
-
-	std::locale::global(boost::locale::generator().generate(""));
-	boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;

@@ -5,6 +5,7 @@
 
 #include "components/NinePatchComponent.h"
 #include "components/TextComponent.h"
+#include "Localization.h"
 
 class GuiFastSelect : public GuiComponent
 {
@@ -13,6 +14,9 @@ public:
 
 	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
+
+//	static const std::string LETTERS = ;
+	static std::string getLetters() { return _("ABCDEFGHIJKLMNOPQRSTUVWXYZ");};
 
 private:
 	void setScrollDir(int dir);

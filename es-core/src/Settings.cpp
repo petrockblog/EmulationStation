@@ -105,7 +105,9 @@ void Settings::setDefaults()
 		mStringMap["AudioDevice"] = "PCM";
 	#else
 		mStringMap["AudioDevice"] = "Master";
-	#endif
+    #endif
+
+    mStringMap["Local"] = "fr_FR.UTF-8";
 
 }
 

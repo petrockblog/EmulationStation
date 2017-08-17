@@ -34,3 +34,9 @@ Makefile
 .cproject
 .project
 .settings/
+
+# Clion
+.idea
+CPackConfig.cmake
+CPackSourceConfig.cmake
+*.cbp
