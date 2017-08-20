@@ -50,7 +50,7 @@ ELSE (WIN32)
     )
 
     FIND_LIBRARY(OPENGLES_gl_LIBRARY
-      NAMES GLES_CM GLESv1_CM
+      NAMES brcmGLESv2 GLES_CM GLESv1_CM
       PATHS /opt/graphics/OpenGL/lib
             /usr/openwin/lib
             /usr/shlib /usr/X11R6/lib
