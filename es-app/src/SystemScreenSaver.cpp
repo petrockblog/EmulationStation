@@ -1,6 +1,7 @@
 #include "SystemScreenSaver.h"
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
+#include "bcm_host.h"
 #endif
 #include "components/VideoVlcComponent.h"
 #include "platform.h"
@@ -13,6 +14,7 @@
 #include "views/ViewController.h"
 #include "views/gamelist/IGameListView.h"
 #include <stdio.h>
+
 
 #define FADE_TIME 			300
 
@@ -28,6 +30,10 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mGameName(""),
 	mCurrentGame(NULL)
 {
+#ifdef _RPI_
+	bcm_host_init();
+        vc_gencmd_init();
+#endif
 	mWindow->setScreenSaver(this);
 	std::string path = getTitleFolder();
 	if(!boost::filesystem::exists(path))
@@ -38,6 +44,9 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 
 SystemScreenSaver::~SystemScreenSaver()
 {
+#ifdef _RPI_
+	vc_gencmd_stop();
+#endif
 	// Delete subtitle file, if existing
 	remove(getTitlePath().c_str());
 	mCurrentGame = NULL;
@@ -116,6 +125,9 @@ void SystemScreenSaver::startScreenSaver()
 
 void SystemScreenSaver::stopScreenSaver()
 {
+#ifdef _RPI_
+        vc_gencmd_send("display_power 1");
+#endif
 	delete mVideoScreensaver;
 	mVideoScreensaver = NULL;
 	// we need this to loop through different videos
@@ -141,8 +153,14 @@ void SystemScreenSaver::renderScreenSaver()
 	else if (mState != STATE_INACTIVE)
 	{
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
-		unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
-		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
+		if (Settings::getInstance()->getString("ScreenSaverBehavior") == "dim") {
+			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | 0xA0);
+		} else { 
+			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | 0xFF);
+#ifdef _RPI_
+		        vc_gencmd_send("display_power 0");
+#endif
+		}
 	}
 }
 
