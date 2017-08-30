@@ -15,8 +15,8 @@ const int logoBuffersLeft[] = { -5, -2, -1 };
 const int logoBuffersRight[] = { 1, 2, 5 };
 
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
-										 mViewNeedsReload(true),
-										 mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
+	mViewNeedsReload(true),
+	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
 {
 	mCamOffset = 0;
 	mExtrasCamOffset = 0;
@@ -102,7 +102,7 @@ void SystemView::populate()
 		e.data.backgroundExtras = ThemeData::makeExtras((*it)->getTheme(), "system", mWindow);
 
 		// sort the extras by z-index
-		std::stable_sort(e.data.backgroundExtras.begin(), e.data.backgroundExtras.end(),  [](GuiComponent* a, GuiComponent* b) {
+		std::stable_sort(e.data.backgroundExtras.begin(), e.data.backgroundExtras.end(), [](GuiComponent* a, GuiComponent* b) {
 			return b->getZIndex() > a->getZIndex();
 		});
 
@@ -328,7 +328,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 void SystemView::render(const Eigen::Affine3f& parentTrans)
 {
 	if(size() == 0)
-		return;  // nothing to render
+		return; // nothing to render
 
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 
@@ -378,15 +378,15 @@ HelpStyle SystemView::getHelpStyle()
 	return style;
 }
 
-void  SystemView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
+void SystemView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
 	LOG(LogDebug) << "SystemView::onThemeChanged()";
 	mViewNeedsReload = true;
 	populate();
 }
 
-//  Get the ThemeElements that make up the SystemView.
-void  SystemView::getViewElements(const std::shared_ptr<ThemeData>& theme)
+// Get the ThemeElements that make up the SystemView.
+void SystemView::getViewElements(const std::shared_ptr<ThemeData>& theme)
 {
 	LOG(LogDebug) << "SystemView::getViewElements()";
 
@@ -406,7 +406,7 @@ void  SystemView::getViewElements(const std::shared_ptr<ThemeData>& theme)
 	mViewNeedsReload = false;
 }
 
-//  Render system carousel
+// Render system carousel
 void SystemView::renderCarousel(const Eigen::Affine3f& trans)
 {
 	// background box behind logos
@@ -540,7 +540,7 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float u
 				extrasTrans.translate(Eigen::Vector3f(0, (i - mExtrasCamOffset) * mSize.y(), 0));
 
 			Renderer::pushClipRect(Eigen::Vector2i(extrasTrans.translation()[0], extrasTrans.translation()[1]),
-								   mSize.cast<int>());
+				mSize.cast<int>());
 			SystemViewData data = mEntries.at(index).data;
 			for (unsigned int j = 0; j < data.backgroundExtras.size(); j++) {
 				GuiComponent *extra = data.backgroundExtras[j];
@@ -565,7 +565,7 @@ void SystemView::renderFade(const Eigen::Affine3f& trans)
 }
 
 // Populate the system carousel with the legacy values
-void  SystemView::getDefaultElements(void)
+void SystemView::getDefaultElements(void)
 {
 	// Carousel
 	mCarousel.type = HORIZONTAL;
@@ -626,7 +626,7 @@ void SystemView::getCarouselFromTheme(const ThemeData::ThemeElement* elem)
 		mCarousel.zIndex = elem->get<float>("zIndex");
 	if (elem->has("logoRotation"))
 		mCarousel.logoRotation = elem->get<float>("logoRotation");
-    if (elem->has("logoRotationOrigin"))
+	if (elem->has("logoRotationOrigin"))
 		mCarousel.logoRotationOrigin = elem->get<Eigen::Vector2f>("logoRotationOrigin");
 	if (elem->has("logoAlignment"))
 	{

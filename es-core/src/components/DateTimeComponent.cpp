@@ -4,8 +4,8 @@
 #include "Log.h"
 #include "Util.h"
 
-DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
-	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
+DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window),
+	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0),
 	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT)), mUppercase(false), mAutoSize(true)
 {
 	updateTextCache();
@@ -71,7 +71,7 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 					new_tm.tm_mon = 11;
 				else if(new_tm.tm_mon < 0)
 					new_tm.tm_mon = 0;
-				
+
 			}else if(mEditIndex == 1)
 			{
 				new_tm.tm_mday += incDir;
@@ -94,7 +94,7 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 				new_tm.tm_mday = days_in_month;
 
 			mTime = boost::posix_time::ptime_from_tm(new_tm);
-			
+
 			updateTextCache();
 			return true;
 		}
@@ -106,7 +106,7 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 				mEditIndex--;
 			return true;
 		}
-		
+
 		if(config->isMappedTo("left", input))
 		{
 			mEditIndex--;
@@ -156,7 +156,7 @@ void DateTimeComponent::render(const Eigen::Affine3f& parentTrans)
 		{
 			if(mEditIndex >= 0 && (unsigned int)mEditIndex < mCursorBoxes.size())
 			{
-				Renderer::drawRect((int)mCursorBoxes[mEditIndex][0], (int)mCursorBoxes[mEditIndex][1], 
+				Renderer::drawRect((int)mCursorBoxes[mEditIndex][0], (int)mCursorBoxes[mEditIndex][1],
 					(int)mCursorBoxes[mEditIndex][2], (int)mCursorBoxes[mEditIndex][3], 0x00000022);
 			}
 		}
@@ -224,7 +224,7 @@ std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 		}
 		break;
 	}
-	
+
 	if(mTime == boost::posix_time::not_a_date_time)
 		return "unknown";
 
@@ -321,7 +321,7 @@ void DateTimeComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, cons
 		return;
 
 	// We set mAutoSize BEFORE calling GuiComponent::applyTheme because it calls
-	// setSize(), which will call updateTextCache(), which will reset mSize if 
+	// setSize(), which will call updateTextCache(), which will reset mSize if
 	// mAutoSize == true, ignoring the theme's value.
 	if(properties & ThemeFlags::SIZE)
 		mAutoSize = !elem->has("size");

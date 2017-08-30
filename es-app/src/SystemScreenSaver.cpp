@@ -14,7 +14,7 @@
 #include "views/gamelist/IGameListView.h"
 #include <stdio.h>
 
-#define FADE_TIME 			300
+#define FADE_TIME 300
 
 SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mVideoScreensaver(NULL),

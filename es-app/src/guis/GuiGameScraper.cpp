@@ -50,27 +50,27 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 6), true, false);
 
 	// we call this->close() instead of just delete this; in the accept callback:
-	// this is because of how GuiComponent::update works.  if it was just delete this, this would happen when the metadata resolver is done:
-	//     GuiGameScraper::update()
-	//       GuiComponent::update()
-	//         it = mChildren.begin();
-	//         mBox::update()
-	//         it++;
-	//         mSearchComponent::update()
-	//           acceptCallback -> delete this
-	//         it++; // error, mChildren has been deleted because it was part of this
+	// this is because of how GuiComponent::update works. if it was just delete this, this would happen when the metadata resolver is done:
+	//	GuiGameScraper::update()
+	//		GuiComponent::update()
+	//			it = mChildren.begin();
+	//			mBox::update()
+	//			it++;
+	//			mSearchComponent::update()
+	//				acceptCallback -> delete this
+	//			it++; // error, mChildren has been deleted because it was part of this
 
 	// so instead we do this:
-	//     GuiGameScraper::update()
-	//       GuiComponent::update()
-	//         it = mChildren.begin();
-	//         mBox::update()
-	//         it++;
-	//         mSearchComponent::update()
-	//           acceptCallback -> close() -> mClose = true
-	//         it++; // ok
-	//       if(mClose)
-	//         delete this;
+	//	 GuiGameScraper::update()
+	//		GuiComponent::update()
+	//			it = mChildren.begin();
+	//			mBox::update()
+	//			it++;
+	//			mSearchComponent::update()
+	//				acceptCallback -> close() -> mClose = true
+	//			it++; // ok
+	//			if(mClose)
+	//				delete this;
 	mSearch->setAcceptCallback([this, doneFunc](const ScraperSearchResult& result) { doneFunc(result); close(); });
 	mSearch->setCancelCallback([&] { delete this; });
 

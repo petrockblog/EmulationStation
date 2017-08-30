@@ -6,7 +6,7 @@
 #include "Util.h"
 
 NinePatchComponent::NinePatchComponent(Window* window, const std::string& path, unsigned int edgeColor, unsigned int centerColor) : GuiComponent(window),
-	mEdgeColor(edgeColor), mCenterColor(centerColor), 
+	mEdgeColor(edgeColor), mCenterColor(centerColor),
 	mPath(path),
 	mVertices(NULL), mColors(NULL)
 {
@@ -142,7 +142,7 @@ void NinePatchComponent::buildVertices()
 void NinePatchComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
-	
+
 	if(mTexture && mVertices != NULL)
 	{
 		Renderer::setMatrix(trans);

@@ -45,7 +45,7 @@ public:
 	TextCache* buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color);
 	TextCache* buildTextCache(const std::string& text, Eigen::Vector2f offset, unsigned int color, float xLen, Alignment alignment = ALIGN_LEFT, float lineSpacing = 1.5f);
 	void renderTextCache(TextCache* cache);
-	
+
 	std::string wrapText(std::string text, float xLen); // Inserts newlines into text to make it wrap properly.
 	Eigen::Vector2f sizeWrappedText(std::string text, float xLen, float lineSpacing = 1.5f); // Returns the expected size of a string after wrapping is applied.
 	Eigen::Vector2f getWrappedTextCursorOffset(std::string text, float xLen, size_t cursor, float lineSpacing = 1.5f); // Returns the position of of the cursor after moving "cursor" characters.
@@ -118,7 +118,7 @@ private:
 	struct Glyph
 	{
 		FontTexture* texture;
-		
+
 		Eigen::Vector2f texPos;
 		Eigen::Vector2f texSize; // in texels!
 
@@ -131,7 +131,7 @@ private:
 	Glyph* getGlyph(UnicodeChar id);
 
 	int mMaxGlyphHeight;
-	
+
 	const int mSize;
 	const std::string mPath;
 

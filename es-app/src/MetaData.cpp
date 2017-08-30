@@ -10,7 +10,7 @@ MetaDataDecl gameDecls[] = {
 	{"name",        MD_STRING,              "",                 false,      "name",                 "enter game name"},
 	{"desc",        MD_MULTILINE_STRING,    "",                 false,      "description",          "enter description"},
 	{"image",       MD_PATH,                "",                 false,      "image",                "enter path to image"},
-	{"video",       MD_PATH     ,           "",                 false,      "video",                "enter path to video"},
+	{"video",       MD_PATH,                "",                 false,      "video",                "enter path to video"},
 	{"marquee",     MD_PATH,                "",                 false,      "marquee",              "enter path to marquee"},
 	{"thumbnail",   MD_PATH,                "",                 false,      "thumbnail",            "enter path to thumbnail"},
 	{"rating",      MD_RATING,              "0.000000",         false,      "rating",               "enter rating"},
@@ -105,7 +105,7 @@ void MetaDataList::appendToXML(pugi::xml_node parent, bool ignoreDefaults, const
 			// if it's just the default (and we ignore defaults), don't write it
 			if(ignoreDefaults && mapIter->second == mddIter->defaultValue)
 				continue;
-			
+
 			// try and make paths relative if we can
 			std::string value = mapIter->second;
 			if (mddIter->type == MD_PATH)

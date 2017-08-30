@@ -52,4 +52,3 @@ private:
 	std::shared_ptr<TextureResource> mFilledTexture;
 	std::shared_ptr<TextureResource> mUnfilledTexture;
 };
-

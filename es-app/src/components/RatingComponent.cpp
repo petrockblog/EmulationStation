@@ -64,7 +64,7 @@ void RatingComponent::onSizeChanged()
 	if(mSize.y() > 0)
 	{
 		size_t heightPx = (size_t)round(mSize.y());
-		if (mFilledTexture)
+		if(mFilledTexture)
 			mFilledTexture->rasterizeAt(heightPx, heightPx);
 		if(mUnfilledTexture)
 			mUnfilledTexture->rasterizeAt(heightPx, heightPx);
@@ -82,25 +82,25 @@ void RatingComponent::updateVertices()
 	const float fw = round(h * numStars);
 
 	mVertices[0].pos << 0.0f, 0.0f;
-		mVertices[0].tex << 0.0f, 1.0f;
+	mVertices[0].tex << 0.0f, 1.0f;
 	mVertices[1].pos << w, h;
-		mVertices[1].tex << mValue * numStars, 0.0f;
+	mVertices[1].tex << mValue * numStars, 0.0f;
 	mVertices[2].pos << 0.0f, h;
-		mVertices[2].tex << 0.0f, 0.0f;
+	mVertices[2].tex << 0.0f, 0.0f;
 
 	mVertices[3] = mVertices[0];
 	mVertices[4].pos << w, 0.0f;
-		mVertices[4].tex << mValue * numStars, 1.0f;
+	mVertices[4].tex << mValue * numStars, 1.0f;
 	mVertices[5] = mVertices[1];
 
 	mVertices[6] = mVertices[4];
 	mVertices[7].pos << fw, h;
-		mVertices[7].tex << numStars, 0.0f;
+	mVertices[7].tex << numStars, 0.0f;
 	mVertices[8] = mVertices[1];
 
 	mVertices[9] = mVertices[6];
 	mVertices[10].pos << fw, 0.0f;
-		mVertices[10].tex << numStars, 1.0f;
+	mVertices[10].tex << numStars, 1.0f;
 	mVertices[11] = mVertices[7];
 }
 
@@ -121,11 +121,11 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
-	
+
 	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
 	glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
-	
+
 	mFilledTexture->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -135,7 +135,7 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
-	
+
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
 

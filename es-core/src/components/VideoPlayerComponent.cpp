@@ -201,4 +201,3 @@ void VideoPlayerComponent::stopVideo()
 }
 
 #endif
-

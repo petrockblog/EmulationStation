@@ -11,7 +11,7 @@ class TextEditComponent : public GuiComponent
 {
 public:
 	TextEditComponent(Window* window);
-	
+
 	void textInput(const char* text) override;
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;

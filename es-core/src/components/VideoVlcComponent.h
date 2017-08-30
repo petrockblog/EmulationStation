@@ -10,9 +10,9 @@
 #include "resources/TextureResource.h"
 
 struct VideoContext {
-	SDL_Surface*		surface;
-	SDL_mutex*			mutex;
-	bool				valid;
+	SDL_Surface* surface;
+	SDL_mutex* mutex;
+	bool valid;
 };
 
 class VideoVlcComponent : public VideoComponent
@@ -20,10 +20,10 @@ class VideoVlcComponent : public VideoComponent
 	// Structure that groups together the configuration of the video component
 	struct Configuration
 	{
-		unsigned						startDelay;
-		bool							showSnapshotNoVideo;
-		bool							showSnapshotDelay;
-		std::string						defaultVideoPath;
+		unsigned    startDelay;
+		bool        showSnapshotNoVideo;
+		bool        showSnapshotDelay;
+		std::string defaultVideoPath;
 	};
 
 public:
@@ -61,11 +61,11 @@ private:
 	void freeContext();
 
 private:
-	static libvlc_instance_t*		mVLC;
-	libvlc_media_t*					mMedia;
-	libvlc_media_player_t*			mMediaPlayer;
-	VideoContext					mContext;
-	std::shared_ptr<TextureResource> mTexture;
+	static libvlc_instance_t*           mVLC;
+	libvlc_media_t*                     mMedia;
+	libvlc_media_player_t*              mMediaPlayer;
+	VideoContext                        mContext;
+	std::shared_ptr<TextureResource>    mTexture;
 };
 
 #endif

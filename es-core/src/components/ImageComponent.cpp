@@ -41,7 +41,7 @@ void ImageComponent::resize()
 	}else{
 		// SVG rasterization is determined by height (see SVGResource.cpp), and rasterization is done in terms of pixels
 		// if rounding is off enough in the rasterization step (for images with extreme aspect ratios), it can cause cutoff when the aspect ratio breaks
-		// so, we always make sure the resultant height is an integer to make sure cutoff doesn't happen, and scale width from that 
+		// so, we always make sure the resultant height is an integer to make sure cutoff doesn't happen, and scale width from that
 		// (you'll see this scattered throughout the function)
 		// this is probably not the best way, so if you're familiar with this problem and have a better solution, please make a pull request!
 
@@ -50,7 +50,7 @@ void ImageComponent::resize()
 			mSize = textureSize;
 
 			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
-			
+
 			if(resizeScale.x() < resizeScale.y())
 			{
 				mSize[0] *= resizeScale.x();
@@ -109,7 +109,7 @@ void ImageComponent::setImage(const char* path, size_t length, bool tile)
 
 	mTexture = TextureResource::get("", tile);
 	mTexture->initFromMemory(path, length);
-	
+
 	resize();
 }
 
@@ -315,7 +315,7 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	}
 
 	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-	
+
 	if(properties & POSITION && elem->has("pos"))
 	{
 		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
