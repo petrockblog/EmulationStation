@@ -60,9 +60,9 @@ namespace Renderer
 		if(display_height == 0)
 			display_height = dispMode.h;
 
-		sdlWindow = SDL_CreateWindow("EmulationStation", 
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-			display_width, display_height, 
+		sdlWindow = SDL_CreateWindow("EmulationStation",
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			display_width, display_height,
 			SDL_WINDOW_OPENGL | (Settings::getInstance()->getBool("Windowed") ? 0 : SDL_WINDOW_FULLSCREEN));
 
 		if(sdlWindow == NULL)
@@ -101,8 +101,8 @@ namespace Renderer
 		// vsync
 		if(Settings::getInstance()->getBool("VSync"))
 		{
-			// SDL_GL_SetSwapInterval(0) for immediate updates (no vsync, default), 
-			// 1 for updates synchronized with the vertical retrace, 
+			// SDL_GL_SetSwapInterval(0) for immediate updates (no vsync, default),
+			// 1 for updates synchronized with the vertical retrace,
 			// or -1 for late swap tearing.
 			// SDL_GL_SetSwapInterval returns 0 on success, -1 on error.
 			// if vsync is requested, try late swap tearing; if that doesn't work, try normal vsync

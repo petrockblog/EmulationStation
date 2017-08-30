@@ -9,30 +9,30 @@ std::map<CURL*, HttpReq*> HttpReq::s_requests;
 
 std::string HttpReq::urlEncode(const std::string &s)
 {
-    const std::string unreserved = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~";
+	const std::string unreserved = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~";
 
-    std::string escaped="";
-    for(size_t i=0; i<s.length(); i++)
-    {
-        if (unreserved.find_first_of(s[i]) != std::string::npos)
-        {
-            escaped.push_back(s[i]);
-        }
-        else
-        {
-            escaped.append("%");
-            char buf[3];
-            sprintf(buf, "%.2X", (unsigned char)s[i]);
-            escaped.append(buf);
-        }
-    }
-    return escaped;
+	std::string escaped="";
+	for(size_t i=0; i<s.length(); i++)
+	{
+		if (unreserved.find_first_of(s[i]) != std::string::npos)
+		{
+			escaped.push_back(s[i]);
+		}
+		else
+		{
+			escaped.append("%");
+			char buf[3];
+			sprintf(buf, "%.2X", (unsigned char)s[i]);
+			escaped.append(buf);
+		}
+	}
+	return escaped;
 }
 
 bool HttpReq::isUrl(const std::string& str)
 {
 	//the worst guess
-	return (!str.empty() && !boost::filesystem::exists(str) && 
+	return (!str.empty() && !boost::filesystem::exists(str) &&
 		(str.find("http://") != std::string::npos || str.find("https://") != std::string::npos || str.find("www.") != std::string::npos));
 }
 
@@ -122,7 +122,7 @@ HttpReq::Status HttpReq::status()
 			if(msg->msg == CURLMSG_DONE)
 			{
 				HttpReq* req = s_requests[msg->easy_handle];
-				
+
 				if(req == NULL)
 				{
 					LOG(LogError) << "Cannot find easy handle!";
@@ -173,5 +173,5 @@ size_t HttpReq::write_content(void* buff, size_t size, size_t nmemb, void* req_p
 //used as a curl callback
 /*int HttpReq::update_progress(void* req_ptr, double dlTotal, double dlNow, double ulTotal, double ulNow)
 {
-	
+
 }*/

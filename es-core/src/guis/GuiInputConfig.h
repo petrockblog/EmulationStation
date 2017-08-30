@@ -48,5 +48,5 @@ private:
 	int mHeldTime;
 	int mHeldInputId;
 
-	BusyComponent mBusyAnim;	
+	BusyComponent mBusyAnim;
 };

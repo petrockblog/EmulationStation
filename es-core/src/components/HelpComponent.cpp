@@ -63,7 +63,7 @@ void HelpComponent::updateGrid()
 
 	mGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(mPrompts.size() * 4, 1));
 	// [icon] [spacer1] [text] [spacer2]
-	
+
 	std::vector< std::shared_ptr<ImageComponent> > icons;
 	std::vector< std::shared_ptr<TextComponent> > labels;
 
@@ -104,7 +104,7 @@ std::shared_ptr<TextureResource> HelpComponent::getIconTexture(const char* name)
 	auto it = mIconCache.find(name);
 	if(it != mIconCache.end())
 		return it->second;
-	
+
 	auto pathLookup = ICON_PATH_MAP.find(name);
 	if(pathLookup == ICON_PATH_MAP.end())
 	{
@@ -135,7 +135,7 @@ void HelpComponent::setOpacity(unsigned char opacity)
 void HelpComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	
+
 	if(mGrid)
 		mGrid->render(trans);
 }

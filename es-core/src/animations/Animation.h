@@ -26,7 +26,7 @@ inline float smoothStep(float edge0, float edge1, float x)
 {
 	// Scale, and clamp x to 0..1 range
 	x = clamp(0, 1, (x - edge0)/(edge1 - edge0));
-        
+
 	// Evaluate polynomial
 	return x*x*x*(x*(x*6 - 15) + 10);
 }

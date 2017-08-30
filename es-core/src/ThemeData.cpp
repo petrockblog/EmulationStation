@@ -171,10 +171,10 @@ std::string resolvePath(const char* in, const fs::path& relative)
 		return in;
 
 	fs::path relPath = relative.parent_path();
-	
+
 	boost::filesystem::path path(in);
-	
-	// we use boost filesystem here instead of just string checks because 
+
+	// we use boost filesystem here instead of just string checks because
 	// some directories could theoretically start with ~ or .
 	if(*path.begin() == "~")
 	{
@@ -198,12 +198,12 @@ std::string resolvePlaceholders(const char* in)
 {
 	if(!in || in[0] == '\0')
 		return std::string(in);
-		
+
 	std::string inStr(in);
-	
+
 	using namespace boost::xpressive;
 	sregex rex = "${" >> (s1 = +('.' | _w)) >> '}';
-    
+
 	std::string output = regex_replace(inStr, rex, format_variables);
 
 	return output;
@@ -310,12 +310,12 @@ void ThemeData::parseVariables(const pugi::xml_node& root)
 {
 	ThemeException error;
 	error.setFiles(mPaths);
-    
+
 	pugi::xml_node variables = root.child("variables");
 
 	if(!variables)
 		return;
-    
+
 	for(pugi::xml_node_iterator it = variables.begin(); it != variables.end(); ++it)
 	{
 		std::string key = it->name();
@@ -347,7 +347,7 @@ void ThemeData::parseViews(const pugi::xml_node& root)
 			viewKey = nameAttr.substr(prevOff, off - prevOff);
 			prevOff = nameAttr.find_first_not_of(delim, off);
 			off = nameAttr.find_first_of(delim, prevOff);
-			
+
 			if (std::find(sSupportedViews.begin(), sSupportedViews.end(), viewKey) != sSupportedViews.end())
 			{
 				ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
@@ -380,8 +380,8 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 			std::string elemKey = nameAttr.substr(prevOff, off - prevOff);
 			prevOff = nameAttr.find_first_not_of(delim, off);
 			off = nameAttr.find_first_of(delim, prevOff);
-			
-			parseElement(node, elemTypeIt->second, 
+
+			parseElement(node, elemTypeIt->second,
 				view.elements.insert(std::pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
 
 			if(std::find(view.orderedKeys.begin(), view.orderedKeys.end(), elemKey) == view.orderedKeys.end())
@@ -398,7 +398,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 	element.type = root.name();
 	element.extra = root.attribute("extra").as_bool(false);
-	
+
 	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
 	{
 		auto typeIt = typeMap.find(node.name());
@@ -412,7 +412,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 		case NORMALIZED_PAIR:
 		{
 			size_t divider = str.find(' ');
-			if(divider == std::string::npos) 
+			if(divider == std::string::npos)
 				throw error << "invalid normalized pair (property \"" << node.name() << "\", value \"" << str.c_str() << "\")";
 
 			std::string first = str.substr(0, divider);
@@ -484,7 +484,7 @@ const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, co
 
 	if(elemIt->second.type != expectedType && !expectedType.empty())
 	{
-		LOG(LogWarning) << " requested mismatched theme type for [" << view << "." << element << "] - expected \"" 
+		LOG(LogWarning) << " requested mismatched theme type for [" << view << "." << element << "] - expected \""
 			<< expectedType << "\", got \"" << elemIt->second.type << "\"";
 		return NULL;
 	}
@@ -524,7 +524,7 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 	auto viewIt = theme->mViews.find(view);
 	if(viewIt == theme->mViews.end())
 		return comps;
-	
+
 	for(auto it = viewIt->second.orderedKeys.begin(); it != viewIt->second.orderedKeys.end(); it++)
 	{
 		ThemeElement& elem = viewIt->second.elements.at(*it);
@@ -551,9 +551,9 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	std::map<std::string, ThemeSet> sets;
 
 	static const size_t pathCount = 2;
-	fs::path paths[pathCount] = { 
-		"/etc/emulationstation/themes", 
-		getHomePath() + "/.emulationstation/themes" 
+	fs::path paths[pathCount] = {
+		"/etc/emulationstation/themes",
+		getHomePath() + "/.emulationstation/themes"
 	};
 
 	fs::directory_iterator end;

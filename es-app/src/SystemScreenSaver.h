@@ -23,8 +23,8 @@ public:
 	virtual void launchGame();
 
 private:
-	void	countVideos();
-	void	pickRandomVideo(std::string& path);
+	void countVideos();
+	void pickRandomVideo(std::string& path);
 
 	void input(InputConfig* config, Input input);
 
@@ -36,15 +36,15 @@ private:
 	};
 
 private:
-	bool			mCounted;
-	unsigned long	mVideoCount;
+	bool            mCounted;
+	unsigned long   mVideoCount;
 	VideoComponent* mVideoScreensaver;
-	Window*			mWindow;
-	STATE			mState;
-	float			mOpacity;
-	int				mTimer;
-	FileData*		mCurrentGame;
-	std::string		mGameName;
-	std::string		mSystemName;
-	int 			mVideoChangeTime;
+	Window*         mWindow;
+	STATE           mState;
+	float           mOpacity;
+	int             mTimer;
+	FileData*       mCurrentGame;
+	std::string     mGameName;
+	std::string     mSystemName;
+	int             mVideoChangeTime;
 };

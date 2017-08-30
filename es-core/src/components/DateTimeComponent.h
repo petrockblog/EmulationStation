@@ -43,7 +43,7 @@ private:
 
 	std::string getDisplayString(DisplayMode mode) const;
 	DisplayMode getCurrentDisplayMode() const;
-	
+
 	void updateTextCache();
 
 	boost::posix_time::ptime mTime;

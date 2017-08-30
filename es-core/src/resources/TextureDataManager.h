@@ -83,4 +83,3 @@ private:
 	std::shared_ptr<TextureData>															mBlank;
 	TextureLoader*																			mLoader;
 };
-

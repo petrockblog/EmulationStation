@@ -31,10 +31,10 @@ std::vector<FilterDataDecl>& FileFilterIndex::getFilterDataDecls()
 void FileFilterIndex::importIndex(FileFilterIndex* indexToImport)
 {
 	struct IndexImportStructure
-    {
-      std::map<std::string, int>* destinationIndex;
-      std::map<std::string, int>* sourceIndex;
-    };
+	{
+		std::map<std::string, int>* destinationIndex;
+		std::map<std::string, int>* sourceIndex;
+	};
 
 	IndexImportStructure indexStructDecls[] = {
 		{ &genreIndexAllKeys, &(indexToImport->genreIndexAllKeys) },

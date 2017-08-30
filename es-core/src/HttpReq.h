@@ -5,20 +5,20 @@
 #include <map>
 
 /* Usage:
- * HttpReq myRequest("www.google.com", "/index.html");
- * //for blocking behavior: while(myRequest.status() == HttpReq::REQ_IN_PROGRESS);
- * //for non-blocking behavior: check if(myRequest.status() != HttpReq::REQ_IN_PROGRESS) in some sort of update method
- * 
- * //once one of those completes, the request is ready
- * if(myRequest.status() != REQ_SUCCESS)
- * {
- *    //an error occured
- *    LOG(LogError) << "HTTP request error - " << myRequest.getErrorMessage();
- *    return;
- * }
- *
- * std::string content = myRequest.getContent();
- * //process contents...
+* HttpReq myRequest("www.google.com", "/index.html");
+* //for blocking behavior: while(myRequest.status() == HttpReq::REQ_IN_PROGRESS);
+* //for non-blocking behavior: check if(myRequest.status() != HttpReq::REQ_IN_PROGRESS) in some sort of update method
+*
+* //once one of those completes, the request is ready
+* if(myRequest.status() != REQ_SUCCESS)
+* {
+*    //an error occured
+*    LOG(LogError) << "HTTP request error - " << myRequest.getErrorMessage();
+*    return;
+* }
+*
+* std::string content = myRequest.getContent();
+* //process contents...
 */
 
 class HttpReq
@@ -30,12 +30,12 @@ public:
 
 	enum Status
 	{
-		REQ_IN_PROGRESS,		//request is in progress
-		REQ_SUCCESS,			//request completed successfully, get it with getContent()
+		REQ_IN_PROGRESS,        //request is in progress
+		REQ_SUCCESS,            //request completed successfully, get it with getContent()
 
-		REQ_IO_ERROR,			//some boost::asio error happened, get it with getErrorMsg()
-		REQ_BAD_STATUS_CODE,	//some invalid HTTP response status code happened (non-200)
-		REQ_INVALID_RESPONSE	//the HTTP response was invalid
+		REQ_IO_ERROR,           //some boost::asio error happened, get it with getErrorMsg()
+		REQ_BAD_STATUS_CODE,    //some invalid HTTP response status code happened (non-200)
+		REQ_INVALID_RESPONSE    //the HTTP response was invalid
 	};
 
 	Status status(); //process any received data and return the status afterwards

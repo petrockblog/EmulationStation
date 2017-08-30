@@ -54,7 +54,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(SEGA_MASTER_SYSTEM, "Sega Master System")
 	(SEGA_MEGA_DRIVE, "Sega Mega Drive")
 	(SEGA_SATURN, "Sega Saturn")
-	(SEGA_SG1000, "SEGA SG-1000")	
+	(SEGA_SG1000, "SEGA SG-1000")
 	(PLAYSTATION, "Sony Playstation")
 	(PLAYSTATION_2, "Sony Playstation 2")
 	(PLAYSTATION_3, "Sony Playstation 3")
@@ -71,7 +71,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(TRS80_COLOR_COMPUTER, "TRS-80 Color Computer")
 	(TANDY, "TRS-80 Color Computer");
 
-void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
+void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests,
 	std::vector<ScraperSearchResult>& results)
 {
 	std::string path = "thegamesdb.net/api/GetGame.php?";
@@ -100,7 +100,7 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 		// no platform specified, we're done
 		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
 	}else{
-		// go through the list, we need to split this into multiple requests 
+		// go through the list, we need to split this into multiple requests
 		// because TheGamesDB API either sucks or I don't know how to use it properly...
 		std::string urlBase = path;
 		auto& platforms = params.system->getPlatformIds();
