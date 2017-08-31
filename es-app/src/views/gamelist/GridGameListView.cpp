@@ -251,9 +251,6 @@ void GridGameListView::getDefaultElements()
 
 void GridGameListView::updateInfoPanel()
 {
-	if (bDefaultTheme)
-		return;
-
 	FileData* file = (mGrid.size() == 0 || mGrid.isScrolling()) ? NULL : mGrid.getSelectedObject();
 
 	bool fadingOut;
