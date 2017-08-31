@@ -487,9 +487,9 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 	elem = theme->getElement("grid", "gridRowsAndColumns", "container");
 	if (elem) {
 		if (elem->has("size")) {
-			Eigen::Vector2f DesiredGridSize = elem->get<Eigen::Vector2f>("size");
-			mRequestedGridDimensions.x() = (int)DesiredGridSize.x();
-			mRequestedGridDimensions.y() = (int)DesiredGridSize.y();
+			Eigen::Vector2f RequestedGridDimensions = elem->get<Eigen::Vector2f>("size");
+			mRequestedGridDimensions.x() = (int)RequestedGridDimensions.x();
+			mRequestedGridDimensions.y() = (int)RequestedGridDimensions.y();
 		}
 	}
 
