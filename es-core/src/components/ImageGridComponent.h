@@ -118,7 +118,7 @@ private:
 		return squareSize;
 	};
 
-	Eigen::Vector2i getGridSize() const
+	Eigen::Vector2i getGridDimensions() const
 	{
 		if (mRequestedGridDimensions.x() > 0)
             return mRequestedGridDimensions;
@@ -396,7 +396,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 
 		if(dir != Eigen::Vector2i::Zero())
 		{
-			listInput(dir.x() + dir.y() * getGridSize().x());
+			listInput(dir.x() + dir.y() * getGridDimensions().x());
 			return true;
 		}
 	}else{
@@ -524,7 +524,7 @@ void ImageGridComponent<T>::buildImages()
 {
 	mTiles.clear();
 
-	Eigen::Vector2i gridSize = getGridSize();
+	Eigen::Vector2i gridSize = getGridDimensions();
 	Eigen::Vector2f squareSize = getMaxSquareSize();
 
 	// Setup gridsize either by default or from theme
@@ -583,7 +583,7 @@ void ImageGridComponent<T>::updateImages()
 	if (mTiles.empty())
 		buildImages();
 
-	Eigen::Vector2i gridSize = getGridSize();
+	Eigen::Vector2i gridSize = getGridDimensions();
 
 	int cursorRow = mCursor / gridSize.x();
 	int cursorCol = mCursor % gridSize.x();
