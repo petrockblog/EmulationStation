@@ -69,6 +69,13 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("forceUppercase", BOOLEAN)
 		("lineSpacing", FLOAT)
 		("zIndex", FLOAT)))
+	("imagegrid", makeMap(boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("margin", NORMALIZED_PAIR)
+		("rowsAndColumns", NORMALIZED_PAIR)
+		("pathMissingBoxArt", PATH)
+		("zIndex", FLOAT)))
 	("container", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
