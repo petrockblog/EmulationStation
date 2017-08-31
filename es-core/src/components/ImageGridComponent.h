@@ -70,7 +70,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
-	void applyThemeToChildren(const std::shared_ptr<ThemeData>& theme);
+	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 	void setVisible(bool visible);
 
 	int getEntryCount();
@@ -467,7 +467,8 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 }
 
 template<typename T>
-void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData>& theme) {
+void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
 	Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	using namespace ThemeFlags;
 
@@ -477,14 +478,14 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 
 	// Get hacked-in theme stuff
 	// Margin:
-	auto elem = theme->getElement("grid", "md_grid_margin", "container");
+	auto elem = theme->getElement(view, "md_grid_margin", "container");
 	if (elem) {
 		if (elem->has("size")) 
 			setMargin(elem->get<Eigen::Vector2f>("size").cwiseProduct(screen));
 	} 
 
 	// Grid Size (Columns and Rows)
-	elem = theme->getElement("grid", "gridRowsAndColumns", "container");
+	elem = theme->getElement(view, "gridRowsAndColumns", "container");
 	if (elem) {
 		if (elem->has("size")) {
 			Eigen::Vector2f RequestedGridDimensions = elem->get<Eigen::Vector2f>("size");
@@ -494,7 +495,7 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 	}
 
 	// Change default missing boxart icon
-	elem = theme->getElement("grid", "missing_boxart", "image");
+	elem = theme->getElement(view, "missing_boxart", "image");
 	if (elem) {
 		std::string path = elem->get<std::string>("path");
 		if (ResourceManager::getInstance()->fileExists(path))

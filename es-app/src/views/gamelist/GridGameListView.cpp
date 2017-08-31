@@ -183,7 +183,6 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	using namespace ThemeFlags;
 	mTitle.applyTheme(theme, getName(), "md_title", ALL);
 	mGrid.applyTheme(theme, getName(), "md_grid", ALL);
-	mGrid.applyThemeToChildren(theme);
 
 	// ---  DETAILED METADATA THEME ---
 	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE | Z_INDEX);
