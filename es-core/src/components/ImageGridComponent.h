@@ -469,8 +469,11 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 template<typename T>
 void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
-	Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-	using namespace ThemeFlags;
+    GuiComponent::applyTheme(theme, view, element, properties);
+
+    using namespace ThemeFlags;
+
+    Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// Keep theme data pointer.
 	mTheme = theme;
