@@ -194,7 +194,7 @@ void GuiMetaDataEd::save()
 		mSavedCallback();
 
 	// update respective Collection Entries
-	CollectionSystemManager::get()->refreshCollectionSystems(mScraperParams.game);
+	CollectionSystemManager::get()->updateCollectionSystems(mScraperParams.game);
 }
 
 void GuiMetaDataEd::fetch()

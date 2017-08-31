@@ -20,56 +20,16 @@ FileFilterIndex::FileFilterIndex()
 
 FileFilterIndex::~FileFilterIndex()
 {
-	resetIndex();
-}
-
-std::vector<FilterDataDecl>& FileFilterIndex::getFilterDataDecls()
-{
-	return filterDataDecl;
-}
-
-void FileFilterIndex::importIndex(FileFilterIndex* indexToImport)
-{
-	struct IndexImportStructure
-    {
-      std::map<std::string, int>* destinationIndex;
-      std::map<std::string, int>* sourceIndex;
-    };
-
-	IndexImportStructure indexStructDecls[] = {
-		{ &genreIndexAllKeys, &(indexToImport->genreIndexAllKeys) },
-		{ &playersIndexAllKeys, &(indexToImport->playersIndexAllKeys) },
-		{ &pubDevIndexAllKeys, &(indexToImport->pubDevIndexAllKeys) },
-		{ &ratingsIndexAllKeys, &(indexToImport->ratingsIndexAllKeys) },
-		{ &favoritesIndexAllKeys, &(indexToImport->favoritesIndexAllKeys) }
-	};
-
-	std::vector<IndexImportStructure> indexImportDecl = std::vector<IndexImportStructure>(indexStructDecls, indexStructDecls + sizeof(indexStructDecls) / sizeof(indexStructDecls[0]));
-
-	for (std::vector<IndexImportStructure>::iterator indexesIt = indexImportDecl.begin(); indexesIt != indexImportDecl.end(); ++indexesIt )
-	{
-		for (std::map<std::string, int>::iterator sourceIt = (*indexesIt).sourceIndex->begin(); sourceIt != (*indexesIt).sourceIndex->end(); ++sourceIt )
-		{
-			if ((*indexesIt).destinationIndex->find((*sourceIt).first) == (*indexesIt).destinationIndex->end())
-			{
-				// entry doesn't exist
-				(*((*indexesIt).destinationIndex))[(*sourceIt).first] = (*sourceIt).second;
-			}
-			else
-			{
-				(*((*indexesIt).destinationIndex))[(*sourceIt).first] += (*sourceIt).second;
-			}
-		}
-	}
-}
-void FileFilterIndex::resetIndex()
-{
-	clearAllFilters();
 	clearIndex(genreIndexAllKeys);
 	clearIndex(playersIndexAllKeys);
 	clearIndex(pubDevIndexAllKeys);
 	clearIndex(ratingsIndexAllKeys);
 	clearIndex(favoritesIndexAllKeys);
+}
+
+std::vector<FilterDataDecl>& FileFilterIndex::getFilterDataDecls()
+{
+	return filterDataDecl;
 }
 
 std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType type, bool getSecondary)
@@ -210,21 +170,21 @@ void FileFilterIndex::clearAllFilters()
 
 void FileFilterIndex::debugPrintIndexes()
 {
-	LOG(LogInfo) << "Printing Indexes...";
+	LOG(LogError) << "Printing Indexes...";
 	for (auto x: playersIndexAllKeys) {
-		LOG(LogInfo) << "Multiplayer Index: " << x.first << ": " << x.second;
+		LOG(LogError) << "Multiplayer Index: " << x.first << ": " << x.second;
 	}
 	for (auto x: genreIndexAllKeys) {
-		LOG(LogInfo) << "Genre Index: " << x.first << ": " << x.second;
+		LOG(LogError) << "Genre Index: " << x.first << ": " << x.second;
 	}
 	for (auto x: ratingsIndexAllKeys) {
-		LOG(LogInfo) << "Ratings Index: " << x.first << ": " << x.second;
+		LOG(LogError) << "Ratings Index: " << x.first << ": " << x.second;
 	}
 	for (auto x: pubDevIndexAllKeys) {
-		LOG(LogInfo) << "PubDev Index: " << x.first << ": " << x.second;
+		LOG(LogError) << "PubDev Index: " << x.first << ": " << x.second;
 	}
 	for (auto x: favoritesIndexAllKeys) {
-		LOG(LogInfo) << "Favorites Index: " << x.first << ": " << x.second;
+		LOG(LogError) << "Favorites Index: " << x.first << ": " << x.second;
 	}
 }
 

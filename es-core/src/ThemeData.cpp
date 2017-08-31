@@ -33,8 +33,6 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("size", NORMALIZED_PAIR)
 		("maxSize", NORMALIZED_PAIR)
 		("origin", NORMALIZED_PAIR)
-	 	("rotation", FLOAT)
-		("rotationOrigin", NORMALIZED_PAIR)
 		("path", PATH)
 		("tile", BOOLEAN)
 		("color", COLOR)
@@ -42,9 +40,6 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("text", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
-		("origin", NORMALIZED_PAIR)
-		("rotation", FLOAT)
-		("rotationOrigin", NORMALIZED_PAIR)
 		("text", STRING)
 		("backgroundColor", COLOR)
 		("fontPath", PATH)
@@ -58,7 +53,6 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
-		("origin", NORMALIZED_PAIR)
 		("selectorHeight", FLOAT)
 		("selectorOffsetY", FLOAT)
 		("selectorColor", COLOR)
@@ -78,7 +72,6 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("container", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
-	 	("origin", NORMALIZED_PAIR)
 		("zIndex", FLOAT)))
 	("ninepatch", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
@@ -96,9 +89,6 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("rating", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
-		("origin", NORMALIZED_PAIR)
-		("rotation", FLOAT)
-		("rotationOrigin", NORMALIZED_PAIR)
 		("color", COLOR)
 		("filledPath", PATH)
 		("unfilledPath", PATH)
@@ -116,8 +106,6 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("size", NORMALIZED_PAIR)
 		("maxSize", NORMALIZED_PAIR)
 		("origin", NORMALIZED_PAIR)
-		("rotation", FLOAT)
-		("rotationOrigin", NORMALIZED_PAIR)
 		("default", PATH)
 		("delay", FLOAT)
 		("zIndex", FLOAT)

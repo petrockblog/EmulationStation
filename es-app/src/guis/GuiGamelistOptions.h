@@ -19,8 +19,6 @@ public:
 private:
 	void openGamelistFilter();
 	void openMetaDataEd();
-	void startEditMode();
-	void exitEditMode();
 	void jumpToLetter();
 
 	MenuComponent mMenu;

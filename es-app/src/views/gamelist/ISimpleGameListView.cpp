@@ -93,8 +93,6 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				{
 					mCursorStack.push(cursor);
 					populateList(cursor->getChildrenListToDisplay());
-					FileData* cursor = getCursor();
-					setCursor(cursor);
 				}
 			}
 
@@ -109,12 +107,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				Sound::getFromTheme(getTheme(), getName(), "back")->play();
 			}else{
 				onFocusLost();
-				SystemData* systemToView = getCursor()->getSystem();
-				if (systemToView->isCollection())
-				{
-					systemToView = CollectionSystemManager::get()->getSystemToView(systemToView);
-				}
-				ViewController::get()->goToSystemView(systemToView);
+				ViewController::get()->goToSystemView(getCursor()->getSystem());
 			}
 
 			return true;
@@ -137,17 +130,14 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 		}else if (config->isMappedTo("x", input))
 		{
 			// go to random system game
-			FileData* randomGame = getCursor()->getSystem()->getRandomGame();
-			if (randomGame)
-			{
-				setCursor(randomGame);
-			}
+			setCursor(mRoot->getSystem()->getRandomGame());
+			//ViewController::get()->goToRandomGame();
 			return true;
 		}else if (config->isMappedTo("y", input))
 		{
-			if(mRoot->getSystem()->isGameSystem())
+			if(Settings::getInstance()->getString("CollectionSystemsAuto").find("favorites") != std::string::npos && mRoot->getSystem()->isGameSystem())
 			{
-				if(CollectionSystemManager::get()->toggleGameInCollection(getCursor()))
+				if(CollectionSystemManager::get()->toggleGameInCollection(getCursor(), "favorites"))
 				{
 					return true;
 				}

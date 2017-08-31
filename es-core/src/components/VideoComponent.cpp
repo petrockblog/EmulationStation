@@ -3,7 +3,6 @@
 #include "ThemeData.h"
 #include "Util.h"
 #include "Window.h"
-#include "PowerSaver.h"
 #ifdef WIN32
 #include <codecvt>
 #endif
@@ -61,6 +60,7 @@ VideoComponent::VideoComponent(Window* window) :
 	mDisable(false),
 	mScreensaverMode(false),
 	mTargetIsMax(false),
+	mOrigin(0, 0),
 	mTargetSize(0, 0)
 {
 	// Setup the default configuration
@@ -84,10 +84,18 @@ VideoComponent::~VideoComponent()
 	remove(getTitlePath().c_str());
 }
 
-void VideoComponent::onOriginChanged()
+void VideoComponent::setOrigin(float originX, float originY)
 {
+	mOrigin << originX, originY;
+
 	// Update the embeded static image
-	mStaticImage.setOrigin(mOrigin);
+	mStaticImage.setOrigin(originX, originY);
+}
+
+Eigen::Vector2f VideoComponent::getCenter() const
+{
+	return Eigen::Vector2f(mPosition.x() - (getSize().x() * mOrigin.x()) + getSize().x() / 2,
+		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
 }
 
 void VideoComponent::onSizeChanged()
@@ -213,13 +221,6 @@ void VideoComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	if (elem->has("showSnapshotDelay"))
 		mConfig.showSnapshotDelay = elem->get<bool>("showSnapshotDelay");
 
-	if(properties & ThemeFlags::ROTATION) {
-		if(elem->has("rotation"))
-			setRotationDegrees(elem->get<float>("rotation"));
-		if(elem->has("rotationOrigin"))
-			setRotationOrigin(elem->get<Eigen::Vector2f>("rotationOrigin"));
-	}
-
 	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
 		setZIndex(elem->get<float>("zIndex"));
 	else
@@ -263,7 +264,7 @@ void VideoComponent::startVideoWithDelay()
 		// Set the video that we are going to be playing so we don't attempt to restart it
 		mPlayingVideoPath = mVideoPath;
 
-		if (mConfig.startDelay == 0 || PowerSaver::getMode() == PowerSaver::INSTANT)
+		if (mConfig.startDelay == 0)
 		{
 			// No delay. Just start the video
 			mStartDelayed = false;

@@ -82,7 +82,7 @@ void Settings::setDefaults()
 	mBoolMap["ScreenSaverControls"] = true;
 	mStringMap["ScreenSaverGameInfo"] = "never";
 	mBoolMap["StretchVideoOnScreenSaver"] = false;
-	mStringMap["PowerSaverMode"] = "disabled";
+	mStringMap["PowerSaverMode"] = "default";
 
 	// This setting only applies to raspberry pi but set it for all platforms so
 	// we don't get a warning if we encounter it on a different platform
@@ -99,9 +99,6 @@ void Settings::setDefaults()
 	// Audio out device for Video playback using OMX player.
 	mStringMap["OMXAudioDev"] = "both";
 	mStringMap["CollectionSystemsAuto"] = "";
-	mStringMap["CollectionSystemsCustom"] = "";
-	mBoolMap["SortAllSystems"] = false;
-	mBoolMap["UseCustomCollectionsSystem"] = true;
 
 	// Audio out device for volume control
 	#ifdef _RPI_
