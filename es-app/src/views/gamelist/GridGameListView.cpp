@@ -12,7 +12,7 @@
 // ============================================================================
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
-	mGrid(window, 6/*system->getGridModSize()*/), mBackgroundImage(window), mTitle(window),
+	mGrid(window, 6), mBackgroundImage(window), mTitle(window),
 	mDescContainer(window), mDescription(window),
 	mImage(window),
 	
