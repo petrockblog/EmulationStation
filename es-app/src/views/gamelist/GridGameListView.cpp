@@ -12,7 +12,7 @@
 // ============================================================================
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
-	mGrid(window, 6), mBackgroundImage(window), mTitle(window),
+	mGrid(window, 6), mBackgroundImage(window), mGameTitle(window),
 	mDescContainer(window), mDescription(window),
 	mImage(window),
 	
@@ -22,12 +22,12 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mRating(window), mReleaseDate(window), mDeveloper(window), mPublisher(window),
 	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window)
 {
-	mTitle.setFont(Font::get(FONT_SIZE_MEDIUM));
-	mTitle.setPosition(0, mSize.y() * 0.05f);
-	mTitle.setColor(0xAAAAAAFF);
-	mTitle.setSize(mSize.x(), 0);
-	mTitle.setAlignment(ALIGN_CENTER);
-	addChild(&mTitle);
+	mGameTitle.setFont(Font::get(FONT_SIZE_MEDIUM));
+	mGameTitle.setPosition(0, mSize.y() * 0.05f);
+	mGameTitle.setColor(0xAAAAAAFF);
+	mGameTitle.setSize(mSize.x(), 0);
+	mGameTitle.setAlignment(ALIGN_CENTER);
+	addChild(&mGameTitle);
 
 	mGrid.setPosition(24, mSize.y() * 0.15f);
 	mGrid.setSize(mSize.x() * 0.8f, mSize.y() * 0.8f);
@@ -93,7 +93,7 @@ void GridGameListView::setCursor(FileData* file)
 	{
 		populateList(file->getParent()->getChildren());
 		mGrid.setCursor(file);
-		mTitle.setText(file->getName());
+		mGameTitle.setText(file->getName());
 	}
 }
 
@@ -101,8 +101,6 @@ bool GridGameListView::input(InputConfig* config, Input input)
 {
 	if (config->isMappedTo("left", input) || config->isMappedTo("right", input)
 	    || config->isMappedTo("up", input) || config->isMappedTo("down", input)) {
-		// Quick and dirty way of changing header title without doing in update()
-		mTitle.setText(mGrid.getSelectedName());
 		updateInfoPanel();
 
 		// Destroy dpad input so mGrid can use it.
@@ -178,7 +176,7 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	ISimpleGameListView::onThemeChanged(theme);
 
 	using namespace ThemeFlags;
-	mTitle.applyTheme(theme, getName(), "md_title", ALL);
+	mGameTitle.applyTheme(theme, getName(), "md_title", ALL);
 	mGrid.applyTheme(theme, getName(), "gamegrid", ALL);
 
 	// ---  DETAILED METADATA THEME ---
@@ -225,6 +223,7 @@ void GridGameListView::updateInfoPanel()
 		fadingOut = true;
 	}
 	else {
+		mGameTitle.setText(file->getName());
 		mImage.setImage(file->metadata.get("image"));
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();

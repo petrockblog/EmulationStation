@@ -37,7 +37,7 @@ protected:
 
 	ImageGridComponent<FileData*> mGrid;
 
-	TextComponent mTitle;
+	TextComponent mGameTitle;
 
 	ImageComponent mBackgroundImage;
 
