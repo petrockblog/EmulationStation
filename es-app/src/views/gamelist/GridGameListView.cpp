@@ -218,7 +218,7 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	}
 
 	// ---  DETAILED METADATA THEME ---
-	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE | Z_INDEX | ROTATION);
+	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE | Z_INDEX);
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
@@ -244,7 +244,7 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 	mDescContainer.applyTheme(theme, getName(), "md_description", POSITION | ThemeFlags::SIZE | Z_INDEX);
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
-	mDescription.applyTheme(theme, getName(), "md_description", ALL ^ (POSITION | ThemeFlags::SIZE | ThemeFlags::ORIGIN | TEXT | ROTATION));
+	mDescription.applyTheme(theme, getName(), "md_description", ALL ^ (POSITION | ThemeFlags::SIZE | ThemeFlags::ORIGIN | TEXT));
 
 	sortChildren();
 }
