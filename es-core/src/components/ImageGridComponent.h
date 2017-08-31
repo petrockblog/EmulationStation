@@ -560,7 +560,8 @@ void ImageGridComponent<T>::buildImages()
 
 			tile->setPosition(tdx, tdy);
 
-			if (bThemeLoaded) tile->setTheme(mTheme);
+			if (bThemeLoaded)
+                tile->applyTheme(mTheme);
 
 			mTiles.push_back(tile);
 

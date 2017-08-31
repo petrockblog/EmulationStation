@@ -134,7 +134,7 @@ void GridTileComponent::update(int deltaTime) {
 		mText->setColor(mAnimation.current.textColor);
 }
 
-void GridTileComponent::setTheme(const std::shared_ptr<ThemeData>& theme) {
+void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 	using namespace ThemeFlags;
 
 	// Set animation settings to default if that theme element isn't defined.

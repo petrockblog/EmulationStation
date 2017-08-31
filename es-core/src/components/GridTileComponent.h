@@ -57,7 +57,7 @@ public:
 	bool isSelected() { return bSelected; }
 
 	// Used to give custom theme control to all elements and for slight animation puroposes.
-	void setTheme(const std::shared_ptr<ThemeData>& theme);
+	void applyTheme(const std::shared_ptr<ThemeData>& theme);
 
 	void setImage(const std::shared_ptr<TextureResource>& texture);
 	void setImage(std::string path, bool tile = false);
