@@ -38,7 +38,6 @@ protected:
 	using IList<ImageGridData, T>::listUpdate;
 	using IList<ImageGridData, T>::listInput;
 	using IList<ImageGridData, T>::listRenderTitleOverlay;
-	using IList<ImageGridData, T>::listRenderFileTitle;
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
 	using IList<ImageGridData, T>::mPosition;

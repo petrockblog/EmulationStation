@@ -292,12 +292,6 @@ protected:
 			scroll(mScrollVelocity);
 	}
 
-	void listRenderFileTitle(const Eigen::Affine3f& trans) {
-		for (int i = 0; i < mEntries.size(); i++) {
-			mEntries[i].data.title->render(trans);
-		}
-	}
-
 	void listRenderTitleOverlay(const Eigen::Affine3f& trans)
 	{
 		if(size() == 0 || !mTitleOverlayFont || mTitleOverlayOpacity == 0)
