@@ -27,7 +27,7 @@ unsigned int getColorTween(unsigned int currentColor, unsigned int endColor, int
 	int tab = (int)(getColorDifference(eb, b) / endFrame);
 	int tae = (int)(getColorDifference(ea, a) / endFrame);
 
-	// Get per frame itteration
+	// Get per frame iteration
 	r = (unsigned char)(r + (tar * frame));
 	g = (unsigned char)(g + (tag * frame));
 	b = (unsigned char)(b + (tab * frame));
