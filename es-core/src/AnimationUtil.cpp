@@ -1,7 +1,4 @@
 #include "AnimationUtil.h"
-#include "resources/ResourceManager.h"
-#include "platform.h"
-#include "Log.h"
 
 unsigned int getColorTween(unsigned int currentColor, unsigned int endColor, int frame, int endFrame, bool reverse)
 {
