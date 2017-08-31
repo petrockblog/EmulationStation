@@ -179,43 +179,14 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
 	ISimpleGameListView::onThemeChanged(theme);
 
+	getDefaultElements();
+	if (!theme->getElement("grid", "md_grid", "text"))
+		return;
+
 	using namespace ThemeFlags;
 	mTitle.applyTheme(theme, getName(), "md_title", ALL);
 	mGrid.applyTheme(theme, getName(), "md_grid", ALL);
 	mGrid.applyThemeToChildren(theme);
-
-	bDefaultTheme = !theme->getElement("grid", "md_grid", "text");
-
-	// If the selected theme contains no grid view elements, create a default theme.
-	if (bDefaultTheme) {
-		mBackground.applyTheme(theme, "basic", "background", ALL);
-		mGrid.setSize(Renderer::getScreenWidth() * .975f, Renderer::getScreenHeight() * .72f);
-
-		mHeaderText.setOpacity(0);
-		
-		// fade out all metadata labels.
-		mDescContainer.setOpacity(0);
-		mLblRating.setOpacity(0);
-		mLblReleaseDate.setOpacity(0);
-		mLblDeveloper.setOpacity(0);
-		mLblPublisher.setOpacity(0);
-		mLblGenre.setOpacity(0);
-		mLblPlayers.setOpacity(0);
-		mLblLastPlayed.setOpacity(0);
-		mLblPlayCount.setOpacity(0);
-		mRating.setOpacity(0);
-		mReleaseDate.setOpacity(0);
-		mDeveloper.setOpacity(0);
-		mPublisher.setOpacity(0);
-		mGenre.setOpacity(0);
-		mPlayers.setOpacity(0);
-		mLastPlayed.setOpacity(0);
-		mPlayCount.setOpacity(0);
-
-		// set margin
-		mGrid.setMargin(Eigen::Vector2f(Renderer::getScreenWidth() * .02f, Renderer::getScreenHeight() * .05f));
-		return;
-	}
 
 	// ---  DETAILED METADATA THEME ---
 	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE | Z_INDEX);
@@ -247,6 +218,35 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	mDescription.applyTheme(theme, getName(), "md_description", ALL ^ (POSITION | ThemeFlags::SIZE | ThemeFlags::ORIGIN | TEXT));
 
 	sortChildren();
+}
+
+void GridGameListView::getDefaultElements()
+{
+    mGrid.setSize(Renderer::getScreenWidth() * .975f, Renderer::getScreenHeight() * .72f);
+
+    mHeaderText.setOpacity(0);
+
+    // fade out all metadata labels.
+    mDescContainer.setOpacity(0);
+    mLblRating.setOpacity(0);
+    mLblReleaseDate.setOpacity(0);
+    mLblDeveloper.setOpacity(0);
+    mLblPublisher.setOpacity(0);
+    mLblGenre.setOpacity(0);
+    mLblPlayers.setOpacity(0);
+    mLblLastPlayed.setOpacity(0);
+    mLblPlayCount.setOpacity(0);
+    mRating.setOpacity(0);
+    mReleaseDate.setOpacity(0);
+    mDeveloper.setOpacity(0);
+    mPublisher.setOpacity(0);
+    mGenre.setOpacity(0);
+    mPlayers.setOpacity(0);
+    mLastPlayed.setOpacity(0);
+    mPlayCount.setOpacity(0);
+
+    // set margin
+    mGrid.setMargin(Eigen::Vector2f(Renderer::getScreenWidth() * .02f, Renderer::getScreenHeight() * .05f));
 }
 
 void GridGameListView::updateInfoPanel()
