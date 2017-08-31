@@ -127,9 +127,6 @@ void GridGameListView::update(int deltatime) {
 	mLoadFrame++;
 
 	mGrid.update(deltatime);
-
-	if (mSystemQuickChangeCoolDown < 30)
-		mSystemQuickChangeCoolDown++;
 }
 
 void GridGameListView::populateList(const std::vector<FileData*>& files)
@@ -373,15 +370,12 @@ void GridGameListView::onFocusGained() {
 	mGrid.reloadTextures();
 	mGrid.setVisible(true);
 	bFocused = true;
-	mSystemQuickChangeCoolDown = 0;
 }
 
 void GridGameListView::onFocusLost() {
-	if (mGrid.getEntryCount() > 0)
-		mGrid.unloadTextures(true);
+	mGrid.unloadTextures(true);
 	mGrid.setVisible(false);
 	bFocused = false;
-	mSystemQuickChangeCoolDown = 0;
 }
 
 

@@ -72,6 +72,4 @@ private:
 
 	std::vector<TextComponent*> getMDLabels();
 	std::vector<GuiComponent*> getMDValues();
-
-	int mSystemQuickChangeCoolDown = 0;
 };

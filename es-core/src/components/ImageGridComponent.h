@@ -238,8 +238,10 @@ void ImageGridComponent<T>::unloadTextures(bool unloadAll) {
 		for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
 			// Ignore textures currently in range of cursor
 			if (!unloadAll)
-				if ((*i) > mCursorRange.min && (*i) < mCursorRange.max) continue;
-			if ((*i) > mEntries.size()) continue;
+				if ((*i) > mCursorRange.min && (*i) < mCursorRange.max)
+                    continue;
+			if ((*i) > mEntries.size())
+                continue;
 			clearImageAt((*i));
 			i = mLoadedTextureList.erase(i);
 		}
@@ -254,7 +256,8 @@ void ImageGridComponent<T>::unloadTextures(bool unloadAll) {
 		mLoadedTextureList.clear();
 	}
 
-	if (unloadAll) mTiles.clear();
+	if (unloadAll)
+        mTiles.clear();
 
 	bLoading = true;		// Reload images now.
 	bUnloaded = false;
