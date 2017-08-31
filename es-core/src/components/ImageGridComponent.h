@@ -120,7 +120,8 @@ private:
 
 	Eigen::Vector2i getGridSize() const
 	{
-		if (mDesiredGridSize.x() > 0) return mDesiredGridSize;
+		if (mRequestedGridDimensions.x() > 0)
+            return mRequestedGridDimensions;
 
 		Eigen::Vector2f squareSize = getMaxSquareSize();
 		if (!mTiles.empty()) squareSize = mTiles[0]->getSize();
@@ -140,7 +141,7 @@ private:
 	bool mEntriesDirty;
 
 	Eigen::Vector2f mMargin;
-	Eigen::Vector2i mDesiredGridSize;
+	Eigen::Vector2i mRequestedGridDimensions;
 
 	const int MAX_TEXTURES = 80;			// The maximum amount of images that can be loaded at once
 	const int CURSOR_RANGE = 34;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
@@ -166,8 +167,8 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 {
 	mEntriesDirty = true;
 	setMargin(Eigen::Vector2f(24, 24));
-	mDesiredGridSize.x() = 0;
-	mDesiredGridSize.y() = 0;
+	mRequestedGridDimensions.x() = 0;
+	mRequestedGridDimensions.y() = 0;
 	mMissingBoxartTexture = TextureResource::get(":/blank_game.png");
 }
 
@@ -487,8 +488,8 @@ void ImageGridComponent<T>::applyThemeToChildren(const std::shared_ptr<ThemeData
 	if (elem) {
 		if (elem->has("size")) {
 			Eigen::Vector2f DesiredGridSize = elem->get<Eigen::Vector2f>("size");
-			mDesiredGridSize.x() = (int)DesiredGridSize.x();
-			mDesiredGridSize.y() = (int)DesiredGridSize.y();
+			mRequestedGridDimensions.x() = (int)DesiredGridSize.x();
+			mRequestedGridDimensions.y() = (int)DesiredGridSize.y();
 		}
 	}
 
@@ -527,14 +528,14 @@ void ImageGridComponent<T>::buildImages()
 	Eigen::Vector2f squareSize = getMaxSquareSize();
 
 	// Setup gridsize either by default or from theme
-	if (mDesiredGridSize.x() == 0) {
-		mDesiredGridSize.x() = 4;
-		mDesiredGridSize.y() = 2;
+	if (mRequestedGridDimensions.x() == 0) {
+		mRequestedGridDimensions.x() = 4;
+		mRequestedGridDimensions.y() = 2;
 	}
 
 	// Get distance between tile points.
-	float tileDistanceX = (mSize.x() / mDesiredGridSize.x()) - getMargin().x();
-	float tileDistanceY = (mSize.y() / mDesiredGridSize.y()) - getMargin().y();
+	float tileDistanceX = (mSize.x() / mRequestedGridDimensions.x()) - getMargin().x();
+	float tileDistanceY = (mSize.y() / mRequestedGridDimensions.y()) - getMargin().y();
 
 	// Scale image by aspect ratio.
 	float ratioW = tileDistanceX / squareSize.x();
@@ -544,10 +545,10 @@ void ImageGridComponent<T>::buildImages()
 	squareSize.y() *= ratio;
 	
 	// The margin to add to have all tiles be evenly spaced and be flush with sides.
-	float realMargin = mSize.x() - (squareSize.x() * mDesiredGridSize.x());
-	realMargin /= mDesiredGridSize.x() - 1;
-	float realMarginY = mSize.y() - (squareSize.y() * mDesiredGridSize.y());
-	realMarginY /= mDesiredGridSize.y() - 1;
+	float realMargin = mSize.x() - (squareSize.x() * mRequestedGridDimensions.x());
+	realMargin /= mRequestedGridDimensions.x() - 1;
+	float realMarginY = mSize.y() - (squareSize.y() * mRequestedGridDimensions.y());
+	realMarginY /= mRequestedGridDimensions.y() - 1;
 
 	// Layout tile size and position
 	float tdy = 0;
