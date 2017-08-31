@@ -77,29 +77,17 @@ Here is a quick list of all Added theme options GridView has and that do somethi
 	<size> (only height can be modified)
 </container>
 
-<container name="md_grid_margin">
-	<size> (sets size width and height of margin between tiles)
-</container>
-
 // Current Game selected.
 <text name="md_title">
 	<ALL TEXT PROPERTIES>
 </text>
 
-// The container for the whole grid (will become a container in the future)
-<text name="md_grid">
+<imagegrid name="gamegrid">
 	<size>
 	<pos>
-</text>
-
-// Set how many rows and columns a grid has
-<container name="gridRowsAndColumns">
-	<size>column row</size>
-</container>
-
-// Replace the missing boxart texture
-<image name="missing_boxart">
-	<path>new_path</path>
-</image>
+	<margin> //sets size width and height of margin between tiles
+    <rowsAndColumns> [COLUMN] [ROW] </rowsAndColumns>   // Set how many rows and columns a grid has
+    <pathMissingBoxArt> [PATH] </pathMissingBoxArt>     // Replace the missing boxart texture
+</imagegrid>
 ```
 
