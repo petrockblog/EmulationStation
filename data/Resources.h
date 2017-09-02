@@ -11,9 +11,6 @@ extern const uint8_t splash_svg_data[];
 extern const uint16_t opensans_hebrew_condensed_light_ttf_size;
 extern const uint8_t opensans_hebrew_condensed_light_ttf_data[];
 
-extern const uint16_t blank_game_png_size;
-extern const uint8_t blank_game_png_data[];
-
 extern const uint16_t frame_png_size;
 extern const uint8_t frame_png_data[];
 
@@ -68,8 +65,14 @@ extern const uint8_t opensans_hebrew_condensed_regular_ttf_data[];
 extern const uint16_t star_unfilled_svg_size;
 extern const uint8_t star_unfilled_svg_data[];
 
+extern const uint16_t blank_game_png_size;
+extern const uint8_t blank_game_png_data[];
+
 extern const uint16_t busy_2_svg_size;
 extern const uint8_t busy_2_svg_data[];
+
+extern const uint16_t folder_png_size;
+extern const uint8_t folder_png_data[];
 
 extern const uint16_t on_svg_size;
 extern const uint8_t on_svg_data[];
