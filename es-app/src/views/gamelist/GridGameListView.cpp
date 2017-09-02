@@ -222,20 +222,23 @@ void GridGameListView::updateInfoPanel()
 		//mDescription.setText("");
 		fadingOut = true;
 	}
-	else {
+	else
+    {
 		mGameTitle.setText(file->getName());
+
 		mImage.setImage(file->metadata.get("image"));
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
-		if (file->getType() == GAME)
+        mRating.setValue(file->metadata.get("rating"));
+        mReleaseDate.setValue(file->metadata.get("releasedate"));
+        mDeveloper.setValue(file->metadata.get("developer"));
+        mPublisher.setValue(file->metadata.get("publisher"));
+        mGenre.setValue(file->metadata.get("genre"));
+        mPlayers.setValue(file->metadata.get("players"));
+
+        if (file->getType() == GAME)
 		{
-			mRating.setValue(file->metadata.get("rating"));
-			mReleaseDate.setValue(file->metadata.get("releasedate"));
-			mDeveloper.setValue(file->metadata.get("developer"));
-			mPublisher.setValue(file->metadata.get("publisher"));
-			mGenre.setValue(file->metadata.get("genre"));
-			mPlayers.setValue(file->metadata.get("players"));
 			mLastPlayed.setValue(file->metadata.get("lastplayed"));
 			mPlayCount.setValue(file->metadata.get("playcount"));
 		}
