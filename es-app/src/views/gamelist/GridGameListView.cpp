@@ -71,7 +71,8 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2 * padding), mSize.y() - mDescContainer.getPosition().y());
 	mDescContainer.setAutoScroll(true);
-	addChild(&mDescContainer);
+    mDescContainer.setDefaultZIndex(40);
+    addChild(&mDescContainer);
 
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
