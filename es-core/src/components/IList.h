@@ -170,9 +170,11 @@ public:
 	// Will load an object's texture from it's stored texture string.  
 	// Can be safely called many times without reloading texture.
 	void loadTexture(int index) {
-		if (!mEntries[index].isTextureLoaded) {
+		if (!mEntries[index].isTextureLoaded)
+		{
 			std::string imagePath = mEntries[index].strdata;
-			if (mEntries[index].object->getType() == 2) TextureResource::get(":/folder.png");
+			if (mEntries[index].object->getType() == 2)
+				TextureResource::get(":/folder.png");
 			else {
 				mEntries[index].data.texture = ResourceManager::getInstance()->fileExists(imagePath) ?
 					TextureResource::get(imagePath) : mMissingBoxartTexture;
@@ -188,8 +190,10 @@ public:
 	// Sets this image back to default texture.
 	void clearImage(int index) {
 		if (mEntries[index].isTextureLoaded) {
-			if (mEntries[index].object->getType() == 2) return;
-			else mEntries[index].data.texture = TextureResource::get(":/frame.png");
+			if (mEntries[index].object->getType() == 2)
+				return;
+			else
+				mEntries[index].data.texture = TextureResource::get(":/frame.png");
 			mEntries[index].isTextureLoaded = false;
 
 			// Subtract Loaded Texture Count
@@ -219,7 +223,8 @@ public:
 
 	void pop_back() {
 		mCursor = 0;
-		if (mEntries.size() > 1) mEntries.pop_back();
+		if (mEntries.size() > 1)
+			mEntries.pop_back();
 	}
 
 	inline int size() const { return mEntries.size(); }

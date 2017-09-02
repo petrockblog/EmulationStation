@@ -273,10 +273,12 @@ void ImageGridComponent<T>::reloadTextures() {
 
 template<typename T>
 void ImageGridComponent<T>::dynamicImageLoader() {
-	if (mLoadedTextureList.size() > MAX_TEXTURES) unloadTextures();
+	if (mLoadedTextureList.size() > MAX_TEXTURES)
+		unloadTextures();
 
 	// if cursor is getting close to the ends of range; update
-	if (getCursorIndex() > mCursorRange.max - 5 && getCursorIndex() < mCursorRange.min + 5) updateLoadRange();
+	if (getCursorIndex() > mCursorRange.max - 5 && getCursorIndex() < mCursorRange.min + 5)
+		updateLoadRange();
 
 	// Update range if user is out of range and no loading/unloading is being performed.
 	if (bLoading == false && bUnloaded && getCursorIndex() > mCursorRange.max || getCursorIndex() < mCursorRange.min)
@@ -286,48 +288,58 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 	if (bLoading && mScrollTier < 1) {
 		// Make sure index is in range.
 		if (mCurrentLoad < getEntryCount() && mCurrentLoad > 0) {
-			if (mLoadedTextureList.size() > MAX_TEXTURES) unloadTextures();
+			if (mLoadedTextureList.size() > MAX_TEXTURES)
+				unloadTextures();
 			static_cast<IList <ImageGridData, T >*>(this)->loadTexture(mCurrentLoad);
 		}
 
 		// update images as they load in.
 		updateImages();
 
-		if (mCurrentLoad < mCursorRange.max) mCurrentLoad++;
-		else bLoading = false;
+		if (mCurrentLoad < mCursorRange.max)
+			mCurrentLoad++;
+		else
+			bLoading = false;
 	}
 	else
 	{
-		if (bUnloaded) return;
+		if (bUnloaded)
+			return;
 
 		// Unload images that are out of range in the opposite direction the user is going
-		switch (mCurrentDirection) {
-		case MOVING_DOWN:
-			if (mCursorRange.min > 0) {
-				for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
-					if ((*i) >= mCursorRange.min) break;
-					clearImageAt((*i));
-					i = mLoadedTextureList.erase(i);
+		switch (mCurrentDirection)
+		{
+			case MOVING_DOWN:
+				if (mCursorRange.min > 0) {
+					for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++)
+					{
+						if ((*i) >= mCursorRange.min)
+							break;
+						clearImageAt((*i));
+						i = mLoadedTextureList.erase(i);
+					}
 				}
-			}
-			break;
+				break;
 
-		case MOVING_UP:
-			if (mCursorRange.max < getEntryCount()) {
-				for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
-					if ((*i) <= mCursorRange.max) break;
-					clearImageAt((*i));
-					i = mLoadedTextureList.erase(i);
+			case MOVING_UP:
+				if (mCursorRange.max < getEntryCount()) {
+					for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++)
+					{
+						if ((*i) <= mCursorRange.max)
+							break;
+						clearImageAt((*i));
+						i = mLoadedTextureList.erase(i);
+					}
 				}
-			}
-			break;
+				break;
 		}
 
 		bUnloaded = true;
 	}
 
 	// update and load after user exits out of fast scroll
-	if (mPrevScrollTier > 0 && mScrollTier == 0) {
+	if (mPrevScrollTier > 0 && mScrollTier == 0)
+	{
 		bLoading = false;
 		updateLoadRange();
 	}
@@ -338,7 +350,8 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 template<typename T>
 void ImageGridComponent<T>::updateLoadRange() {
 	// Only update range if not loading and not within last built range
-	if (bLoading) return;
+	if (bLoading)
+		return;
 
 	int cursorRange = CURSOR_RANGE;
 
@@ -346,7 +359,8 @@ void ImageGridComponent<T>::updateLoadRange() {
 	int cursor = getCursorIndex();
 
 	// return if index hasn't changed and range is setup
-	if (cursor == mPrevIndex && mCursorRange.length > 0) return;
+	if (cursor == mPrevIndex && mCursorRange.length > 0)
+		return;
 
 	// Get minimum [ will stay at 0 until user moves past 12. ]
 	int rmin = cursor - int(cursorRange / 2);
@@ -357,10 +371,12 @@ void ImageGridComponent<T>::updateLoadRange() {
 	if (rmin < cursorRange / 2)
 		rmax = cursor + int(cursorRange);
 	else rmax = cursor + int(cursorRange / 2);
-	if (rmax > getEntryCount()) rmax = getEntryCount() - 1;
+	if (rmax > getEntryCount())
+		rmax = getEntryCount() - 1;
 
 	// if there is only one game, set range 0-0
-	if (getEntryCount() == 1) rmax = 0;
+	if (getEntryCount() == 1)
+		rmax = 0;
 
 	mCursorRange.min = rmin;
 	mCursorRange.max = rmax;
@@ -417,9 +433,8 @@ void ImageGridComponent<T>::update(int deltaTime)
 {
 	listUpdate(deltaTime);
 
-	for (auto t = mTiles.begin(); t != mTiles.end(); t++) {
+	for (auto t = mTiles.begin(); t != mTiles.end(); t++)
 		(*t)->update(deltaTime);
-	}
 }
 
 template<typename T>
@@ -431,11 +446,12 @@ template<typename T>
 void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
 	// If this grid isn't in focus, return and do not render
-	if (!bVisible) return;
+	if (!bVisible)
+		return;
 
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 
-	if(mEntriesDirty)
+	if (mEntriesDirty)
 	{
 		buildImages();
 		updateImages();
@@ -445,24 +461,26 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	int i = 0;
 	std::shared_ptr<GridTileComponent> pTile;
 	bool bSelected = false;
-	for (auto ti = mTiles.begin(); ti != mTiles.end(); ti++) {
-		if (i > getEntryCount() - 1) break;
+	for (auto ti = mTiles.begin(); ti != mTiles.end(); ti++)
+	{
+		if (i > getEntryCount() - 1)
+			break;
 		// Keep the selected tile and render it later (so it draws on top others)
-		if ((*ti)->isSelected()) {
+		if ((*ti)->isSelected())
+		{
 			i++;
 			pTile = (*ti);
 			bSelected = true;
 		}
-		else {
+		else
+		{
 			i++;
 			(*ti)->render(trans);
 		}
 	}
 
-	if (bSelected) {
+	if (bSelected)
 		pTile->render(trans);
-	}
-
 
 	listRenderTitleOverlay(trans);
 
@@ -483,11 +501,13 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 	bThemeLoaded = true;
 
 	auto elem = theme->getElement(view, element, "imagegrid");
-	if (elem) {
+	if (elem)
+	{
 		if (elem->has("margin"))
 			setMargin(elem->get<Eigen::Vector2f>("margin").cwiseProduct(screen));
 
-		if (elem->has("rowsAndColumns")) {
+		if (elem->has("rowsAndColumns"))
+		{
 			Eigen::Vector2f requestedGridDimensions = elem->get<Eigen::Vector2f>("rowsAndColumns");
 			mRequestedGridDimensions.x() = (int)requestedGridDimensions.x();
 			mRequestedGridDimensions.y() = (int)requestedGridDimensions.y();
@@ -499,7 +519,7 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
             if (ResourceManager::getInstance()->fileExists(path))
                 mMissingBoxartTexture = TextureResource::get(path);
             else
-            LOG(LogWarning) << "Could not replace MissingBoxArt, check path: " << path;
+            	LOG(LogWarning) << "Could not replace MissingBoxArt, check path: " << path;
         }
 	}
 }
@@ -528,7 +548,8 @@ void ImageGridComponent<T>::buildImages()
 	Eigen::Vector2f squareSize = getMaxSquareSize();
 
 	// Setup gridsize either by default or from theme
-	if (mRequestedGridDimensions.x() == 0) {
+	if (mRequestedGridDimensions.x() == 0)
+	{
 		mRequestedGridDimensions.x() = 4;
 		mRequestedGridDimensions.y() = 2;
 	}
@@ -616,9 +637,10 @@ void ImageGridComponent<T>::updateImages()
 		{
 			tile->setSelected(true);
 			tile->show();
-		}else{
-			tile->setSelected(false);
 		}
+		else
+			tile->setSelected(false);
+
 		tile->setBackgroundPath(":/frame.png");
 		tile->setImage(mEntries.at(i).data.texture);
 		tile->setText(mEntries.at(i).name);
