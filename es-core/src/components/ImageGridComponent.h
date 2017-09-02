@@ -500,27 +500,32 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 	mTheme = theme;
 	bThemeLoaded = true;
 
-	auto elem = theme->getElement(view, element, "imagegrid");
-	if (elem)
-	{
-		if (elem->has("margin"))
-			setMargin(elem->get<Eigen::Vector2f>("margin").cwiseProduct(screen));
+	// Get hacked-in theme stuff
+	// Margin:
+	auto elem = theme->getElement(view, "md_grid_margin", "container");
+	if (elem) {
+		if (elem->has("size")) 
+			setMargin(elem->get<Eigen::Vector2f>("size").cwiseProduct(screen));
+	} 
 
-		if (elem->has("rowsAndColumns"))
-		{
-			Eigen::Vector2f requestedGridDimensions = elem->get<Eigen::Vector2f>("rowsAndColumns");
-			mRequestedGridDimensions.x() = (int)requestedGridDimensions.x();
-			mRequestedGridDimensions.y() = (int)requestedGridDimensions.y();
+	// Grid Size (Columns and Rows)
+	elem = theme->getElement(view, "gridRowsAndColumns", "container");
+	if (elem) {
+		if (elem->has("size")) {
+			Eigen::Vector2f RequestedGridDimensions = elem->get<Eigen::Vector2f>("size");
+			mRequestedGridDimensions.x() = (int)RequestedGridDimensions.x();
+			mRequestedGridDimensions.y() = (int)RequestedGridDimensions.y();
 		}
+	}
 
-        if (elem->has("pathMissingBoxArt"))
-        {
-            std::string path = elem->get<std::string>("pathMissingBoxArt");
-            if (ResourceManager::getInstance()->fileExists(path))
-                mMissingBoxartTexture = TextureResource::get(path);
-            else
-            	LOG(LogWarning) << "Could not replace MissingBoxArt, check path: " << path;
-        }
+	// Change default missing boxart icon
+	elem = theme->getElement(view, "missing_boxart", "image");
+	if (elem) {
+		std::string path = elem->get<std::string>("path");
+		if (ResourceManager::getInstance()->fileExists(path))
+			mMissingBoxartTexture = TextureResource::get(path);
+		else
+			LOG(LogWarning) << "Could not replace MissingBoxart, check path: " << path;
 	}
 }
 

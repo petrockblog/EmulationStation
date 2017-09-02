@@ -17,13 +17,10 @@ Display current selected game.
 
 Setup for the grid as a whole.
 ```xml
-<imagegrid name="gamegrid">
-    <pos>               // Size and position for the whole grid. pos origin is 0,0.
-    <size>
-    <margin>            // The margin between grid tiles.
-    <rowsAndColumns>    // sets the amount of rows and columns to fit into grid space.
-    <pathMissingBoxArt> // Changes the missing boxart texture. (can be done per system)
-</imagegrid>
+<text name="md_grid"> <pos> <size>             // Size and position for the whole grid.  pos origin is 0,0.
+<container name="md_grid_margin"> <size>       // The margin between grid tiles.
+<container name="gridRowsAndColumns"> <size>   // sets the amount of rows and columns to fit into grid space.
+<image name="missing_boxart"> <path>           // Changes the missing boxart texture.  (can be done per system)
 ```
 
 Gridtile modification
