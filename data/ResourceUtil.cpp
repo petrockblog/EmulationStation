@@ -2,7 +2,7 @@
 
 #include "Resources.h"
 
-const size_t res2hNrOfFiles = 47;
+const uint32_t res2hNrOfFiles = 47;
 const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/blank_game.png", blank_game_png_size, blank_game_png_data},
     {":/splash.svg", splash_svg_size, splash_svg_data},
