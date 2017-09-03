@@ -224,7 +224,7 @@ void GridGameListView::updateInfoPanel()
 		fadingOut = true;
 	}
 	else
-    {
+	{
 		mGameTitle.setText(file->getName());
 
 		mImage.setImage(file->metadata.get("image"));
