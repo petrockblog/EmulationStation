@@ -71,8 +71,8 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2 * padding), mSize.y() - mDescContainer.getPosition().y());
 	mDescContainer.setAutoScroll(true);
-    mDescContainer.setDefaultZIndex(40);
-    addChild(&mDescContainer);
+	mDescContainer.setDefaultZIndex(40);
+	addChild(&mDescContainer);
 
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
@@ -231,14 +231,14 @@ void GridGameListView::updateInfoPanel()
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
-        mRating.setValue(file->metadata.get("rating"));
-        mReleaseDate.setValue(file->metadata.get("releasedate"));
-        mDeveloper.setValue(file->metadata.get("developer"));
-        mPublisher.setValue(file->metadata.get("publisher"));
-        mGenre.setValue(file->metadata.get("genre"));
-        mPlayers.setValue(file->metadata.get("players"));
+		mRating.setValue(file->metadata.get("rating"));
+		mReleaseDate.setValue(file->metadata.get("releasedate"));
+		mDeveloper.setValue(file->metadata.get("developer"));
+		mPublisher.setValue(file->metadata.get("publisher"));
+		mGenre.setValue(file->metadata.get("genre"));
+		mPlayers.setValue(file->metadata.get("players"));
 
-        if (file->getType() == GAME)
+		if (file->getType() == GAME)
 		{
 			mLastPlayed.setValue(file->metadata.get("lastplayed"));
 			mPlayCount.setValue(file->metadata.get("playcount"));
