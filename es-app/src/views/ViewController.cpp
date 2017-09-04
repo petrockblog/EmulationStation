@@ -468,7 +468,10 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 	}
 	// Redisplay the current view
 	if (mCurrentView)
+	{
 		mCurrentView->onShow();
+		mCurrentView->onFocusGained();
+	}
 
 }
 

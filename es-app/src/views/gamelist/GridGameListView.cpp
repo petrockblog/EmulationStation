@@ -210,6 +210,7 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	mDescription.applyTheme(theme, getName(), "md_description", ALL ^ (POSITION | ThemeFlags::SIZE | ThemeFlags::ORIGIN | TEXT | ROTATION));
 
 	sortChildren();
+	onFocusGained();
 }
 
 void GridGameListView::updateInfoPanel()
