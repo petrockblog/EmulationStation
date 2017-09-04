@@ -174,7 +174,6 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 	if (elem) {
 		if (elem->has("color")) {
 			mAnimation.selected.color = elem->get<unsigned int>("color");
-			//mAnimation.selected.color = addAlpha(mAnimation.selected.color, 0xFF);
 			mAnimation.animateColor = true;
 		}
 		if (elem->has("size")) {
@@ -188,7 +187,6 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 	if (elem) {
 		if (elem->has("color")) {
 			mAnimation.unselected.color = elem->get<unsigned int>("color");
-			//mAnimation.unselected.color = addAlpha(mAnimation.current.color, 0xAA);
 			mAnimation.current.color = mAnimation.unselected.color;
 			mImage->setColorShift(mAnimation.current.color);
 		}
