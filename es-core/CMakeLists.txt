@@ -177,7 +177,7 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/busy_3_svg.cpp
 
     ${emulationstation-all_SOURCE_DIR}/data/converted/blank_game_png.cpp
-	${emulationstation-all_SOURCE_DIR}/data/converted/folder_png.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/folder_png.cpp
 )
 
 list(APPEND CORE_SOURCES ${EMBEDDED_ASSET_SOURCES})
