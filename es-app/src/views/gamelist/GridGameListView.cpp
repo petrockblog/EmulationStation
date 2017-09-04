@@ -36,7 +36,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	
 	mRoot = root;
 
-	populateList(mRoot->getChildren());
+	populateList(mRoot->getChildrenListToDisplay());
 
 	// --- DETAILED LIST METADATA ---
 	const float padding = 0.01f;
@@ -92,7 +92,7 @@ void GridGameListView::setCursor(FileData* file)
 {
 	if(!mGrid.setCursor(file) && mGrid.getEntryCount() > 0)
 	{
-		populateList(file->getParent()->getChildren());
+		populateList(file->getParent()->getChildrenListToDisplay());
 		mGrid.setCursor(file);
 		mGameTitle.setText(file->getName());
 	}
@@ -157,7 +157,7 @@ void GridGameListView::remove(FileData *game, bool deleteFile)
 		boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
 	if (getCursor() == game)                     // Select next element in list, or prev if none
 	{
-		std::vector<FileData*> siblings = game->getParent()->getChildren();
+		std::vector<FileData*> siblings = game->getParent()->getChildrenListToDisplay();
 		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
 		auto gamePos = std::distance(siblings.begin(), gameIter);
 		if (gameIter != siblings.end())
