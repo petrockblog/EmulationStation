@@ -178,6 +178,7 @@ endif()
 if(DEFINED BCMHOST)
     LIST(APPEND COMMON_LIBRARIES
         bcm_host
+	vchiq_arm
         EGL
         ${OPENGLES_LIBRARIES}
     )
