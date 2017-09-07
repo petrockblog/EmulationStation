@@ -1,6 +1,10 @@
 #pragma once
 
 #include "Window.h"
+#ifdef _RPI_
+#include "interface/vchi/vchi.h"
+#include "bcm_host.h"
+#endif
 
 class VideoComponent;
 
@@ -47,4 +51,7 @@ private:
 	std::string		mGameName;
 	std::string		mSystemName;
 	int 			mVideoChangeTime;
+	bool 			           mVchiInit;
+  VCHI_INSTANCE_T 	   mVchiInstance;
+	VCHI_CONNECTION_T 	*mVchiConnection = nullptr;
 };
