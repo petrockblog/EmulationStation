@@ -30,24 +30,24 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mSystemName(""),
 	mGameName(""),
 	mVchiInit(false),
-        mVchiInstance(0),
-        mVchiConnection(nullptr),
+  mVchiInstance(0),
+  mVchiConnection(nullptr),
 	mCurrentGame(NULL)
 {
 #ifdef _RPI_
-    if (vchi_initialise(&mVchiInstance) != 0) {
-      LOG(LogError) << "VCHI initialization failed";
-      return;
-    }
+  if (vchi_initialise(&mVchiInstance) != 0) {
+    LOG(LogError) << "VCHI initialization failed";
+    return;
+  }
 
-    //create a vchi connection
-    if (vchi_connect(NULL, 0, mVchiInstance) != 0) {
-      LOG(LogError) << "VCHI connection failed";
-      return;
-    }
+  //create a vchi connection
+  if (vchi_connect(NULL, 0, mVchiInstance) != 0) {
+    LOG(LogError) << "VCHI connection failed";
+    return;
+  }
 
-    vc_vchi_gencmd_init(mVchiInstance, &mVchiConnection, 1);
-    mVchiInit = true;
+  vc_vchi_gencmd_init(mVchiInstance, &mVchiConnection, 1);
+  mVchiInit = true;
 #endif
 	mWindow->setScreenSaver(this);
 	std::string path = getTitleFolder();
@@ -60,16 +60,15 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 SystemScreenSaver::~SystemScreenSaver()
 {
 #ifdef _RPI_
-    if (mVchiInit) {
-      int err;
+  if (mVchiInit) {
+    int err;
+    vc_gencmd_stop();
 
-      vc_gencmd_stop();
-
-      //close the vchi connection
-      if ((err = vchi_disconnect(mVchiInstance)) != 0) {
-        LOG(LogError) << "VCHI disconnect failed, err=" << err;
-      }
+    //close the vchi connection
+    if ((err = vchi_disconnect(mVchiInstance)) != 0) {
+      LOG(LogError) << "VCHI disconnect failed, err=" << err;
     }
+  }
 #endif
 	// Delete subtitle file, if existing
 	remove(getTitlePath().c_str());
@@ -149,6 +148,7 @@ void SystemScreenSaver::startScreenSaver()
 
 void SystemScreenSaver::stopScreenSaver()
 {
+
 #ifdef _RPI_
 	if (Settings::getInstance()->getString("ScreenSaverBehavior") == "black") {
 		int err;
@@ -156,18 +156,17 @@ void SystemScreenSaver::stopScreenSaver()
  		if (!mVchiInit) {
 		      return ;
 		}
-    	
+
 		if ((err = vc_gencmd_send("display_power 1")) != 0) {
 		      LOG(LogError) << "vc_gencmd_send returned " << err;
 		      return ;
 		}
-	    
-		    char rbuf[1024] = {0};
+
+	  char rbuf[1024] = {0};
 		if ((err = vc_gencmd_read_response(rbuf, sizeof(rbuf) - 1)) != 0) {
 		      LOG(LogError) << "vc_gencmd_read_response returned " << err;
 		      return;
-		}    
-		
+		}
 	}
 #endif
 	delete mVideoScreensaver;
@@ -197,25 +196,25 @@ void SystemScreenSaver::renderScreenSaver()
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
 		if (Settings::getInstance()->getString("ScreenSaverBehavior") == "dim") {
 			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | 0xA0);
-		} else { 
+		} else {
 			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | 0xFF);
 #ifdef _RPI_
-		    int err;
+		  int err;
 
-		    if (!mVchiInit) {
-		      return ;
-		    }
-    
-		    if ((err = vc_gencmd_send("display_power 0")) != 0) {
-		      LOG(LogError) << "vc_gencmd_send returned " << err;
-		      return ;
-		    }
-    
-		    char rbuf[1024] = {0};
-		    if ((err = vc_gencmd_read_response(rbuf, sizeof(rbuf) - 1)) != 0) {
-		      LOG(LogError) << "vc_gencmd_read_response returned " << err;
-		      return ;
-		    }    
+		  if (!mVchiInit) {
+		    return ;
+		  }
+
+		  if ((err = vc_gencmd_send("display_power 0")) != 0) {
+		    LOG(LogError) << "vc_gencmd_send returned " << err;
+		    return ;
+		  }
+
+		  char rbuf[1024] = {0};
+		  if ((err = vc_gencmd_read_response(rbuf, sizeof(rbuf) - 1)) != 0) {
+		    LOG(LogError) << "vc_gencmd_read_response returned " << err;
+		    return ;
+		  }
 #endif
 		}
 	}

@@ -51,8 +51,7 @@ private:
 	std::string		mGameName;
 	std::string		mSystemName;
 	int 			mVideoChangeTime;
-	bool 			mVchiInit;
-  	VCHI_INSTANCE_T 	mVchiInstance;
+	bool 			           mVchiInit;
+  VCHI_INSTANCE_T 	   mVchiInstance;
 	VCHI_CONNECTION_T 	*mVchiConnection = nullptr;
-
 };
