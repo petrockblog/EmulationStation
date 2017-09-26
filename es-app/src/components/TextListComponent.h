@@ -142,7 +142,11 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 
 	if(size() == 0)
 		return;
-
+	
+        /* force update info before we render if cursor is on first element */
+  	if(mCursor == 0)
+                stopScrolling();
+	
 	const float entrySize = std::max(font->getHeight(1.0), (float)font->getSize()) * mLineSpacing;
 
 	int startEntry = 0;
