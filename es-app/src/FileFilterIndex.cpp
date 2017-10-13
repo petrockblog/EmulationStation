@@ -4,15 +4,16 @@
 #define INCLUDE_UNKNOWN false;
 
 FileFilterIndex::FileFilterIndex()
-	: filterByGenre(false), filterByPlayers(false), filterByPubDev(false), filterByRatings(false), filterByFavorites(false)
+	: filterByGenre(false), filterByPlayers(false), filterByPubDev(false), filterByRatings(false), filterByFavorites(false), filterByAchievements(false)
 {
 	FilterDataDecl filterDecls[] = {
-		//type 				//allKeys 				//filteredBy 		//filteredKeys 				//primaryKey 	//hasSecondaryKey 	//secondaryKey 	//menuLabel
-		{ FAVORITES_FILTER, &favoritesIndexAllKeys, &filterByFavorites,	&favoritesIndexFilteredKeys,"favorite",		false,				"",				"FAVORITES"	},
-		{ GENRE_FILTER, 	&genreIndexAllKeys, 	&filterByGenre,		&genreIndexFilteredKeys, 	"genre",		true,				"genre",		"GENRE"	},
-		{ PLAYER_FILTER, 	&playersIndexAllKeys, 	&filterByPlayers,	&playersIndexFilteredKeys, 	"players",		false,				"",				"PLAYERS"	},
-		{ PUBDEV_FILTER, 	&pubDevIndexAllKeys, 	&filterByPubDev,	&pubDevIndexFilteredKeys, 	"developer",	true,				"publisher",	"PUBLISHER / DEVELOPER"	},
-		{ RATINGS_FILTER, 	&ratingsIndexAllKeys, 	&filterByRatings,	&ratingsIndexFilteredKeys, 	"rating",		false,				"",				"RATING"	}
+		//type                 //allKeys                  //filteredBy           //filteredKeys                  //primaryKey    //hasSecondaryKey   //secondaryKey  //menuLabel
+		{ FAVORITES_FILTER,    &favoritesIndexAllKeys,    &filterByFavorites,    &favoritesIndexFilteredKeys,    "favorite",     false,              "",             "FAVORITES" },
+		{ GENRE_FILTER,        &genreIndexAllKeys,        &filterByGenre,        &genreIndexFilteredKeys,        "genre",        true,               "genre",        "GENRE" },
+		{ PLAYER_FILTER,       &playersIndexAllKeys,      &filterByPlayers,      &playersIndexFilteredKeys,      "players",      false,              "",             "PLAYERS"   },
+		{ PUBDEV_FILTER,       &pubDevIndexAllKeys,       &filterByPubDev,       &pubDevIndexFilteredKeys,       "developer",    true,               "publisher",    "PUBLISHER / DEVELOPER" },
+		{ RATINGS_FILTER,      &ratingsIndexAllKeys,      &filterByRatings,      &ratingsIndexFilteredKeys,      "rating",       false,              "",             "RATING"    },
+		{ ACHIEVEMENTS_FILTER, &achievementsIndexAllKeys, &filterByAchievements, &achievementsIndexFilteredKeys, "achievements", false,              "",             "ACHIEVEMENTS"  },
 	};
 
 	filterDataDecl = std::vector<FilterDataDecl>(filterDecls, filterDecls + sizeof(filterDecls) / sizeof(filterDecls[0]));
@@ -31,17 +32,18 @@ std::vector<FilterDataDecl>& FileFilterIndex::getFilterDataDecls()
 void FileFilterIndex::importIndex(FileFilterIndex* indexToImport)
 {
 	struct IndexImportStructure
-    {
-      std::map<std::string, int>* destinationIndex;
-      std::map<std::string, int>* sourceIndex;
-    };
+	{
+		std::map<std::string, int>* destinationIndex;
+		std::map<std::string, int>* sourceIndex;
+	};
 
 	IndexImportStructure indexStructDecls[] = {
 		{ &genreIndexAllKeys, &(indexToImport->genreIndexAllKeys) },
 		{ &playersIndexAllKeys, &(indexToImport->playersIndexAllKeys) },
 		{ &pubDevIndexAllKeys, &(indexToImport->pubDevIndexAllKeys) },
 		{ &ratingsIndexAllKeys, &(indexToImport->ratingsIndexAllKeys) },
-		{ &favoritesIndexAllKeys, &(indexToImport->favoritesIndexAllKeys) }
+		{ &favoritesIndexAllKeys, &(indexToImport->favoritesIndexAllKeys) },
+		{ &achievementsIndexAllKeys, &(indexToImport->achievementsIndexAllKeys) }
 	};
 
 	std::vector<IndexImportStructure> indexImportDecl = std::vector<IndexImportStructure>(indexStructDecls, indexStructDecls + sizeof(indexStructDecls) / sizeof(indexStructDecls[0]));
@@ -70,6 +72,7 @@ void FileFilterIndex::resetIndex()
 	clearIndex(pubDevIndexAllKeys);
 	clearIndex(ratingsIndexAllKeys);
 	clearIndex(favoritesIndexAllKeys);
+	clearIndex(achievementsIndexAllKeys);
 }
 
 std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType type, bool getSecondary)
@@ -144,6 +147,13 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 			key = strToUpper(game->metadata.get("favorite"));
 			break;
 		}
+		case ACHIEVEMENTS_FILTER:
+		{
+			if (game->getType() != GAME)
+				return "FALSE";
+			key = strToUpper(game->metadata.get("achievements"));
+			break;
+		}
 	}
 	boost::trim(key);
 	if (key.empty() || (type == RATINGS_FILTER && key == "0 STARS")) {
@@ -159,6 +169,7 @@ void FileFilterIndex::addToIndex(FileData* game)
 	managePubDevEntryInIndex(game);
 	manageRatingsEntryInIndex(game);
 	manageFavoritesEntryInIndex(game);
+	manageAchievementsEntryInIndex(game);
 }
 
 void FileFilterIndex::removeFromIndex(FileData* game)
@@ -168,6 +179,7 @@ void FileFilterIndex::removeFromIndex(FileData* game)
 	managePubDevEntryInIndex(game, true);
 	manageRatingsEntryInIndex(game, true);
 	manageFavoritesEntryInIndex(game, true);
+	manageAchievementsEntryInIndex(game, true);
 }
 
 void FileFilterIndex::setFilter(FilterIndexType type, std::vector<std::string>* values)
@@ -225,6 +237,9 @@ void FileFilterIndex::debugPrintIndexes()
 	}
 	for (auto x: favoritesIndexAllKeys) {
 		LOG(LogInfo) << "Favorites Index: " << x.first << ": " << x.second;
+	}
+	for (auto x: achievementsIndexAllKeys) {
+		LOG(LogInfo) << "Achievements Index: " << x.first << ": " << x.second;
 	}
 }
 
@@ -285,8 +300,8 @@ bool FileFilterIndex::showFile(FileData* game)
 
 bool FileFilterIndex::isKeyBeingFilteredBy(std::string key, FilterIndexType type)
 {
-	const FilterIndexType filterTypes[5] = { FAVORITES_FILTER, PLAYER_FILTER, RATINGS_FILTER, GENRE_FILTER, PUBDEV_FILTER };
-	std::vector<std::string> filterKeysList[5] = { favoritesIndexFilteredKeys, playersIndexFilteredKeys, ratingsIndexFilteredKeys, genreIndexFilteredKeys, pubDevIndexFilteredKeys };
+	const FilterIndexType filterTypes[6] = { FAVORITES_FILTER, ACHIEVEMENTS_FILTER, PLAYER_FILTER, RATINGS_FILTER, GENRE_FILTER, PUBDEV_FILTER };
+	std::vector<std::string> filterKeysList[6] = { favoritesIndexFilteredKeys, achievementsIndexFilteredKeys, playersIndexFilteredKeys, ratingsIndexFilteredKeys, genreIndexFilteredKeys, pubDevIndexFilteredKeys };
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -409,6 +424,19 @@ void FileFilterIndex::manageFavoritesEntryInIndex(FileData* game, bool remove)
 	}
 
 	manageIndexEntry(&favoritesIndexAllKeys, key, remove);
+}
+
+void FileFilterIndex::manageAchievementsEntryInIndex(FileData* game, bool remove)
+{
+	// flag for including unknowns
+	bool includeUnknown = INCLUDE_UNKNOWN;
+	std::string key = getIndexableKey(game, ACHIEVEMENTS_FILTER, false);
+	if (!includeUnknown && key == UNKNOWN_LABEL) {
+		// no valid achievements info found
+		return;
+	}
+
+	manageIndexEntry(&achievementsIndexAllKeys, key, remove);
 }
 
 void FileFilterIndex::manageIndexEntry(std::map<std::string, int>* index, std::string key, bool remove) {
