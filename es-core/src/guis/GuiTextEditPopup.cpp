@@ -1,11 +1,9 @@
 #include "guis/GuiTextEditPopup.h"
 #include "components/MenuComponent.h"
 
-using namespace Eigen;
-
 GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, const std::string& initValue, 
 	const std::function<void(const std::string&)>& okCallback, bool multiLine, const char* acceptBtnText)
-	: GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 3)), mMultiLine(multiLine)
+	: GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Eigen::Vector2i(1, 3)), mMultiLine(multiLine)
 {
 	addChild(&mBackground);
 	addChild(&mGrid);
@@ -24,9 +22,9 @@ GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, con
 
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 
-	mGrid.setEntry(mTitle, Vector2i(0, 0), false, true);
-	mGrid.setEntry(mText, Vector2i(0, 1), true, false, Vector2i(1, 1), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
-	mGrid.setEntry(mButtonGrid, Vector2i(0, 2), true, false);
+	mGrid.setEntry(mTitle, Eigen::Vector2i(0, 0), false, true);
+	mGrid.setEntry(mText, Eigen::Vector2i(0, 1), true, false, Eigen::Vector2i(1, 1), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
+	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 2), true, false);
 
 	float textHeight = mText->getFont()->getHeight();
 	if(multiLine)
