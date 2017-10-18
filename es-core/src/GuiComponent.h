@@ -3,7 +3,8 @@
 #include "InputConfig.h"
 #include <memory>
 #include <string>
-#include <Eigen/Dense>
+#include <functional>
+#include "math/Math.h"
 #include "HelpStyle.h"
 
 class Window;

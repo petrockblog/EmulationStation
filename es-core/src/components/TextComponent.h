@@ -55,7 +55,7 @@ private:
 
 	std::shared_ptr<Font> mFont;
 	bool mUppercase;
-	Eigen::Matrix<bool, 1, 2> mAutoCalcExtent;
+	Eigen::Vector2b mAutoCalcExtent;
 	std::string mText;
 	std::shared_ptr<TextCache> mTextCache;
 	Alignment mHorizontalAlignment;

@@ -46,8 +46,8 @@ void IGameListView::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
 
-	float scaleX = trans.linear()(0,0);
-	float scaleY = trans.linear()(1,1);
+	float scaleX = trans[0];
+	float scaleY = trans[5];
 
 	Eigen::Vector2i pos(trans.translation()[0], trans.translation()[1]);
 	Eigen::Vector2i size(mSize.x() * scaleX, mSize.y() * scaleY);

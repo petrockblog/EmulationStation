@@ -241,11 +241,11 @@ void GuiComponent::setOpacity(unsigned char opacity)
 
 const Eigen::Affine3f& GuiComponent::getTransform()
 {
-	mTransform.setIdentity();
+	mTransform = Eigen::Affine3f::Identity();
 	mTransform.translate(mPosition);
 	if (mScale != 1.0)
 	{
-		mTransform *= Eigen::Scaling(mScale);
+		mTransform.scale(mScale);
 	}
 	if (mRotation != 0.0)
 	{
@@ -257,8 +257,8 @@ const Eigen::Affine3f& GuiComponent::getTransform()
 		if (xOff != 0.0 || yOff != 0.0)
 			mTransform.translate(Eigen::Vector3f(xOff * -1, yOff * -1, 0.0f));
 
-		// apply rotation transorm
-		mTransform *= Eigen::AngleAxisf(mRotation, Eigen::Vector3f::UnitZ());
+		// apply rotation transform
+		mTransform.rotate(mRotation, Eigen::Vector3f::UnitZ());
 
 		// Tranform back to original point
 		if (xOff != 0.0 || yOff != 0.0)

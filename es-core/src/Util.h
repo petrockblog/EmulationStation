@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <Eigen/Dense>
+#include "math/Math.h"
 #include <boost/filesystem.hpp>
 #include <boost/date_time.hpp>
 

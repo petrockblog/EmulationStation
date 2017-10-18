@@ -5,7 +5,7 @@
 #include <string>
 #include <set>
 #include <list>
-#include <Eigen/Dense>
+#include "math/Math.h"
 #include "platform.h"
 #include "resources/TextureData.h"
 #include "resources/TextureDataManager.h"

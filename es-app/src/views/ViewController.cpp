@@ -152,7 +152,7 @@ void ViewController::goToRandomGame()
 
 void ViewController::playViewTransition()
 {
-	Eigen::Vector3f target(Eigen::Vector3f::Identity());
+	Eigen::Vector3f target(Eigen::Vector3f::Zero());
 	if(mCurrentView)
 		target = mCurrentView->getPosition();
 
