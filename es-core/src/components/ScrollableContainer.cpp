@@ -11,9 +11,9 @@ ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window),
 {
 }
 
-void ScrollableContainer::render(const Affine3f& parentTrans)
+void ScrollableContainer::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 
 	Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());
 

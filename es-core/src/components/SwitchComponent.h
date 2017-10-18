@@ -11,7 +11,7 @@ public:
 	SwitchComponent(Window* window, bool state = false);
 
 	bool input(InputConfig* config, Input input) override;
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 	void onSizeChanged() override;
 
 	bool getState() const;

@@ -34,16 +34,16 @@ float round(float num)
 }
 #endif
 
-Affine3f& roundMatrix(Affine3f& mat)
+Matrix4x4f& roundMatrix(Matrix4x4f& mat)
 {
 	mat.translation()[0] = round(mat.translation()[0]);
 	mat.translation()[1] = round(mat.translation()[1]);
 	return mat;
 }
 
-Affine3f roundMatrix(const Affine3f& mat)
+Matrix4x4f roundMatrix(const Matrix4x4f& mat)
 {
-	Affine3f ret = mat;
+	Matrix4x4f ret = mat;
 	roundMatrix(ret);
 	return ret;
 }

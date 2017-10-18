@@ -84,9 +84,9 @@ void ButtonComponent::updateImage()
 	mBox.setImagePath(mFocused ? ":/button_filled.png" : ":/button.png");
 }
 
-void ButtonComponent::render(const Affine3f& parentTrans)
+void ButtonComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Matrix4x4f trans = roundMatrix(parentTrans * getTransform());
 	
 	mBox.render(trans);
 

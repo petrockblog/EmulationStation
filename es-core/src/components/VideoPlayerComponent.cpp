@@ -32,7 +32,7 @@ VideoPlayerComponent::~VideoPlayerComponent()
 	stopVideo();
 }
 
-void VideoPlayerComponent::render(const Affine3f& parentTrans)
+void VideoPlayerComponent::render(const Matrix4x4f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
 

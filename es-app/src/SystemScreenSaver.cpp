@@ -209,20 +209,20 @@ void SystemScreenSaver::renderScreenSaver()
 	if (mVideoScreensaver && screensaver_behavior == "random video")
 	{
 		// Render black background
-		Renderer::setMatrix(Affine3f::Identity());
+		Renderer::setMatrix(Matrix4x4f::Identity());
 		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), (unsigned char)(255));
 
 		// Only render the video if the state requires it
 		if ((int)mState >= STATE_FADE_IN_VIDEO)
 		{
-			Affine3f transform = Affine3f::Identity();
+			Matrix4x4f transform = Matrix4x4f::Identity();
 			mVideoScreensaver->render(transform);
 		}
 	}
 	else if (mImageScreensaver && screensaver_behavior == "slideshow")
 	{
 		// Render black background
-		Renderer::setMatrix(Affine3f::Identity());
+		Renderer::setMatrix(Matrix4x4f::Identity());
 		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), (unsigned char)(255));
 
 		// Only render the video if the state requires it
@@ -232,7 +232,7 @@ void SystemScreenSaver::renderScreenSaver()
 			{
 				mImageScreensaver->setOpacity(255-mOpacity);
 
-				Affine3f transform = Affine3f::Identity();
+				Matrix4x4f transform = Matrix4x4f::Identity();
 				mImageScreensaver->render(transform);
 			}
 		}
@@ -248,7 +248,7 @@ void SystemScreenSaver::renderScreenSaver()
 	}
 	else if (mState != STATE_INACTIVE)
 	{
-		Renderer::setMatrix(Affine3f::Identity());
+		Renderer::setMatrix(Matrix4x4f::Identity());
 		unsigned char opacity = screensaver_behavior == "dim" ? 0xA0 : 0xFF;
 		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
 	}

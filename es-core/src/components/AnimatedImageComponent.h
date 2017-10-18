@@ -24,7 +24,7 @@ public:
 	void reset(); // set to frame 0
 
 	void update(int deltaTime) override;
-	void render(const Affine3f& trans) override;
+	void render(const Matrix4x4f& trans) override;
 
 	void onSizeChanged() override;
 

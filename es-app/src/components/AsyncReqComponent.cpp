@@ -33,9 +33,9 @@ void AsyncReqComponent::update(int deltaTime)
 	mTime += deltaTime;
 }
 
-void AsyncReqComponent::render(const Affine3f& parentTrans)
+void AsyncReqComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = Affine3f::Identity();
+	Matrix4x4f trans = Matrix4x4f::Identity();
 	trans = trans.translate(Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0));
 	Renderer::setMatrix(trans);
 

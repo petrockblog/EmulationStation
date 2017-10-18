@@ -139,9 +139,9 @@ void NinePatchComponent::buildVertices()
 	}
 }
 
-void NinePatchComponent::render(const Affine3f& parentTrans)
+void NinePatchComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Matrix4x4f trans = roundMatrix(parentTrans * getTransform());
 	
 	if(mTexture && mVertices != NULL)
 	{

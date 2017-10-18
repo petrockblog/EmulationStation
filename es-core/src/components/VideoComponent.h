@@ -52,8 +52,8 @@ public:
 	void onSizeChanged() override;
 	void setOpacity(unsigned char opacity) override;
 
-	void render(const Affine3f& parentTrans) override;
-	void renderSnapshot(const Affine3f& parentTrans);
+	void render(const Matrix4x4f& parentTrans) override;
+	void renderSnapshot(const Matrix4x4f& parentTrans);
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 

@@ -327,12 +327,12 @@ void SystemView::onCursorChanged(const CursorState& state)
 	setAnimation(anim, 0, nullptr, false, 0);
 }
 
-void SystemView::render(const Affine3f& parentTrans)
+void SystemView::render(const Matrix4x4f& parentTrans)
 {
 	if(size() == 0)
 		return;  // nothing to render
 
-	Affine3f trans = getTransform() * parentTrans;
+	Matrix4x4f trans = getTransform() * parentTrans;
 
 	auto systemInfoZIndex = mSystemInfo.getZIndex();
 	auto minMax = std::minmax(mCarousel.zIndex, systemInfoZIndex);
@@ -409,10 +409,10 @@ void  SystemView::getViewElements(const std::shared_ptr<ThemeData>& theme)
 }
 
 //  Render system carousel
-void SystemView::renderCarousel(const Affine3f& trans)
+void SystemView::renderCarousel(const Matrix4x4f& trans)
 {
 	// background box behind logos
-	Affine3f carouselTrans = trans;
+	Matrix4x4f carouselTrans = trans;
 	carouselTrans.translate(Vector3f(mCarousel.pos.x(), mCarousel.pos.y(), 0.0));
 	carouselTrans.translate(Vector3f(mCarousel.origin.x() * mCarousel.size.x() * -1, mCarousel.origin.y() * mCarousel.size.y() * -1, 0.0f));
 
@@ -484,7 +484,7 @@ void SystemView::renderCarousel(const Affine3f& trans)
 		while (index >= (int)mEntries.size())
 			index -= mEntries.size();
 
-		Affine3f logoTrans = carouselTrans;
+		Matrix4x4f logoTrans = carouselTrans;
 		logoTrans.translate(Vector3f(i * logoSpacing[0] + xOff, i * logoSpacing[1] + yOff, 0));
 
 		float distance = i - mCamOffset;
@@ -508,14 +508,14 @@ void SystemView::renderCarousel(const Affine3f& trans)
 	Renderer::popClipRect();
 }
 
-void SystemView::renderInfoBar(const Affine3f& trans)
+void SystemView::renderInfoBar(const Matrix4x4f& trans)
 {
 	Renderer::setMatrix(trans);
 	mSystemInfo.render(trans);
 }
 
 // Draw background extras
-void SystemView::renderExtras(const Affine3f& trans, float lower, float upper)
+void SystemView::renderExtras(const Matrix4x4f& trans, float lower, float upper)
 {
 	int extrasCenter = (int)mExtrasCamOffset;
 
@@ -535,7 +535,7 @@ void SystemView::renderExtras(const Affine3f& trans, float lower, float upper)
 		//Only render selected system when not showing
 		if (mShowing || index == mCursor)
 		{
-			Affine3f extrasTrans = trans;
+			Matrix4x4f extrasTrans = trans;
 			if (mCarousel.type == HORIZONTAL)
 				extrasTrans.translate(Vector3f((i - mExtrasCamOffset) * mSize.x(), 0, 0));
 			else
@@ -556,7 +556,7 @@ void SystemView::renderExtras(const Affine3f& trans, float lower, float upper)
 	Renderer::popClipRect();
 }
 
-void SystemView::renderFade(const Affine3f& trans)
+void SystemView::renderFade(const Matrix4x4f& trans)
 {
 	// fade extras if necessary
 	if (mExtrasFadeOpacity)

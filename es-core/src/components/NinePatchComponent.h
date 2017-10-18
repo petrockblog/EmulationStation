@@ -20,7 +20,7 @@ public:
 	NinePatchComponent(Window* window, const std::string& path = "", unsigned int edgeColor = 0xFFFFFFFF, unsigned int centerColor = 0xFFFFFFFF);
 	virtual ~NinePatchComponent();
 
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 	void onSizeChanged() override;
 

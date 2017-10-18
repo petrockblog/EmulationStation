@@ -130,9 +130,9 @@ void HelpComponent::setOpacity(unsigned char opacity)
 	}
 }
 
-void HelpComponent::render(const Affine3f& parentTrans)
+void HelpComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 	
 	if(mGrid)
 		mGrid->render(trans);

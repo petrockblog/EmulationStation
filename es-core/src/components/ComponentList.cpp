@@ -157,12 +157,12 @@ void ComponentList::updateCameraOffset()
 	}
 }
 
-void ComponentList::render(const Affine3f& parentTrans)
+void ComponentList::render(const Matrix4x4f& parentTrans)
 {
 	if(!size())
 		return;
 
-	Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Matrix4x4f trans = roundMatrix(parentTrans * getTransform());
 
 	// clip everything to be inside our bounds
 	Vector3f dim(mSize.x(), mSize.y(), 0);

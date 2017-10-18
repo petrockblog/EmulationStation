@@ -29,7 +29,7 @@ public:
 	void setBackgroundColor(unsigned int color);
 	void setRenderBackground(bool render);
 
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 	std::string getValue() const override;
 	void setValue(const std::string& value) override;

@@ -51,7 +51,7 @@ public:
 
 	bool hasImage();
 
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 

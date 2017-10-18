@@ -157,9 +157,4 @@ typedef Matrix4x4<int>    Matrix4x4i;
 typedef Matrix4x4<float>  Matrix4x4f;
 typedef Matrix4x4<double> Matrix4x4d;
 
-typedef Matrix4x4<bool>   Affine3b;
-typedef Matrix4x4<int>    Affine3i;
-typedef Matrix4x4<float>  Affine3f;
-typedef Matrix4x4<double> Affine3d;
-
 #endif

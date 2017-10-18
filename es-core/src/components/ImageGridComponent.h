@@ -37,7 +37,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 private:
 	Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
@@ -147,9 +147,9 @@ void ImageGridComponent<T>::update(int deltaTime)
 }
 
 template<typename T>
-void ImageGridComponent<T>::render(const Affine3f& parentTrans)
+void ImageGridComponent<T>::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = getTransform() * parentTrans;
+	Matrix4x4f trans = getTransform() * parentTrans;
 
 	if(mEntriesDirty)
 	{

@@ -51,7 +51,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 	void onThemeChanged(const std::shared_ptr<ThemeData>& theme);
 
@@ -67,10 +67,10 @@ private:
 	void getDefaultElements(void);
 	void getCarouselFromTheme(const ThemeData::ThemeElement* elem);
 
-	void renderCarousel(const Affine3f& parentTrans);
-	void renderExtras(const Affine3f& parentTrans, float lower, float upper);
-	void renderInfoBar(const Affine3f& trans);
-	void renderFade(const Affine3f& trans);
+	void renderCarousel(const Matrix4x4f& parentTrans);
+	void renderExtras(const Matrix4x4f& parentTrans, float lower, float upper);
+	void renderInfoBar(const Matrix4x4f& trans);
+	void renderFade(const Matrix4x4f& trans);
 
 
 	SystemViewCarousel mCarousel;

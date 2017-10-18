@@ -42,7 +42,7 @@ public:
 	
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	void add(const std::string& name, const T& obj, unsigned int colorId);
@@ -134,9 +134,9 @@ TextListComponent<T>::TextListComponent(Window* window) :
 }
 
 template <typename T>
-void TextListComponent<T>::render(const Affine3f& parentTrans)
+void TextListComponent<T>::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 	
 	std::shared_ptr<Font>& font = mFont;
 
@@ -221,7 +221,7 @@ void TextListComponent<T>::render(const Affine3f& parentTrans)
 		if(mCursor == i)
 			offset[0] -= mMarqueeOffset;
 		
-		Affine3f drawTrans = trans;
+		Matrix4x4f drawTrans = trans;
 		drawTrans.translate(offset);
 		Renderer::setMatrix(drawTrans);
 

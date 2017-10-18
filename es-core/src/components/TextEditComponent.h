@@ -15,7 +15,7 @@ public:
 	void textInput(const char* text) override;
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 	void onFocusGained() override;
 	void onFocusLost() override;

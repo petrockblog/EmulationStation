@@ -228,7 +228,7 @@ void Window::update(int deltaTime)
 
 void Window::render()
 {
-	Affine3f transform = Affine3f::Identity();
+	Matrix4x4f transform = Matrix4x4f::Identity();
 
 	mRenderedHelpPrompts = false;
 
@@ -251,7 +251,7 @@ void Window::render()
 
 	if(Settings::getInstance()->getBool("DrawFramerate") && mFrameDataText)
 	{
-		Renderer::setMatrix(Affine3f::Identity());
+		Renderer::setMatrix(Matrix4x4f::Identity());
 		mDefaultFonts.at(1)->renderTextCache(mFrameDataText.get());
 	}
 
@@ -296,7 +296,7 @@ void Window::setAllowSleep(bool sleep)
 
 void Window::renderLoadingScreen()
 {
-	Affine3f trans = Affine3f::Identity();
+	Matrix4x4f trans = Matrix4x4f::Identity();
 	Renderer::setMatrix(trans);
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF);
 
@@ -319,7 +319,7 @@ void Window::renderLoadingScreen()
 
 void Window::renderHelpPromptsEarly()
 {
-	mHelp->render(Affine3f::Identity());
+	mHelp->render(Matrix4x4f::Identity());
 	mRenderedHelpPrompts = true;
 }
 

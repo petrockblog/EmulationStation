@@ -247,7 +247,7 @@ protected:
 			scroll(mScrollVelocity);
 	}
 
-	void listRenderTitleOverlay(const Affine3f& trans)
+	void listRenderTitleOverlay(const Matrix4x4f& trans)
 	{
 		if(size() == 0 || !mTitleOverlayFont || mTitleOverlayOpacity == 0)
 			return;
@@ -259,7 +259,7 @@ protected:
 		off[0] = (Renderer::getScreenWidth() - off.x()) * 0.5f;
 		off[1] = (Renderer::getScreenHeight() - off.y()) * 0.5f;
 		
-		Affine3f identTrans = Affine3f::Identity();
+		Matrix4x4f identTrans = Matrix4x4f::Identity();
 
 		mGradient.setOpacity(mTitleOverlayOpacity);
 		mGradient.render(identTrans);

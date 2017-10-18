@@ -153,11 +153,11 @@ void VideoComponent::setOpacity(unsigned char opacity)
 	mStaticImage.setOpacity(opacity);
 }
 
-void VideoComponent::render(const Affine3f& parentTrans)
+void VideoComponent::render(const Matrix4x4f& parentTrans)
 {
 	float x, y;
 
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 
 	Renderer::setMatrix(trans);
@@ -169,7 +169,7 @@ void VideoComponent::render(const Affine3f& parentTrans)
 	handleLooping();
 }
 
-void VideoComponent::renderSnapshot(const Affine3f& parentTrans)
+void VideoComponent::renderSnapshot(const Matrix4x4f& parentTrans)
 {
 	// This is the case where the video is not currently being displayed. Work out
 	// if we need to display a static image

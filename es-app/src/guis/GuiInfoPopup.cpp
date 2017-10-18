@@ -60,10 +60,10 @@ GuiInfoPopup::~GuiInfoPopup()
 
 }
 
-void GuiInfoPopup::render(const Affine3f& parentTrans)
+void GuiInfoPopup::render(const Matrix4x4f& parentTrans)
 {
 	// we use identity as we want to render on a specific window position, not on the view
-	Affine3f trans = getTransform() * Affine3f::Identity();
+	Matrix4x4f trans = getTransform() * Matrix4x4f::Identity();
 	if(running && updateState())
 	{
 		// if we're still supposed to be rendering it

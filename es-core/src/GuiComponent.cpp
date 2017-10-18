@@ -7,7 +7,7 @@
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255),
 	mPosition(Vector3f::Zero()), mOrigin(Vector2f::Zero()), mRotationOrigin(0.5, 0.5),
-	mSize(Vector2f::Zero()), mTransform(Affine3f::Identity()), mIsProcessing(false)
+	mSize(Vector2f::Zero()), mTransform(Matrix4x4f::Identity()), mIsProcessing(false)
 {
 	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
 		mAnimationMap[i] = NULL;
@@ -57,13 +57,13 @@ void GuiComponent::update(int deltaTime)
 	updateChildren(deltaTime);
 }
 
-void GuiComponent::render(const Affine3f& parentTrans)
+void GuiComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 	renderChildren(trans);
 }
 
-void GuiComponent::renderChildren(const Affine3f& transform) const
+void GuiComponent::renderChildren(const Matrix4x4f& transform) const
 {
 	for(unsigned int i = 0; i < getChildCount(); i++)
 	{
@@ -239,9 +239,9 @@ void GuiComponent::setOpacity(unsigned char opacity)
 	}
 }
 
-const Affine3f& GuiComponent::getTransform()
+const Matrix4x4f& GuiComponent::getTransform()
 {
-	mTransform = Affine3f::Identity();
+	mTransform = Matrix4x4f::Identity();
 	mTransform.translate(mPosition);
 	if (mScale != 1.0)
 	{

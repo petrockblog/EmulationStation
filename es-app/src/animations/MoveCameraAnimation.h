@@ -5,7 +5,7 @@
 class MoveCameraAnimation : public Animation
 {
 public:
-	MoveCameraAnimation(Affine3f& camera, const Vector3f& target) : mCameraStart(camera), mTarget(target), cameraOut(camera) {}
+	MoveCameraAnimation(Matrix4x4f& camera, const Vector3f& target) : mCameraStart(camera), mTarget(target), cameraOut(camera) {}
 
 	int getDuration() const override { return 400; }
 
@@ -17,8 +17,8 @@ public:
 	}
 
 private:
-	Affine3f mCameraStart;
+	Matrix4x4f mCameraStart;
 	Vector3f mTarget;
 
-	Affine3f& cameraOut;
+	Matrix4x4f& cameraOut;
 };

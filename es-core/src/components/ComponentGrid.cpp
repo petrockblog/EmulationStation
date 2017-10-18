@@ -355,9 +355,9 @@ void ComponentGrid::update(int deltaTime)
 	}
 }
 
-void ComponentGrid::render(const Affine3f& parentTrans)
+void ComponentGrid::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 
 	renderChildren(trans);
 	

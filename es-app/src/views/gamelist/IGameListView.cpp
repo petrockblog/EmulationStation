@@ -42,9 +42,9 @@ HelpStyle IGameListView::getHelpStyle()
 	return style;
 }
 
-void IGameListView::render(const Affine3f& parentTrans)
+void IGameListView::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 
 	float scaleX = trans[0];
 	float scaleY = trans[5];

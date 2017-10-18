@@ -126,12 +126,12 @@ void VideoVlcComponent::resize()
 	onSizeChanged();
 }
 
-void VideoVlcComponent::render(const Affine3f& parentTrans)
+void VideoVlcComponent::render(const Matrix4x4f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
 	float x, y;
 
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 
 	Renderer::setMatrix(trans);

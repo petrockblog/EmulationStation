@@ -32,11 +32,11 @@ public:
 
 	//Called when it's time to render.  By default, just calls renderChildren(parentTrans * getTransform()).
 	//You probably want to override this like so:
-	//1. Calculate the new transform that your control will draw at with Affine3f t = parentTrans * getTransform().
+	//1. Calculate the new transform that your control will draw at with Matrix4x4f t = parentTrans * getTransform().
 	//2. Set the renderer to use that new transform as the model matrix - Renderer::setMatrix(t);
 	//3. Draw your component.
 	//4. Tell your children to render, based on your component's transform - renderChildren(t).
-	virtual void render(const Affine3f& parentTrans);
+	virtual void render(const Matrix4x4f& parentTrans);
 
 	Vector3f getPosition() const;
 	inline void setPosition(const Vector3f& offset) { setPosition(offset.x(), offset.y(), offset.z()); }
@@ -100,7 +100,7 @@ public:
 	virtual unsigned char getOpacity() const;
 	virtual void setOpacity(unsigned char opacity);
 
-	const Affine3f& getTransform();
+	const Matrix4x4f& getTransform();
 
 	virtual std::string getValue() const;
 	virtual void setValue(const std::string& value);
@@ -131,7 +131,7 @@ public:
 	bool isProcessing() const;
 
 protected:
-	void renderChildren(const Affine3f& transform) const;
+	void renderChildren(const Matrix4x4f& transform) const;
 	void updateSelf(int deltaTime); // updates animations
 	void updateChildren(int deltaTime); // updates animations
 
@@ -158,6 +158,6 @@ public:
 	const static unsigned char MAX_ANIMATIONS = 4;
 
 private:
-	Affine3f mTransform; //Don't access this directly! Use getTransform()!
+	Matrix4x4f mTransform; //Don't access this directly! Use getTransform()!
 	AnimationController* mAnimationMap[MAX_ANIMATIONS];
 };

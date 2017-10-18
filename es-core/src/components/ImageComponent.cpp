@@ -224,9 +224,9 @@ void ImageComponent::updateColors()
 	Renderer::buildGLColorArray(mColors, mColorShift, 6);
 }
 
-void ImageComponent::render(const Affine3f& parentTrans)
+void ImageComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
 
 	if(mTexture && mOpacity > 0)

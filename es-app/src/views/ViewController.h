@@ -46,7 +46,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 	enum ViewMode
 	{
@@ -96,7 +96,7 @@ private:
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
 	std::shared_ptr<SystemView> mSystemListView;
 	
-	Affine3f mCamera;
+	Matrix4x4f mCamera;
 	float mFadeOpacity;
 	bool mLockInput;
 

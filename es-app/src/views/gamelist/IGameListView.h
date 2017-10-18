@@ -39,7 +39,7 @@ public:
 
 	virtual HelpStyle getHelpStyle() override;
 
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 protected:
 	FileData* mRoot;
 	std::shared_ptr<ThemeData> mTheme;

@@ -30,7 +30,7 @@ void ViewController::init(Window* window)
 }
 
 ViewController::ViewController(Window* window)
-	: GuiComponent(window), mCurrentView(nullptr), mCamera(Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
+	: GuiComponent(window), mCurrentView(nullptr), mCamera(Matrix4x4f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
 	mState.viewing = NOTHING;
 	mCurUIMode = Settings::getInstance()->getString("UIMode");
@@ -223,7 +223,7 @@ void ViewController::launch(FileData* game, Vector3f center)
 	if (mCurrentView)
 		mCurrentView->onHide();
 
-	Affine3f origCamera = mCamera;
+	Matrix4x4f origCamera = mCamera;
 	origCamera.translation() = -mCurrentView->getPosition();
 
 	center += mCurrentView->getPosition();
@@ -388,9 +388,9 @@ void ViewController::update(int deltaTime)
 	updateSelf(deltaTime);
 }
 
-void ViewController::render(const Affine3f& parentTrans)
+void ViewController::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = mCamera * parentTrans;
+	Matrix4x4f trans = mCamera * parentTrans;
 
 	// camera position, position + size
 	Vector3f viewStart = trans.inverse().translation();

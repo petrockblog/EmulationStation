@@ -241,9 +241,9 @@ void TextEditComponent::onCursorChanged()
 	}
 }
 
-void TextEditComponent::render(const Affine3f& parentTrans)
+void TextEditComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = getTransform() * parentTrans;
+	Matrix4x4f trans = getTransform() * parentTrans;
 	renderChildren(trans);
 
 	// text + cursor rendering

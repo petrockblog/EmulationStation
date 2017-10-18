@@ -31,14 +31,14 @@ class LaunchAnimation : public Animation
 {
 public:
 	//Target is a centerpoint
-	LaunchAnimation(Affine3f& camera, float& fade, const Vector3f& target, int duration) : 
+	LaunchAnimation(Matrix4x4f& camera, float& fade, const Vector3f& target, int duration) : 
 	  mCameraStart(camera), mTarget(target), mDuration(duration), cameraOut(camera), fadeOut(fade) {}
 
 	int getDuration() const override { return mDuration; }
 
 	void apply(float t) override
 	{
-		cameraOut = Affine3f::Identity();
+		cameraOut = Matrix4x4f::Identity();
 
 		float zoom = lerp<float>(1.0, 4.25f, t*t);
 		cameraOut.scale(Vector3f(zoom, zoom, 1));
@@ -55,10 +55,10 @@ public:
 	}
 
 private:
-	Affine3f mCameraStart;
+	Matrix4x4f mCameraStart;
 	Vector3f mTarget;
 	int mDuration;
 
-	Affine3f& cameraOut;
+	Matrix4x4f& cameraOut;
 	float& fadeOut;
 };

@@ -9,8 +9,8 @@ std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);
 std::string strToUpper(const std::string& str);
 
-Affine3f& roundMatrix(Affine3f& mat);
-Affine3f roundMatrix(const Affine3f& mat);
+Matrix4x4f& roundMatrix(Matrix4x4f& mat);
+Matrix4x4f roundMatrix(const Matrix4x4f& mat);
 
 Vector3f roundVector(const Vector3f& vec);
 Vector2f roundVector(const Vector2f& vec);

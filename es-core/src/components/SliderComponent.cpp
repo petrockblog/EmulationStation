@@ -61,9 +61,9 @@ void SliderComponent::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void SliderComponent::render(const Affine3f& parentTrans)
+void SliderComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Matrix4x4f trans = roundMatrix(parentTrans * getTransform());
 	Renderer::setMatrix(trans);
 
 	// render suffix

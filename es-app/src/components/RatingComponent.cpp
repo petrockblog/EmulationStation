@@ -109,9 +109,9 @@ void RatingComponent::updateColors()
 	Renderer::buildGLColorArray(mColors, mColorShift, 12);
 }
 
-void RatingComponent::render(const Affine3f& parentTrans)
+void RatingComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Matrix4x4f trans = roundMatrix(parentTrans * getTransform());
 	Renderer::setMatrix(trans);
 
 	glEnable(GL_TEXTURE_2D);

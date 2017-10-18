@@ -27,9 +27,9 @@ bool SwitchComponent::input(InputConfig* config, Input input)
 	return false;
 }
 
-void SwitchComponent::render(const Affine3f& parentTrans)
+void SwitchComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 	
 	mImage.render(trans);
 

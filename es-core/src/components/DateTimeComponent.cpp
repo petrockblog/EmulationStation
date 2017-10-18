@@ -134,9 +134,9 @@ void DateTimeComponent::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void DateTimeComponent::render(const Affine3f& parentTrans)
+void DateTimeComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 
 	if(mTextCache)
 	{

@@ -13,7 +13,7 @@ public:
 	void reset();
 
 	void update(int deltaTime) override;
-	void render(const Affine3f& parentTrans) override;
+	void render(const Matrix4x4f& parentTrans) override;
 
 private:
 	Vector2f getContentSize();

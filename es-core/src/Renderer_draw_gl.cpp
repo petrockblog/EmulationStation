@@ -133,7 +133,7 @@ namespace Renderer {
 		glLoadMatrixf(matrix);
 	}
 
-	void setMatrix(const Affine3f& matrix)
+	void setMatrix(const Matrix4x4f& matrix)
 	{
 		setMatrix((float*)matrix.data());
 	}

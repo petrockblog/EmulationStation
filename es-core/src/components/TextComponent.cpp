@@ -95,9 +95,9 @@ void TextComponent::setUppercase(bool uppercase)
 	onTextChanged();
 }
 
-void TextComponent::render(const Affine3f& parentTrans)
+void TextComponent::render(const Matrix4x4f& parentTrans)
 {
-	Affine3f trans = parentTrans * getTransform();
+	Matrix4x4f trans = parentTrans * getTransform();
 
 	if (mRenderBackground)
 	{
