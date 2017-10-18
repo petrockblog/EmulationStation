@@ -15,7 +15,7 @@
 #include "guis/GuiTextEditPopup.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
-	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
+	mGrid(window, Vector2i(4, 3)), mBusyAnim(window), 
 	mSearchType(type)
 {
 	addChild(&mGrid);
@@ -23,14 +23,14 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mBlockAccept = false;
 
 	// left spacer (empty component, needed for borders)
-	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Eigen::Vector2i(0, 0), false, false, Eigen::Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
+	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 0), false, false, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 
 	// selected result name
 	mResultName = std::make_shared<TextComponent>(mWindow, "Result name", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 
 	// selected result thumbnail
 	mResultThumbnail = std::make_shared<ImageComponent>(mWindow);
-	mGrid.setEntry(mResultThumbnail, Eigen::Vector2i(1, 1), false, false, Eigen::Vector2i(1, 1));
+	mGrid.setEntry(mResultThumbnail, Vector2i(1, 1), false, false, Vector2i(1, 1));
 
 	// selected result desc + container
 	mDescContainer = std::make_shared<ScrollableContainer>(mWindow);
@@ -57,16 +57,16 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "GENRE:", font, mdLblColor), mMD_Genre));
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PLAYERS:", font, mdLblColor), mMD_Players));
 
-	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Eigen::Vector2i(2, mMD_Pairs.size()*2 - 1));
+	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, mMD_Pairs.size()*2 - 1));
 	unsigned int i = 0;
 	for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
 	{
-		mMD_Grid->setEntry(it->first, Eigen::Vector2i(0, i), false, true);
-		mMD_Grid->setEntry(it->second, Eigen::Vector2i(1, i), false, it->resize);
+		mMD_Grid->setEntry(it->first, Vector2i(0, i), false, true);
+		mMD_Grid->setEntry(it->second, Vector2i(1, i), false, it->resize);
 		i += 2;
 	}
 
-	mGrid.setEntry(mMD_Grid, Eigen::Vector2i(2, 1), false, false);
+	mGrid.setEntry(mMD_Grid, Vector2i(2, 1), false, false);
 
 	// result list
 	mResultList = std::make_shared<ComponentList>(mWindow);
@@ -178,23 +178,23 @@ void ScraperSearchComponent::updateViewStyle()
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
 	{
 		// show name
-		mGrid.setEntry(mResultName, Eigen::Vector2i(1, 0), false, true, Eigen::Vector2i(2, 1), GridFlags::BORDER_TOP);
+		mGrid.setEntry(mResultName, Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
 
 		// need a border on the bottom left
-		mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Eigen::Vector2i(0, 2), false, false, Eigen::Vector2i(3, 1), GridFlags::BORDER_BOTTOM);
+		mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 2), false, false, Vector2i(3, 1), GridFlags::BORDER_BOTTOM);
 
 		// show description on the right
-		mGrid.setEntry(mDescContainer, Eigen::Vector2i(3, 0), false, false, Eigen::Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
+		mGrid.setEntry(mDescContainer, Vector2i(3, 0), false, false, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 	}else{
 		// fake row where name would be
-		mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Eigen::Vector2i(1, 0), false, true, Eigen::Vector2i(2, 1), GridFlags::BORDER_TOP);
+		mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
 
 		// show result list on the right
-		mGrid.setEntry(mResultList, Eigen::Vector2i(3, 0), true, true, Eigen::Vector2i(1, 3), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
+		mGrid.setEntry(mResultList, Vector2i(3, 0), true, true, Vector2i(1, 3), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 
 		// show description under image/info
-		mGrid.setEntry(mDescContainer, Eigen::Vector2i(1, 2), false, false, Eigen::Vector2i(2, 1), GridFlags::BORDER_BOTTOM);
+		mGrid.setEntry(mDescContainer, Vector2i(1, 2), false, false, Vector2i(2, 1), GridFlags::BORDER_BOTTOM);
 		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 	}
 }
@@ -341,9 +341,9 @@ bool ScraperSearchComponent::input(InputConfig* config, Input input)
 	return GuiComponent::input(config, input);
 }
 
-void ScraperSearchComponent::render(const Eigen::Affine3f& parentTrans)
+void ScraperSearchComponent::render(const Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Affine3f trans = parentTrans * getTransform();
 
 	renderChildren(trans);
 

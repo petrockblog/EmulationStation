@@ -78,7 +78,7 @@ void TextureResource::initFromMemory(const char* data, size_t length)
 	mSourceSize << mTextureData->sourceWidth(), mTextureData->sourceHeight();
 }
 
-const Eigen::Vector2i TextureResource::getSize() const
+const Vector2i TextureResource::getSize() const
 {
 	return mSize;
 }
@@ -163,7 +163,7 @@ void TextureResource::rasterizeAt(size_t width, size_t height)
 		data->load();
 }
 
-Eigen::Vector2f TextureResource::getSourceImageSize() const
+Vector2f TextureResource::getSourceImageSize() const
 {
 	return mSourceSize;
 }

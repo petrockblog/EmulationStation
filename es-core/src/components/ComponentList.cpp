@@ -157,21 +157,21 @@ void ComponentList::updateCameraOffset()
 	}
 }
 
-void ComponentList::render(const Eigen::Affine3f& parentTrans)
+void ComponentList::render(const Affine3f& parentTrans)
 {
 	if(!size())
 		return;
 
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Affine3f trans = roundMatrix(parentTrans * getTransform());
 
 	// clip everything to be inside our bounds
-	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
+	Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
-	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()),
-		Eigen::Vector2i((int)round(dim.x()), (int)round(dim.y() + 1)));
+	Renderer::pushClipRect(Vector2i((int)trans.translation().x(), (int)trans.translation().y()),
+		Vector2i((int)round(dim.x()), (int)round(dim.y() + 1)));
 
 	// scroll the camera
-	trans.translate(Eigen::Vector3f(0, -round(mCameraOffset), 0));
+	trans.translate(Vector3f(0, -round(mCameraOffset), 0));
 
 	// draw our entries
 	std::vector<GuiComponent*> drawAfterCursor;

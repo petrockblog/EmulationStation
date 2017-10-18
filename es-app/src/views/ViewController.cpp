@@ -30,7 +30,7 @@ void ViewController::init(Window* window)
 }
 
 ViewController::ViewController(Window* window)
-	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
+	: GuiComponent(window), mCurrentView(nullptr), mCamera(Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
 	mState.viewing = NOTHING;
 	mCurUIMode = Settings::getInstance()->getString("UIMode");
@@ -152,7 +152,7 @@ void ViewController::goToRandomGame()
 
 void ViewController::playViewTransition()
 {
-	Eigen::Vector3f target(Eigen::Vector3f::Zero());
+	Vector3f target(Vector3f::Zero());
 	if(mCurrentView)
 		target = mCurrentView->getPosition();
 
@@ -211,7 +211,7 @@ void ViewController::onFileChanged(FileData* file, FileChangeType change)
 		it->second->onFileChanged(file, change);
 }
 
-void ViewController::launch(FileData* game, Eigen::Vector3f center)
+void ViewController::launch(FileData* game, Vector3f center)
 {
 	if(game->getType() != GAME)
 	{
@@ -223,7 +223,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 	if (mCurrentView)
 		mCurrentView->onHide();
 
-	Eigen::Affine3f origCamera = mCamera;
+	Affine3f origCamera = mCamera;
 	origCamera.translation() = -mCurrentView->getPosition();
 
 	center += mCurrentView->getPosition();
@@ -388,13 +388,13 @@ void ViewController::update(int deltaTime)
 	updateSelf(deltaTime);
 }
 
-void ViewController::render(const Eigen::Affine3f& parentTrans)
+void ViewController::render(const Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = mCamera * parentTrans;
+	Affine3f trans = mCamera * parentTrans;
 
 	// camera position, position + size
-	Eigen::Vector3f viewStart = trans.inverse().translation();
-	Eigen::Vector3f viewEnd = trans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
+	Vector3f viewStart = trans.inverse().translation();
+	Vector3f viewEnd = trans.inverse() * Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
 
 	// Keep track of UI mode changes.
 	monitorUIMode();
@@ -406,8 +406,8 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
 		// clipping
-		Eigen::Vector3f guiStart = it->second->getPosition();
-		Eigen::Vector3f guiEnd = it->second->getPosition() + Eigen::Vector3f(it->second->getSize().x(), it->second->getSize().y(), 0);
+		Vector3f guiStart = it->second->getPosition();
+		Vector3f guiEnd = it->second->getPosition() + Vector3f(it->second->getSize().x(), it->second->getSize().y(), 0);
 
 		if(guiEnd.x() >= viewStart.x() && guiEnd.y() >= viewStart.y() &&
 			guiStart.x() <= viewEnd.x() && guiStart.y() <= viewEnd.y())

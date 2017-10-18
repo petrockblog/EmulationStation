@@ -59,7 +59,7 @@ void HelpComponent::updateGrid()
 
 	std::shared_ptr<Font>& font = mStyle.font;
 
-	mGrid = std::make_shared<ComponentGrid>(mWindow, Eigen::Vector2i(mPrompts.size() * 4, 1));
+	mGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(mPrompts.size() * 4, 1));
 	// [icon] [spacer1] [text] [spacer2]
 	
 	std::vector< std::shared_ptr<ImageComponent> > icons;
@@ -89,11 +89,11 @@ void HelpComponent::updateGrid()
 		mGrid->setColWidthPerc(col + 1, ICON_TEXT_SPACING / width);
 		mGrid->setColWidthPerc(col + 2, labels.at(i)->getSize().x() / width);
 
-		mGrid->setEntry(icons.at(i), Eigen::Vector2i(col, 0), false, false);
-		mGrid->setEntry(labels.at(i), Eigen::Vector2i(col + 2, 0), false, false);
+		mGrid->setEntry(icons.at(i), Vector2i(col, 0), false, false);
+		mGrid->setEntry(labels.at(i), Vector2i(col + 2, 0), false, false);
 	}
 
-	mGrid->setPosition(Eigen::Vector3f(mStyle.position.x(), mStyle.position.y(), 0.0f));
+	mGrid->setPosition(Vector3f(mStyle.position.x(), mStyle.position.y(), 0.0f));
 	//mGrid->setPosition(OFFSET_X, Renderer::getScreenHeight() - mGrid->getSize().y() - OFFSET_Y);
 }
 
@@ -130,9 +130,9 @@ void HelpComponent::setOpacity(unsigned char opacity)
 	}
 }
 
-void HelpComponent::render(const Eigen::Affine3f& parentTrans)
+void HelpComponent::render(const Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Affine3f trans = parentTrans * getTransform();
 	
 	if(mGrid)
 		mGrid->render(trans);

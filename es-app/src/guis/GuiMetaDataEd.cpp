@@ -19,7 +19,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mScraperParams(scraperParams),
 
 	mBackground(window, ":/frame.png"),
-	mGrid(window, Eigen::Vector2i(1, 3)),
+	mGrid(window, Vector2i(1, 3)),
 
 	mMetaDataDecl(mdd),
 	mMetaData(md),
@@ -28,18 +28,18 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	addChild(&mBackground);
 	addChild(&mGrid);
 
-	mHeaderGrid = std::make_shared<ComponentGrid>(mWindow, Eigen::Vector2i(1, 5));
+	mHeaderGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(1, 5));
 
 	mTitle = std::make_shared<TextComponent>(mWindow, "EDIT METADATA", Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
 	mSubtitle = std::make_shared<TextComponent>(mWindow, strToUpper(scraperParams.game->getPath().filename().generic_string()),
 		Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
-	mHeaderGrid->setEntry(mTitle, Eigen::Vector2i(0, 1), false, true);
-	mHeaderGrid->setEntry(mSubtitle, Eigen::Vector2i(0, 3), false, true);
+	mHeaderGrid->setEntry(mTitle, Vector2i(0, 1), false, true);
+	mHeaderGrid->setEntry(mSubtitle, Vector2i(0, 3), false, true);
 
-	mGrid.setEntry(mHeaderGrid, Eigen::Vector2i(0, 0), false, true);
+	mGrid.setEntry(mHeaderGrid, Vector2i(0, 0), false, true);
 
 	mList = std::make_shared<ComponentList>(mWindow);
-	mGrid.setEntry(mList, Eigen::Vector2i(0, 1), true, true);
+	mGrid.setEntry(mList, Vector2i(0, 1), true, true);
 
 	// populate list
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
@@ -113,7 +113,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 				auto bracket = std::make_shared<ImageComponent>(mWindow);
 				bracket->setImage(":/arrow.svg");
-				bracket->setResize(Eigen::Vector2f(0, lbl->getFont()->getLetterHeight()));
+				bracket->setResize(Vector2f(0, lbl->getFont()->getLetterHeight()));
 				row.addElement(bracket, false);
 
 				bool multiLine = iter->type == MD_MULTILINE_STRING;
@@ -148,7 +148,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	}
 
 	mButtons = makeButtonGrid(mWindow, buttons);
-	mGrid.setEntry(mButtons, Eigen::Vector2i(0, 2), true, false);
+	mGrid.setEntry(mButtons, Vector2i(0, 2), true, false);
 
 	// resize + center
 	float width = std::min(Renderer::getScreenHeight(), (unsigned int) (Renderer::getScreenWidth() * 0.90f));
@@ -158,7 +158,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 void GuiMetaDataEd::onSizeChanged()
 {
-	mBackground.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
+	mBackground.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 
 	mGrid.setSize(mSize);
 

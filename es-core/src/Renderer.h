@@ -26,11 +26,11 @@ namespace Renderer
 	//graphics commands
 	void swapBuffers();
 
-	void pushClipRect(Eigen::Vector2i pos, Eigen::Vector2i dim);
+	void pushClipRect(Vector2i pos, Vector2i dim);
 	void popClipRect();
 
 	void setMatrix(float* mat);
-	void setMatrix(const Eigen::Affine3f& transform);
+	void setMatrix(const Affine3f& transform);
 
 	void drawRect(int x, int y, int w, int h, unsigned int color, GLenum blend_sfactor = GL_SRC_ALPHA, GLenum blend_dfactor = GL_ONE_MINUS_SRC_ALPHA);
 	void drawRect(float x, float y, float w, float h, unsigned int color, GLenum blend_sfactor = GL_SRC_ALPHA, GLenum blend_dfactor = GL_ONE_MINUS_SRC_ALPHA);

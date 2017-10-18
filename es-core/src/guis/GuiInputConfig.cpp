@@ -136,7 +136,7 @@ static const char* inputIcon[inputCount] =
 #define HOLD_TO_SKIP_MS 1000
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback) : GuiComponent(window), 
-	mBackground(window, ":/frame.png"), mGrid(window, Eigen::Vector2i(1, 7)), 
+	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 7)), 
 	mTargetConfig(target), mHoldingInput(false), mBusyAnim(window)
 {
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId() << " (" << target->getDeviceName() << ").";
@@ -151,10 +151,10 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	addChild(&mGrid);
 
 	// 0 is a spacer row
-	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Eigen::Vector2i(0, 0), false);
+	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 0), false);
 
 	mTitle = std::make_shared<TextComponent>(mWindow, "CONFIGURING", Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
-	mGrid.setEntry(mTitle, Eigen::Vector2i(0, 1), false, true);
+	mGrid.setEntry(mTitle, Vector2i(0, 1), false, true);
 	
 	std::stringstream ss;
 	if(target->getDeviceId() == DEVICE_KEYBOARD)
@@ -162,15 +162,15 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	else
 		ss << "GAMEPAD " << (target->getDeviceId() + 1);
 	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(ss.str()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, ALIGN_CENTER);
-	mGrid.setEntry(mSubtitle1, Eigen::Vector2i(0, 2), false, true);
+	mGrid.setEntry(mSubtitle1, Vector2i(0, 2), false, true);
 
 	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "HOLD ANY BUTTON TO SKIP", Font::get(FONT_SIZE_SMALL), 0x99999900, ALIGN_CENTER);
-	mGrid.setEntry(mSubtitle2, Eigen::Vector2i(0, 3), false, true);
+	mGrid.setEntry(mSubtitle2, Vector2i(0, 3), false, true);
 
 	// 4 is a spacer row
 
 	mList = std::make_shared<ComponentList>(mWindow);
-	mGrid.setEntry(mList, Eigen::Vector2i(0, 5), true, true);
+	mGrid.setEntry(mList, Vector2i(0, 5), true, true);
 	for(int i = 0; i < inputCount; i++)
 	{
 		ComponentListRow row;
@@ -290,7 +290,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		}
 	}));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
-	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 6), true, false);
+	mGrid.setEntry(mButtonGrid, Vector2i(0, 6), true, false);
 
 	setSize(Renderer::getScreenWidth() * 0.6f, Renderer::getScreenHeight() * 0.75f);
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
@@ -298,7 +298,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 void GuiInputConfig::onSizeChanged()
 {
-	mBackground.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
+	mBackground.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 
 	// update grid
 	mGrid.setSize(mSize);
@@ -353,7 +353,7 @@ void GuiInputConfig::rowDone()
 			// at bottom of list, done
 			mConfiguringAll = false;
 			mConfiguringRow = false;
-			mGrid.moveCursor(Eigen::Vector2i(0, 1));
+			mGrid.moveCursor(Vector2i(0, 1));
 		}else{
 			// on another one
 			setPress(mMappings.at(mList->getCursorId()));

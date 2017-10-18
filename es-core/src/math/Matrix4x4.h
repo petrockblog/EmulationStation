@@ -5,8 +5,6 @@
 #include <math/Vector4.h>
 #include <math/Vector3.h>
 
-namespace Eigen {
-
 template<typename S>
 class Matrix4x4
 {
@@ -48,8 +46,8 @@ public:
 	M& operator-=(const M& other) { *this = *this - other; return *this; }
 	M& operator*=(const M& other) { *this = *this * other; return *this; }
 
-	S& operator[](const size_t index) { assert(index < Size() && "index out of range"); return mV[index]; }
-	const S& operator[](const size_t index) const { assert(index < Size() && "index out of range"); return mV[index]; }
+	S& operator[](const size_t index) { assert(index < Size() && "index out of range"); return mM[index]; }
+	const S& operator[](const size_t index) const { assert(index < Size() && "index out of range"); return mM[index]; }
 
 	CommaInitializer<M, S> M::operator<<(const S& s) { return CommaInitializer<M, S>(*this, s); }
 
@@ -163,7 +161,5 @@ typedef Matrix4x4<bool>   Affine3b;
 typedef Matrix4x4<int>    Affine3i;
 typedef Matrix4x4<float>  Affine3f;
 typedef Matrix4x4<double> Affine3d;
-
-}
 
 #endif

@@ -9,7 +9,7 @@
 #include "Util.h"
 
 namespace Renderer {
-	std::stack<Eigen::Vector4i> clipStack;
+	std::stack<Vector4i> clipStack;
 
 	void setColor4bArray(GLubyte* array, unsigned int color)
 	{
@@ -29,9 +29,9 @@ namespace Renderer {
 		}
 	}
 
-	void pushClipRect(Eigen::Vector2i pos, Eigen::Vector2i dim)
+	void pushClipRect(Vector2i pos, Vector2i dim)
 	{
-		Eigen::Vector4i box(pos.x(), pos.y(), dim.x(), dim.y());
+		Vector4i box(pos.x(), pos.y(), dim.x(), dim.y());
 		if(box[2] == 0)
 			box[2] = Renderer::getScreenWidth() - box.x();
 		if(box[3] == 0)
@@ -46,7 +46,7 @@ namespace Renderer {
 		//make sure the box fits within clipStack.top(), and clip further accordingly
 		if(clipStack.size())
 		{
-			Eigen::Vector4i& top = clipStack.top();
+			Vector4i& top = clipStack.top();
 			if(top[0] > box[0])
 				box[0] = top[0];
 			if(top[1] > box[1])
@@ -80,7 +80,7 @@ namespace Renderer {
 		{
 			glDisable(GL_SCISSOR_TEST);
 		}else{
-			Eigen::Vector4i top = clipStack.top();
+			Vector4i top = clipStack.top();
 			glScissor(top[0], top[1], top[2], top[3]);
 		}
 	}
@@ -133,7 +133,7 @@ namespace Renderer {
 		glLoadMatrixf(matrix);
 	}
 
-	void setMatrix(const Eigen::Affine3f& matrix)
+	void setMatrix(const Affine3f& matrix)
 	{
 		setMatrix((float*)matrix.data());
 	}

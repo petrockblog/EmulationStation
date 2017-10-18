@@ -76,7 +76,7 @@ void AnimatedImageComponent::update(int deltaTime)
 	}
 }
 
-void AnimatedImageComponent::render(const Eigen::Affine3f& trans)
+void AnimatedImageComponent::render(const Affine3f& trans)
 {
 	if(mFrames.size())
 		mFrames.at(mCurrentFrame).first->render(getTransform() * trans);

@@ -42,15 +42,15 @@ HelpStyle IGameListView::getHelpStyle()
 	return style;
 }
 
-void IGameListView::render(const Eigen::Affine3f& parentTrans)
+void IGameListView::render(const Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Affine3f trans = parentTrans * getTransform();
 
 	float scaleX = trans[0];
 	float scaleY = trans[5];
 
-	Eigen::Vector2i pos(trans.translation()[0], trans.translation()[1]);
-	Eigen::Vector2i size(mSize.x() * scaleX, mSize.y() * scaleY);
+	Vector2i pos(trans.translation()[0], trans.translation()[1]);
+	Vector2i size(mSize.x() * scaleX, mSize.y() * scaleY);
 
 	Renderer::pushClipRect(pos, size);
 	renderChildren(trans);

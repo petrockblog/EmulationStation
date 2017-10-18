@@ -14,15 +14,15 @@ AnimationFrame BUSY_ANIMATION_FRAMES[] = {
 const AnimationDef BUSY_ANIMATION_DEF = { BUSY_ANIMATION_FRAMES, 4, true };
 
 BusyComponent::BusyComponent(Window* window) : GuiComponent(window),
-	mBackground(window, ":/frame.png"), mGrid(window, Eigen::Vector2i(5, 3))
+	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(5, 3))
 {
 	mAnimation = std::make_shared<AnimatedImageComponent>(mWindow);
 	mAnimation->load(&BUSY_ANIMATION_DEF);
 	mText = std::make_shared<TextComponent>(mWindow, "WORKING...", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 
 	// col 0 = animation, col 1 = spacer, col 2 = text
-	mGrid.setEntry(mAnimation, Eigen::Vector2i(1, 1), false, true);
-	mGrid.setEntry(mText, Eigen::Vector2i(3, 1), false, true);
+	mGrid.setEntry(mAnimation, Vector2i(1, 1), false, true);
+	mGrid.setEntry(mText, Vector2i(3, 1), false, true);
 
 	addChild(&mBackground);
 	addChild(&mGrid);
@@ -46,8 +46,8 @@ void BusyComponent::onSizeChanged()
 
 	mGrid.setRowHeightPerc(1, textHeight / mSize.y());
 	
-	mBackground.fitTo(Eigen::Vector2f(mGrid.getColWidth(1) + mGrid.getColWidth(2) + mGrid.getColWidth(3), textHeight + 2),
-		mAnimation->getPosition(), Eigen::Vector2f(0, 0));
+	mBackground.fitTo(Vector2f(mGrid.getColWidth(1) + mGrid.getColWidth(2) + mGrid.getColWidth(3), textHeight + 2),
+		mAnimation->getPosition(), Vector2f(0, 0));
 }
 
 void BusyComponent::reset()

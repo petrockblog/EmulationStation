@@ -7,12 +7,12 @@
 #include "ThemeData.h"
 #include "Util.h"
 
-Eigen::Vector2i ImageComponent::getTextureSize() const
+Vector2i ImageComponent::getTextureSize() const
 {
 	if(mTexture)
 		return mTexture->getSize();
 	else
-		return Eigen::Vector2i::Zero();
+		return Vector2i::Zero();
 }
 
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
@@ -31,7 +31,7 @@ void ImageComponent::resize()
 	if(!mTexture)
 		return;
 
-	const Eigen::Vector2f textureSize = mTexture->getSourceImageSize();
+	const Vector2f textureSize = mTexture->getSourceImageSize();
 	if(textureSize.isZero())
 		return;
 
@@ -49,7 +49,7 @@ void ImageComponent::resize()
 		{
 			mSize = textureSize;
 
-			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
+			Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
 			
 			if(resizeScale.x() < resizeScale.y())
 			{
@@ -178,8 +178,8 @@ void ImageComponent::updateVertices()
 
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
-	Eigen::Vector2f topLeft(0.0, 0.0);
-	Eigen::Vector2f bottomRight(round(mSize.x()), round(mSize.y()));
+	Vector2f topLeft(0.0, 0.0);
+	Vector2f bottomRight(round(mSize.x()), round(mSize.y()));
 
 	mVertices[0].pos << topLeft.x(), topLeft.y();
 	mVertices[1].pos << topLeft.x(), bottomRight.y();
@@ -224,9 +224,9 @@ void ImageComponent::updateColors()
 	Renderer::buildGLColorArray(mColors, mColorShift, 6);
 }
 
-void ImageComponent::render(const Eigen::Affine3f& parentTrans)
+void ImageComponent::render(const Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Affine3f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
 
 	if(mTexture && mOpacity > 0)
@@ -324,25 +324,25 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		return;
 	}
 
-	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	Vector2f scale = getParent() ? getParent()->getSize() : Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	
 	if(properties & POSITION && elem->has("pos"))
 	{
-		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
-		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+		Vector2f denormalized = elem->get<Vector2f>("pos").cwiseProduct(scale);
+		setPosition(Vector3f(denormalized.x(), denormalized.y(), 0));
 	}
 
 	if(properties & ThemeFlags::SIZE)
 	{
 		if(elem->has("size"))
-			setResize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
+			setResize(elem->get<Vector2f>("size").cwiseProduct(scale));
 		else if(elem->has("maxSize"))
-			setMaxSize(elem->get<Eigen::Vector2f>("maxSize").cwiseProduct(scale));
+			setMaxSize(elem->get<Vector2f>("maxSize").cwiseProduct(scale));
 	}
 
 	// position + size also implies origin
 	if((properties & ORIGIN || (properties & POSITION && properties & ThemeFlags::SIZE)) && elem->has("origin"))
-		setOrigin(elem->get<Eigen::Vector2f>("origin"));
+		setOrigin(elem->get<Vector2f>("origin"));
 
 	if(elem->has("default")) {
 		setDefaultImage(elem->get<std::string>("default"));
@@ -361,7 +361,7 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		if(elem->has("rotation"))
 			setRotationDegrees(elem->get<float>("rotation"));
 		if(elem->has("rotationOrigin"))
-			setRotationOrigin(elem->get<Eigen::Vector2f>("rotationOrigin"));
+			setRotationOrigin(elem->get<Vector2f>("rotationOrigin"));
 	}
 
 	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))

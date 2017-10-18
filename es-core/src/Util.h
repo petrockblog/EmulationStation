@@ -9,11 +9,11 @@ std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);
 std::string strToUpper(const std::string& str);
 
-Eigen::Affine3f& roundMatrix(Eigen::Affine3f& mat);
-Eigen::Affine3f roundMatrix(const Eigen::Affine3f& mat);
+Affine3f& roundMatrix(Affine3f& mat);
+Affine3f roundMatrix(const Affine3f& mat);
 
-Eigen::Vector3f roundVector(const Eigen::Vector3f& vec);
-Eigen::Vector2f roundVector(const Eigen::Vector2f& vec);
+Vector3f roundVector(const Vector3f& vec);
+Vector2f roundVector(const Vector2f& vec);
 
 #if defined(_WIN32) && _MSC_VER < 1800
 float round(float num);

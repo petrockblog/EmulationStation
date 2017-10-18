@@ -121,7 +121,7 @@ void DetailedGameListView::initMDLabels()
 	const unsigned int colCount = 2;
 	const unsigned int rowCount = components.size() / 2;
 
-	Eigen::Vector3f start(mSize.x() * 0.01f, mSize.y() * 0.625f, 0.0f);
+	Vector3f start(mSize.x() * 0.01f, mSize.y() * 0.625f, 0.0f);
 	
 	const float colSize = (mSize.x() * 0.48f) / colCount;
 	const float rowPadding = 0.01f * mSize.y();
@@ -129,14 +129,14 @@ void DetailedGameListView::initMDLabels()
 	for(unsigned int i = 0; i < components.size(); i++)
 	{
 		const unsigned int row = i % rowCount;
-		Eigen::Vector3f pos(0.0f, 0.0f, 0.0f);
+		Vector3f pos(0.0f, 0.0f, 0.0f);
 		if(row == 0)
 		{
-			pos = start + Eigen::Vector3f(colSize * (i / rowCount), 0, 0);
+			pos = start + Vector3f(colSize * (i / rowCount), 0, 0);
 		}else{
 			// work from the last component
 			GuiComponent* lc = components[i-1];
-			pos = lc->getPosition() + Eigen::Vector3f(0, lc->getSize().y() + rowPadding, 0);
+			pos = lc->getPosition() + Vector3f(0, lc->getSize().y() + rowPadding, 0);
 		}
 
 		components[i]->setFont(Font::get(FONT_SIZE_SMALL));
@@ -166,7 +166,7 @@ void DetailedGameListView::initMDValues()
 	for(unsigned int i = 0; i < labels.size(); i++)
 	{
 		const float heightDiff = (labels[i]->getSize().y() - values[i]->getSize().y()) / 2;
-		values[i]->setPosition(labels[i]->getPosition() + Eigen::Vector3f(labels[i]->getSize().x(), heightDiff, 0));
+		values[i]->setPosition(labels[i]->getPosition() + Vector3f(labels[i]->getSize().x(), heightDiff, 0));
 		values[i]->setSize(colSize - labels[i]->getSize().x(), values[i]->getSize().y());
 		values[i]->setDefaultZIndex(40);
 
@@ -237,7 +237,7 @@ void DetailedGameListView::updateInfoPanel()
 
 void DetailedGameListView::launch(FileData* game)
 {
-	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
+	Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
 	if(mImage.hasImage())
 		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
 

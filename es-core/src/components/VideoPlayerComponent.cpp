@@ -32,7 +32,7 @@ VideoPlayerComponent::~VideoPlayerComponent()
 	stopVideo();
 }
 
-void VideoPlayerComponent::render(const Eigen::Affine3f& parentTrans)
+void VideoPlayerComponent::render(const Affine3f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
 

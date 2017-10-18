@@ -71,7 +71,7 @@ void VideoVlcComponent::resize()
 	if(!mTexture)
 		return;
 
-	const Eigen::Vector2f textureSize(mVideoWidth, mVideoHeight);
+	const Vector2f textureSize(mVideoWidth, mVideoHeight);
 
 	if(textureSize.isZero())
 		return;
@@ -87,7 +87,7 @@ void VideoVlcComponent::resize()
 
 			mSize = textureSize;
 
-			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
+			Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
 
 			if(resizeScale.x() < resizeScale.y())
 			{
@@ -126,12 +126,12 @@ void VideoVlcComponent::resize()
 	onSizeChanged();
 }
 
-void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
+void VideoVlcComponent::render(const Affine3f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
 	float x, y;
 
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Affine3f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 
 	Renderer::setMatrix(trans);
@@ -151,9 +151,9 @@ void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
 		// Define a structure to contain the data for each vertex
 		struct Vertex
 		{
-			Eigen::Vector2f pos;
-			Eigen::Vector2f tex;
-			Eigen::Vector4f colour;
+			Vector2f pos;
+			Vector2f tex;
+			Vector4f colour;
 		} vertices[6];
 
 		// We need two triangles to cover the rectangular area
@@ -315,7 +315,7 @@ void VideoVlcComponent::startVideo()
 					{
 						if(!Settings::getInstance()->getBool("CaptionsCompatibility")) {
 
-							Eigen::Vector2f resizeScale((Renderer::getScreenWidth() / mVideoWidth), (Renderer::getScreenHeight() / mVideoHeight));
+							Vector2f resizeScale((Renderer::getScreenWidth() / mVideoWidth), (Renderer::getScreenHeight() / mVideoHeight));
 
 							if(resizeScale.x() < resizeScale.y())
 							{

@@ -4,8 +4,6 @@
 #include <assert.h>
 #include "math/CommaInitializer.h"
 
-namespace Eigen {
-
 template<typename S>
 class Vector3
 {
@@ -81,7 +79,5 @@ typedef Vector3<bool>   Vector3b;
 typedef Vector3<int>    Vector3i;
 typedef Vector3<float>  Vector3f;
 typedef Vector3<double> Vector3d;
-
-}
 
 #endif

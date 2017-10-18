@@ -18,7 +18,7 @@ ButtonComponent::ButtonComponent(Window* window, const std::string& text, const 
 
 void ButtonComponent::onSizeChanged()
 {
-	mBox.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
+	mBox.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 }
 
 void ButtonComponent::setPressedFunc(std::function<void()> f)
@@ -84,15 +84,15 @@ void ButtonComponent::updateImage()
 	mBox.setImagePath(mFocused ? ":/button_filled.png" : ":/button.png");
 }
 
-void ButtonComponent::render(const Eigen::Affine3f& parentTrans)
+void ButtonComponent::render(const Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Affine3f trans = roundMatrix(parentTrans * getTransform());
 	
 	mBox.render(trans);
 
 	if(mTextCache)
 	{
-		Eigen::Vector3f centerOffset((mSize.x() - mTextCache->metrics.size.x()) / 2, (mSize.y() - mTextCache->metrics.size.y()) / 2, 0);
+		Vector3f centerOffset((mSize.x() - mTextCache->metrics.size.x()) / 2, (mSize.y() - mTextCache->metrics.size.y()) / 2, 0);
 		centerOffset = roundVector(centerOffset);
 		trans = trans.translate(centerOffset);
 

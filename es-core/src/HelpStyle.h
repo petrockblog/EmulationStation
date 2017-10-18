@@ -9,7 +9,7 @@ class Font;
 
 struct HelpStyle
 {
-	Eigen::Vector2f position;
+	Vector2f position;
 	unsigned int iconColor;
 	unsigned int textColor;
 	std::shared_ptr<Font> font;

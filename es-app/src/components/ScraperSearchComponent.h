@@ -39,7 +39,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Affine3f& parentTrans) override;
 	std::vector<HelpPrompt> getHelpPrompts() override;
 	void onSizeChanged() override;	
 	void onFocusGained() override;
