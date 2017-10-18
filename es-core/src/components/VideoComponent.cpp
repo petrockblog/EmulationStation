@@ -155,8 +155,6 @@ void VideoComponent::setOpacity(unsigned char opacity)
 
 void VideoComponent::render(const Matrix4x4f& parentTrans)
 {
-	float x, y;
-
 	Matrix4x4f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 
