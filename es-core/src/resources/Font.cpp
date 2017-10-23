@@ -609,42 +609,69 @@ float Font::getLetterHeight()
 
 //the worst algorithm ever written
 //breaks up a normal string with newlines to make it fit xLen
+// supported UTF-8 text (wordwrap and cheap hyphenation)
 std::string Font::wrapText(std::string text, float xLen)
 {
 	std::string out;
+	std::string line, word;
 
-	std::string line, word, temp;
-	size_t space;
+	size_t pos = 0, pos2 = 0;
+	while (0 < text.length()) {
+		size_t n = pos;
+		for (; n < (int)text.length(); n++) {
+			if (pos == 0 && xLen < sizeText(text.substr(pos, n)).x()) {
+				n--;
+				break;
+			}
+			char c = text[n];
+			if ('0' <= c && c <= '9') continue;
+			if ('A' <= c && c <= 'Z') continue;
+			if ('a' <= c && c <= 'z') continue;
+			if ('-' == c) continue;
+			if ('_' == c) continue;
+			if ('\'' == c) continue;
+			if (',' == c) continue;
+			if ('.' == c) continue;
+			break;
+		}
+		
+		size_t p;
+		if (pos < n) {
+			p = n;
+		} else {
+			p = Font::getNextCursor(text, pos);
+			if (p == pos) {
+				break;
+			}
+		}
 
-	Eigen::Vector2f textSize;
-
-	while(text.length() > 0) //while there's text or we still have text to render
-	{
-		space = text.find_first_of(" \t\n");
-		if(space == std::string::npos)
-			space = text.length() - 1;
-
-		word = text.substr(0, space + 1);
-		text.erase(0, space + 1);
-
-		temp = line + word;
-
-		textSize = sizeText(temp);
-
-		// if the word will fit on the line, add it to our line, and continue
-		if(textSize.x() <= xLen)
-		{
-			line = temp;
+		if (text[pos] == '\n') {
+			out += text.substr(0, pos + 1);
+			text.erase(0, p);
+			pos2 = pos = p = 0;
 			continue;
-		}else{
-			// the next word won't fit, so break here
-			out += line + '\n';
-			line = word;
+		}
+		
+		if (xLen < sizeText(text.substr(0, p)).x()) {
+			size_t cut;
+			if (0 < pos) {
+				cut = pos;
+			} else {
+				cut = p;
+			}
+
+			out += text.substr(0, cut) + "\n";
+			text.erase(0, cut);
+			pos2 = pos = p = 0;
+			n = 0;
+			continue;
+		} else {
+			pos2 = pos;
+			pos = p;
 		}
 	}
 
-	// whatever's left should fit
-	out += line;
+	out += text;
 
 	return out;
 }
