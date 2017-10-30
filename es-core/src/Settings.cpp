@@ -47,14 +47,9 @@ void Settings::setDefaults()
 	mBoolMap["ShowExit"] = true;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["SplashScreen"] = true;
+	mStringMap["StartupSystem"] = "";
 
-#ifdef _RPI_
-	// don't enable VSync by default on the Pi, since it already
-	// has trouble trying to render things at 60fps in certain menus
-	mBoolMap["VSync"] = false;
-#else
 	mBoolMap["VSync"] = true;
-#endif
 
 	mBoolMap["EnableSounds"] = true;
 	mBoolMap["ShowHelpPrompts"] = true;

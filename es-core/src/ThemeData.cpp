@@ -275,14 +275,14 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 		if(!result)
 			throw error << "Error parsing file: \n    " << result.description();
 
-		pugi::xml_node root = includeDoc.child("theme");
-		if(!root)
+		pugi::xml_node theme = includeDoc.child("theme");
+		if(!theme)
 			throw error << "Missing <theme> tag!";
 
-		parseVariables(root);
-		parseIncludes(root);
-		parseViews(root);
-		parseFeatures(root);
+		parseVariables(theme);
+		parseIncludes(theme);
+		parseViews(theme);
+		parseFeatures(theme);
 
 		mPaths.pop_back();
 	}
@@ -419,7 +419,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			std::string first = str.substr(0, divider);
 			std::string second = str.substr(divider, std::string::npos);
 
-			Eigen::Vector2f val(atof(first.c_str()), atof(second.c_str()));
+			Vector2f val(atof(first.c_str()), atof(second.c_str()));
 
 			element.properties[node.name()] = val;
 			break;

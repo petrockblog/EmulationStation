@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Sound.h"
 #include "Log.h"
+#include "SystemData.h"
 #include "Settings.h"
 #include "PowerSaver.h"
 #include "guis/GuiMsgBox.h"
@@ -119,7 +120,16 @@ void GuiMenu::openSoundSettings()
 		auto sounds_enabled = std::make_shared<SwitchComponent>(mWindow);
 		sounds_enabled->setState(Settings::getInstance()->getBool("EnableSounds"));
 		s->addWithLabel("ENABLE NAVIGATION SOUNDS", sounds_enabled);
-		s->addSaveFunc([sounds_enabled] { Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); });
+		s->addSaveFunc([sounds_enabled] {
+			if (sounds_enabled->getState()
+				&& !Settings::getInstance()->getBool("EnableSounds")
+				&& PowerSaver::getMode() == PowerSaver::INSTANT)
+			{
+				Settings::getInstance()->setString("PowerSaverMode", "default");
+				PowerSaver::init();
+			}
+			Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState());
+		});
 
 		auto video_audio = std::make_shared<SwitchComponent>(mWindow);
 		video_audio->setState(Settings::getInstance()->getBool("VideoAudio"));
@@ -266,6 +276,21 @@ void GuiMenu::openUISettings()
 			ViewController::get()->reloadAll();
 	});
 
+	// Optionally start in selected system
+	auto systemfocus_list = std::make_shared< OptionListComponent<std::string> >(mWindow, "START ON SYSTEM", false);
+	systemfocus_list->add("NONE", "", Settings::getInstance()->getString("StartupSystem") == "");
+	for (auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	{
+		if ("retropie" != (*it)->getName())
+		{
+			systemfocus_list->add((*it)->getName(), (*it)->getName(), Settings::getInstance()->getString("StartupSystem") == (*it)->getName());
+		}
+	}
+	s->addWithLabel("START ON SYSTEM", systemfocus_list);
+	s->addSaveFunc([systemfocus_list] {
+		Settings::getInstance()->setString("StartupSystem", systemfocus_list->getSelected());
+	});
+
 	// show help
 	auto show_help = std::make_shared<SwitchComponent>(mWindow);
 	show_help->setState(Settings::getInstance()->getBool("ShowHelpPrompts"));
@@ -300,6 +325,7 @@ void GuiMenu::openOtherSettings()
 		if (Settings::getInstance()->getString("PowerSaverMode") != "instant" && power_saver->getSelected() == "instant") {
 			Settings::getInstance()->setString("TransitionStyle", "instant");
 			Settings::getInstance()->setBool("MoveCarousel", false);
+			Settings::getInstance()->setBool("EnableSounds", false);
 		}
 		Settings::getInstance()->setString("PowerSaverMode", power_saver->getSelected());
 		PowerSaver::init();
