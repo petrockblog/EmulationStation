@@ -608,72 +608,49 @@ float Font::getLetterHeight()
 	return glyph->texSize.y() * glyph->texture->textureSize.y();
 }
 
-//the worst algorithm ever written
-//breaks up a normal string with newlines to make it fit xLen
-// supported UTF-8 text (wordwrap and cheap hyphenation)
-std::string Font::wrapText(std::string text, float xLen)
+// Naive way to find whitespace characters, only includes the common ones in the ASCII range!
+bool Font::isWhiteSpace(UnicodeChar c)
 {
-	std::string out;
-	std::string line, word;
+	return (c == (UnicodeChar) ' ' ||
+		c == (UnicodeChar) '\n' ||
+		c == (UnicodeChar) '\t' ||
+		c == (UnicodeChar) '\v' ||
+		c == (UnicodeChar) '\f' ||
+		c == (UnicodeChar) '\r');
+}
 
-	size_t pos = 0, pos2 = 0;
-	while (0 < text.length()) {
-		size_t n = pos;
-		for (; n < (int)text.length(); n++) {
-			if (pos == 0 && xLen < sizeText(text.substr(pos, n)).x()) {
-				n--;
-				break;
-			}
-			char c = text[n];
-			if ('0' <= c && c <= '9') continue;
-			if ('A' <= c && c <= 'Z') continue;
-			if ('a' <= c && c <= 'z') continue;
-			if ('-' == c) continue;
-			if ('_' == c) continue;
-			if ('\'' == c) continue;
-			if (',' == c) continue;
-			if ('.' == c) continue;
-			break;
-		}
-		
-		size_t p;
-		if (pos < n) {
-			p = n;
-		} else {
-			p = Font::getNextCursor(text, pos);
-			if (p == pos) {
-				break;
+// Breaks up a normal string with newlines to make it fit width (in pixels)
+std::string Font::wrapText(std::string text, float maxWidth)
+{
+	std::string out = "";
+	while (text.length() > 0)  // find next cut-point
+	{
+		size_t cursor = 0;
+		float lineWidth = 0.0f;
+		size_t lastWhiteSpace = 0;
+		while ((lineWidth < maxWidth) &&
+			(cursor < text.length()))
+		{
+			UnicodeChar c = readUnicodeChar(text, cursor); // also advances cursor!
+			lineWidth = sizeText(text.substr(0, cursor)).x(); // this takes into account \n already present!
+			if (isWhiteSpace(c))
+			{
+				lastWhiteSpace = cursor;
 			}
 		}
 
-		if (text[pos] == '\n') {
-			out += text.substr(0, pos + 1);
-			text.erase(0, p);
-			pos2 = pos = p = 0;
-			continue;
+		if (cursor == text.length()) // arrived at end of text.
+		{
+			out += text;
+			text.erase();
 		}
-		
-		if (xLen < sizeText(text.substr(0, p)).x()) {
-			size_t cut;
-			if (0 < pos) {
-				cut = pos;
-			} else {
-				cut = p;
-			}
-
+		else // need to cut at last whitespace or lacking that, the previous cursor.
+		{
+			size_t cut = (lastWhiteSpace != 0) ? lastWhiteSpace : getPrevCursor(text, cursor);
 			out += text.substr(0, cut) + "\n";
 			text.erase(0, cut);
-			pos2 = pos = p = 0;
-			n = 0;
-			continue;
-		} else {
-			pos2 = pos;
-			pos = p;
 		}
 	}
-
-	out += text;
-
 	return out;
 }
 
