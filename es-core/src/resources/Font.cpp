@@ -482,45 +482,49 @@ float Font::getLetterHeight()
 	return glyph->texSize.y() * glyph->texture->textureSize.y();
 }
 
-//the worst algorithm ever written
-//breaks up a normal string with newlines to make it fit xLen
-std::string Font::wrapText(std::string text, float xLen)
+// Naive way to find whitespace characters, only includes the common ones in the ASCII range!
+bool Font::isWhiteSpace(UnicodeChar c)
 {
-	std::string out;
+	return (c == (UnicodeChar) ' ' ||
+		c == (UnicodeChar) '\n' ||
+		c == (UnicodeChar) '\t' ||
+		c == (UnicodeChar) '\v' ||
+		c == (UnicodeChar) '\f' ||
+		c == (UnicodeChar) '\r');
+}
 
-	std::string line, word, temp;
-	size_t space;
-
-	Vector2f textSize;
-
-	while(text.length() > 0) //while there's text or we still have text to render
+// Breaks up a normal string with newlines to make it fit width (in pixels)
+std::string Font::wrapText(std::string text, float maxWidth)
+{
+	std::string out = "";
+	while (text.length() > 0)  // find next cut-point
 	{
-		space = text.find_first_of(" \t\n");
-		if(space == std::string::npos)
-			space = text.length() - 1;
-
-		word = text.substr(0, space + 1);
-		text.erase(0, space + 1);
-
-		temp = line + word;
-
-		textSize = sizeText(temp);
-
-		// if the word will fit on the line, add it to our line, and continue
-		if(textSize.x() <= xLen)
+		size_t cursor = 0;
+		float lineWidth = 0.0f;
+		size_t lastWhiteSpace = 0;
+		while ((lineWidth < maxWidth) &&
+			(cursor < text.length()))
 		{
-			line = temp;
-			continue;
-		}else{
-			// the next word won't fit, so break here
-			out += line + '\n';
-			line = word;
+			UnicodeChar c = readUnicodeChar(text, cursor); // also advances cursor!
+			lineWidth = sizeText(text.substr(0, cursor)).x(); // this takes into account \n already present!
+			if (isWhiteSpace(c))
+			{
+				lastWhiteSpace = cursor;
+			}
+		}
+
+		if (cursor == text.length()) // arrived at end of text.
+		{
+			out += text;
+			text.erase();
+		}
+		else // need to cut at last whitespace or lacking that, the previous cursor.
+		{
+			size_t cut = (lastWhiteSpace != 0) ? lastWhiteSpace : getPrevCursor(text, cursor);
+			out += text.substr(0, cut) + "\n";
+			text.erase(0, cut);
 		}
 	}
-
-	// whatever's left should fit
-	out += line;
-
 	return out;
 }
 

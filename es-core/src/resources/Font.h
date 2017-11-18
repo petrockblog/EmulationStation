@@ -124,6 +124,8 @@ private:
 
 	Glyph* getGlyph(unsigned int id);
 
+	bool isWhiteSpace(UnicodeChar c);
+	
 	int mMaxGlyphHeight;
 	
 	const int mSize;
