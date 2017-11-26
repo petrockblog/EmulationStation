@@ -1,9 +1,15 @@
 #pragma once
+#ifndef ES_APP_VIEWS_VIEW_CONTROLLER_H
+#define ES_APP_VIEWS_VIEW_CONTROLLER_H
 
-#include "views/gamelist/IGameListView.h"
-#include "views/SystemView.h"
+#include "FileData.h"
+#include "GuiComponent.h"
+#include "Renderer.h"
+#include <vector>
 
+class IGameListView;
 class SystemData;
+class SystemView;
 
 // Used to smoothly transition the camera between multiple views (e.g. from system to system, from gamelist to gamelist).
 class ViewController : public GuiComponent
@@ -30,17 +36,17 @@ public:
 	void goToGameList(SystemData* system);
 	void goToSystemView(SystemData* system);
 	void goToStart();
-	void goToRandomGame();
+	void ReloadAndGoToStart();
 
 	void onFileChanged(FileData* file, FileChangeType change);
 
 	// Plays a nice launch effect and launches the game at the end of it.
 	// Once the game terminates, plays a return effect.
-	void launch(FileData* game, Eigen::Vector3f centerCameraOn = Eigen::Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0));
+	void launch(FileData* game, Vector3f centerCameraOn = Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0));
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 	enum ViewMode
 	{
@@ -90,9 +96,11 @@ private:
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
 	std::shared_ptr<SystemView> mSystemListView;
 	
-	Eigen::Affine3f mCamera;
+	Transform4x4f mCamera;
 	float mFadeOpacity;
 	bool mLockInput;
 
 	State mState;
 };
+
+#endif // ES_APP_VIEWS_VIEW_CONTROLLER_H

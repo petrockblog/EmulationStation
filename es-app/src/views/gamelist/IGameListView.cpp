@@ -1,12 +1,9 @@
 #include "views/gamelist/IGameListView.h"
-#include "Window.h"
-#include "guis/GuiMetaDataEd.h"
-#include "guis/GuiMenu.h"
+
 #include "guis/GuiGamelistOptions.h"
 #include "views/ViewController.h"
-#include "Settings.h"
-#include "Log.h"
 #include "Sound.h"
+#include "Window.h"
 
 bool IGameListView::input(InputConfig* config, Input input)
 {
@@ -42,15 +39,15 @@ HelpStyle IGameListView::getHelpStyle()
 	return style;
 }
 
-void IGameListView::render(const Eigen::Affine3f& parentTrans)
+void IGameListView::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 
-	float scaleX = trans.linear()(0,0);
-	float scaleY = trans.linear()(1,1);
+	float scaleX = trans.r0().x();
+	float scaleY = trans.r1().y();
 
-	Eigen::Vector2i pos(trans.translation()[0], trans.translation()[1]);
-	Eigen::Vector2i size(mSize.x() * scaleX, mSize.y() * scaleY);
+	Vector2i pos((int)Math::round(trans.translation()[0]), (int)Math::round(trans.translation()[1]));
+	Vector2i size((int)Math::round(mSize.x() * scaleX), (int)Math::round(mSize.y() * scaleY));
 
 	Renderer::pushClipRect(pos, size);
 	renderChildren(trans);

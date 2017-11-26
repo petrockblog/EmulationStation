@@ -1,14 +1,16 @@
 #pragma once
+#ifndef ES_APP_SYSTEM_DATA_H
+#define ES_APP_SYSTEM_DATA_H
 
-#include <vector>
-#include <string>
-#include "FileData.h"
-#include "Window.h"
-#include "MetaData.h"
 #include "PlatformId.h"
-#include "ThemeData.h"
-#include "FileFilterIndex.h"
-#include "CollectionSystemManager.h"
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <vector>
+
+class FileData;
+class FileFilterIndex;
+class ThemeData;
 
 struct SystemEnvironmentData
 {
@@ -32,7 +34,7 @@ public:
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
 	inline SystemEnvironmentData* getSystemEnvData() const { return mEnvData; }
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mEnvData->mPlatformIds; }
-	inline bool hasPlatformId(PlatformIds::PlatformId id) { if (!mEnvData) return false; return std::find(mEnvData->mPlatformIds.begin(), mEnvData->mPlatformIds.end(), id) != mEnvData->mPlatformIds.end(); }
+	inline bool hasPlatformId(PlatformIds::PlatformId id) { if (!mEnvData) return false; return std::find(mEnvData->mPlatformIds.cbegin(), mEnvData->mPlatformIds.cend(), id) != mEnvData->mPlatformIds.cend(); }
 
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
@@ -50,26 +52,13 @@ public:
 
 	static std::vector<SystemData*> sSystemVector;
 
-	inline std::vector<SystemData*>::const_iterator getIterator() const { return std::find(sSystemVector.begin(), sSystemVector.end(), this); };
-	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.rbegin(), sSystemVector.rend(), this); };
+	inline std::vector<SystemData*>::const_iterator getIterator() const { return std::find(sSystemVector.cbegin(), sSystemVector.cend(), this); };
+	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.crbegin(), sSystemVector.crend(), this); };
 	inline bool isCollection() { return mIsCollectionSystem; };
 	inline bool isGameSystem() { return mIsGameSystem; }
-	inline SystemData* getNext() const
-	{
-		auto it = getIterator();
-		it++;
-		if(it == sSystemVector.end()) it = sSystemVector.begin();
-		return *it;
-	}
-
-	inline SystemData* getPrev() const
-	{
-		auto it = getRevIterator();
-		it++;
-		if(it == sSystemVector.rend()) it = sSystemVector.rbegin();
-		return *it;
-	}
-
+	
+	SystemData* getNext() const;
+	SystemData* getPrev() const;
 	static SystemData* getRandomSystem();
 	FileData* getRandomGame();
 
@@ -88,9 +77,12 @@ private:
 	std::shared_ptr<ThemeData> mTheme;
 
 	void populateFolder(FileData* folder);
+	void indexAllGameFilters(const FileData* folder);
 	void setIsGameSystemStatus();
 
 	FileFilterIndex* mFilterIndex;
 
 	FileData* mRootFolder;
 };
+
+#endif // ES_APP_SYSTEM_DATA_H

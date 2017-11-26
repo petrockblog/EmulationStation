@@ -1,10 +1,14 @@
 #include "Gamelist.h"
-#include "SystemData.h"
-#include "pugixml/src/pugixml.hpp"
-#include <boost/filesystem.hpp>
+
+#include "FileData.h"
+#include "FileFilterIndex.h"
 #include "Log.h"
 #include "Settings.h"
+#include "SystemData.h"
 #include "Util.h"
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <pugixml/src/pugixml.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -37,7 +41,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 		const std::unordered_map<std::string, FileData*>& children = treeNode->getChildrenByFilename();
 
 		std::string key = path_it->string();
-		found = children.find(key) != children.end();
+		found = children.find(key) != children.cend();
 		if (found) {
 			treeNode = children.at(key);
 		}
@@ -141,14 +145,6 @@ void parseGamelist(SystemData* system)
 				file->metadata.set("name", defaultName);
 
 			file->metadata.resetChangedFlag();
-
-			// index if it's a game!
-			if(type == GAME)
-			{
-				FileFilterIndex* index = system->getIndex();
-				index->addToIndex(file);
-			}
-
 		}
 	}
 }

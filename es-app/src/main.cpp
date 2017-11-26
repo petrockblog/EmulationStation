@@ -1,30 +1,29 @@
 //EmulationStation, a graphical front-end for ROM browsing. Created by Alec "Aloshi" Lofquist.
 //http://www.aloshi.com
 
-#include <SDL.h>
-#include <iostream>
-#include <iomanip>
-#include "Renderer.h"
-#include "views/ViewController.h"
-#include "SystemData.h"
-#include <boost/filesystem.hpp>
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
-#include "AudioManager.h"
-#include "platform.h"
-#include "Log.h"
-#include "Window.h"
-#include "SystemScreenSaver.h"
+#include "views/ViewController.h"
+#include "CollectionSystemManager.h"
 #include "EmulationStation.h"
+#include "InputManager.h"
+#include "Log.h"
+#include "platform.h"
 #include "PowerSaver.h"
-#include "Settings.h"
 #include "ScraperCmdLine.h"
-#include <sstream>
-#include <boost/locale.hpp>
-
+#include "Settings.h"
+#include "SystemData.h"
+#include "SystemScreenSaver.h"
+#include <boost/filesystem/operations.hpp>
+#include <SDL_events.h>
+#include <SDL_main.h>
+#include <SDL_timer.h>
+#include <iostream>
 #ifdef WIN32
 #include <Windows.h>
 #endif
+
+#include <FreeImage.h>
 
 namespace fs = boost::filesystem;
 
@@ -51,11 +50,9 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
 		{
 			Settings::getInstance()->setBool("IgnoreGamelist", true);
-#ifndef WIN32
 		}else if(strcmp(argv[i], "--show-hidden-files") == 0)
 		{
 			Settings::getInstance()->setBool("ShowHiddenFiles", true);
-#endif
 		}else if(strcmp(argv[i], "--draw-framerate") == 0)
 		{
 			Settings::getInstance()->setBool("DrawFramerate", true);
@@ -85,7 +82,16 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		{
 			int maxVRAM = atoi(argv[i + 1]);
 			Settings::getInstance()->setInt("MaxVRAM", maxVRAM);
-		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+		}
+		else if (strcmp(argv[i], "--force-kiosk") == 0)
+		{
+			Settings::getInstance()->setBool("ForceKiosk", true);
+		}
+		else if (strcmp(argv[i], "--force-kid") == 0)
+		{
+			Settings::getInstance()->setBool("ForceKid", true);
+		}
+		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 #ifdef WIN32
 			// This is a bit of a hack, but otherwise output will go to nowhere
@@ -111,6 +117,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--windowed			not fullscreen, should be used with --resolution\n"
 				"--vsync [1/on or 0/off]		turn vsync on or off (default is on)\n"
 				"--max-vram [size]		Max VRAM to use in Mb before swapping. 0 for unlimited\n"
+				"--force-kiosk		Force the UI mode to be Kiosk\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help
@@ -178,7 +185,7 @@ int main(int argc, char* argv[])
 	unsigned int width = 0;
 	unsigned int height = 0;
 
-	std::locale::global(boost::locale::generator().generate(""));
+	std::locale::global(std::locale("C"));
 	boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv, &width, &height))
@@ -215,6 +222,11 @@ int main(int argc, char* argv[])
 		if(GetConsoleWindow()) // should only pass in "CONSOLE" mode
 			ShowWindow(GetConsoleWindow(), SW_HIDE);
 	}
+#endif
+
+	// call this ONLY when linking with FreeImage as a static library
+#ifdef FREEIMAGE_LIB
+	FreeImage_Initialise();
 #endif
 
 	//if ~/.emulationstation doesn't exist and cannot be created, bail
@@ -304,35 +316,20 @@ int main(int argc, char* argv[])
 	int ps_time = SDL_GetTicks();
 
 	bool running = true;
-	bool ps_standby = false;
 
 	while(running)
 	{
 		SDL_Event event;
-		bool ps_standby = PowerSaver::getState() && SDL_GetTicks() - ps_time > PowerSaver::getMode();
+		bool ps_standby = PowerSaver::getState() && (int) SDL_GetTicks() - ps_time > PowerSaver::getMode();
 
 		if(ps_standby ? SDL_WaitEventTimeout(&event, PowerSaver::getTimeout()) : SDL_PollEvent(&event))
 		{
 			do
 			{
-				switch(event.type)
-				{
-					case SDL_JOYHATMOTION:
-					case SDL_JOYBUTTONDOWN:
-					case SDL_JOYBUTTONUP:
-					case SDL_KEYDOWN:
-					case SDL_KEYUP:
-					case SDL_JOYAXISMOTION:
-					case SDL_TEXTINPUT:
-					case SDL_TEXTEDITING:
-					case SDL_JOYDEVICEADDED:
-					case SDL_JOYDEVICEREMOVED:
-						InputManager::getInstance()->parseEvent(event, &window);
-						break;
-					case SDL_QUIT:
-						running = false;
-						break;
-				}
+				InputManager::getInstance()->parseEvent(event, &window);
+
+				if(event.type == SDL_QUIT)
+					running = false;
 			} while(SDL_PollEvent(&event));
 
 			// triggered if exiting from SDL_WaitEvent due to event
@@ -378,6 +375,11 @@ int main(int argc, char* argv[])
 
 	CollectionSystemManager::deinit();
 	SystemData::deleteSystems();
+
+	// call this ONLY when linking with FreeImage as a static library
+#ifdef FREEIMAGE_LIB
+	FreeImage_DeInitialise();
+#endif
 
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 

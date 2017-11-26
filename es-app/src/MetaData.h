@@ -1,11 +1,11 @@
 #pragma once
+#ifndef ES_APP_META_DATA_H
+#define ES_APP_META_DATA_H
 
-#include "pugixml/src/pugixml.hpp"
-#include <string>
-#include <map>
-#include "GuiComponent.h"
-#include <boost/date_time.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/filesystem/path.hpp>
+
+namespace pugi { class xml_node; }
 
 enum MetaDataType
 {
@@ -44,8 +44,8 @@ const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type);
 class MetaDataList
 {
 public:
-	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node node, const boost::filesystem::path& relativeTo);
-	void appendToXML(pugi::xml_node parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const;
+	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node& node, const boost::filesystem::path& relativeTo);
+	void appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const;
 
 	MetaDataList(MetaDataListType type);
 	
@@ -70,3 +70,5 @@ private:
 	std::map<std::string, std::string> mMap;
 	bool mWasChanged;
 };
+
+#endif // ES_APP_META_DATA_H

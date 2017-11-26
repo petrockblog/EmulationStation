@@ -1,11 +1,18 @@
 #include "FileData.h"
-#include "FileSorts.h"
-#include "views/ViewController.h"
-#include "SystemData.h"
-#include "Log.h"
+
 #include "AudioManager.h"
-#include "VolumeControl.h"
+#include "CollectionSystemManager.h"
+#include "FileFilterIndex.h"
+#include "FileSorts.h"
+#include "Log.h"
+#include "platform.h"
+#include "SystemData.h"
 #include "Util.h"
+#include "VolumeControl.h"
+#include "Window.h"
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/filesystem/operations.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -43,12 +50,32 @@ std::string FileData::getCleanName() const
 	return removeParenthesis(this->getDisplayName());
 }
 
-const std::string& FileData::getThumbnailPath() const
+const std::string FileData::getThumbnailPath() const
 {
-	if(!metadata.get("thumbnail").empty())
-		return metadata.get("thumbnail");
-	else
-		return metadata.get("image");
+	std::string thumbnail = metadata.get("thumbnail");
+
+	// no thumbnail, try image
+	if(thumbnail.empty())
+	{
+		thumbnail = metadata.get("image");
+
+		// no image, try to use local image
+		if(thumbnail.empty())
+		{
+			const char* extList[2] = { ".png", ".jpg" };
+			for(int i = 0; i < 2; i++)
+			{
+				if(thumbnail.empty())
+				{
+					std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
+					if(boost::filesystem::exists(path))
+						thumbnail = path;
+				}
+			}
+		}
+	}
+
+	return thumbnail;
 }
 
 const std::string& FileData::getName()
@@ -61,7 +88,7 @@ const std::vector<FileData*>& FileData::getChildrenListToDisplay() {
 	FileFilterIndex* idx = CollectionSystemManager::get()->getSystemToView(mSystem)->getIndex();
 	if (idx->isFiltered()) {
 		mFilteredChildren.clear();
-		for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+		for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 		{
 			if (idx->showFile((*it))) {
 				mFilteredChildren.push_back(*it);
@@ -76,14 +103,63 @@ const std::vector<FileData*>& FileData::getChildrenListToDisplay() {
 	}
 }
 
-const std::string& FileData::getVideoPath() const
+const std::string FileData::getVideoPath() const
 {
-	return metadata.get("video");
+	std::string video = metadata.get("video");
+
+	// no video, try to use local video
+	if(video.empty())
+	{
+		std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-video.mp4";
+		if(boost::filesystem::exists(path))
+			video = path;
+	}
+
+	return video;
 }
 
-const std::string& FileData::getMarqueePath() const
+const std::string FileData::getMarqueePath() const
 {
-	return metadata.get("marquee");
+	std::string marquee = metadata.get("marquee");
+
+	// no marquee, try to use local marquee
+	if(marquee.empty())
+	{
+		const char* extList[2] = { ".png", ".jpg" };
+		for(int i = 0; i < 2; i++)
+		{
+			if(marquee.empty())
+			{
+				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-marquee" + extList[i];
+				if(boost::filesystem::exists(path))
+					marquee = path;
+			}
+		}
+	}
+
+	return marquee;
+}
+
+const std::string FileData::getImagePath() const
+{
+	std::string image = metadata.get("image");
+
+	// no image, try to use local image
+	if(image.empty())
+	{
+		const char* extList[2] = { ".png", ".jpg" };
+		for(int i = 0; i < 2; i++)
+		{
+			if(image.empty())
+			{
+				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
+				if(boost::filesystem::exists(path))
+					image = path;
+			}
+		}
+	}
+
+	return image;
 }
 
 std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool displayedOnly) const
@@ -91,7 +167,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool d
 	std::vector<FileData*> out;
 	FileFilterIndex* idx = mSystem->getIndex();
 
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 	{
 		if((*it)->getType() & typeMask)
 		{
@@ -102,7 +178,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool d
 		if((*it)->getChildren().size() > 0)
 		{
 			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask, displayedOnly);
-			out.insert(out.end(), subchildren.cbegin(), subchildren.cend());
+			out.insert(out.cend(), subchildren.cbegin(), subchildren.cend());
 		}
 	}
 
@@ -124,7 +200,7 @@ void FileData::addChild(FileData* file)
 	assert(file->getParent() == NULL);
 
 	const std::string key = file->getKey();
-	if (mChildrenByFilename.find(key) == mChildrenByFilename.end())
+	if (mChildrenByFilename.find(key) == mChildrenByFilename.cend())
 	{
 		mChildrenByFilename[key] = file;
 		mChildren.push_back(file);
@@ -137,7 +213,7 @@ void FileData::removeChild(FileData* file)
 	assert(mType == FOLDER);
 	assert(file->getParent() == this);
 	mChildrenByFilename.erase(file->getKey());
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 	{
 		if(*it == file)
 		{
@@ -156,7 +232,7 @@ void FileData::sort(ComparisonFunction& comparator, bool ascending)
 {
 	std::stable_sort(mChildren.begin(), mChildren.end(), comparator);
 
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 	{
 		if((*it)->getChildren().size() > 0)
 			(*it)->sort(comparator, ascending);
@@ -199,7 +275,6 @@ void FileData::launchGame(Window* window)
 
 	window->init();
 	VolumeControl::getInstance()->init();
-	AudioManager::getInstance()->init();
 	window->normalizeNextUpdate();
 
 	//update number of times the game has been launched

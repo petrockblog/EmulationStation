@@ -1,13 +1,10 @@
 #include "Renderer.h"
-#include <iostream>
-#include "platform.h"
-#include GLHEADER
-#include "resources/Font.h"
-#include <SDL.h>
-#include "Log.h"
-#include "ImageIO.h"
+
 #include "../data/Resources.h"
+#include "ImageIO.h"
+#include "Log.h"
 #include "Settings.h"
+#include <SDL.h>
 
 #ifdef USE_OPENGL_ES
 	#define glOrtho glOrthof
@@ -88,7 +85,7 @@ namespace Renderer
 						Uint32 rmask = 0x000000ff; Uint32 gmask = 0x0000ff00; Uint32 bmask = 0x00ff0000; Uint32 amask = 0xff000000;
 			#endif
 			//try creating SDL surface from logo data
-			SDL_Surface * logoSurface = SDL_CreateRGBSurfaceFrom((void *)rawData.data(), width, height, 32, width * 4, rmask, gmask, bmask, amask);
+			SDL_Surface * logoSurface = SDL_CreateRGBSurfaceFrom((void *)rawData.data(), (int)width, (int)height, 32, (int)(width * 4), rmask, gmask, bmask, amask);
 			if (logoSurface != NULL)
 			{
 				SDL_SetWindowIcon(sdlWindow, logoSurface);
@@ -105,11 +102,13 @@ namespace Renderer
 			// 1 for updates synchronized with the vertical retrace, 
 			// or -1 for late swap tearing.
 			// SDL_GL_SetSwapInterval returns 0 on success, -1 on error.
-			// if vsync is requested, try late swap tearing; if that doesn't work, try normal vsync
+			// if vsync is requested, try normal vsync; if that doesn't work, try late swap tearing
 			// if that doesn't work, report an error
-			if(SDL_GL_SetSwapInterval(-1) != 0 && SDL_GL_SetSwapInterval(1) != 0)
+			if(SDL_GL_SetSwapInterval(1) != 0 && SDL_GL_SetSwapInterval(-1) != 0)
 				LOG(LogWarning) << "Tried to enable vsync, but failed! (" << SDL_GetError() << ")";
 		}
+		else
+			SDL_GL_SetSwapInterval(0);
 
 		return true;
 	}

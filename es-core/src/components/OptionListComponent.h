@@ -1,14 +1,10 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H
+#define ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "resources/Font.h"
-#include "Renderer.h"
-#include "Window.h"
-#include "components/TextComponent.h"
-#include "components/ImageComponent.h"
-#include "components/MenuComponent.h"
-#include <sstream>
 #include "Log.h"
+#include "Window.h"
 
 //Used to display a list of options.
 //Can select one or multiple options.
@@ -144,7 +140,7 @@ public:
 		auto font = Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT);
 		mText.setFont(font);
 		mText.setColor(0x777777FF);
-		mText.setAlignment(ALIGN_CENTER);
+		mText.setHorizontalAlignment(ALIGN_CENTER);
 		addChild(&mText);
 
 		if(mMultiSelect)
@@ -197,7 +193,7 @@ public:
 					unsigned int i = getSelectedId();
 					int next = (int)i - 1;
 					if(next < 0)
-						next += mEntries.size();
+						next += (int)mEntries.size();
 
 					mEntries.at(i).selected = false;
 					mEntries.at(next).selected = true;
@@ -223,7 +219,7 @@ public:
 	std::vector<T> getSelectedObjects()
 	{
 		std::vector<T> ret;
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			if(it->selected)
 				ret.push_back(it->object);
@@ -302,7 +298,7 @@ private:
 				mParent->onSizeChanged();
 		}else{
 			// display currently selected + l/r cursors
-			for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+			for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 			{
 				if(it->selected)
 				{
@@ -336,3 +332,5 @@ private:
 
 	std::vector<OptionListData> mEntries;
 };
+
+#endif // ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H

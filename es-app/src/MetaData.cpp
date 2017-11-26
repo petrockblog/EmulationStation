@@ -1,7 +1,9 @@
 #include "MetaData.h"
-#include "components/TextComponent.h"
+
 #include "Log.h"
 #include "Util.h"
+#include <boost/date_time/posix_time/time_formatters.hpp>
+#include <pugixml/src/pugixml.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -20,6 +22,8 @@ MetaDataDecl gameDecls[] = {
 	{"genre",       MD_STRING,              "unknown",          false,      "genre",                "enter game genre"},
 	{"players",     MD_INT,                 "1",                false,      "players",              "enter number of players"},
 	{"favorite",    MD_BOOL,                "false",            false,      "favorite",             "enter favorite off/on"},
+	{"hidden",      MD_BOOL,                "false",            false,      "hidden",               "enter hidden off/on" },
+	{"kidgame",     MD_BOOL,                "false",            false,      "kidgame",              "enter kidgame off/on" },
 	{"playcount",   MD_INT,                 "0",                true,       "play count",           "enter number of times played"},
 	{"lastplayed",  MD_TIME,                "0",                true,       "last played",          "enter last played date"}
 };
@@ -61,18 +65,18 @@ MetaDataList::MetaDataList(MetaDataListType type)
 	: mType(type), mWasChanged(false)
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
-	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
+	for(auto iter = mdd.cbegin(); iter != mdd.cend(); iter++)
 		set(iter->key, iter->defaultValue);
 }
 
 
-MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node node, const fs::path& relativeTo)
+MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& node, const fs::path& relativeTo)
 {
 	MetaDataList mdl(type);
 
 	const std::vector<MetaDataDecl>& mdd = mdl.getMDD();
 
-	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
+	for(auto iter = mdd.cbegin(); iter != mdd.cend(); iter++)
 	{
 		pugi::xml_node md = node.child(iter->key.c_str());
 		if(md)
@@ -92,14 +96,14 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node n
 	return mdl;
 }
 
-void MetaDataList::appendToXML(pugi::xml_node parent, bool ignoreDefaults, const fs::path& relativeTo) const
+void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const fs::path& relativeTo) const
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 
-	for(auto mddIter = mdd.begin(); mddIter != mdd.end(); mddIter++)
+	for(auto mddIter = mdd.cbegin(); mddIter != mdd.cend(); mddIter++)
 	{
 		auto mapIter = mMap.find(mddIter->key);
-		if(mapIter != mMap.end())
+		if(mapIter != mMap.cend())
 		{
 			// we have this value!
 			// if it's just the default (and we ignore defaults), don't write it
@@ -151,7 +155,7 @@ bool MetaDataList::isDefault()
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 
-	for (int i = 1; i < mMap.size(); i++) {
+	for (unsigned int i = 1; i < mMap.size(); i++) {
 		if (mMap.at(mdd[i].key) != mdd[i].defaultValue) return false;
 	}
 

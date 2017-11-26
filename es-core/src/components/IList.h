@@ -1,13 +1,11 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_ILIST_H
+#define ES_CORE_COMPONENTS_ILIST_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include "GuiComponent.h"
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
 #include "resources/Font.h"
-#include "Renderer.h"
+#include "PowerSaver.h"
 
 enum CursorState
 {
@@ -139,21 +137,21 @@ public:
 		return mEntries.at(mCursor).object;
 	}
 
-	void setCursor(typename std::vector<Entry>::iterator& it)
+	void setCursor(typename std::vector<Entry>::const_iterator& it)
 	{
-		assert(it != mEntries.end());
-		mCursor = it - mEntries.begin();
+		assert(it != mEntries.cend());
+		mCursor = it - mEntries.cbegin();
 		onCursorChanged(CURSOR_STOPPED);
 	}
 
 	// returns true if successful (select is in our list), false if not
 	bool setCursor(const UserData& obj)
 	{
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			if((*it).object == obj)
 			{
-				mCursor = it - mEntries.begin();
+				mCursor = (int)(it - mEntries.cbegin());
 				onCursorChanged(CURSOR_STOPPED);
 				return true;
 			}
@@ -209,7 +207,7 @@ public:
 
 	bool remove(const UserData& obj)
 	{
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			if((*it).object == obj)
 			{
@@ -223,16 +221,16 @@ public:
 
 	void pop_back() {
 		mCursor = 0;
-		if (mEntries.size() > 1)
 			mEntries.pop_back();
+		if (mEntries.size() > 1)
 	}
 
-	inline int size() const { return mEntries.size(); }
+	inline int size() const { return (int)mEntries.size(); }
 
 protected:
-	void remove(typename std::vector<Entry>::iterator& it)
+	void remove(typename std::vector<Entry>::const_iterator& it)
 	{
-		if(mCursor > 0 && it - mEntries.begin() <= mCursor)
+		if(mCursor > 0 && it - mEntries.cbegin() <= mCursor)
 		{
 			mCursor--;
 			onCursorChanged(CURSOR_STOPPED);
@@ -244,6 +242,8 @@ protected:
 
 	bool listInput(int velocity) // a velocity of 0 = stop scrolling
 	{
+		PowerSaver::setState(velocity == 0);
+
 		// generate an onCursorChanged event in the stopped state when the user lets go of the key
 		if(velocity == 0 && mScrollVelocity != 0)
 			onCursorChanged(CURSOR_STOPPED);
@@ -297,7 +297,7 @@ protected:
 			scroll(mScrollVelocity);
 	}
 
-	void listRenderTitleOverlay(const Eigen::Affine3f& trans)
+	void listRenderTitleOverlay(const Transform4x4f& /*trans*/)
 	{
 		if(size() == 0 || !mTitleOverlayFont || mTitleOverlayOpacity == 0)
 			return;
@@ -305,11 +305,11 @@ protected:
 		// we don't bother caching this because it's only two letters and will change pretty much every frame if we're scrolling
 		const std::string text = getSelectedName().size() >= 2 ? getSelectedName().substr(0, 2) : "??";
 
-		Eigen::Vector2f off = mTitleOverlayFont->sizeText(text);
+		Vector2f off = mTitleOverlayFont->sizeText(text);
 		off[0] = (Renderer::getScreenWidth() - off.x()) * 0.5f;
 		off[1] = (Renderer::getScreenHeight() - off.y()) * 0.5f;
 		
-		Eigen::Affine3f identTrans = Eigen::Affine3f::Identity();
+		Transform4x4f identTrans = Transform4x4f::Identity();
 
 		mGradient.setOpacity(mTitleOverlayOpacity);
 		mGradient.render(identTrans);
@@ -358,6 +358,8 @@ protected:
 		onCursorChanged((mScrollTier > 0) ? CURSOR_SCROLLING : CURSOR_STOPPED);
 	}
 
-	virtual void onCursorChanged(const CursorState& state) {}
-	virtual void onScroll(int amt) {}
+	virtual void onCursorChanged(const CursorState& /*state*/) {}
+	virtual void onScroll(int /*amt*/) {}
 };
+
+#endif // ES_CORE_COMPONENTS_ILIST_H

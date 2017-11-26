@@ -1,11 +1,11 @@
 #include "views/gamelist/BasicGameListView.h"
+
+#include "views/UIModeController.h"
 #include "views/ViewController.h"
-#include "Renderer.h"
-#include "Window.h"
-#include "ThemeData.h"
-#include "SystemData.h"
+#include "CollectionSystemManager.h"
 #include "Settings.h"
-#include "FileFilterIndex.h"
+#include "SystemData.h"
+#include <boost/filesystem/operations.hpp>
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
@@ -45,7 +45,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	mHeaderText.setText(mRoot->getSystem()->getFullName());
 	if (files.size() > 0)
 	{
-		for(auto it = files.begin(); it != files.end(); it++)
+		for(auto it = files.cbegin(); it != files.cend(); it++)
 		{
 			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
 		}
@@ -110,9 +110,9 @@ void BasicGameListView::remove(FileData *game, bool deleteFile)
 	if (getCursor() == game)                     // Select next element in list, or prev if none
 	{
 		std::vector<FileData*> siblings = parent->getChildrenListToDisplay();
-		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
-		auto gamePos = std::distance(siblings.begin(), gameIter);
-		if (gameIter != siblings.end())
+		auto gameIter = std::find(siblings.cbegin(), siblings.cend(), game);
+		unsigned int gamePos = (int)std::distance(siblings.cbegin(), gameIter);
+		if (gameIter != siblings.cend())
 		{
 			if ((gamePos + 1) < siblings.size())
 			{
@@ -142,9 +142,9 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("b", "back"));
 	prompts.push_back(HelpPrompt("select", "options"));
 	prompts.push_back(HelpPrompt("x", "random"));
-	if(mRoot->getSystem()->isGameSystem())
+	if(mRoot->getSystem()->isGameSystem() && !UIModeController::getInstance()->isUIModeKid())
 	{
-		const char* prompt = CollectionSystemManager::get()->getEditingCollection().c_str();
+		std::string prompt = CollectionSystemManager::get()->getEditingCollection();
 		prompts.push_back(HelpPrompt("y", prompt));
 	}
 	return prompts;

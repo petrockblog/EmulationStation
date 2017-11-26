@@ -1,23 +1,26 @@
 #include "guis/GuiMetaDataEd.h"
-#include "Renderer.h"
-#include "Log.h"
-#include "components/AsyncReqComponent.h"
-#include "Settings.h"
-#include "views/ViewController.h"
-#include "guis/GuiGameScraper.h"
-#include "guis/GuiMsgBox.h"
-#include <boost/filesystem.hpp>
 
-#include "components/TextEditComponent.h"
+#include "components/ButtonComponent.h"
+#include "components/ComponentList.h"
 #include "components/DateTimeComponent.h"
+#include "components/MenuComponent.h"
 #include "components/RatingComponent.h"
 #include "components/SwitchComponent.h"
+#include "components/TextComponent.h"
+#include "guis/GuiGameScraper.h"
+#include "guis/GuiMsgBox.h"
 #include "guis/GuiTextEditPopup.h"
-
-using namespace Eigen;
+#include "resources/Font.h"
+#include "views/ViewController.h"
+#include "CollectionSystemManager.h"
+#include "FileData.h"
+#include "FileFilterIndex.h"
+#include "SystemData.h"
+#include "Util.h"
+#include "Window.h"
 
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams,
-	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window),
+	const std::string& /*header*/, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window),
 	mScraperParams(scraperParams),
 
 	mBackground(window, ":/frame.png"),
@@ -44,7 +47,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mGrid.setEntry(mList, Vector2i(0, 1), true, true);
 
 	// populate list
-	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
+	for(auto iter = mdd.cbegin(); iter != mdd.cend(); iter++)
 	{
 		std::shared_ptr<GuiComponent> ed;
 
@@ -115,7 +118,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 				auto bracket = std::make_shared<ImageComponent>(mWindow);
 				bracket->setImage(":/arrow.svg");
-				bracket->setResize(Eigen::Vector2f(0, lbl->getFont()->getLetterHeight()));
+				bracket->setResize(Vector2f(0, lbl->getFont()->getLetterHeight()));
 				row.addElement(bracket, false);
 
 				bool multiLine = iter->type == MD_MULTILINE_STRING;
@@ -152,8 +155,9 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mButtons = makeButtonGrid(mWindow, buttons);
 	mGrid.setEntry(mButtons, Vector2i(0, 2), true, false);
 
-	// resize + center
-	setSize(Renderer::getScreenWidth() * 0.5f, Renderer::getScreenHeight() * 0.82f);
+	// resize + center	
+	float width = (float)Math::min(Renderer::getScreenHeight(), (int)(Renderer::getScreenWidth() * 0.90f));
+	setSize(width, Renderer::getScreenHeight() * 0.82f);
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 }
 

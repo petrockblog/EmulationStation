@@ -1,15 +1,19 @@
 #include "SystemData.h"
-#include "Gamelist.h"
-#include <boost/filesystem.hpp>
-#include <fstream>
-#include <stdlib.h>
-#include <SDL_joystick.h>
-#include "Renderer.h"
-#include "Log.h"
-#include "InputManager.h"
-#include <iostream>
-#include "Settings.h"
+
+#include "CollectionSystemManager.h"
+#include "FileFilterIndex.h"
 #include "FileSorts.h"
+#include "Gamelist.h"
+#include "Log.h"
+#include "platform.h"
+#include "Settings.h"
+#include "ThemeData.h"
+#include <boost/filesystem/operations.hpp>
+#include <pugixml/src/pugixml.hpp>
+#include <fstream>
+#ifdef WIN32
+#include <Windows.h>
+#endif
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -33,6 +37,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, Sys
 			parseGamelist(this);
 
 		mRootFolder->sort(FileSorts::SortTypes.at(0));
+
+		indexAllGameFilters(mRootFolder);
 	}
 	else
 	{
@@ -63,20 +69,17 @@ void SystemData::setIsGameSystemStatus()
 	mIsGameSystem = (mName != "retropie");
 }
 
-#ifndef WIN32
-// test to see if a file is hidden in *nix (dot-prefixed)
-// could be expanded to check for Windows hidden attribute
+// test to see if a file is hidden
 bool isHidden(const fs::path &filePath)
 {
+#ifdef WIN32
+	const DWORD Attributes = GetFileAttributes(filePath.generic_string().c_str());
+	return (Attributes != INVALID_FILE_ATTRIBUTES) && (Attributes & FILE_ATTRIBUTE_HIDDEN);
+#else
 	fs::path::string_type fileName = filePath.filename().string();
-	if(fileName[0] == '.')
-	{
-		return true;
-	}
-
-	return false;
-}
+	return fileName[0] == '.';
 #endif
+}
 
 void SystemData::populateFolder(FileData* folder)
 {
@@ -119,13 +122,11 @@ void SystemData::populateFolder(FileData* folder)
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
 
 		isGame = false;
-		if(std::find(mEnvData->mSearchExtensions.begin(), mEnvData->mSearchExtensions.end(), extension) != mEnvData->mSearchExtensions.end())
+		if(std::find(mEnvData->mSearchExtensions.cbegin(), mEnvData->mSearchExtensions.cend(), extension) != mEnvData->mSearchExtensions.cend())
 		{
-#ifndef WIN32
 			// skip hidden files
 			if(!showHidden && isHidden(filePath))
 				continue;
-#endif
 
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), mEnvData, this);
 			folder->addChild(newGame);
@@ -143,6 +144,20 @@ void SystemData::populateFolder(FileData* folder)
 				delete newFolder;
 			else
 				folder->addChild(newFolder);
+		}
+	}
+}
+
+void SystemData::indexAllGameFilters(const FileData* folder)
+{
+	const std::vector<FileData*>& children = folder->getChildren();
+
+	for(std::vector<FileData*>::const_iterator it = children.cbegin(); it != children.cend(); ++it)
+	{
+		switch((*it)->getType())
+		{
+			case GAME:   { mFilterIndex->addToIndex(*it); } break;
+			case FOLDER: { indexAllGameFilters(*it);      } break;
 		}
 	}
 }
@@ -202,7 +217,6 @@ bool SystemData::loadConfig()
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
 		std::string name, fullname, path, cmd, themeFolder;
-		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
 		fullname = system.child("fullname").text().get();
@@ -217,7 +231,7 @@ bool SystemData::loadConfig()
 		const char* platformList = system.child("platform").text().get();
 		std::vector<std::string> platformStrs = readList(platformList);
 		std::vector<PlatformIds::PlatformId> platformIds;
-		for(auto it = platformStrs.begin(); it != platformStrs.end(); it++)
+		for(auto it = platformStrs.cbegin(); it != platformStrs.cend(); it++)
 		{
 			const char* str = it->c_str();
 			PlatformIds::PlatformId platformId = PlatformIds::getPlatformId(str);
@@ -343,6 +357,34 @@ std::string SystemData::getConfigPath(bool forWrite)
 	return "/etc/emulationstation/es_systems.cfg";
 }
 
+SystemData* SystemData::getNext() const
+{
+	std::vector<SystemData*>::const_iterator it = getIterator();
+
+	do {
+		it++;
+		if (it == sSystemVector.cend())
+			it = sSystemVector.cbegin();
+	} while ((*it)->getDisplayedGameCount() == 0); 
+	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
+
+	return *it;
+}
+
+SystemData* SystemData::getPrev() const
+{
+	std::vector<SystemData*>::const_reverse_iterator it = getRevIterator();
+
+	do {
+		it++;
+		if (it == sSystemVector.crend())
+			it = sSystemVector.crbegin();
+	} while ((*it)->getDisplayedGameCount() == 0);
+	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
+
+	return *it;
+}
+
 std::string SystemData::getGamelistPath(bool forWrite) const
 {
 	fs::path filePath;
@@ -391,22 +433,22 @@ bool SystemData::hasGamelist() const
 
 unsigned int SystemData::getGameCount() const
 {
-	return mRootFolder->getFilesRecursive(GAME).size();
+	return (unsigned int)mRootFolder->getFilesRecursive(GAME).size();
 }
 
 SystemData* SystemData::getRandomSystem()
 {
 	//  this is a bit brute force. It might be more efficient to just to a while (!gameSystem) do random again...
 	unsigned int total = 0;
-	for(auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
+	for(auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
 	{
 		if ((*it)->isGameSystem())
 			total ++;
 	}
 
 	// get random number in range
-	int target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
-	for (auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
+	int target = (int)Math::round((std::rand() / (float)RAND_MAX) * (total - 1));
+	for (auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
 	{
 		if ((*it)->isGameSystem())
 		{
@@ -420,23 +462,26 @@ SystemData* SystemData::getRandomSystem()
 			}
 		}
 	}
+
+	// if we end up here, there is no valid system
+	return NULL;
 }
 
 FileData* SystemData::getRandomGame()
 {
 	std::vector<FileData*> list = mRootFolder->getFilesRecursive(GAME, true);
-	unsigned int total = list.size();
+	unsigned int total = (int)list.size();
 	int target = 0;
 	// get random number in range
 	if (total == 0)
 		return NULL;
-	target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
+	target = (int)Math::round((std::rand() / (float)RAND_MAX) * (total - 1));
 	return list.at(target);
 }
 
 unsigned int SystemData::getDisplayedGameCount() const
 {
-	return mRootFolder->getFilesRecursive(GAME, true).size();
+	return (unsigned int)mRootFolder->getFilesRecursive(GAME, true).size();
 }
 
 void SystemData::loadTheme()

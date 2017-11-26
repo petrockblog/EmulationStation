@@ -1,3 +1,7 @@
+#pragma once
+#ifndef ES_CORE_POWER_SAVER_H
+#define ES_CORE_POWER_SAVER_H
+
 class PowerSaver
 {
 public:
@@ -35,6 +39,10 @@ private:
 	static bool mRunningScreenSaver;
 
 	static mode mMode;
-	static int mPlayNextTimeout;
+	static int mWakeupTimeout;
 	static int mScreenSaverTimeout;
+
+	static void loadWakeupTime();
 };
+
+#endif // ES_CORE_POWER_SAVER_H

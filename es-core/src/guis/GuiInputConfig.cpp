@@ -1,12 +1,11 @@
 #include "guis/GuiInputConfig.h"
-#include "guis/GuiMsgBox.h"
-#include "Window.h"
-#include "Log.h"
-#include "components/TextComponent.h"
-#include "components/ImageComponent.h"
-#include "components/MenuComponent.h"
+
 #include "components/ButtonComponent.h"
-#include "Util.h"
+#include "components/MenuComponent.h"
+#include "guis/GuiMsgBox.h"
+#include "InputManager.h"
+#include "Log.h"
+#include "Window.h"
 
 // static const int inputCount = 10;
 // static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown" };
@@ -133,8 +132,6 @@ static const char* inputIcon[inputCount] =
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.
 
-using namespace Eigen;
-
 #define HOLD_TO_SKIP_MS 1000
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback) : GuiComponent(window), 
@@ -251,7 +248,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	}
 
 	// only show "HOLD TO SKIP" if this input is skippable
-	mList->setCursorChangedCallback([this](CursorState state) {
+	mList->setCursorChangedCallback([this](CursorState /*state*/) {
 		bool skippable = inputSkippable[mList->getCursorId()];
 		mSubtitle2->setOpacity(skippable * 255);
 	});
@@ -384,7 +381,7 @@ void GuiInputConfig::setAssignedTo(const std::shared_ptr<TextComponent>& text, I
 	text->setColor(0x777777FF);
 }
 
-void GuiInputConfig::error(const std::shared_ptr<TextComponent>& text, const std::string& msg)
+void GuiInputConfig::error(const std::shared_ptr<TextComponent>& text, const std::string& /*msg*/)
 {
 	text->setText("ALREADY TAKEN");
 	text->setColor(0x656565FF);

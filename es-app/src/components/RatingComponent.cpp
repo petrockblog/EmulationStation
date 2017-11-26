@@ -1,14 +1,15 @@
 #include "components/RatingComponent.h"
+
+#include "resources/TextureResource.h"
 #include "Renderer.h"
-#include "Window.h"
-#include "Util.h"
+#include "ThemeData.h"
 
 RatingComponent::RatingComponent(Window* window) : GuiComponent(window), mColorShift(0xFFFFFFFF)
 {
 	mFilledTexture = TextureResource::get(":/star_filled.svg", true);
 	mUnfilledTexture = TextureResource::get(":/star_unfilled.svg", true);
 	mValue = 0.5f;
-	mSize << 64 * NUM_RATING_STARS, 64;
+	mSize = Vector2f(64 * NUM_RATING_STARS, 64);
 	updateVertices();
 	updateColors();
 }
@@ -63,7 +64,7 @@ void RatingComponent::onSizeChanged()
 
 	if(mSize.y() > 0)
 	{
-		size_t heightPx = (size_t)round(mSize.y());
+		size_t heightPx = (size_t)Math::round(mSize.y());
 		if (mFilledTexture)
 			mFilledTexture->rasterizeAt(heightPx, heightPx);
 		if(mUnfilledTexture)
@@ -77,30 +78,30 @@ void RatingComponent::updateVertices()
 {
 	const float numStars = NUM_RATING_STARS;
 
-	const float h = round(getSize().y()); // is the same as a single star's width
-	const float w = round(h * mValue * numStars);
-	const float fw = round(h * numStars);
+	const float h = Math::round(getSize().y()); // is the same as a single star's width
+	const float w = Math::round(h * mValue * numStars);
+	const float fw = Math::round(h * numStars);
 
-	mVertices[0].pos << 0.0f, 0.0f;
-		mVertices[0].tex << 0.0f, 1.0f;
-	mVertices[1].pos << w, h;
-		mVertices[1].tex << mValue * numStars, 0.0f;
-	mVertices[2].pos << 0.0f, h;
-		mVertices[2].tex << 0.0f, 0.0f;
+	mVertices[0].pos = Vector2f(0.0f, 0.0f);
+	mVertices[0].tex = Vector2f(0.0f, 1.0f);
+	mVertices[1].pos = Vector2f(w, h);
+	mVertices[1].tex = Vector2f(mValue * numStars, 0.0f);
+	mVertices[2].pos = Vector2f(0.0f, h);
+	mVertices[2].tex = Vector2f(0.0f, 0.0f);
 
 	mVertices[3] = mVertices[0];
-	mVertices[4].pos << w, 0.0f;
-		mVertices[4].tex << mValue * numStars, 1.0f;
+	mVertices[4].pos = Vector2f(w, 0.0f);
+	mVertices[4].tex = Vector2f(mValue * numStars, 1.0f);
 	mVertices[5] = mVertices[1];
 
 	mVertices[6] = mVertices[4];
-	mVertices[7].pos << fw, h;
-		mVertices[7].tex << numStars, 0.0f;
+	mVertices[7].pos = Vector2f(fw, h);
+	mVertices[7].tex = Vector2f(numStars, 0.0f);
 	mVertices[8] = mVertices[1];
 
 	mVertices[9] = mVertices[6];
-	mVertices[10].pos << fw, 0.0f;
-		mVertices[10].tex << numStars, 1.0f;
+	mVertices[10].pos = Vector2f(fw, 0.0f);
+	mVertices[10].tex = Vector2f(numStars, 1.0f);
 	mVertices[11] = mVertices[7];
 }
 
@@ -109,9 +110,10 @@ void RatingComponent::updateColors()
 	Renderer::buildGLColorArray(mColors, mColorShift, 12);
 }
 
-void RatingComponent::render(const Eigen::Affine3f& parentTrans)
+void RatingComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Transform4x4f trans = parentTrans * getTransform();
+	trans.round();
 	Renderer::setMatrix(trans);
 
 	glEnable(GL_TEXTURE_2D);

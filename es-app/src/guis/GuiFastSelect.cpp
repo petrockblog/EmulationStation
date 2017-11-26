@@ -1,5 +1,6 @@
 #include "guis/GuiFastSelect.h"
-#include "ThemeData.h"
+
+#include "views/gamelist/IGameListView.h"
 #include "FileSorts.h"
 #include "SystemData.h"
 
@@ -19,14 +20,14 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	addChild(&mBackground);
 
 	mLetterText.setSize(mSize.x(), mSize.y() * 0.75f);
-	mLetterText.setAlignment(ALIGN_CENTER);
+	mLetterText.setHorizontalAlignment(ALIGN_CENTER);
 	mLetterText.applyTheme(theme, "fastSelect", "letter", FONT_PATH | COLOR);
 	// TODO - set font size
 	addChild(&mLetterText);
 
 	mSortText.setPosition(0, mSize.y() * 0.75f);
 	mSortText.setSize(mSize.x(), mSize.y() * 0.25f);
-	mSortText.setAlignment(ALIGN_CENTER);
+	mSortText.setHorizontalAlignment(ALIGN_CENTER);
 	mSortText.applyTheme(theme, "fastSelect", "subtext", FONT_PATH | COLOR);
 	// TODO - set font size
 	addChild(&mSortText);
@@ -34,8 +35,8 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	mSortId = 0; // TODO
 	updateSortText();
 
-	mLetterId = LETTERS.find(mGameList->getCursor()->getName()[0]);
-	if(mLetterId == std::string::npos)
+	mLetterId = (int)LETTERS.find(mGameList->getCursor()->getName()[0]);
+	if(mLetterId == (int)std::string::npos)
 		mLetterId = 0;
 
 	mScrollDir = 0;
@@ -79,7 +80,7 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 	{
 		mSortId--;
 		if(mSortId < 0)
-			mSortId += FileSorts::SortTypes.size();
+			mSortId += (int)FileSorts::SortTypes.size();
 
 		updateSortText();
 		return true;
@@ -114,9 +115,9 @@ void GuiFastSelect::scroll()
 {
 	mLetterId += mScrollDir;
 	if(mLetterId < 0)
-		mLetterId += LETTERS.length();
+		mLetterId += (int)LETTERS.length();
 	else if(mLetterId >= (int)LETTERS.length())
-		mLetterId -= LETTERS.length();
+		mLetterId -= (int)LETTERS.length();
 
 	mLetterText.setText(LETTERS.substr(mLetterId, 1));
 }

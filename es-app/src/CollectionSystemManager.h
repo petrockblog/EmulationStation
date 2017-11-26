@@ -1,15 +1,15 @@
 #pragma once
+#ifndef ES_APP_COLLECTION_SYSTEM_MANAGER_H
+#define ES_APP_COLLECTION_SYSTEM_MANAGER_H
 
-#include <vector>
+#include <map>
 #include <string>
-#include "FileData.h"
-#include "Window.h"
-#include "MetaData.h"
-#include "PlatformId.h"
-#include "ThemeData.h"
-#include "FileFilterIndex.h"
-#include "SystemData.h"
-#include "views/ViewController.h"
+#include <vector>
+
+class FileData;
+class SystemData;
+class Window;
+struct SystemEnvironmentData;
 
 enum CollectionSystemType
 {
@@ -70,7 +70,7 @@ public:
 	void setEditMode(std::string collectionName);
 	void exitEditMode();
 	inline bool isEditing() { return mIsEditingCustom; };
-	inline std::string getEditingCollection() { std::string res = mEditingCollection; return res; };
+	inline std::string getEditingCollection() { return mEditingCollection; };
 	bool toggleGameInCollection(FileData* file);
 
 	SystemData* getSystemToView(SystemData* sys);
@@ -113,3 +113,5 @@ private:
 std::string getCustomCollectionConfigPath(std::string collectionName);
 std::string getCollectionsFolder();
 bool systemSort(SystemData* sys1, SystemData* sys2);
+
+#endif // ES_APP_COLLECTION_SYSTEM_MANAGER_H

@@ -1,23 +1,13 @@
 #pragma once
+#ifndef ES_CORE_UTIL_H
+#define ES_CORE_UTIL_H
 
-#include <string>
-#include <Eigen/Dense>
-#include <boost/filesystem.hpp>
-#include <boost/date_time.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/filesystem/path.hpp>
 
 std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);
 std::string strToUpper(const std::string& str);
-
-Eigen::Affine3f& roundMatrix(Eigen::Affine3f& mat);
-Eigen::Affine3f roundMatrix(const Eigen::Affine3f& mat);
-
-Eigen::Vector3f roundVector(const Eigen::Vector3f& vec);
-Eigen::Vector2f roundVector(const Eigen::Vector2f& vec);
-
-#if defined(_WIN32) && _MSC_VER < 1800
-float round(float num);
-#endif
 
 std::string getCanonicalPath(const std::string& str);
 
@@ -47,3 +37,5 @@ std::vector<std::string> commaStringToVector(std::string commaString);
 
 // turn a vector of strings into a comma-separated string
 std::string vectorToCommaString(std::vector<std::string> stringVector);
+
+#endif // ES_CORE_UTIL_H

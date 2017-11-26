@@ -1,12 +1,13 @@
 #include "components/VideoComponent.h"
+
+#include "resources/ResourceManager.h"
+#include "PowerSaver.h"
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
 #include "Window.h"
-#include "PowerSaver.h"
-#ifdef WIN32
-#include <codecvt>
-#endif
+#include <boost/filesystem/operations.hpp>
+#include <SDL_timer.h>
 
 #define FADE_TIME_MS	200
 
@@ -23,8 +24,9 @@ std::string getTitleFolder() {
 void writeSubtitle(const char* gameName, const char* systemName, bool always)
 {
 	FILE* file = fopen(getTitlePath().c_str(), "w");
+	int end = (int)(Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") / (1000));
 	if (always) {
-		fprintf(file, "1\n00:00:01,000 --> 00:00:30,000\n");
+		fprintf(file, "1\n00:00:01,000 --> 00:00:%d,000\n", end);
 	}
 	else
 	{
@@ -34,9 +36,10 @@ void writeSubtitle(const char* gameName, const char* systemName, bool always)
 	fprintf(file, "<i>%s</i>\n\n", systemName);
 
 	if (!always) {
-		fprintf(file, "2\n00:00:26,000 --> 00:00:30,000\n");
-		fprintf(file, "%s\n", gameName);
-		fprintf(file, "<i>%s</i>\n", systemName);
+		if (end > 12)
+		{
+			fprintf(file, "2\n00:00:%d,000 --> 00:00:%d,000\n%s\n<i>%s</i>\n", end-4, end, gameName, systemName);
+		}
 	}
 
 	fflush(file);
@@ -142,11 +145,9 @@ void VideoComponent::setOpacity(unsigned char opacity)
 	mStaticImage.setOpacity(opacity);
 }
 
-void VideoComponent::render(const Eigen::Affine3f& parentTrans)
+void VideoComponent::render(const Transform4x4f& parentTrans)
 {
-	float x, y;
-
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 
 	Renderer::setMatrix(trans);
@@ -158,7 +159,7 @@ void VideoComponent::render(const Eigen::Affine3f& parentTrans)
 	handleLooping();
 }
 
-void VideoComponent::renderSnapshot(const Eigen::Affine3f& parentTrans)
+void VideoComponent::renderSnapshot(const Transform4x4f& parentTrans)
 {
 	// This is the case where the video is not currently being displayed. Work out
 	// if we need to display a static image
@@ -180,26 +181,26 @@ void VideoComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		return;
 	}
 
-	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	Vector2f scale = getParent() ? getParent()->getSize() : Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	if ((properties & POSITION) && elem->has("pos"))
 	{
-		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
-		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
-		mStaticImage.setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+		Vector2f denormalized = elem->get<Vector2f>("pos") * scale;
+		setPosition(Vector3f(denormalized.x(), denormalized.y(), 0));
+		mStaticImage.setPosition(Vector3f(denormalized.x(), denormalized.y(), 0));
 	}
 
 	if(properties & ThemeFlags::SIZE)
 	{
 		if(elem->has("size"))
-			setResize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
+			setResize(elem->get<Vector2f>("size") * scale);
 		else if(elem->has("maxSize"))
-			setMaxSize(elem->get<Eigen::Vector2f>("maxSize").cwiseProduct(scale));
+			setMaxSize(elem->get<Vector2f>("maxSize") * scale);
 	}
 
 	// position + size also implies origin
 	if (((properties & ORIGIN) || ((properties & POSITION) && (properties & ThemeFlags::SIZE))) && elem->has("origin"))
-		setOrigin(elem->get<Eigen::Vector2f>("origin"));
+		setOrigin(elem->get<Vector2f>("origin"));
 
 	if(elem->has("default"))
 		mConfig.defaultVideoPath = elem->get<std::string>("default");
@@ -217,7 +218,7 @@ void VideoComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		if(elem->has("rotation"))
 			setRotationDegrees(elem->get<float>("rotation"));
 		if(elem->has("rotationOrigin"))
-			setRotationOrigin(elem->get<Eigen::Vector2f>("rotationOrigin"));
+			setRotationOrigin(elem->get<Vector2f>("rotationOrigin"));
 	}
 
 	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))

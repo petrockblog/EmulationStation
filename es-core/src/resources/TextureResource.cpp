@@ -1,11 +1,7 @@
 #include "resources/TextureResource.h"
-#include "Log.h"
-#include "platform.h"
-#include GLHEADER
-#include "ImageIO.h"
-#include "Renderer.h"
+
+#include "resources/TextureData.h"
 #include "Util.h"
-#include "Settings.h"
 
 TextureDataManager		TextureResource::sTextureDataManager;
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
@@ -35,8 +31,8 @@ TextureResource::TextureResource(const std::string& path, bool tile, bool dynami
 			data->load();
 		}
 
-		mSize << data->width(), data->height();
-		mSourceSize << data->sourceWidth(), data->sourceHeight();
+		mSize = Vector2i((int)data->width(), (int)data->height());
+		mSourceSize = Vector2f(data->sourceWidth(), data->sourceHeight());
 	}
 	else
 	{
@@ -62,8 +58,8 @@ void TextureResource::initFromPixels(const unsigned char* dataRGBA, size_t width
 	mTextureData->releaseRAM();
 	mTextureData->initFromRGBA(dataRGBA, width, height);
 	// Cache the image dimensions
-	mSize << width, height;
-	mSourceSize << mTextureData->sourceWidth(), mTextureData->sourceHeight();
+	mSize = Vector2i((int)width, (int)height);
+	mSourceSize = Vector2f(mTextureData->sourceWidth(), mTextureData->sourceHeight());
 }
 
 void TextureResource::initFromMemory(const char* data, size_t length)
@@ -74,11 +70,11 @@ void TextureResource::initFromMemory(const char* data, size_t length)
 	mTextureData->releaseRAM();
 	mTextureData->initImageFromMemory((const unsigned char*)data, length);
 	// Get the size from the texture data
-	mSize << mTextureData->width(), mTextureData->height();
-	mSourceSize << mTextureData->sourceWidth(), mTextureData->sourceHeight();
+	mSize = Vector2i((int)mTextureData->width(), (int)mTextureData->height());
+	mSourceSize = Vector2f(mTextureData->sourceWidth(), mTextureData->sourceHeight());
 }
 
-const Eigen::Vector2i TextureResource::getSize() const
+const Vector2i TextureResource::getSize() const
 {
 	return mSize;
 }
@@ -118,7 +114,7 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 
 	TextureKeyType key(canonicalPath, tile);
 	auto foundTexture = sTextureMap.find(key);
-	if(foundTexture != sTextureMap.end())
+	if(foundTexture != sTextureMap.cend())
 	{
 		if(!foundTexture->second.expired())
 			return foundTexture->second.lock();
@@ -157,13 +153,13 @@ void TextureResource::rasterizeAt(size_t width, size_t height)
 		data = mTextureData;
 	else
 		data = sTextureDataManager.get(this);
-	mSourceSize << (float)width, (float)height;
+	mSourceSize = Vector2f((float)width, (float)height);
 	data->setSourceSize((float)width, (float)height);
 	if (mForceLoad || (mTextureData != nullptr))
 		data->load();
 }
 
-Eigen::Vector2f TextureResource::getSourceImageSize() const
+Vector2f TextureResource::getSourceImageSize() const
 {
 	return mSourceSize;
 }
@@ -203,7 +199,7 @@ size_t TextureResource::getTotalTextureSize()
 	return total;
 }
 
-void TextureResource::unload(std::shared_ptr<ResourceManager>& rm)
+void TextureResource::unload(std::shared_ptr<ResourceManager>& /*rm*/)
 {
 	// Release the texture's resources
 	std::shared_ptr<TextureData> data;
@@ -216,7 +212,7 @@ void TextureResource::unload(std::shared_ptr<ResourceManager>& rm)
 	data->releaseRAM();
 }
 
-void TextureResource::reload(std::shared_ptr<ResourceManager>& rm)
+void TextureResource::reload(std::shared_ptr<ResourceManager>& /*rm*/)
 {
 	// For dynamically loaded textures the texture manager will load them on demand.
 	// For manually loaded textures we have to reload them here

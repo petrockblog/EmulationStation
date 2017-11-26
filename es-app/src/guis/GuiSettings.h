@@ -1,6 +1,8 @@
-#include "GuiComponent.h"
+#pragma once
+#ifndef ES_APP_GUIS_GUI_SETTINGS_H
+#define ES_APP_GUIS_GUI_SETTINGS_H
+
 #include "components/MenuComponent.h"
-#include "SystemData.h"
 
 // This is just a really simple template for a GUI that calls some save functions when closed.
 class GuiSettings : public GuiComponent
@@ -22,3 +24,5 @@ private:
 	MenuComponent mMenu;
 	std::vector< std::function<void()> > mSaveFuncs;
 };
+
+#endif // ES_APP_GUIS_GUI_SETTINGS_H

@@ -1,23 +1,21 @@
 #include "components/ImageComponent.h"
-#include <iostream>
-#include <boost/filesystem.hpp>
-#include <math.h>
+
+#include "resources/TextureResource.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "ThemeData.h"
-#include "Util.h"
 
-Eigen::Vector2i ImageComponent::getTextureSize() const
+Vector2i ImageComponent::getTextureSize() const
 {
 	if(mTexture)
 		return mTexture->getSize();
 	else
-		return Eigen::Vector2i::Zero();
+		return Vector2i::Zero();
 }
 
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
 	mTargetIsMax(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
-	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0.0f), mFading(false)
+	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0), mFading(false)
 {
 	updateColors();
 }
@@ -31,8 +29,8 @@ void ImageComponent::resize()
 	if(!mTexture)
 		return;
 
-	const Eigen::Vector2f textureSize = mTexture->getSourceImageSize();
-	if(textureSize.isZero())
+	const Vector2f textureSize = mTexture->getSourceImageSize();
+	if(textureSize == Vector2f::Zero())
 		return;
 
 	if(mTexture->isTiled())
@@ -49,7 +47,7 @@ void ImageComponent::resize()
 		{
 			mSize = textureSize;
 
-			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
+			Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
 			
 			if(resizeScale.x() < resizeScale.y())
 			{
@@ -61,29 +59,29 @@ void ImageComponent::resize()
 			}
 
 			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = round(mSize[1]);
+			mSize[1] = Math::round(mSize[1]);
 			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
 
 		}else{
 			// if both components are set, we just stretch
 			// if no components are set, we don't resize at all
-			mSize = mTargetSize.isZero() ? textureSize : mTargetSize;
+			mSize = mTargetSize == Vector2f::Zero() ? textureSize : mTargetSize;
 
 			// if only one component is set, we resize in a way that maintains aspect ratio
 			// for SVG rasterization, we always calculate width from rounded height (see comment above)
 			if(!mTargetSize.x() && mTargetSize.y())
 			{
-				mSize[1] = round(mTargetSize.y());
+				mSize[1] = Math::round(mTargetSize.y());
 				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
 			}else if(mTargetSize.x() && !mTargetSize.y())
 			{
-				mSize[1] = round((mTargetSize.x() / textureSize.x()) * textureSize.y());
+				mSize[1] = Math::round((mTargetSize.x() / textureSize.x()) * textureSize.y());
 				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
 			}
 		}
 	}
 	// mSize.y() should already be rounded
-	mTexture->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
+	mTexture->rasterizeAt((size_t)Math::round(mSize.x()), (size_t)Math::round(mSize.y()));
 
 	onSizeChanged();
 }
@@ -93,12 +91,22 @@ void ImageComponent::onSizeChanged()
 	updateVertices();
 }
 
+void ImageComponent::setDefaultImage(std::string path)
+{
+	mDefaultPath = path;
+}
+
 void ImageComponent::setImage(std::string path, bool tile)
 {
 	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
-		mTexture.reset();
-	else
+	{
+		if(mDefaultPath.empty() || !ResourceManager::getInstance()->fileExists(mDefaultPath))
+			mTexture.reset();
+		else
+			mTexture = TextureResource::get(mDefaultPath, tile, mForceLoad, mDynamic);
+	} else {
 		mTexture = TextureResource::get(path, tile, mForceLoad, mDynamic);
+	}
 
 	resize();
 }
@@ -121,14 +129,14 @@ void ImageComponent::setImage(const std::shared_ptr<TextureResource>& texture)
 
 void ImageComponent::setResize(float width, float height)
 {
-	mTargetSize << width, height;
+	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = false;
 	resize();
 }
 
 void ImageComponent::setMaxSize(float width, float height)
 {
-	mTargetSize << width, height;
+	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = true;
 	resize();
 }
@@ -168,16 +176,16 @@ void ImageComponent::updateVertices()
 
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
-	Eigen::Vector2f topLeft(0.0, 0.0);
-	Eigen::Vector2f bottomRight(round(mSize.x()), round(mSize.y()));
+	Vector2f topLeft(0.0, 0.0);
+	Vector2f bottomRight(Math::round(mSize.x()), Math::round(mSize.y()));
 
-	mVertices[0].pos << topLeft.x(), topLeft.y();
-	mVertices[1].pos << topLeft.x(), bottomRight.y();
-	mVertices[2].pos << bottomRight.x(), topLeft.y();
+	mVertices[0].pos = Vector2f(topLeft.x(), topLeft.y());
+	mVertices[1].pos = Vector2f(topLeft.x(), bottomRight.y());
+	mVertices[2].pos = Vector2f(bottomRight.x(), topLeft.y());
 
-	mVertices[3].pos << bottomRight.x(), topLeft.y();
-	mVertices[4].pos << topLeft.x(), bottomRight.y();
-	mVertices[5].pos << bottomRight.x(), bottomRight.y();
+	mVertices[3].pos = Vector2f(bottomRight.x(), topLeft.y());
+	mVertices[4].pos = Vector2f(topLeft.x(), bottomRight.y());
+	mVertices[5].pos = Vector2f(bottomRight.x(), bottomRight.y());
 
 	float px, py;
 	if(mTexture->isTiled())
@@ -189,13 +197,13 @@ void ImageComponent::updateVertices()
 		py = 1;
 	}
 
-	mVertices[0].tex << 0, py;
-	mVertices[1].tex << 0, 0;
-	mVertices[2].tex << px, py;
+	mVertices[0].tex = Vector2f(0, py);
+	mVertices[1].tex = Vector2f(0, 0);
+	mVertices[2].tex = Vector2f(px, py);
 
-	mVertices[3].tex << px, py;
-	mVertices[4].tex << 0, 0;
-	mVertices[5].tex << px, 0;
+	mVertices[3].tex = Vector2f(px, py);
+	mVertices[4].tex = Vector2f(0, 0);
+	mVertices[5].tex = Vector2f(px, 0);
 
 	if(mFlipX)
 	{
@@ -214,9 +222,9 @@ void ImageComponent::updateColors()
 	Renderer::buildGLColorArray(mColors, mColorShift, 6);
 }
 
-void ImageComponent::render(const Eigen::Affine3f& parentTrans)
+void ImageComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
 
 	if(mTexture && mOpacity > 0)
@@ -314,25 +322,29 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		return;
 	}
 
-	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	Vector2f scale = getParent() ? getParent()->getSize() : Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	
 	if(properties & POSITION && elem->has("pos"))
 	{
-		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
-		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+		Vector2f denormalized = elem->get<Vector2f>("pos") * scale;
+		setPosition(Vector3f(denormalized.x(), denormalized.y(), 0));
 	}
 
 	if(properties & ThemeFlags::SIZE)
 	{
 		if(elem->has("size"))
-			setResize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
+			setResize(elem->get<Vector2f>("size") * scale);
 		else if(elem->has("maxSize"))
-			setMaxSize(elem->get<Eigen::Vector2f>("maxSize").cwiseProduct(scale));
+			setMaxSize(elem->get<Vector2f>("maxSize") * scale);
 	}
 
 	// position + size also implies origin
 	if((properties & ORIGIN || (properties & POSITION && properties & ThemeFlags::SIZE)) && elem->has("origin"))
-		setOrigin(elem->get<Eigen::Vector2f>("origin"));
+		setOrigin(elem->get<Vector2f>("origin"));
+
+	if(elem->has("default")) {
+		setDefaultImage(elem->get<std::string>("default"));
+	}
 
 	if(properties & PATH && elem->has("path"))
 	{
@@ -347,7 +359,7 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		if(elem->has("rotation"))
 			setRotationDegrees(elem->get<float>("rotation"));
 		if(elem->has("rotationOrigin"))
-			setRotationOrigin(elem->get<Eigen::Vector2f>("rotationOrigin"));
+			setRotationOrigin(elem->get<Vector2f>("rotationOrigin"));
 	}
 
 	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))

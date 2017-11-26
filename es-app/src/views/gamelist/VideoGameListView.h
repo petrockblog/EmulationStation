@@ -1,10 +1,13 @@
 #pragma once
+#ifndef ES_APP_VIEWS_GAME_LIST_VIDEO_GAME_LIST_VIEW_H
+#define ES_APP_VIEWS_GAME_LIST_VIDEO_GAME_LIST_VIEW_H
 
-#include "views/gamelist/BasicGameListView.h"
-#include "components/ScrollableContainer.h"
-#include "components/RatingComponent.h"
 #include "components/DateTimeComponent.h"
-#include "components/VideoComponent.h"
+#include "components/RatingComponent.h"
+#include "components/ScrollableContainer.h"
+#include "views/gamelist/BasicGameListView.h"
+
+class VideoComponent;
 
 class VideoGameListView : public BasicGameListView
 {
@@ -52,3 +55,5 @@ private:
 	bool		mVideoPlaying;
 
 };
+
+#endif // ES_APP_VIEWS_GAME_LIST_VIDEO_GAME_LIST_VIEW_H

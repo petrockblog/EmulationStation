@@ -1,7 +1,12 @@
 #pragma once
+#ifndef ES_APP_COMPONENTS_RATING_COMPONENT_H
+#define ES_APP_COMPONENTS_RATING_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "resources/TextureResource.h"
+#include "platform.h"
+#include GLHEADER
+
+class TextureResource;
 
 #define NUM_RATING_STARS 5
 
@@ -19,7 +24,7 @@ public:
 	void setValue(const std::string& value) override; // Should be a normalized float (in the range [0..1]) - if it's not, it will be clamped.
 
 	bool input(InputConfig* config, Input input) override;
-	void render(const Eigen::Affine3f& parentTrans);
+	void render(const Transform4x4f& parentTrans);
 
 	void onSizeChanged() override;
 
@@ -40,8 +45,8 @@ private:
 
 	struct Vertex
 	{
-		Eigen::Vector2f pos;
-		Eigen::Vector2f tex;
+		Vector2f pos;
+		Vector2f tex;
 	} mVertices[12];
 
 
@@ -53,3 +58,4 @@ private:
 	std::shared_ptr<TextureResource> mUnfilledTexture;
 };
 
+#endif // ES_APP_COMPONENTS_RATING_COMPONENT_H

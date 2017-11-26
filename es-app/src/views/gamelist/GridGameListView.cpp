@@ -1,5 +1,6 @@
 #include "views/gamelist/GridGameListView.h"
 #include "animations/LambdaAnimation.h"
+#include "views/ViewController.h"
 
 // ===========================================================================
 // Part of this was written by Aloshi but was never finished and added to ES. 

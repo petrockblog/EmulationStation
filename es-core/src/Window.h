@@ -1,13 +1,22 @@
 #pragma once
+#ifndef ES_CORE_WINDOW_H
+#define ES_CORE_WInDOW_H
 
-#include "GuiComponent.h"
-#include <vector>
-#include "resources/Font.h"
-#include "InputManager.h"
+#include "HelpPrompt.h"
+#include "InputConfig.h"
+#include "Settings.h"
+
+#include <memory>
 
 class FileData;
+class Font;
+class GuiComponent;
 class HelpComponent;
 class ImageComponent;
+class InputConfig;
+class TextCache;
+class Transform4x4f;
+struct HelpStyle;
 
 class Window
 {
@@ -27,7 +36,7 @@ public:
 
 	class InfoPopup {
 	public:
-		virtual void render(const Eigen::Affine3f& parentTrans) = 0;
+		virtual void render(const Transform4x4f& parentTrans) = 0;
 		virtual void stop() = 0;
 		virtual ~InfoPopup() {};
 	};
@@ -38,7 +47,7 @@ public:
 	void pushGui(GuiComponent* gui);
 	void removeGui(GuiComponent* gui);
 	GuiComponent* peekGui();
-	inline int getGuiStackSize() { return mGuiStack.size(); }
+	inline int getGuiStackSize() { return (int)mGuiStack.size(); }
 
 	void textInput(const char* text);
 	void input(InputConfig* config, Input input);
@@ -98,3 +107,5 @@ private:
 
 	bool mRenderedHelpPrompts;
 };
+
+#endif // ES_CORE_WINDOW_H

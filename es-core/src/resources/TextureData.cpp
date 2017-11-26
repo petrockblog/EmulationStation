@@ -1,12 +1,15 @@
 #include "resources/TextureData.h"
+
+#include "math/Misc.h"
 #include "resources/ResourceManager.h"
-#include "Log.h"
 #include "ImageIO.h"
-#include "string.h"
-#include "Util.h"
-#include "nanosvg/nanosvg.h"
-#include "nanosvg/nanosvgrast.h"
-#include <vector>
+#include "Log.h"
+#include "platform.h"
+#include GLHEADER
+#include <nanosvg/nanosvg.h>
+#include <nanosvg/nanosvgrast.h>
+#include <assert.h>
+#include <string.h>
 
 #define DPI 96
 
@@ -59,24 +62,24 @@ bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length
 		mSourceWidth = svgImage->width;
 		mSourceHeight = svgImage->height;
 	}
-	mWidth = (size_t)round(mSourceWidth);
-	mHeight = (size_t)round(mSourceHeight);
+	mWidth = (size_t)Math::round(mSourceWidth);
+	mHeight = (size_t)Math::round(mSourceHeight);
 
 	if (mWidth == 0)
 	{
 		// auto scale width to keep aspect
-		mWidth = (size_t)round(((float)mHeight / svgImage->height) * svgImage->width);
+		mWidth = (size_t)Math::round(((float)mHeight / svgImage->height) * svgImage->width);
 	}
 	else if (mHeight == 0)
 	{
 		// auto scale height to keep aspect
-		mHeight = (size_t)round(((float)mWidth / svgImage->width) * svgImage->height);
+		mHeight = (size_t)Math::round(((float)mWidth / svgImage->width) * svgImage->height);
 	}
 
 	unsigned char* dataRGBA = new unsigned char[mWidth * mHeight * 4];
 
 	NSVGrasterizer* rast = nsvgCreateRasterizer();
-	nsvgRasterize(rast, svgImage, 0, 0, mHeight / svgImage->height, dataRGBA, mWidth, mHeight, mWidth * 4);
+	nsvgRasterize(rast, svgImage, 0, 0, mHeight / svgImage->height, dataRGBA, (int)mWidth, (int)mHeight, (int)mWidth * 4);
 	nsvgDeleteRasterizer(rast);
 
 	ImageIO::flipPixelsVert(dataRGBA, mWidth, mHeight);
@@ -105,8 +108,8 @@ bool TextureData::initImageFromMemory(const unsigned char* fileData, size_t leng
 		return false;
 	}
 
-	mSourceWidth = width;
-	mSourceHeight = height;
+	mSourceWidth = (float) width;
+	mSourceHeight = (float) height;
 	mScalable = false;
 
 	return initFromRGBA(imageRGBA.data(), width, height);
@@ -179,7 +182,7 @@ bool TextureData::uploadAndBind()
 		glGenTextures(1, &mTextureID);
 		glBindTexture(GL_TEXTURE_2D, mTextureID);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, mDataRGBA);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)mWidth, (GLsizei)mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, mDataRGBA);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

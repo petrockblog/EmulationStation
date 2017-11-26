@@ -1,17 +1,15 @@
 #include "guis/GuiScraperMulti.h"
-#include "Renderer.h"
-#include "Log.h"
+
+#include "components/ButtonComponent.h"
+#include "components/MenuComponent.h"
+#include "components/ScraperSearchComponent.h"
+#include "components/TextComponent.h"
+#include "guis/GuiMsgBox.h"
 #include "views/ViewController.h"
 #include "Gamelist.h"
 #include "PowerSaver.h"
-
-#include "components/TextComponent.h"
-#include "components/ButtonComponent.h"
-#include "components/ScraperSearchComponent.h"
-#include "components/MenuComponent.h" // for makeButtonGrid
-#include "guis/GuiMsgBox.h"
-
-using namespace Eigen;
+#include "SystemData.h"
+#include "Window.h"
 
 GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults) :
 	GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)),
@@ -25,7 +23,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	PowerSaver::pause();
 	mIsProcessing = true;
 
-	mTotalGames = mSearchQueue.size();
+	mTotalGames = (int)mSearchQueue.size();
 	mCurrentGame = 0;
 	mTotalSuccessful = 0;
 	mTotalSkipped = 0;
@@ -76,7 +74,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 GuiScraperMulti::~GuiScraperMulti()
 {
 	// view type probably changed (basic -> detailed)
-	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
 		ViewController::get()->reloadGameListView(*it, false);
 }
 

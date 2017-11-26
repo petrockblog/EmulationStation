@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
+#define ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 
 #include "ThemeData.h"
 #include "GuiComponent.h"
@@ -10,6 +12,7 @@
 #include "Settings.h"
 #include "Renderer.h"
 #include "Log.h"
+#include "resources/TextureResource.h"
 
 struct ImageGridData
 {
@@ -69,9 +72,9 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
-	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 	void setVisible(bool visible);
+	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 	int getEntryCount();
 	int getCursorIndex();
@@ -84,13 +87,13 @@ public:
 	void unloadTextures(bool unloadAll = false);
 
 private:
-	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
+	Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
 	{
-		Eigen::Vector2f aspect(1, 1);
+		Vector2f aspect(1, 1);
 
 		if(tex)
 		{
-			const Eigen::Vector2i& texSize = tex->getSize();
+			const Vector2i& texSize = tex->getSize();
 
 			if(texSize.x() > texSize.y())
 				aspect[0] = (float)texSize.x() / texSize.y();
@@ -98,17 +101,17 @@ private:
 				aspect[1] = (float)texSize.y() / texSize.x();
 		}
 
-		return Eigen::Vector2f((156 * aspect.x()), (156 * aspect.y() ) );
+		return Vector2f(156 * aspect.x(), 156 * aspect.y());
 	};
 
-	Eigen::Vector2f getMaxSquareSize() const
+	Vector2f getMaxSquareSize() const
 	{
-		Eigen::Vector2f squareSize(32, 32);
+		Vector2f squareSize(32, 32);
 
 		// calc biggest square size
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
-			Eigen::Vector2f chkSize = getSquareSize(it->data.texture);
+			Vector2f chkSize = getSquareSize(it->data.texture);
 			if(chkSize.x() > squareSize.x())
 				squareSize[0] = chkSize[0];
 			if(chkSize.y() > squareSize.y())
@@ -403,7 +406,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 {
 	if(input.value != 0)
 	{
-		Eigen::Vector2i dir = Eigen::Vector2i::Zero();
+		Vector2i dir = Vector2i::Zero();
 		if(config->isMappedTo("up", input))
 			dir[1] = -1;
 		else if(config->isMappedTo("down", input))
@@ -413,7 +416,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 		else if(config->isMappedTo("right", input))
 			dir[0] = 1;
 
-		if(dir != Eigen::Vector2i::Zero())
+		if(dir != Vector2i::Zero())
 		{
 			listInput(dir.x() + dir.y() * getGridDimensions().x());
 			return true;
@@ -613,7 +616,6 @@ void ImageGridComponent<T>::updateImages()
 	Eigen::Vector2i gridSize = getGridDimensions();
 
 	int cursorRow = mCursor / gridSize.x();
-	int cursorCol = mCursor % gridSize.x();
 
 	int start = (cursorRow - (gridSize.y() / 2)) * gridSize.x();
 
@@ -654,3 +656,5 @@ void ImageGridComponent<T>::updateImages()
 		i++;
 	}
 }
+
+#endif // ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H

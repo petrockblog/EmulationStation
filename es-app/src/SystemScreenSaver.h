@@ -1,7 +1,11 @@
 #pragma once
+#ifndef ES_APP_SYSTEM_SCREEN_SAVER_H
+#define ES_APP_SYSTEM_SCREEN_SAVER_H
 
 #include "Window.h"
 
+class ImageComponent;
+class Sound;
 class VideoComponent;
 
 // Screensaver implementation for main window
@@ -23,8 +27,13 @@ public:
 	virtual void launchGame();
 
 private:
-	void	countVideos();
-	void	pickRandomVideo(std::string& path);
+	unsigned long countGameListNodes(const char *nodeName);
+	void countVideos();
+	void countImages();
+	void pickGameListNode(unsigned long index, const char *nodeName, std::string& path);
+	void pickRandomVideo(std::string& path);
+	void pickRandomGameListImage(std::string& path);
+	void pickRandomCustomImage(std::string& path);
 
 	void input(InputConfig* config, Input input);
 
@@ -36,9 +45,12 @@ private:
 	};
 
 private:
-	bool			mCounted;
-	unsigned long	mVideoCount;
-	VideoComponent* mVideoScreensaver;
+	bool			mVideosCounted;
+	unsigned long		mVideoCount;
+	VideoComponent*		mVideoScreensaver;
+	bool			mImagesCounted;
+	unsigned long		mImageCount;
+	ImageComponent*		mImageScreensaver;
 	Window*			mWindow;
 	STATE			mState;
 	float			mOpacity;
@@ -46,4 +58,9 @@ private:
 	FileData*		mCurrentGame;
 	std::string		mGameName;
 	std::string		mSystemName;
+	int 			mVideoChangeTime;
+	std::shared_ptr<Sound>	mBackgroundAudio;
+	bool			mStopBackgroundAudio;
 };
+
+#endif // ES_APP_SYSTEM_SCREEN_SAVER_H

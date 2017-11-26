@@ -1,12 +1,13 @@
 #pragma once
+#ifndef ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H
+#define ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H
 
 #include "FileData.h"
+#include "GuiComponent.h"
 #include "Renderer.h"
 
-class Window;
-class GuiComponent;
-class FileData;
 class ThemeData;
+class Window;
 
 // This is an interface that defines the minimum for a GameListView.
 class IGameListView : public GuiComponent
@@ -39,8 +40,10 @@ public:
 
 	virtual HelpStyle getHelpStyle() override;
 
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 protected:
 	FileData* mRoot;
 	std::shared_ptr<ThemeData> mTheme;
 };
+
+#endif // ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H

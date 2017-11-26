@@ -1,7 +1,7 @@
-#include <iostream>
 #include "HttpReq.h"
+
 #include "Log.h"
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/operations.hpp>
 
 CURLM* HttpReq::s_multi_handle = curl_multi_init();
 
@@ -117,7 +117,7 @@ HttpReq::Status HttpReq::status()
 
 		int msgs_left;
 		CURLMsg* msg;
-		while(msg = curl_multi_info_read(s_multi_handle, &msgs_left))
+		while((msg = curl_multi_info_read(s_multi_handle, &msgs_left)) != nullptr)
 		{
 			if(msg->msg == CURLMSG_DONE)
 			{

@@ -1,14 +1,15 @@
 #include "views/gamelist/VideoGameListView.h"
-#include "views/ViewController.h"
-#include "Window.h"
+
 #include "animations/LambdaAnimation.h"
-#include <sys/stat.h>
-#include <fcntl.h>
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
-#include "Settings.h"
 #endif
 #include "components/VideoVlcComponent.h"
+#include "views/ViewController.h"
+#ifdef _RPI_
+#include "Settings.h"
+#endif
+#include <boost/filesystem/operations.hpp>
 
 VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),
@@ -39,7 +40,7 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
 	mList.setSize(mSize.x() * (0.50f - padding), mList.getSize().y());
 	mList.setAlignment(TextListComponent<FileData*>::ALIGN_LEFT);
-	mList.setCursorChangedCallback([&](const CursorState& state) { updateInfoPanel(); });
+	mList.setCursorChangedCallback([&](const CursorState& /*state*/) { updateInfoPanel(); });
 
 	// Marquee
 	mMarquee.setOrigin(0.5f, 0.5f);
@@ -154,12 +155,10 @@ void VideoGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 void VideoGameListView::initMDLabels()
 {
-	using namespace Eigen;
-
 	std::vector<TextComponent*> components = getMDLabels();
 
 	const unsigned int colCount = 2;
-	const unsigned int rowCount = components.size() / 2;
+	const unsigned int rowCount = (int)(components.size() / 2);
 
 	Vector3f start(mSize.x() * 0.01f, mSize.y() * 0.625f, 0.0f);
 
@@ -187,8 +186,6 @@ void VideoGameListView::initMDLabels()
 
 void VideoGameListView::initMDValues()
 {
-	using namespace Eigen;
-
 	std::vector<TextComponent*> labels = getMDLabels();
 	std::vector<GuiComponent*> values = getMDValues();
 
@@ -240,37 +237,15 @@ void VideoGameListView::updateInfoPanel()
 		fadingOut = true;
 
 	}else{
-		std::string				video_path;
-		std::string				marquee_path;
-		std::string				thumbnail_path;
-		video_path 			= file->getVideoPath();
-		marquee_path 		= file->getMarqueePath();
-		thumbnail_path 		= file->getThumbnailPath();
-
-		if	(!video_path.empty() && (video_path[0] == '~'))
-		{
-			video_path.erase(0, 1);
-			video_path.insert(0, getHomePath());
-		}
-		if	(!marquee_path.empty() && (marquee_path[0] == '~'))
-		{
-			marquee_path.erase(0, 1);
-			marquee_path.insert(0, getHomePath());
-		}
-		if (!thumbnail_path.empty() && (thumbnail_path[0] == '~'))
-		{
-			thumbnail_path.erase(0, 1);
-			thumbnail_path.insert(0, getHomePath());
-		}
-		if (!mVideo->setVideo(video_path))
+		if (!mVideo->setVideo(file->getVideoPath()))
 		{
 			mVideo->setDefaultVideo();
 		}
 		mVideoPlaying = true;
 
-		mVideo->setImage(thumbnail_path);
-		mMarquee.setImage(marquee_path);
-		mImage.setImage(thumbnail_path);
+		mVideo->setImage(file->getThumbnailPath());
+		mMarquee.setImage(file->getMarqueePath());
+		mImage.setImage(file->getThumbnailPath());
 
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
@@ -297,9 +272,9 @@ void VideoGameListView::updateInfoPanel()
 	comps.push_back(&mDescription);
 	comps.push_back(&mImage);
 	std::vector<TextComponent*> labels = getMDLabels();
-	comps.insert(comps.end(), labels.begin(), labels.end());
+	comps.insert(comps.cend(), labels.cbegin(), labels.cend());
 
-	for(auto it = comps.begin(); it != comps.end(); it++)
+	for(auto it = comps.cbegin(); it != comps.cend(); it++)
 	{
 		GuiComponent* comp = *it;
 		// an animation is playing
@@ -311,7 +286,7 @@ void VideoGameListView::updateInfoPanel()
 		{
 			auto func = [comp](float t)
 			{
-				comp->setOpacity((unsigned char)(lerp<float>(0.0f, 1.0f, t)*255));
+				comp->setOpacity((unsigned char)(Math::lerp(0.0f, 1.0f, t)*255));
 			};
 			comp->setAnimation(new LambdaAnimation(func, 150), 0, nullptr, fadingOut);
 		}
@@ -320,33 +295,33 @@ void VideoGameListView::updateInfoPanel()
 
 void VideoGameListView::launch(FileData* game)
 {
-	float screenWidth = Renderer::getScreenWidth();
-	float screenHeight = Renderer::getScreenHeight();
+	float screenWidth = (float) Renderer::getScreenWidth();
+	float screenHeight = (float) Renderer::getScreenHeight();
 
-	Eigen::Vector3f target(screenWidth / 2.0f, screenHeight / 2.0f, 0);
+	Vector3f target(screenWidth / 2.0f, screenHeight / 2.0f, 0);
 
 	if(mMarquee.hasImage() &&
 		(mMarquee.getPosition().x() < screenWidth && mMarquee.getPosition().x() > 0.0f &&
 		 mMarquee.getPosition().y() < screenHeight && mMarquee.getPosition().y() > 0.0f))
 	{
-		target << mMarquee.getCenter().x(), mMarquee.getCenter().y(), 0;
+		target = Vector3f(mMarquee.getCenter().x(), mMarquee.getCenter().y(), 0);
 	}
 	else if(mImage.hasImage() &&
 		(mImage.getPosition().x() < screenWidth && mImage.getPosition().x() > 2.0f &&
 		 mImage.getPosition().y() < screenHeight && mImage.getPosition().y() > 2.0f))
 	{
-		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
+		target = Vector3f(mImage.getCenter().x(), mImage.getCenter().y(), 0);
 	}
 	else if(mHeaderImage.hasImage() &&
 		(mHeaderImage.getPosition().x() < screenWidth && mHeaderImage.getPosition().x() > 0.0f &&
 		 mHeaderImage.getPosition().y() < screenHeight && mHeaderImage.getPosition().y() > 0.0f))
 	{
-		target << mHeaderImage.getCenter().x(), mHeaderImage.getCenter().y(), 0;
+		target = Vector3f(mHeaderImage.getCenter().x(), mHeaderImage.getCenter().y(), 0);
 	}
 	else if(mVideo->getPosition().x() < screenWidth && mVideo->getPosition().x() > 0.0f &&
 		 mVideo->getPosition().y() < screenHeight && mVideo->getPosition().y() > 0.0f)
 	{
-		target << mVideo->getCenter().x(), mVideo->getCenter().y(), 0;
+		target = Vector3f(mVideo->getCenter().x(), mVideo->getCenter().y(), 0);
 	}
 
 	ViewController::get()->launch(game, target);

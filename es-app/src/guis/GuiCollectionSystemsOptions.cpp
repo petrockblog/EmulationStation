@@ -1,13 +1,12 @@
 #include "guis/GuiCollectionSystemsOptions.h"
-#include "guis/GuiMsgBox.h"
-#include "guis/GuiTextEditPopup.h"
-#include "Settings.h"
-#include "views/ViewController.h"
 
-#include "guis/GuiSettings.h"
-#include "Util.h"
-#include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
+#include "components/SwitchComponent.h"
+#include "guis/GuiSettings.h"
+#include "guis/GuiTextEditPopup.h"
+#include "views/ViewController.h"
+#include "CollectionSystemManager.h"
+#include "Window.h"
 
 GuiCollectionSystemsOptions::GuiCollectionSystemsOptions(Window* window) : GuiComponent(window), mMenu(window, "GAME COLLECTION SETTINGS")
 {
@@ -33,7 +32,7 @@ void GuiCollectionSystemsOptions::initializeMenu()
 			std::shared_ptr< OptionListComponent<std::string> > folderThemes = std::make_shared< OptionListComponent<std::string> >(mWindow, "SELECT THEME FOLDER", true);
 
 			// add Custom Systems
-			for(auto it = unusedFolders.begin() ; it != unusedFolders.end() ; it++ )
+			for(auto it = unusedFolders.cbegin() ; it != unusedFolders.cend() ; it++ )
 			{
 				ComponentListRow row;
 				std::string name = *it;
@@ -142,7 +141,7 @@ void GuiCollectionSystemsOptions::addSystemsToMenu()
 	autoOptionList = std::make_shared< OptionListComponent<std::string> >(mWindow, "SELECT COLLECTIONS", true);
 
 	// add Auto Systems
-	for(std::map<std::string, CollectionSystemData>::iterator it = autoSystems.begin() ; it != autoSystems.end() ; it++ )
+	for(std::map<std::string, CollectionSystemData>::const_iterator it = autoSystems.cbegin() ; it != autoSystems.cend() ; it++ )
 	{
 		autoOptionList->add(it->second.decl.longName, it->second.decl.name, it->second.isEnabled);
 	}
@@ -153,7 +152,7 @@ void GuiCollectionSystemsOptions::addSystemsToMenu()
 	customOptionList = std::make_shared< OptionListComponent<std::string> >(mWindow, "SELECT COLLECTIONS", true);
 
 	// add Custom Systems
-	for(std::map<std::string, CollectionSystemData>::iterator it = customSystems.begin() ; it != customSystems.end() ; it++ )
+	for(std::map<std::string, CollectionSystemData>::const_iterator it = customSystems.cbegin() ; it != customSystems.cend() ; it++ )
 	{
 		customOptionList->add(it->second.decl.longName, it->second.decl.name, it->second.isEnabled);
 	}

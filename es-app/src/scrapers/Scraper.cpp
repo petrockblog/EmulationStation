@@ -1,14 +1,18 @@
 #include "scrapers/Scraper.h"
-#include "Log.h"
-#include "Settings.h"
-#include <FreeImage.h>
-#include <boost/filesystem.hpp>
-#include <boost/assign.hpp>
 
+#include "FileData.h"
 #include "GamesDBScraper.h"
+#include "Log.h"
+#include "platform.h"
+#include "Settings.h"
+#include "SystemData.h"
+#include <boost/filesystem/operations.hpp>
+#include <FreeImage.h>
+#include <fstream>
 
-const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
-	("TheGamesDB", &thegamesdb_generate_scraper_requests);
+const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs {
+	{ "TheGamesDB", &thegamesdb_generate_scraper_requests }
+};
 
 std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params)
 {
@@ -22,7 +26,7 @@ std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParam
 std::vector<std::string> getScraperList()
 {
 	std::vector<std::string> list;
-	for(auto it = scraper_request_funcs.begin(); it != scraper_request_funcs.end(); it++)
+	for(auto it = scraper_request_funcs.cbegin(); it != scraper_request_funcs.cend(); it++)
 	{
 		list.push_back(it->first);
 	}
@@ -43,13 +47,15 @@ void ScraperSearchHandle::update()
 
 	if(!mRequestQueue.empty())
 	{
-		auto& req = mRequestQueue.front();
-		AsyncHandleStatus status = req->status();
+		// a request can add more requests to the queue while running,
+		// so be careful with references into the queue
+		auto& req = *(mRequestQueue.front());
+		AsyncHandleStatus status = req.status();
 
 		if(status == ASYNC_ERROR)
 		{
 			// propegate error
-			setError(req->getStatusString());
+			setError(req.getStatusString());
 
 			// empty our queue
 			while(!mRequestQueue.empty())
@@ -136,8 +142,8 @@ void MDResolveHandle::update()
 	if(mStatus == ASYNC_DONE || mStatus == ASYNC_ERROR)
 		return;
 	
-	auto it = mFuncs.begin();
-	while(it != mFuncs.end())
+	auto it = mFuncs.cbegin();
+	while(it != mFuncs.cend())
 	{
 		if(it->first->status() == ASYNC_ERROR)
 		{
@@ -256,7 +262,7 @@ bool resizeImage(const std::string& path, int maxWidth, int maxHeight)
 		return false;
 	}
 
-	bool saved = FreeImage_Save(format, imageRescaled, path.c_str());
+	bool saved = (FreeImage_Save(format, imageRescaled, path.c_str()) != 0);
 	FreeImage_Unload(imageRescaled);
 
 	if(!saved)

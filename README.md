@@ -20,6 +20,20 @@ sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev lib
   libvlc-dev libvlccore-dev vlc-nox
 ```
 
+Note this Repository uses a git submodule - to checkout the source and all submodules, use
+
+```bash
+git clone --recursive https://github.com/RetroPie/EmulationStation.git
+```
+
+or 
+
+```bash
+git clone https://github.com/RetroPie/EmulationStation.git
+cd EmulationStation
+git submodule init --update
+```
+
 Then, generate and build the Makefile with CMake:
 ```bash
 cd YourEmulationStationDirectory
@@ -86,9 +100,12 @@ You can use `--help` or `-h` to view a list of command-line options. Briefly out
 --draw-framerate	- draw the framerate.
 --no-exit		- do not display 'exit' in the ES menu.
 --debug			- show the console window on Windows, do slightly more logging
---windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
+--windowed		- run ES in a window, works best in conjunction with --resolution [w] [h].
 --vsync [1/on or 0/off]	- turn vsync on or off (default is on).
---scrape	- run the interactive command-line metadata scraper.
+--scrape		- run the interactive command-line metadata scraper.
+--no-splash		- don't show the splash screen.
+--max-vram [size]	- Max VRAM to use in Mb before swapping. 0 for unlimited.
+--force-kiosk		- Force the UI mode to be Kiosk.
 ```
 
 As long as ES hasn't frozen, you can always press F4 to close the application.

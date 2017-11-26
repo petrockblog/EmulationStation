@@ -1,7 +1,10 @@
 #include "guis/GuiInfoPopup.h"
-#include "Renderer.h"
+
+#include "components/ComponentGrid.h"
+#include "components/NinePatchComponent.h"
 #include "components/TextComponent.h"
-#include "Log.h"
+#include "Renderer.h"
+#include <SDL_timer.h>
 
 GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :
 	GuiComponent(window), mMessage(message), mDuration(duration), running(true)
@@ -32,8 +35,8 @@ GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :
 	}
 
 	// add a padding to the box
-	int paddingX = Renderer::getScreenWidth() * 0.03f;
-	int paddingY = Renderer::getScreenHeight() * 0.02f;
+	int paddingX = (int) (Renderer::getScreenWidth() * 0.03f);
+	int paddingY = (int) (Renderer::getScreenHeight() * 0.02f);
 	mSize[0] = mSize.x() + paddingX;
 	mSize[1] = mSize.y() + paddingY;
 
@@ -43,15 +46,15 @@ GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :
 	setPosition(posX, posY, 0);
 
 	mFrame->setImagePath(":/frame.png");
-	mFrame->fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
+	mFrame->fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 	addChild(mFrame);
 
 	// we only init the actual time when we first start to render
 	mStartTime = 0;
 
-	mGrid = new ComponentGrid(window, Eigen::Vector2i(1, 3));
+	mGrid = new ComponentGrid(window, Vector2i(1, 3));
 	mGrid->setSize(mSize);
-	mGrid->setEntry(s, Eigen::Vector2i(0, 1), false, true);
+	mGrid->setEntry(s, Vector2i(0, 1), false, true);
 	addChild(mGrid);
 }
 
@@ -60,10 +63,10 @@ GuiInfoPopup::~GuiInfoPopup()
 
 }
 
-void GuiInfoPopup::render(const Eigen::Affine3f& parentTrans)
+void GuiInfoPopup::render(const Transform4x4f& /*parentTrans*/)
 {
 	// we use identity as we want to render on a specific window position, not on the view
-	Eigen::Affine3f trans = getTransform() * Eigen::Affine3f::Identity();
+	Transform4x4f trans = getTransform() * Transform4x4f::Identity();
 	if(running && updateState())
 	{
 		// if we're still supposed to be rendering it
@@ -105,7 +108,7 @@ bool GuiInfoPopup::updateState()
 	{
 		alpha = ((-(curTime - mStartTime - mDuration)*255)/500);
 	}
-	mGrid->setOpacity(alpha);
+	mGrid->setOpacity((unsigned char)alpha);
 
 	// apply fade in effect to popup frame
 	mFrame->setEdgeColor(0xFFFFFF00 | (unsigned char)(alpha));
