@@ -32,7 +32,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 
 	mGrid.setPosition(24, mSize.y() * 0.15f);
 	mGrid.setSize(mSize.x() * 0.8f, mSize.y() * 0.8f);
-	mGrid.setMargin(Eigen::Vector2f(Renderer::getScreenWidth() * .02f, Renderer::getScreenHeight() * .05f));
+	mGrid.setMargin(Vector2f(Renderer::getScreenWidth() * .02f, Renderer::getScreenHeight() * .05f));
 	addChild(&mGrid);
 	
 	mRoot = root;
