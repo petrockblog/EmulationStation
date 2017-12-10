@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <Eigen/Dense>
 
 unsigned int getColorTween(unsigned int color, unsigned int endColor, int frame, int endFrame, bool reverse = false);
 
