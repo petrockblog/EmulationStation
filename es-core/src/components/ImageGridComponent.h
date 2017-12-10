@@ -66,7 +66,7 @@ public:
 	
 	void onSizeChanged() override;
 	
-	void setMargin(Eigen::Vector2f marg) { mMargin = marg; }
+	void setMargin(Vector2f marg) { mMargin = marg; }
 
 	void clear(bool clearall = false) override;
 
@@ -121,20 +121,20 @@ private:
 		return squareSize;
 	};
 
-	Eigen::Vector2i getGridDimensions() const
+	Vector2i getGridDimensions() const
 	{
 		if (mRequestedGridDimensions.x() > 0)
             return mRequestedGridDimensions;
 
-		Eigen::Vector2f squareSize = getMaxSquareSize();
+		Vector2f squareSize = getMaxSquareSize();
 		if (!mTiles.empty()) squareSize = mTiles[0]->getSize();
 
-		Eigen::Vector2i gridSize(mSize.x() / (squareSize.x() + getPadding().x()), mSize.y() / (squareSize.y() + getPadding().y()));
+		Vector2i gridSize(mSize.x() / (squareSize.x() + getPadding().x()), mSize.y() / (squareSize.y() + getPadding().y()));
 		return gridSize;
 	};
 
-	Eigen::Vector2f getPadding() const { return Eigen::Vector2f(24, 24); }
-	Eigen::Vector2f getMargin() { return mMargin; }
+	Vector2f getPadding() const { return Vector2f(24, 24); }
+	Vector2f getMargin() { return mMargin; }
 	
 	void buildImages();
 	void updateImages();
@@ -143,8 +143,8 @@ private:
 
 	bool mEntriesDirty;
 
-	Eigen::Vector2f mMargin;
-	Eigen::Vector2i mRequestedGridDimensions;
+	Vector2f mMargin;
+	Vector2i mRequestedGridDimensions;
 
 	const int MAX_TEXTURES = 80;			// The maximum amount of images that can be loaded at once
 	const int CURSOR_RANGE = 34;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
@@ -169,7 +169,7 @@ template<typename T>
 ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window)
 {
 	mEntriesDirty = true;
-	setMargin(Eigen::Vector2f(24, 24));
+	setMargin(Vector2f(24, 24));
 	mRequestedGridDimensions.x() = 0;
 	mRequestedGridDimensions.y() = 0;
 	mMissingBoxartTexture = TextureResource::get(":/blank_game.png");
@@ -446,13 +446,13 @@ void ImageGridComponent<T>::setVisible(bool visible) {
 }
 
 template<typename T>
-void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
+void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 {
 	// If this grid isn't in focus, return and do not render
 	if (!bVisible)
 		return;
 
-	Eigen::Affine3f trans = getTransform() * parentTrans;
+	Transform4x4f trans = getTransform() * parentTrans;
 
 	if (mEntriesDirty)
 	{
@@ -497,7 +497,7 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 
     using namespace ThemeFlags;
 
-    Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+    Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// Keep theme data pointer.
 	mTheme = theme;
@@ -508,14 +508,14 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 	auto elem = theme->getElement(view, "md_grid_margin", "container");
 	if (elem) {
 		if (elem->has("size")) 
-			setMargin(elem->get<Eigen::Vector2f>("size").cwiseProduct(screen));
+			setMargin(elem->get<Vector2f>("size").cwiseProduct(screen));
 	} 
 
 	// Grid Size (Columns and Rows)
 	elem = theme->getElement(view, "gridRowsAndColumns", "container");
 	if (elem) {
 		if (elem->has("size")) {
-			Eigen::Vector2f RequestedGridDimensions = elem->get<Eigen::Vector2f>("size");
+			Vector2f RequestedGridDimensions = elem->get<Vector2f>("size");
 			mRequestedGridDimensions.x() = (int)RequestedGridDimensions.x();
 			mRequestedGridDimensions.y() = (int)RequestedGridDimensions.y();
 		}
@@ -533,7 +533,7 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 }
 
 template<typename T>
-void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
+void ImageGridComponent<T>::onCursorChanged(const CursorState& /*state*/)
 {
 	updateImages();
 	updateLoadRange();
@@ -552,8 +552,8 @@ void ImageGridComponent<T>::buildImages()
 {
 	mTiles.clear();
 
-	Eigen::Vector2i gridSize = getGridDimensions();
-	Eigen::Vector2f squareSize = getMaxSquareSize();
+	Vector2i gridSize = getGridDimensions();
+	Vector2f squareSize = getMaxSquareSize();
 
 	// Setup gridsize either by default or from theme
 	if (mRequestedGridDimensions.x() == 0)
@@ -613,7 +613,7 @@ void ImageGridComponent<T>::updateImages()
 	if (mTiles.empty())
 		buildImages();
 
-	Eigen::Vector2i gridSize = getGridDimensions();
+	Vector2i gridSize = getGridDimensions();
 
 	int cursorRow = mCursor / gridSize.x();
 
@@ -640,7 +640,7 @@ void ImageGridComponent<T>::updateImages()
 
 		tile->show();
 
-		if(i == mCursor)
+		if(i == (unsigned int)mCursor)
 		{
 			tile->setSelected(true);
 			tile->show();
