@@ -273,6 +273,7 @@ void GuiMenu::openUISettings()
 	styles.push_back("basic");
 	styles.push_back("detailed");
 	styles.push_back("video");
+	styles.push_back("grid");
 	for (auto it = styles.cbegin(); it != styles.cend(); it++)
 		gamelist_style->add(*it, *it, Settings::getInstance()->getString("GamelistViewStyle") == *it);
 	s->addWithLabel("GAMELIST VIEW STYLE", gamelist_style);
