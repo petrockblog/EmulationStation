@@ -7,13 +7,13 @@
 class TextComponent;
 class ImageComponent;
 
-const Eigen::Vector2f NULLVECT = { 0,0 };
+const Vector2f NULLVECT = { 0,0 };
 
 struct KeyframeVariables {
-	Eigen::Vector2f size;
-	Eigen::Vector2f pos;
-	Eigen::Vector2f backgroundSize;
-	Eigen::Vector2f textContainerSize;
+	Vector2f size;
+	Vector2f pos;
+	Vector2f backgroundSize;
+	Vector2f textContainerSize;
 	unsigned char opacity = 0xFF;
 	unsigned int color = 0xFFFFFFFF;
 	unsigned int backgroundColor = 0xFFFFFFFF;
@@ -45,7 +45,7 @@ class GridTileComponent : public GuiComponent
 public:
 	GridTileComponent(Window* window, int index);
 
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 	void update(int deltaTime) override;
 	void onPositionChanged() override;
 
@@ -84,12 +84,12 @@ private:
 	NinePatchComponent mBackground;
 	ComponentGrid mGrid;
 
-	Eigen::Vector2f backgroundPadding;
+	Vector2f backgroundPadding;
 	bool bThemeBackground = false;
 	bool bStretchImage = false;
 	bool bShow = true;
 
-	Eigen::Vector2f mTextContainerSize;
+	Vector2f mTextContainerSize;
 
 	CursorAnimation mAnimation;
 	bool bSelected = false;

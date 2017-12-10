@@ -2,8 +2,6 @@
 #include "AnimationUtil.h"
 #include "Renderer.h"
 
-using namespace Eigen;
-
 GridTileComponent::GridTileComponent(Window* window, int index) : GuiComponent(window), mGrid(window, Vector2i(1, 2)), mBackground(window, ":/frame.png")
 {
 	mText = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
@@ -41,7 +39,7 @@ void GridTileComponent::onSizeChanged()
 	if (bStretchImage)
 		mImage->setSize(mSize.x(), mGrid.getRowHeight(0));
 
-	Eigen::Vector2f newGridSize;
+	Vector2f newGridSize;
 	newGridSize.x() = mGrid.getSize().x();
 	newGridSize.y() = mImage->getSize().y() + mGrid.getRowHeight(1);
 
@@ -78,8 +76,9 @@ void GridTileComponent::setImageToFit(bool fit) {
 	onSizeChanged();
 }
 
-void GridTileComponent::render(const Eigen::Affine3f& parentTrans) {
-	if (bShow) renderChildren(parentTrans);
+void GridTileComponent::render(const Transform4x4f& parentTrans) {
+	if (bShow)
+		renderChildren(parentTrans);
 }
 
 void GridTileComponent::update(int deltaTime) {
@@ -167,7 +166,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 	//mBackground.applyTheme(theme, "grid", "gridtile_background", ALL);
 	mText->applyTheme(theme, "grid", "gridtile_text", ALL);
 
-	Eigen::Vector2f screen = Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// Apply theme data to Struct: GridTile when selected:
 	const ThemeData::ThemeElement* elem = theme->getElement("grid", "gridtile_selected", "image");
@@ -177,7 +176,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 			mAnimation.animateColor = true;
 		}
 		if (elem->has("size")) {
-			mAnimation.selected.size = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
+			mAnimation.selected.size = elem->get<Vector2f>("size").cwiseProduct(screen);
 			mAnimation.animateSize = true;
 		}
 	}
@@ -191,7 +190,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 			mImage->setColorShift(mAnimation.current.color);
 		}
 		if (elem->has("size")) {
-			mAnimation.unselected.size = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
+			mAnimation.unselected.size = elem->get<Vector2f>("size").cwiseProduct(screen);
 			mAnimation.current.size = mAnimation.unselected.size;
 			mAnimation.current.pos.x() = getPosition().x();
 			mAnimation.current.pos.y() = getPosition().y();
@@ -203,7 +202,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 	elem = theme->getElement("grid", "gridtile_textRow_selected", "container");
 	if (elem) {
 		if (elem->has("size")) {
-			mAnimation.selected.textContainerSize = elem->get<Eigen::Vector2f>("size");
+			mAnimation.selected.textContainerSize = elem->get<Vector2f>("size");
 			mAnimation.unselected.textContainerSize = mTextContainerSize;
 			mAnimation.current.textContainerSize = mTextContainerSize;
 			mAnimation.animateTextContainer = true;
@@ -213,7 +212,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 	elem = theme->getElement("grid", "gridtile_textRow", "container");
 	if (elem) {
 		if (elem->has("size")) {
-			mAnimation.unselected.textContainerSize = elem->get<Eigen::Vector2f>("size");
+			mAnimation.unselected.textContainerSize = elem->get<Vector2f>("size");
 			mAnimation.current.textContainerSize = mAnimation.unselected.textContainerSize;
 			mGrid.setRowHeightPerc(1, mAnimation.current.textContainerSize.y());
 		}
@@ -243,7 +242,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 			mAnimation.animateBackgroundColor = true;
 		}
 		if (elem->has("size")) {
-			mAnimation.selected.backgroundSize = elem->get<Eigen::Vector2f>("size").cwiseProduct(screen);
+			mAnimation.selected.backgroundSize = elem->get<Vector2f>("size").cwiseProduct(screen);
 			mAnimation.animateBackgroundSize = true;
 		}
 	}
@@ -267,7 +266,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 		if (elem->has("color-edge"))
 			mBackground.setEdgeColor(elem->get<unsigned int>("color-edge"));
 		if (elem->has("padding")) {
-			backgroundPadding = elem->get<Eigen::Vector2f>("padding").cwiseProduct(screen);
+			backgroundPadding = elem->get<Vector2f>("padding").cwiseProduct(screen);
 		}
 	}
 
