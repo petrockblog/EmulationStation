@@ -222,8 +222,8 @@ public:
 
 	void pop_back() {
 		mCursor = 0;
-			mEntries.pop_back();
 		if (mEntries.size() > 1)
+			mEntries.pop_back();
 	}
 
 	inline int size() const { return (int)mEntries.size(); }
