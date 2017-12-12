@@ -128,7 +128,8 @@ void SystemData::populateFolder(FileData* folder)
 #endif
 
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), mEnvData, this);
-			folder->addChild(newGame);
+			if(!newGame->isArcadeAsset())
+				folder->addChild(newGame);
 			isGame = true;
 		}
 

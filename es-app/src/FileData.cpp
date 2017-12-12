@@ -113,6 +113,20 @@ std::string FileData::getKey() {
 	return getFileName();
 }
 
+const bool FileData::isArcadeAsset()
+{
+	return ( 
+		(mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO)) 
+		&&
+		(
+			std::find(mameBioses.begin(), mameBioses.end(), mPath.stem().generic_string()) != mameBioses.end() 
+			||
+			std::find(mameDevices.begin(), mameDevices.end(), mPath.stem().generic_string()) != mameDevices.end()
+		)
+	);
+}
+
+
 FileData* FileData::getSourceFileData()
 {
 	return this;
