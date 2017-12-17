@@ -58,8 +58,6 @@ public:
 	static const Vector2f UnitX() { return { 1, 0 }; }
 	static const Vector2f UnitY() { return { 0, 1 }; }
 
-	const float cwiseProduct(Vector2f &other) { return 1; }
-
 private:
 
 	float mX;

@@ -176,7 +176,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 			mAnimation.animateColor = true;
 		}
 		if (elem->has("size")) {
-			mAnimation.selected.size = elem->get<Vector2f>("size").cwiseProduct(screen);
+			mAnimation.selected.size = elem->get<Vector2f>("size") * screen;
 			mAnimation.animateSize = true;
 		}
 	}
@@ -190,7 +190,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 			mImage->setColorShift(mAnimation.current.color);
 		}
 		if (elem->has("size")) {
-			mAnimation.unselected.size = elem->get<Vector2f>("size").cwiseProduct(screen);
+			mAnimation.unselected.size = elem->get<Vector2f>("size") * screen;
 			mAnimation.current.size = mAnimation.unselected.size;
 			mAnimation.current.pos.x() = getPosition().x();
 			mAnimation.current.pos.y() = getPosition().y();
@@ -242,7 +242,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 			mAnimation.animateBackgroundColor = true;
 		}
 		if (elem->has("size")) {
-			mAnimation.selected.backgroundSize = elem->get<Vector2f>("size").cwiseProduct(screen);
+			mAnimation.selected.backgroundSize = elem->get<Vector2f>("size") * screen;
 			mAnimation.animateBackgroundSize = true;
 		}
 	}
@@ -266,7 +266,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme) {
 		if (elem->has("color-edge"))
 			mBackground.setEdgeColor(elem->get<unsigned int>("color-edge"));
 		if (elem->has("padding")) {
-			backgroundPadding = elem->get<Vector2f>("padding").cwiseProduct(screen);
+			backgroundPadding = elem->get<Vector2f>("padding") * screen;
 		}
 	}
 
