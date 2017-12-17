@@ -1,3 +1,4 @@
+#include <boost/filesystem.hpp>
 #include "views/gamelist/GridGameListView.h"
 #include "animations/LambdaAnimation.h"
 #include "views/ViewController.h"

@@ -1,3 +1,4 @@
+#include <boost/filesystem.hpp>
 #include "GridTileComponent.h"
 #include "AnimationUtil.h"
 #include "Renderer.h"
