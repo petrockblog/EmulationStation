@@ -74,6 +74,7 @@ set(CORE_HEADERS
 	# Utils
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/FileSystemUtil.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/StringUtil.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/TimeUtil.h
 
 	# Embedded assets (needed by ResourceManager)
 	${emulationstation-all_SOURCE_DIR}/data/Resources.h
@@ -148,6 +149,7 @@ set(CORE_SOURCES
 	# Utils
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/FileSystemUtil.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/StringUtil.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/TimeUtil.cpp
 )
 
 set(EMBEDDED_ASSET_SOURCES
