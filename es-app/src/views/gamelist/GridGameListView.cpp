@@ -276,8 +276,6 @@ void GridGameListView::updateInfoPanel()
 
 void GridGameListView::initMDLabels()
 {
-	using namespace Eigen;
-
 	std::vector<TextComponent*> components = getMDLabels();
 
 	const unsigned int colCount = 2;
@@ -308,8 +306,6 @@ void GridGameListView::initMDLabels()
 
 void GridGameListView::initMDValues()
 {
-	using namespace Eigen;
-
 	std::vector<TextComponent*> labels = getMDLabels();
 	std::vector<GuiComponent*> values = getMDValues();
 
