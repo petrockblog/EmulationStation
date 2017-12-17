@@ -13,6 +13,7 @@
 #include "Renderer.h"
 #include "Log.h"
 #include "resources/TextureResource.h"
+#include "FileData.h"
 
 struct ImageGridData
 {
