@@ -27,7 +27,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mGameTitle.setPosition(0, mSize.y() * 0.05f);
 	mGameTitle.setColor(0xAAAAAAFF);
 	mGameTitle.setSize(mSize.x(), 0);
-	mGameTitle.setAlignment(ALIGN_CENTER);
+	mGameTitle.setHorizontalAlignment(ALIGN_CENTER);
 	addChild(&mGameTitle);
 
 	mGrid.setPosition(24, mSize.y() * 0.15f);

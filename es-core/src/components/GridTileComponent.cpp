@@ -317,7 +317,7 @@ void GridTileComponent::setTextColor(unsigned int color) {
 }
 
 void GridTileComponent::setTextAlignment(Alignment align) {
-	mText->setAlignment(align);
+	mText->setHorizontalAlignment(align);
 }
 
 void GridTileComponent::setUppercase(bool uppercase) {
