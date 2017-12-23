@@ -110,7 +110,8 @@ void VideoPlayerComponent::startVideo()
 				else
 				{
 					float percentVolume = (float)VolumeControl::getInstance()->getVolume();
-					int OMXVolume = (int)((percentVolume-98)*105);
+					// map [0,100] to [-6000,0]
+					int OMXVolume = (int)((percentVolume*6000)/100)*-1;
 					argv[8] = std::to_string(OMXVolume).c_str();
 				}
 
