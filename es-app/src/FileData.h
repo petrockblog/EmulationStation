@@ -6,6 +6,9 @@
 #include <boost/filesystem/path.hpp>
 #include <unordered_map>
 
+extern std::vector<std::string> mameBioses;
+extern std::vector<std::string> mameDevices;
+
 class SystemData;
 class Window;
 struct SystemEnvironmentData;
@@ -60,6 +63,7 @@ public:
 	virtual inline void refreshMetadata() { return; };
 
 	virtual std::string getKey();
+	const bool isArcadeAsset();
 	inline std::string getFullPath() { return getPath().string(); };
 	inline std::string getFileName() { return getPath().filename().string(); };
 	virtual FileData* getSourceFileData();
