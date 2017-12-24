@@ -367,14 +367,16 @@ void ImageGridComponent<T>::updateLoadRange() {
 		return;
 
 	// Get minimum [ will stay at 0 until user moves past 12. ]
-	int rmin = cursor - int(cursorRange / 2);
-	if (rmin < 0) rmin += rmin * -1;
+	int rmin = cursor - (cursorRange / 2);
+	if (rmin < 0)
+		rmin = 0;
 
 	// get max [ will try to be just the viewable area based on mod size ]
 	int rmax = 0;
 	if (rmin < cursorRange / 2)
-		rmax = cursor + int(cursorRange);
-	else rmax = cursor + int(cursorRange / 2);
+		rmax = cursor + cursorRange;
+	else
+		rmax = cursor + (cursorRange / 2);
 	if (rmax > getEntryCount())
 		rmax = getEntryCount() - 1;
 
@@ -386,11 +388,10 @@ void ImageGridComponent<T>::updateLoadRange() {
 	bLoading = true;
 
 	// Determin user's direction
-	if (mPrevIndex > cursor) mCurrentDirection = MOVING_UP;
-	else mCurrentDirection = MOVING_DOWN;
+	mCurrentDirection = (mPrevIndex > cursor ? MOVING_UP : MOVING_DOWN);
+
 	bUnloaded = false;
 	mPrevIndex = cursor;
-
 }
 
 template<typename T>
