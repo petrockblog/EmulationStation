@@ -130,8 +130,8 @@ private:
 		Vector2f squareSize = getMaxSquareSize();
 		if (!mTiles.empty()) squareSize = mTiles[0]->getSize();
 
-		Vector2i gridSize(mSize.x() / (squareSize.x() + getPadding().x()), mSize.y() / (squareSize.y() + getPadding().y()));
-		return gridSize;
+		Vector2i gridDimensions(mSize.x() / (squareSize.x() + getPadding().x()), mSize.y() / (squareSize.y() + getPadding().y()));
+		return gridDimensions;
 	};
 
 	Vector2f getPadding() const { return Vector2f(24, 24); }
@@ -553,7 +553,7 @@ void ImageGridComponent<T>::buildImages()
 {
 	mTiles.clear();
 
-	Vector2i gridSize = getGridDimensions();
+	Vector2i gridDimensions = getGridDimensions();
 	Vector2f squareSize = getMaxSquareSize();
 
 	// Setup gridsize either by default or from theme
@@ -582,13 +582,13 @@ void ImageGridComponent<T>::buildImages()
 
 	// Layout tile size and position
 	float tdy = 0;
-	for(int y = 0; y < gridSize.y(); y++)
+	for(int y = 0; y < gridDimensions.y(); y++)
 	{
 		float tdx = 0;
-		for(int x = 0; x < gridSize.x(); x++)
+		for(int x = 0; x < gridDimensions.x(); x++)
 		{
 			// Create tiles
-			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridSize.x() + x);
+			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridDimensions.x() + x);
 			tile->setImageSize(squareSize.x(), squareSize.y());
 
 			tile->setPosition(tdx, tdy);
@@ -614,15 +614,15 @@ void ImageGridComponent<T>::updateImages()
 	if (mTiles.empty())
 		buildImages();
 
-	Vector2i gridSize = getGridDimensions();
+	Vector2i gridDimensions = getGridDimensions();
 
-	int cursorRow = mCursor / gridSize.x();
+	int cursorRow = mCursor / gridDimensions.x();
 
-	int start = (cursorRow - (gridSize.y() / 2)) * gridSize.x();
+	int start = (cursorRow - (gridDimensions.y() / 2)) * gridDimensions.x();
 
 	//if we're at the end put the row as close as we can and no higher
-	if(start + (gridSize.x() * gridSize.y()) >= (int)mEntries.size())
-		start = gridSize.x() * ((int)mEntries.size()/gridSize.x() - gridSize.y() + 1);
+	if(start + (gridDimensions.x() * gridDimensions.y()) >= (int)mEntries.size())
+		start = gridDimensions.x() * ((int)mEntries.size()/gridDimensions.x() - gridDimensions.y() + 1);
 
 	if(start < 0)
 		start = 0;
