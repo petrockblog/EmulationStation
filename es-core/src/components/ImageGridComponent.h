@@ -285,7 +285,7 @@ void ImageGridComponent<T>::dynamicImageLoader() {
 		updateLoadRange();
 
 	// Update range if user is out of range and no loading/unloading is being performed.
-	if (bLoading == false && bUnloaded && getCursorIndex() > mCursorRange.max || getCursorIndex() < mCursorRange.min)
+	if (!bLoading && bUnloaded && (getCursorIndex() > mCursorRange.max || getCursorIndex() < mCursorRange.min))
 		updateLoadRange();
 
 	// Load in Texture per cycle.
