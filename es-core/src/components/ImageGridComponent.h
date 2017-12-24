@@ -378,10 +378,6 @@ void ImageGridComponent<T>::updateLoadRange() {
 	if (rmax > getEntryCount())
 		rmax = getEntryCount() - 1;
 
-	// if there is only one game, set range 0-0
-	if (getEntryCount() == 1)
-		rmax = 0;
-
 	mCursorRange.min = rmin;
 	mCursorRange.max = rmax;
 	mCursorRange.length = rmax - rmin;
