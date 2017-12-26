@@ -172,8 +172,8 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 {
 	mEntriesDirty = true;
 	setMargin(Vector2f(24, 24));
-	mRequestedGridDimensions.x() = 0;
-	mRequestedGridDimensions.y() = 0;
+	mRequestedGridDimensions.x() = 4;
+	mRequestedGridDimensions.y() = 2;
 	mMissingBoxartTexture = TextureResource::get(":/blank_game.png");
 	mFolderTexture = TextureResource::get(":/folder.png");
 }
@@ -567,13 +567,6 @@ void ImageGridComponent<T>::buildImages()
 
 	Vector2i gridDimensions = getGridDimensions();
 	Vector2f squareSize = getMaxSquareSize();
-
-	// Setup gridsize either by default or from theme
-	if (mRequestedGridDimensions.x() == 0)
-	{
-		mRequestedGridDimensions.x() = 4;
-		mRequestedGridDimensions.y() = 2;
-	}
 
 	// Get distance between tile points.
 	float tileDistanceX = (mSize.x() / mRequestedGridDimensions.x()) - getMargin().x();
