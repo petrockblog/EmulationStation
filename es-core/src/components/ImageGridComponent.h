@@ -52,6 +52,7 @@ protected:
 	using IList<ImageGridData, T>::mTotalLoadedTextures;
 	using IList<ImageGridData, T>::mLoadedTextureList;
 	using IList<ImageGridData, T>::mMissingBoxartTexture;
+	using IList<ImageGridData, T>::mFolderTexture;
 
 public:
 	using IList<ImageGridData, T>::size;
