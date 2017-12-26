@@ -84,7 +84,8 @@ protected:
 	std::list<int>mLoadedTextureList;
 
 	std::shared_ptr<TextureResource> mMissingBoxartTexture;
-	
+	std::shared_ptr<TextureResource> mFolderTexture;
+
 public:
 	IList(Window* window, const ScrollTierList& tierList = LIST_SCROLL_STYLE_QUICK, const ListLoopType& loopType = LIST_PAUSE_AT_END) : GuiComponent(window), 
 		mGradient(window), mTierList(tierList), mLoopType(loopType)
@@ -173,8 +174,9 @@ public:
 		{
 			std::string imagePath = mEntries[index].strdata;
 			if (mEntries[index].object->getType() == 2)
-				TextureResource::get(":/folder.png");
-			else {
+				mEntries[index].data.texture = mFolderTexture;
+			else
+            {
 				mEntries[index].data.texture = ResourceManager::getInstance()->fileExists(imagePath) ?
 					TextureResource::get(imagePath) : mMissingBoxartTexture;
 			}

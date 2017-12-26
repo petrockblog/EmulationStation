@@ -21,6 +21,7 @@ Setup for the grid as a whole.
 <container name="md_grid_margin"> <size>       // The margin between grid tiles.
 <container name="gridRowsAndColumns"> <size>   // sets the amount of rows and columns to fit into grid space.
 <image name="missing_boxart"> <path>           // Changes the missing boxart texture.  (can be done per system)
+<image name="folder"> <path>                   // Changes the folder texture.  (can be done per system)
 ```
 
 Gridtile modification

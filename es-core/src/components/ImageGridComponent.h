@@ -174,6 +174,7 @@ ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : ILi
 	mRequestedGridDimensions.x() = 0;
 	mRequestedGridDimensions.y() = 0;
 	mMissingBoxartTexture = TextureResource::get(":/blank_game.png");
+	mFolderTexture = TextureResource::get(":/folder.png");
 }
 
 template<typename T>
@@ -220,10 +221,13 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	entry.name = name;
 	entry.object = obj;
 	entry.strdata = imagePath;
-	if (obj->getType() == 2) entry.data.texture = TextureResource::get(":/folder.png");
+	if (obj->getType() == 2)
+        entry.data.texture = mFolderTexture;
 	else {
-		if (loadTextureNow) entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
-		else entry.data.texture = TextureResource::get(":/frame.png");
+		if (loadTextureNow)
+            entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
+		else
+            entry.data.texture = TextureResource::get(":/frame.png");
 	}
 
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
@@ -527,6 +531,16 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 			mMissingBoxartTexture = TextureResource::get(path);
 		else
 			LOG(LogWarning) << "Could not replace MissingBoxart, check path: " << path;
+	}
+
+	// Change default folder icon
+	elem = theme->getElement(view, "folder", "image");
+	if (elem) {
+		std::string path = elem->get<std::string>("path");
+		if (ResourceManager::getInstance()->fileExists(path))
+			mFolderTexture = TextureResource::get(path);
+		else
+			LOG(LogWarning) << "Could not replace folder image, check path: " << path;
 	}
 }
 
