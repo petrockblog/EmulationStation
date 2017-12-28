@@ -14,7 +14,7 @@
 // ============================================================================
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
-	mGrid(window, 6), mBackgroundImage(window), mGameTitle(window),
+	mGrid(window), mBackgroundImage(window), mGameTitle(window),
 	mDescContainer(window), mDescription(window),
 	mImage(window),
 	

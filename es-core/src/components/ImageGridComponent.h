@@ -59,7 +59,7 @@ public:
 	using IList<ImageGridData, T>::isScrolling;
 	using IList<ImageGridData, T>::stopScrolling;
 
-	ImageGridComponent(Window* window, int modGridSize = 1);
+	ImageGridComponent(Window* window);
 	~ImageGridComponent();
 
 	void remove();
@@ -167,7 +167,7 @@ private:
 };
 
 template<typename T>
-ImageGridComponent<T>::ImageGridComponent(Window* window, int modGridSize) : IList<ImageGridData, T>(window)
+ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData, T>(window)
 {
 	mEntriesDirty = true;
 	setMargin(Vector2f(24, 24));
