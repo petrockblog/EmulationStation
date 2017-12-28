@@ -49,7 +49,6 @@ protected:
 	int mLoadFrameKey = 1;
 
 private:
-	void getDefaultElements();
 	void updateInfoPanel();
 	void initMDLabels();
 	void initMDValues();
