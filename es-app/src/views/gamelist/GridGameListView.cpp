@@ -145,6 +145,8 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 		// Reload textures after folder change
 		mGrid.reloadTextures();
 		mLoadFrame = mLoadFrameKey;
+
+		mHeaderText.setText(mRoot->getSystem()->getFullName());
 	}
 }
 
