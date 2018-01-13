@@ -69,7 +69,10 @@ namespace Renderer {
 			box.h = 0;
 
 		clipStack.push(box);
-		glScissor(box.x, box.y, box.w, box.h);
+		if (!Renderer::getRotate())
+			glScissor(box.x, box.y, box.w, box.h);
+		else
+			glScissor(box.y, box.x, box.h, box.w);
 		glEnable(GL_SCISSOR_TEST);
 	}
 
@@ -87,7 +90,10 @@ namespace Renderer {
 			glDisable(GL_SCISSOR_TEST);
 		}else{
 			const ClipRect& top = clipStack.top();
-			glScissor(top.x, top.y, top.w, top.h);
+			if (!Renderer::getRotate())
+				glScissor(top.x, top.y, top.w, top.h);
+			else
+				glScissor(top.y, top.x, top.h, top.w);
 		}
 	}
 
