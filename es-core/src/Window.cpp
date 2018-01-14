@@ -40,7 +40,7 @@ void Window::pushGui(GuiComponent* gui)
 
 void Window::removeGui(GuiComponent* gui)
 {
-	for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
+	for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
 	{
 		if(*i == gui)
 		{

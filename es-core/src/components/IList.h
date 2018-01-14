@@ -160,7 +160,7 @@ public:
 
 	bool remove(const UserData& obj)
 	{
-		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
 		{
 			if((*it).object == obj)
 			{
@@ -175,9 +175,9 @@ public:
 	inline int size() const { return (int)mEntries.size(); }
 
 protected:
-	void remove(typename std::vector<Entry>::const_iterator& it)
+	void remove(typename std::vector<Entry>::iterator& it)
 	{
-		if(mCursor > 0 && it - mEntries.cbegin() <= mCursor)
+		if(mCursor > 0 && it - mEntries.begin() <= mCursor)
 		{
 			mCursor--;
 			onCursorChanged(CURSOR_STOPPED);

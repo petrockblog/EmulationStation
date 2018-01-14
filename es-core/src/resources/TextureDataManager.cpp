@@ -29,7 +29,7 @@ std::shared_ptr<TextureData> TextureDataManager::add(const TextureResource* key,
 	remove(key);
 	std::shared_ptr<TextureData> data(new TextureData(tiled));
 	mTextures.push_front(data);
-	mTextureLookup[key] = mTextures.cbegin();
+	mTextureLookup[key] = mTextures.begin();
 	return data;
 }
 
@@ -37,7 +37,7 @@ void TextureDataManager::remove(const TextureResource* key)
 {
 	// Find the entry in the list
 	auto it = mTextureLookup.find(key);
-	if (it != mTextureLookup.cend())
+	if (it != mTextureLookup.end())
 	{
 		// Remove the list entry
 		mTextures.erase((*it).second);
@@ -52,7 +52,7 @@ std::shared_ptr<TextureData> TextureDataManager::get(const TextureResource* key)
 	// move it to the top
 	std::shared_ptr<TextureData> tex;
 	auto it = mTextureLookup.find(key);
-	if (it != mTextureLookup.cend())
+	if (it != mTextureLookup.end())
 	{
 		tex = *(*it).second;
 		// Remove the list entry
@@ -60,7 +60,7 @@ std::shared_ptr<TextureData> TextureDataManager::get(const TextureResource* key)
 		// Put it at the top
 		mTextures.push_front(tex);
 		// Store it back in the lookup
-		mTextureLookup[key] = mTextures.cbegin();
+		mTextureLookup[key] = mTextures.begin();
 
 		// Make sure it's loaded or queued for loading
 		load(tex);
@@ -187,7 +187,7 @@ void TextureLoader::load(std::shared_ptr<TextureData> textureData)
 		std::unique_lock<std::mutex> lock(mMutex);
 		// Remove it from the queue if it is already there
 		auto td = mTextureDataLookup.find(textureData.get());
-		if (td != mTextureDataLookup.cend())
+		if (td != mTextureDataLookup.end())
 		{
 			mTextureDataQ.erase((*td).second);
 			mTextureDataLookup.erase(td);
@@ -195,7 +195,7 @@ void TextureLoader::load(std::shared_ptr<TextureData> textureData)
 
 		// Put it on the start of the queue as we want the newly requested textures to load first
 		mTextureDataQ.push_front(textureData);
-		mTextureDataLookup[textureData.get()] = mTextureDataQ.cbegin();
+		mTextureDataLookup[textureData.get()] = mTextureDataQ.begin();
 		mEvent.notify_one();
 	}
 }
@@ -205,7 +205,7 @@ void TextureLoader::remove(std::shared_ptr<TextureData> textureData)
 	// Just remove it from the queue so we don't attempt to load it
 	std::unique_lock<std::mutex> lock(mMutex);
 	auto td = mTextureDataLookup.find(textureData.get());
-	if (td != mTextureDataLookup.cend())
+	if (td != mTextureDataLookup.end())
 	{
 		mTextureDataQ.erase((*td).second);
 		mTextureDataLookup.erase(td);
