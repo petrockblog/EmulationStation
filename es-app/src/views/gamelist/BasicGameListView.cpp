@@ -45,7 +45,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	mHeaderText.setText(mRoot->getSystem()->getFullName());
 	if (files.size() > 0)
 	{
-		for(auto it = files.cbegin(); it != files.cend(); it++)
+		for(auto it = files.begin(); it != files.end(); it++)
 		{
 			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
 		}
@@ -110,9 +110,9 @@ void BasicGameListView::remove(FileData *game, bool deleteFile)
 	if (getCursor() == game)                     // Select next element in list, or prev if none
 	{
 		std::vector<FileData*> siblings = parent->getChildrenListToDisplay();
-		auto gameIter = std::find(siblings.cbegin(), siblings.cend(), game);
-		int gamePos = (int)std::distance(siblings.cbegin(), gameIter);
-		if (gameIter != siblings.cend())
+		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
+		int gamePos = (int)std::distance(siblings.begin(), gameIter);
+		if (gameIter != siblings.end())
 		{
 			if ((gamePos + 1) < siblings.size())
 			{

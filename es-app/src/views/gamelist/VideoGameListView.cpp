@@ -272,9 +272,9 @@ void VideoGameListView::updateInfoPanel()
 	comps.push_back(&mDescription);
 	comps.push_back(&mImage);
 	std::vector<TextComponent*> labels = getMDLabels();
-	comps.insert(comps.cend(), labels.cbegin(), labels.cend());
+	comps.insert(comps.end(), labels.begin(), labels.end());
 
-	for(auto it = comps.cbegin(); it != comps.cend(); it++)
+	for(auto it = comps.begin(); it != comps.end(); it++)
 	{
 		GuiComponent* comp = *it;
 		// an animation is playing

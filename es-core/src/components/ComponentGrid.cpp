@@ -107,7 +107,7 @@ void ComponentGrid::setEntry(const std::shared_ptr<GuiComponent>& comp, const Ve
 
 bool ComponentGrid::removeEntry(const std::shared_ptr<GuiComponent>& comp)
 {
-	for(auto it = mCells.cbegin(); it != mCells.cend(); it++)
+	for(auto it = mCells.begin(); it != mCells.end(); it++)
 	{
 		if(it->component == comp)
 		{

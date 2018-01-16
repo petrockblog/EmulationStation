@@ -185,7 +185,7 @@ void GuiComponent::removeChild(GuiComponent* cmp)
 
 	cmp->setParent(NULL);
 
-	for(auto i = mChildren.cbegin(); i != mChildren.cend(); i++)
+	for(auto i = mChildren.begin(); i != mChildren.end(); i++)
 	{
 		if(*i == cmp)
 		{
