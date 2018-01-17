@@ -117,6 +117,10 @@ bool parseArgs(int argc, char* argv[])
 		{
 			Settings::getInstance()->setBool("ForceKid", true);
 		}
+		else if (strcmp(argv[i], "--rotate") == 0)
+		{
+			Settings::getInstance()->setBool("rotate", true);
+		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 #ifdef WIN32

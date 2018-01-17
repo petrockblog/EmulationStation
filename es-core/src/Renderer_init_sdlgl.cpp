@@ -13,6 +13,7 @@
 namespace Renderer
 {
 	static bool initialCursorState;
+        bool rotate = false;
 
 	unsigned int windowWidth   = 0;
 	unsigned int windowHeight  = 0;
@@ -27,6 +28,7 @@ namespace Renderer
 	unsigned int getScreenHeight()  { return screenHeight; }
 	unsigned int getScreenOffsetX() { return screenOffsetX; }
 	unsigned int getScreenOffsetY() { return screenOffsetY; }
+	bool getRotate() { return rotate; };
 
 	SDL_Window* sdlWindow = NULL;
 	SDL_GLContext sdlContext = NULL;
@@ -60,17 +62,33 @@ namespace Renderer
 
 		SDL_DisplayMode dispMode;
 		SDL_GetDesktopDisplayMode(0, &dispMode);
-		windowWidth   = Settings::getInstance()->getInt("WindowWidth")   ? Settings::getInstance()->getInt("WindowWidth")   : dispMode.w;
-		windowHeight  = Settings::getInstance()->getInt("WindowHeight")  ? Settings::getInstance()->getInt("WindowHeight")  : dispMode.h;
-		screenWidth   = Settings::getInstance()->getInt("ScreenWidth")   ? Settings::getInstance()->getInt("ScreenWidth")   : windowWidth;
-		screenHeight  = Settings::getInstance()->getInt("ScreenHeight")  ? Settings::getInstance()->getInt("ScreenHeight")  : windowHeight;
-		screenOffsetX = Settings::getInstance()->getInt("ScreenOffsetX") ? Settings::getInstance()->getInt("ScreenOffsetX") : 0;
-		screenOffsetY = Settings::getInstance()->getInt("ScreenOffsetY") ? Settings::getInstance()->getInt("ScreenOffsetY") : 0;
+		rotate        = Settings::getInstance()->getBool("rotate")   ? Settings::getInstance()->getBool("rotate")   : false;
 
-		sdlWindow = SDL_CreateWindow("EmulationStation", 
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-			windowWidth, windowHeight, 
-			SDL_WINDOW_OPENGL | (Settings::getInstance()->getBool("Windowed") ? 0 : SDL_WINDOW_FULLSCREEN));
+                if (!rotate) {
+			windowWidth   = Settings::getInstance()->getInt("WindowWidth")   ? Settings::getInstance()->getInt("WindowWidth")   : dispMode.w;
+			windowHeight  = Settings::getInstance()->getInt("WindowHeight")  ? Settings::getInstance()->getInt("WindowHeight")  : dispMode.h;
+			screenWidth   = Settings::getInstance()->getInt("ScreenWidth")   ? Settings::getInstance()->getInt("ScreenWidth")   : windowWidth;
+			screenHeight  = Settings::getInstance()->getInt("ScreenHeight")  ? Settings::getInstance()->getInt("ScreenHeight")  : windowHeight;
+			screenOffsetX = Settings::getInstance()->getInt("ScreenOffsetX") ? Settings::getInstance()->getInt("ScreenOffsetX") : 0;
+			screenOffsetY = Settings::getInstance()->getInt("ScreenOffsetY") ? Settings::getInstance()->getInt("ScreenOffsetY") : 0;
+			sdlWindow = SDL_CreateWindow("EmulationStation", 
+				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+				windowWidth, windowHeight, 
+				SDL_WINDOW_OPENGL | (Settings::getInstance()->getBool("Windowed") ? 0 : SDL_WINDOW_FULLSCREEN));
+		} else {
+			windowHeight  = Settings::getInstance()->getInt("WindowWidth")   ? Settings::getInstance()->getInt("WindowWidth")   : dispMode.w;
+			windowWidth   = Settings::getInstance()->getInt("WindowHeight")  ? Settings::getInstance()->getInt("WindowHeight")  : dispMode.h;
+			screenHeight  = Settings::getInstance()->getInt("ScreenWidth")   ? Settings::getInstance()->getInt("ScreenWidth")   : windowHeight;
+			screenWidth   = Settings::getInstance()->getInt("ScreenHeight")  ? Settings::getInstance()->getInt("ScreenHeight")  : windowWidth;
+			screenOffsetY = Settings::getInstance()->getInt("ScreenOffsetX") ? Settings::getInstance()->getInt("ScreenOffsetX") : 0;
+			screenOffsetX = Settings::getInstance()->getInt("ScreenOffsetY") ? Settings::getInstance()->getInt("ScreenOffsetY") : 0;
+
+			sdlWindow = SDL_CreateWindow("EmulationStation", 
+				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+				windowHeight, windowWidth, 
+				SDL_WINDOW_OPENGL | (Settings::getInstance()->getBool("Windowed") ? 0 : SDL_WINDOW_FULLSCREEN));
+		}
+
 
 		if(sdlWindow == NULL)
 		{
@@ -143,9 +161,35 @@ namespace Renderer
 			return false;
 
 		//gotta flip y since y=0 is at the bottom
-		glViewport(screenOffsetX, windowHeight - screenHeight - screenOffsetY, screenWidth, screenHeight);
-		glMatrixMode(GL_PROJECTION);
-		glOrtho(0, screenWidth, screenHeight, 0, -1.0, 1.0);
+                if (!rotate) {
+			glViewport(screenOffsetX, windowHeight - screenHeight - screenOffsetY, screenWidth, screenHeight);
+			glMatrixMode(GL_PROJECTION);
+			glOrtho(0, screenWidth, screenHeight, 0, -1.0, 1.0);
+		} else {
+			/*glViewport(screenOffsetY, windowWidth - screenWidth - screenOffsetX, screenHeight, screenHeight);
+			glMatrixMode(GL_PROJECTION);
+			glOrtho(0, screenHeight, screenHeight, 0, -1.0, 1.0);
+			printf("%d %d\n", screenHeight, screenHeight);
+			glTranslatef((screenHeight-screenWidth)/2, (screenHeight-screenWidth)/2, 0);
+			printf("%d %d\n",(screenHeight-screenWidth)/2, (screenHeight-screenWidth)/2);
+			glTranslatef(screenWidth/2, screenHeight/2, 0);
+			glRotatef(90, 0, 0, 1);
+			glTranslatef(-(screenWidth/2), -(screenHeight/2), 0);*/
+
+			glViewport(screenOffsetY, windowWidth - screenWidth - screenOffsetX, screenHeight, screenHeight);
+                	//glViewport(0, 0, 384, 384);
+                	glMatrixMode(GL_PROJECTION);
+                	//glOrtho(0, 384, 384, 0, -1.0, 1.0);
+			glOrtho(0, screenHeight, screenHeight, 0, -1.0, 1.0);
+                	//glTranslatef((384-224)/2, (384-224)/2, 0);
+			glTranslatef((screenHeight-screenWidth)/2, (screenHeight-screenWidth)/2, 0);
+                	//glTranslatef(112, 192, 0);
+			glTranslatef(screenWidth/2, screenHeight/2, 0);
+                	glRotatef(90, 0, 0, 1);
+                	//glTranslatef(-112, -192, 0);
+			glTranslatef(int(screenWidth/2)*-1, int(screenHeight/2)*-1, 0);
+
+		}
 		glMatrixMode(GL_MODELVIEW);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 

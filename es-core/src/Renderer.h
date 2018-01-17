@@ -18,6 +18,7 @@ namespace Renderer
 	bool init();
 	void deinit();
 
+	bool getRotate();
 	unsigned int getWindowWidth();
 	unsigned int getWindowHeight();
 	unsigned int getScreenWidth();
