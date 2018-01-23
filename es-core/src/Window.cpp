@@ -271,8 +271,12 @@ void Window::render()
 		if (!isProcessing() && mAllowSleep && (!mScreenSaver || mScreenSaver->allowSleep()))
 		{
 			// go to sleep
+			if(!mSleeping)
+			{
+				onSleep();
+			}
+
 			mSleeping = true;
-			onSleep();
 		}
 	}
 }
