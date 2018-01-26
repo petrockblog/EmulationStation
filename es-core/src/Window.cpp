@@ -276,8 +276,12 @@ void Window::render()
 		if (!isProcessing() && mAllowSleep && (!mScreenSaver || mScreenSaver->allowSleep()))
 		{
 			// go to sleep
+			if(!mSleeping)
+			{
+				onSleep();
+			}
+
 			mSleeping = true;
-			onSleep();
 		}
 	}
 }
@@ -398,11 +402,20 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 
 void Window::onSleep()
 {
+	std::string sleepCommand = Settings::getInstance()->getString("SleepCommand");
+	if(!sleepCommand.empty())
+	{
+		runSystemCommand(sleepCommand);
+	}
 }
 
 void Window::onWake()
 {
-
+	std::string wakeCommand = Settings::getInstance()->getString("WakeCommand");
+	if(!wakeCommand.empty())
+	{
+		runSystemCommand(wakeCommand);
+	}
 }
 
 bool Window::isProcessing()
