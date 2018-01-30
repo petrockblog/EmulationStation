@@ -1,6 +1,8 @@
 #include "CollectionSystemManager.h"
 
 #include "guis/GuiInfoPopup.h"
+#include "utils/FileSystemUtil.h"
+#include "utils/StringUtil.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "FileData.h"
@@ -9,15 +11,9 @@
 #include "Settings.h"
 #include "SystemData.h"
 #include "ThemeData.h"
-#include "Util.h"
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/xpressive/xpressive.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
-#include <unordered_map>
 
-namespace fs = boost::filesystem;
 std::string myCollectionsName = "collections";
 
 /* Handling the getting, initialization, deinitialization, saving and deletion of
@@ -53,8 +49,8 @@ CollectionSystemManager::CollectionSystemManager(Window* window) : mWindow(windo
 	mCollectionEnvData->mPlatformIds = allPlatformIds;
 
 	std::string path = getCollectionsFolder();
-	if(!fs::exists(path))
-		fs::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 
 	mIsEditingCustom = false;
 	mEditingCollection = "Favorites";
@@ -146,7 +142,7 @@ void CollectionSystemManager::loadCollectionSystems()
 void CollectionSystemManager::loadEnabledListFromSettings()
 {
 	// we parse the auto collection settings list
-	std::vector<std::string> autoSelected = commaStringToVector(Settings::getInstance()->getString("CollectionSystemsAuto"));
+	std::vector<std::string> autoSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsAuto"));
 
 	// iterate the map
 	for(std::map<std::string, CollectionSystemData>::iterator it = mAutoCollectionSystemsData.begin() ; it != mAutoCollectionSystemsData.end() ; it++ )
@@ -155,7 +151,7 @@ void CollectionSystemManager::loadEnabledListFromSettings()
 	}
 
 	// we parse the custom collection settings list
-	std::vector<std::string> customSelected = commaStringToVector(Settings::getInstance()->getString("CollectionSystemsCustom"));
+	std::vector<std::string> customSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsCustom"));
 
 	// iterate the map
 	for(std::map<std::string, CollectionSystemData>::iterator it = mCustomCollectionSystemsData.begin() ; it != mCustomCollectionSystemsData.end() ; it++ )
@@ -335,7 +331,7 @@ bool CollectionSystemManager::isThemeCustomCollectionCompatible(std::vector<std:
 	if(set != themeSets.cend())
 	{
 		std::string defaultThemeFilePath = set->second.path.string() + "/theme.xml";
-		if (fs::exists(defaultThemeFilePath))
+		if (Utils::FileSystem::exists(defaultThemeFilePath))
 		{
 			return true;
 		}
@@ -351,26 +347,33 @@ bool CollectionSystemManager::isThemeCustomCollectionCompatible(std::vector<std:
 
 std::string CollectionSystemManager::getValidNewCollectionName(std::string inName, int index)
 {
-	// filter name - [^A-Za-z0-9\[\]\(\)\s]
-	using namespace boost::xpressive;
-	std::string name;
-	sregex regexp = sregex::compile("[^A-Za-z0-9\\-\\[\\]\\(\\)\\s']");
-	if (index == 0)
+	std::string name = inName;
+
+	if(index == 0)
 	{
-		name = regex_replace(inName, regexp, "");
-		if (name == "")
+		size_t remove = std::string::npos;
+
+		// get valid name
+		while((remove = name.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-[]() ")) != std::string::npos)
 		{
-			name = "New Collection";
+			name.erase(remove, 1);
 		}
 	}
 	else
 	{
-		name = inName + " (" + std::to_string(index) + ")";
+		name += " (" + std::to_string(index) + ")";
 	}
+
+	if(name == "")
+	{
+		name = "New Collection";
+	}
+
 	if(name != inName)
 	{
 		LOG(LogInfo) << "Had to change name, from: " << inName << " to: " << name;
 	}
+
 	// get used systems in es_systems.cfg
 	std::vector<std::string> systemsInUse = getSystemsFromConfig();
 	// get folders assigned to custom collections
@@ -417,7 +420,7 @@ void CollectionSystemManager::setEditMode(std::string collectionName)
 	// if it's bundled, this needs to be the bundle system
 	mEditingCollectionSystemData = sysData;
 
-	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Editing the '" + strToUpper(collectionName) + "' Collection. Add/remove games with Y.", 10000);
+	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Editing the '" + Utils::String::toUpper(collectionName) + "' Collection. Add/remove games with Y.", 10000);
 	mWindow->setInfoPopup(s);
 }
 
@@ -487,6 +490,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 		}
 		else
 		{
+			file->getSourceFileData()->getSystem()->getIndex()->removeFromIndex(file);
 			MetaDataList* md = &file->getSourceFileData()->metadata;
 			std::string value = md->get("favorite");
 			if (value == "false")
@@ -498,15 +502,16 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 				adding = false;
 				md->set("favorite", "false");
 			}
+			file->getSourceFileData()->getSystem()->getIndex()->addToIndex(file);
 			refreshCollectionSystems(file->getSourceFileData());
 		}
 		if (adding)
 		{
-			s = new GuiInfoPopup(mWindow, "Added '" + removeParenthesis(name) + "' to '" + strToUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "Added '" + Utils::String::removeParenthesis(name) + "' to '" + Utils::String::toUpper(sysName) + "'", 4000);
 		}
 		else
 		{
-			s = new GuiInfoPopup(mWindow, "Removed '" + removeParenthesis(name) + "' from '" + strToUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "Removed '" + Utils::String::removeParenthesis(name) + "' from '" + Utils::String::toUpper(sysName) + "'", 4000);
 		}
 		mWindow->setInfoPopup(s);
 		return true;
@@ -716,7 +721,7 @@ void CollectionSystemManager::populateCustomCollection(CollectionSystemData* sys
 	CollectionSystemDecl sysDecl = sysData->decl;
 	std::string path = getCustomCollectionConfigPath(newSys->getName());
 
-	if(!fs::exists(path))
+	if(!Utils::FileSystem::exists(path))
 	{
 		LOG(LogInfo) << "Couldn't find custom collection config file at " << path;
 		return;
@@ -823,7 +828,7 @@ std::vector<std::string> CollectionSystemManager::getSystemsFromConfig()
 	std::vector<std::string> systems;
 	std::string path = SystemData::getConfigPath(false);
 
-	if(!fs::exists(path))
+	if(!Utils::FileSystem::exists(path))
 	{
 		return systems;
 	}
@@ -874,20 +879,21 @@ std::vector<std::string> CollectionSystemManager::getSystemsFromTheme()
 		Settings::getInstance()->setString("ThemeSet", set->first);
 	}
 
-	fs::path themePath = set->second.path;
+	boost::filesystem::path themePath = set->second.path;
 
-	if (fs::exists(themePath))
+	if (Utils::FileSystem::exists(themePath.generic_string()))
 	{
-		fs::directory_iterator end_itr; // default construction yields past-the-end
-		for (fs::directory_iterator itr(themePath); itr != end_itr; ++itr)
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(themePath.generic_string());
+
+		for (Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			if (fs::is_directory(itr->status()))
+			if (Utils::FileSystem::isDirectory(*it))
 			{
 				//... here you have a directory
-				std::string folder = itr->path().string();
+				std::string folder = *it;
 				folder = folder.substr(themePath.string().size()+1);
 
-				if(fs::exists(set->second.getThemePath(folder)))
+				if(Utils::FileSystem::exists(set->second.getThemePath(folder).generic_string()))
 				{
 					systems.push_back(folder);
 				}
@@ -934,21 +940,21 @@ std::vector<std::string> CollectionSystemManager::getUnusedSystemsFromTheme()
 std::vector<std::string> CollectionSystemManager::getCollectionsFromConfigFolder()
 {
 	std::vector<std::string> systems;
-	fs::path configPath = getCollectionsFolder();
+	boost::filesystem::path configPath = getCollectionsFolder();
 
-	if (fs::exists(configPath))
+	if (Utils::FileSystem::exists(configPath.generic_string()))
 	{
-		fs::directory_iterator end_itr; // default construction yields past-the-end
-		for (fs::directory_iterator itr(configPath); itr != end_itr; ++itr)
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(configPath.generic_string());
+		for (Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			if (fs::is_regular_file(itr->status()))
+			if (Utils::FileSystem::isRegularFile(*it))
 			{
 				// it's a file
-				std::string file = itr->path().string();
+				std::string file = *it;
 				std::string filename = file.substr(configPath.string().size());
 
 				// need to confirm filename matches config format
-				if (boost::algorithm::ends_with(filename, ".cfg") && boost::algorithm::starts_with(filename, "custom-") && filename != "custom-.cfg")
+				if (filename != "custom-.cfg" && Utils::String::startsWith(filename, "custom-") && Utils::String::endsWith(filename, ".cfg"))
 				{
 					filename = filename.substr(7, filename.size()-11);
 					systems.push_back(filename);
@@ -1007,20 +1013,18 @@ bool CollectionSystemManager::includeFileInAutoCollections(FileData* file)
 
 std::string getCustomCollectionConfigPath(std::string collectionName)
 {
-	fs::path path = getCollectionsFolder() + "custom-" + collectionName + ".cfg";
+	boost::filesystem::path path = getCollectionsFolder() + "custom-" + collectionName + ".cfg";
 	return path.generic_string();
 }
 
 std::string getCollectionsFolder()
 {
-	return getHomePath() + "/.emulationstation/collections/";
+	return Utils::FileSystem::getHomePath() + "/.emulationstation/collections/";
 }
 
 bool systemSort(SystemData* sys1, SystemData* sys2)
 {
-	std::string name1 = sys1->getName();
-	std::string name2 = sys2->getName();
-	transform(name1.cbegin(), name1.cend(), name1.begin(), ::toupper);
-	transform(name2.cbegin(), name2.cend(), name2.begin(), ::toupper);
+	std::string name1 = Utils::String::toUpper(sys1->getName());
+	std::string name2 = Utils::String::toUpper(sys2->getName());
 	return name1.compare(name2) < 0;
 }

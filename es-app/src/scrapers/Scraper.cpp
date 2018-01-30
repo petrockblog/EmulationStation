@@ -1,12 +1,12 @@
 #include "scrapers/Scraper.h"
 
+#include "utils/FileSystemUtil.h"
 #include "FileData.h"
 #include "GamesDBScraper.h"
 #include "Log.h"
 #include "platform.h"
 #include "Settings.h"
 #include "SystemData.h"
-#include <boost/filesystem/operations.hpp>
 #include <FreeImage.h>
 #include <fstream>
 
@@ -276,15 +276,15 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 	const std::string subdirectory = params.system->getName();
 	const std::string name = params.game->getPath().stem().generic_string() + "-" + suffix;
 
-	std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
+	std::string path = Utils::FileSystem::getHomePath() + "/.emulationstation/downloaded_images/";
 
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 
 	path += subdirectory + "/";
 
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 
 	size_t dot = url.find_last_of('.');
 	std::string ext;

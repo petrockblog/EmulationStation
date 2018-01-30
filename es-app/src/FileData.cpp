@@ -1,5 +1,7 @@
 #include "FileData.h"
 
+#include "utils/FileSystemUtil.h"
+#include "utils/StringUtil.h"
 #include "utils/TimeUtil.h"
 #include "AudioManager.h"
 #include "CollectionSystemManager.h"
@@ -8,15 +10,10 @@
 #include "Log.h"
 #include "platform.h"
 #include "SystemData.h"
-#include "Util.h"
 #include "VolumeControl.h"
 #include "Window.h"
-#include <boost/algorithm/string/trim.hpp>
-#include <boost/filesystem/operations.hpp>
 
-namespace fs = boost::filesystem;
-
-FileData::FileData(FileType type, const fs::path& path, SystemEnvironmentData* envData, SystemData* system)
+FileData::FileData(FileType type, const boost::filesystem::path& path, SystemEnvironmentData* envData, SystemData* system)
 	: mType(type), mPath(path), mSystem(system), mEnvData(envData), mSourceFileData(NULL), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
 {
 	// metadata needs at least a name field (since that's what getName() will return)
@@ -40,14 +37,14 @@ std::string FileData::getDisplayName() const
 {
 	std::string stem = mPath.stem().generic_string();
 	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
-		stem = PlatformIds::getCleanMameName(stem.c_str());
+		stem = PlatformIds::mameTitleSearch(stem.c_str());
 
 	return stem;
 }
 
 std::string FileData::getCleanName() const
 {
-	return removeParenthesis(this->getDisplayName());
+	return Utils::String::removeParenthesis(this->getDisplayName());
 }
 
 const std::string FileData::getThumbnailPath() const
@@ -68,7 +65,7 @@ const std::string FileData::getThumbnailPath() const
 				if(thumbnail.empty())
 				{
 					std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
-					if(boost::filesystem::exists(path))
+					if(Utils::FileSystem::exists(path))
 						thumbnail = path;
 				}
 			}
@@ -111,7 +108,7 @@ const std::string FileData::getVideoPath() const
 	if(video.empty())
 	{
 		std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-video.mp4";
-		if(boost::filesystem::exists(path))
+		if(Utils::FileSystem::exists(path))
 			video = path;
 	}
 
@@ -131,7 +128,7 @@ const std::string FileData::getMarqueePath() const
 			if(marquee.empty())
 			{
 				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-marquee" + extList[i];
-				if(boost::filesystem::exists(path))
+				if(Utils::FileSystem::exists(path))
 					marquee = path;
 			}
 		}
@@ -153,7 +150,7 @@ const std::string FileData::getImagePath() const
 			if(image.empty())
 			{
 				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
-				if(boost::filesystem::exists(path))
+				if(Utils::FileSystem::exists(path))
 					image = path;
 			}
 		}
@@ -257,13 +254,13 @@ void FileData::launchGame(Window* window)
 
 	std::string command = mEnvData->mLaunchCommand;
 
-	const std::string rom = escapePath(getPath());
+	const std::string rom = Utils::FileSystem::getEscapedPath(getPath().generic_string());
 	const std::string basename = getPath().stem().string();
-	const std::string rom_raw = fs::path(getPath()).make_preferred().string();
+	const std::string rom_raw = boost::filesystem::path(getPath()).make_preferred().string();
 
-	command = strreplace(command, "%ROM%", rom);
-	command = strreplace(command, "%BASENAME%", basename);
-	command = strreplace(command, "%ROM_RAW%", rom_raw);
+	command = Utils::String::replace(command, "%ROM%", rom);
+	command = Utils::String::replace(command, "%BASENAME%", basename);
+	command = Utils::String::replace(command, "%ROM_RAW%", rom_raw);
 
 	LOG(LogInfo) << "	" << command;
 	int exitCode = runSystemCommand(command);
@@ -326,9 +323,8 @@ void CollectionFileData::refreshMetadata()
 const std::string& CollectionFileData::getName()
 {
 	if (mDirty) {
-		mCollectionFileName = removeParenthesis(mSourceFileData->metadata.get("name"));
-		boost::trim(mCollectionFileName);
-		mCollectionFileName += " [" + strToUpper(mSourceFileData->getSystem()->getName()) + "]";
+		mCollectionFileName  = Utils::String::removeParenthesis(mSourceFileData->metadata.get("name"));
+		mCollectionFileName += " [" + Utils::String::toUpper(mSourceFileData->getSystem()->getName()) + "]";
 		mDirty = false;
 	}
 	return mCollectionFileName;

@@ -1,12 +1,11 @@
 #include "components/VideoComponent.h"
 
 #include "resources/ResourceManager.h"
+#include "utils/FileSystemUtil.h"
 #include "PowerSaver.h"
 #include "Renderer.h"
 #include "ThemeData.h"
-#include "Util.h"
 #include "Window.h"
-#include <boost/filesystem/operations.hpp>
 #include <SDL_timer.h>
 
 #define FADE_TIME_MS	200
@@ -17,7 +16,7 @@ std::string getTitlePath() {
 }
 
 std::string getTitleFolder() {
-	std::string home = getHomePath();
+	std::string home = Utils::FileSystem::getHomePath();
 	return home + "/.emulationstation/tmp/";
 }
 
@@ -75,8 +74,8 @@ VideoComponent::VideoComponent(Window* window) :
 	}
 
 	std::string path = getTitleFolder();
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 }
 
 VideoComponent::~VideoComponent()
@@ -102,7 +101,7 @@ void VideoComponent::onSizeChanged()
 bool VideoComponent::setVideo(std::string path)
 {
 	// Convert the path into a generic format
-	boost::filesystem::path fullPath = getCanonicalPath(path);
+	boost::filesystem::path fullPath = Utils::FileSystem::getCanonicalPath(path);
 	fullPath.make_preferred().native();
 
 	// Check that it's changed

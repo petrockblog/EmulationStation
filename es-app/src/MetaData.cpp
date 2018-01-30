@@ -1,10 +1,8 @@
 #include "MetaData.h"
 
+#include "utils/FileSystemUtil.h"
 #include "Log.h"
-#include "Util.h"
 #include <pugixml/src/pugixml.hpp>
-
-namespace fs = boost::filesystem;
 
 MetaDataDecl gameDecls[] = {
 	// key,         type,                   default,            statistic,  name in GuiMetaDataEd,  prompt in GuiMetaDataEd
@@ -69,7 +67,7 @@ MetaDataList::MetaDataList(MetaDataListType type)
 }
 
 
-MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& node, const fs::path& relativeTo)
+MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& node, const boost::filesystem::path& relativeTo)
 {
 	MetaDataList mdl(type);
 
@@ -84,7 +82,7 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& 
 			std::string value = md.text().get();
 			if (iter->type == MD_PATH)
 			{
-				value = resolvePath(value, relativeTo, true).generic_string();
+				value = Utils::FileSystem::resolveRelativePath(value, relativeTo.generic_string(), true);
 			}
 			mdl.set(iter->key, value);
 		}else{
@@ -95,7 +93,7 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& 
 	return mdl;
 }
 
-void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const fs::path& relativeTo) const
+void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 
@@ -112,7 +110,7 @@ void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, cons
 			// try and make paths relative if we can
 			std::string value = mapIter->second;
 			if (mddIter->type == MD_PATH)
-				value = makeRelativePath(value, relativeTo, true).generic_string();
+				value = Utils::FileSystem::createRelativePath(value, relativeTo.generic_string(), true);
 
 			parent.append_child(mapIter->first.c_str()).text().set(value.c_str());
 		}

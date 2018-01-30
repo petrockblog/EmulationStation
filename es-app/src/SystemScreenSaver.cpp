@@ -4,6 +4,7 @@
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
+#include "utils/FileSystemUtil.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "FileData.h"
@@ -13,8 +14,6 @@
 #include "Renderer.h"
 #include "Sound.h"
 #include "SystemData.h"
-#include "Util.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <unordered_map>
 
@@ -38,8 +37,8 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 {
 	mWindow->setScreenSaver(this);
 	std::string path = getTitleFolder();
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 	srand((unsigned int)time(NULL));
 	mVideoChangeTime = 30000;
 }
@@ -81,13 +80,13 @@ void SystemScreenSaver::startScreenSaver()
 		pickRandomVideo(path);
 
 		int retry = 200;
-		while(retry > 0 && ((path.empty() || !boost::filesystem::exists(path)) || mCurrentGame == NULL))
+		while(retry > 0 && ((path.empty() || !Utils::FileSystem::exists(path)) || mCurrentGame == NULL))
 		{
 			retry--;
 			pickRandomVideo(path);
 		}
 
-		if (!path.empty() && boost::filesystem::exists(path))
+		if (!path.empty() && Utils::FileSystem::exists(path))
 		{
 #ifdef _RPI_
 			// Create the correct type of video component
@@ -164,7 +163,7 @@ void SystemScreenSaver::startScreenSaver()
 		std::string bg_audio_file = Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile");
 		if ((!mBackgroundAudio) && (bg_audio_file != ""))
 		{
-			if (boost::filesystem::exists(bg_audio_file))
+			if (Utils::FileSystem::exists(bg_audio_file))
 			{
 				// paused PS so that the background audio keeps playing
 				PowerSaver::pause();
@@ -269,7 +268,7 @@ unsigned long SystemScreenSaver::countGameListNodes(const char *nodeName)
 			pugi::xml_node root;
 			std::string xmlReadPath = (*it)->getGamelistPath(false);
 
-			if(boost::filesystem::exists(xmlReadPath))
+			if(Utils::FileSystem::exists(xmlReadPath))
 			{
 				pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
 				if (!result)
@@ -321,7 +320,7 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 
 		std::string xmlReadPath = (*it)->getGamelistPath(false);
 
-		if(boost::filesystem::exists(xmlReadPath))
+		if(Utils::FileSystem::exists(xmlReadPath))
 		{
 			pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
 			if (!result)
@@ -338,7 +337,7 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 					if (index-- == 0)
 					{
 						// Yes. Resolve to a full path
-						path = resolvePath(node.text().get(), (*it)->getStartPath(), true).generic_string();
+						path = Utils::FileSystem::resolveRelativePath(node.text().get(), (*it)->getStartPath(), true);
 						mSystemName = (*it)->getFullName();
 						mGameName = fileNode.child("name").text().get();
 
@@ -346,7 +345,7 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 
 						// try the easy way. Should work for the majority of cases, unless in subfolders
 						FileData* rootFileData = (*it)->getRootFolder();
-						std::string gamePath = resolvePath(fileNode.child("path").text().get(), (*it)->getStartPath(), false).string();
+						std::string gamePath = Utils::FileSystem::resolveRelativePath(fileNode.child("path").text().get(), (*it)->getStartPath(), false);
 
 						std::string shortPath = gamePath;
 						shortPath = shortPath.replace(0, (*it)->getStartPath().length()+1, "");
@@ -416,48 +415,22 @@ void SystemScreenSaver::pickRandomGameListImage(std::string& path)
 void SystemScreenSaver::pickRandomCustomImage(std::string& path)
 {
 	std::string imageDir = Settings::getInstance()->getString("SlideshowScreenSaverImageDir");
-	if ((imageDir != "") && (boost::filesystem::exists(imageDir)))
+	if ((imageDir != "") && (Utils::FileSystem::exists(imageDir)))
 	{
-		std::string imageFilter = Settings::getInstance()->getString("SlideshowScreenSaverImageFilter");
+		std::string                   imageFilter = Settings::getInstance()->getString("SlideshowScreenSaverImageFilter");
+		std::vector<std::string>      matchingFiles;
+		Utils::FileSystem::stringList dirContent  = Utils::FileSystem::getDirContent(imageDir, Settings::getInstance()->getBool("SlideshowScreenSaverRecurse"));
 
-		std::vector<std::string> matchingFiles;
-
-		if (Settings::getInstance()->getBool("SlideshowScreenSaverRecurse"))
+		for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			boost::filesystem::recursive_directory_iterator end_iter;
-			boost::filesystem::recursive_directory_iterator iter(imageDir);
-
-			// TODO: Figure out how to remove this duplication in the else block
-			for (iter; iter != end_iter; ++iter)
+			if (Utils::FileSystem::isRegularFile(*it))
 			{
-				if (boost::filesystem::is_regular_file(iter->status()))
+				// If the image filter is empty, or the file extension is in the filter string,
+				//  add it to the matching files list
+				if ((imageFilter.length() <= 0) ||
+					(imageFilter.find(Utils::FileSystem::getExtension(*it)) != std::string::npos))
 				{
-					// If the image filter is empty, or the file extension is in the filter string,
-					//  add it to the matching files list
-					if ((imageFilter.length() <= 0) ||
-						(imageFilter.find(iter->path().extension().string()) != std::string::npos))
-					{
-						matchingFiles.push_back(iter->path().string());
-					}
-				}
-			}
-		}
-		else
-		{
-			boost::filesystem::directory_iterator end_iter;
-			boost::filesystem::directory_iterator iter(imageDir);
-
-			for (iter; iter != end_iter; ++iter)
-			{
-				if (boost::filesystem::is_regular_file(iter->status()))
-				{
-					// If the image filter is empty, or the file extension is in the filter string,
-					//  add it to the matching files list
-					if ((imageFilter.length() <= 0) ||
-						(imageFilter.find(iter->path().extension().string()) != std::string::npos))
-					{
-						matchingFiles.push_back(iter->path().string());
-					}
+					matchingFiles.push_back(*it);
 				}
 			}
 		}

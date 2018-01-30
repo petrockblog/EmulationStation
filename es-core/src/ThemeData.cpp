@@ -2,11 +2,10 @@
 
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
+#include "utils/FileSystemUtil.h"
 #include "Log.h"
 #include "platform.h"
 #include "Settings.h"
-#include <boost/filesystem/operations.hpp>
-#include <boost/xpressive/xpressive_static.hpp>
 #include <pugixml/src/pugixml.hpp>
 
 std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "video" }, { "grid"} };
@@ -124,8 +123,6 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "zIndex", FLOAT } } }
 };
 
-namespace fs = boost::filesystem;
-
 #define MINIMUM_THEME_FORMAT_VERSION 3
 #define CURRENT_THEME_FORMAT_VERSION 5
 
@@ -152,12 +149,12 @@ unsigned int getHexColor(const char* str)
 }
 
 // helper
-std::string resolvePath(const char* in, const fs::path& relative)
+std::string resolvePath(const char* in, const boost::filesystem::path& relative)
 {
 	if(!in || in[0] == '\0')
 		return in;
 
-	fs::path relPath = relative.parent_path();
+	boost::filesystem::path relPath = relative.parent_path();
 	
 	boost::filesystem::path path(in);
 	
@@ -165,7 +162,7 @@ std::string resolvePath(const char* in, const fs::path& relative)
 	// some directories could theoretically start with ~ or .
 	if(*path.begin() == "~")
 	{
-		path = getHomePath() + (in + 1);
+		path = Utils::FileSystem::getHomePath() + (in + 1);
 	}else if(*path.begin() == ".")
 	{
 		path = relPath / (in + 1);
@@ -176,24 +173,24 @@ std::string resolvePath(const char* in, const fs::path& relative)
 
 std::map<std::string, std::string> mVariables;
 
-std::string &format_variables(const boost::xpressive::smatch &what)
-{
-	return mVariables[what[1].str()];
-}
-
 std::string resolvePlaceholders(const char* in)
 {
-	if(!in || in[0] == '\0')
-		return std::string(in);
-		
 	std::string inStr(in);
-	
-	using namespace boost::xpressive;
-	sregex rex = "${" >> (s1 = +('.' | _w)) >> '}';
-    
-	std::string output = regex_replace(inStr, rex, format_variables);
 
-	return output;
+	if(inStr.empty())
+		return inStr;
+
+	const size_t variableBegin = inStr.find("${");
+	const size_t variableEnd   = inStr.find("}", variableBegin);
+
+	if((variableBegin == std::string::npos) || (variableEnd == std::string::npos))
+		return inStr;
+
+	std::string prefix  = inStr.substr(0, variableBegin);
+	std::string replace = inStr.substr(variableBegin + 2, variableEnd - (variableBegin + 2));
+	std::string suffix  = resolvePlaceholders(inStr.substr(variableEnd + 1).c_str());
+
+	return prefix + mVariables[replace] + suffix;
 }
 
 ThemeData::ThemeData()
@@ -208,7 +205,7 @@ void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const st
 	ThemeException error;
 	error.setFiles(mPaths);
 
-	if(!fs::exists(path))
+	if(!Utils::FileSystem::exists(path))
 		throw error << "File does not exist!";
 
 	mVersion = 0;
@@ -486,8 +483,8 @@ const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 	{
 		theme = std::shared_ptr<ThemeData>(new ThemeData());
 
-		const std::string path = getHomePath() + "/.emulationstation/es_theme_default.xml";
-		if(fs::exists(path))
+		const std::string path = Utils::FileSystem::getHomePath() + "/.emulationstation/es_theme_default.xml";
+		if(Utils::FileSystem::exists(path))
 		{
 			try
 			{
@@ -538,21 +535,21 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	std::map<std::string, ThemeSet> sets;
 
 	static const size_t pathCount = 2;
-	fs::path paths[pathCount] = { 
+	boost::filesystem::path paths[pathCount] = { 
 		"/etc/emulationstation/themes", 
-		getHomePath() + "/.emulationstation/themes" 
+		Utils::FileSystem::getHomePath() + "/.emulationstation/themes" 
 	};
-
-	fs::directory_iterator end;
 
 	for(size_t i = 0; i < pathCount; i++)
 	{
-		if(!fs::is_directory(paths[i]))
+		if(!Utils::FileSystem::isDirectory(paths[i].generic_string()))
 			continue;
 
-		for(fs::directory_iterator it(paths[i]); it != end; ++it)
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(paths[i].generic_string());
+
+		for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			if(fs::is_directory(*it))
+			if(Utils::FileSystem::isDirectory(*it))
 			{
 				ThemeSet set = {*it};
 				sets[set.getName()] = set;
@@ -563,7 +560,7 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	return sets;
 }
 
-fs::path ThemeData::getThemeFromCurrentSet(const std::string& system)
+boost::filesystem::path ThemeData::getThemeFromCurrentSet(const std::string& system)
 {
 	auto themeSets = ThemeData::getThemeSets();
 	if(themeSets.empty())

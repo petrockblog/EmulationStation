@@ -3,6 +3,7 @@
 
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
+#include "utils/FileSystemUtil.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "EmulationStation.h"
@@ -14,7 +15,6 @@
 #include "Settings.h"
 #include "SystemData.h"
 #include "SystemScreenSaver.h"
-#include <boost/filesystem/operations.hpp>
 #include <SDL_events.h>
 #include <SDL_main.h>
 #include <SDL_timer.h>
@@ -24,8 +24,6 @@
 #endif
 
 #include <FreeImage.h>
-
-namespace fs = boost::filesystem;
 
 bool scrape_cmdline = false;
 
@@ -72,6 +70,17 @@ bool parseArgs(int argc, char* argv[])
 			i += 2; // skip the argument value
 			Settings::getInstance()->setInt("ScreenOffsetX", x);
 			Settings::getInstance()->setInt("ScreenOffsetY", y);
+		}else if (strcmp(argv[i], "--screenrotate") == 0)
+		{
+			if (i >= argc - 1)
+			{
+				std::cerr << "Invalid screenrotate supplied.";
+				return false;
+			}
+
+			int rotate = atoi(argv[i + 1]);
+			++i; // skip the argument value
+			Settings::getInstance()->setInt("ScreenRotate", rotate);
 		}else if(strcmp(argv[i], "--gamelist-only") == 0)
 		{
 			Settings::getInstance()->setBool("ParseGamelistOnly", true);
@@ -158,13 +167,13 @@ bool parseArgs(int argc, char* argv[])
 bool verifyHomeFolderExists()
 {
 	//make sure the config directory exists
-	std::string home = getHomePath();
+	std::string home = Utils::FileSystem::getHomePath();
 	std::string configDir = home + "/.emulationstation";
-	if(!fs::exists(configDir))
+	if(!Utils::FileSystem::exists(configDir))
 	{
 		std::cout << "Creating config directory \"" << configDir << "\"\n";
-		fs::create_directory(configDir);
-		if(!fs::exists(configDir))
+		Utils::FileSystem::createDirectory(configDir);
+		if(!Utils::FileSystem::exists(configDir))
 		{
 			std::cerr << "Config directory could not be created!\n";
 			return false;
@@ -326,7 +335,7 @@ int main(int argc, char* argv[])
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
 	{
-		if(fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
+		if(Utils::FileSystem::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
 			ViewController::get()->goToStart();
 		}else{

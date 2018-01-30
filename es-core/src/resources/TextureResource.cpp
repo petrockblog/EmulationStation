@@ -1,7 +1,7 @@
 #include "resources/TextureResource.h"
 
+#include "utils/FileSystemUtil.h"
 #include "resources/TextureData.h"
-#include "Util.h"
 
 TextureDataManager		TextureResource::sTextureDataManager;
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
@@ -104,7 +104,7 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 {
 	std::shared_ptr<ResourceManager>& rm = ResourceManager::getInstance();
 
-	const std::string canonicalPath = getCanonicalPath(path);
+	const std::string canonicalPath = Utils::FileSystem::getCanonicalPath(path);
 	if(canonicalPath.empty())
 	{
 		std::shared_ptr<TextureResource> tex(new TextureResource("", tile, false));

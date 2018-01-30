@@ -1,32 +1,20 @@
 #include "Gamelist.h"
 
+#include "utils/FileSystemUtil.h"
 #include "FileData.h"
 #include "FileFilterIndex.h"
 #include "Log.h"
 #include "Settings.h"
 #include "SystemData.h"
-#include "Util.h"
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <pugixml/src/pugixml.hpp>
 
-namespace fs = boost::filesystem;
-
-FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& path, FileType type, bool trustGamelist)
+FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& path, FileType type)
 {
 	// first, verify that path is within the system's root folder
 	FileData* root = system->getRootFolder();
-
-	fs::path relative;
 	bool contains = false;
-	if (trustGamelist)
-	{
-		relative = removeCommonPathUsingStrings(path, root->getPath(), contains);
-	}
-	else
-	{
-		relative = removeCommonPath(path, root->getPath(), contains);
-	}
+	boost::filesystem::path relative = Utils::FileSystem::removeCommonPath(path.generic_string(), root->getPath().generic_string(), contains);
+
 	if(!contains)
 	{
 		LOG(LogError) << "File path \"" << path << "\" is outside system path \"" << system->getStartPath() << "\"";
@@ -87,10 +75,9 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 
 void parseGamelist(SystemData* system)
 {
-	bool trustGamelist = Settings::getInstance()->getBool("ParseGamelistOnly");
 	std::string xmlpath = system->getGamelistPath(false);
 
-	if(!boost::filesystem::exists(xmlpath))
+	if(!Utils::FileSystem::exists(xmlpath))
 		return;
 
 	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\"...";
@@ -111,7 +98,7 @@ void parseGamelist(SystemData* system)
 		return;
 	}
 
-	fs::path relativeTo = system->getStartPath();
+	boost::filesystem::path relativeTo = system->getStartPath();
 
 	const char* tagList[2] = { "game", "folder" };
 	FileType typeList[2] = { GAME, FOLDER };
@@ -121,15 +108,15 @@ void parseGamelist(SystemData* system)
 		FileType type = typeList[i];
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
-			fs::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
+			boost::filesystem::path path = Utils::FileSystem::resolveRelativePath(fileNode.child("path").text().get(), relativeTo.generic_string(), false);
 
-			if(!trustGamelist && !boost::filesystem::exists(path))
+			if(!Utils::FileSystem::exists(path.generic_string()))
 			{
 				LOG(LogWarning) << "File \"" << path << "\" does not exist! Ignoring.";
 				continue;
 			}
 
-			FileData* file = findOrCreateFile(system, path, type, trustGamelist);
+			FileData* file = findOrCreateFile(system, path, type);
 			if(!file)
 			{
 				LOG(LogError) << "Error finding/creating FileData for \"" << path << "\", skipping.";
@@ -168,7 +155,7 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 		//there's something useful in there so we'll keep the node, add the path
 
 		// try and make the path relative if we can so things still work if we change the rom folder location in the future
-		newNode.prepend_child("path").text().set(makeRelativePath(file->getPath(), system->getStartPath(), false).generic_string().c_str());
+		newNode.prepend_child("path").text().set(Utils::FileSystem::createRelativePath(file->getPath().generic_string(), system->getStartPath(), false).c_str());
 	}
 }
 
@@ -186,7 +173,7 @@ void updateGamelist(SystemData* system)
 	pugi::xml_node root;
 	std::string xmlReadPath = system->getGamelistPath(false);
 
-	if(boost::filesystem::exists(xmlReadPath))
+	if(Utils::FileSystem::exists(xmlReadPath))
 	{
 		//parse an existing file first
 		pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
@@ -242,9 +229,9 @@ void updateGamelist(SystemData* system)
 					continue;
 				}
 
-				fs::path nodePath = resolvePath(pathNode.text().get(), system->getStartPath(), true);
-				fs::path gamePath((*fit)->getPath());
-				if(nodePath == gamePath || (fs::exists(nodePath) && fs::exists(gamePath) && fs::equivalent(nodePath, gamePath)))
+				boost::filesystem::path nodePath = Utils::FileSystem::resolveRelativePath(pathNode.text().get(), system->getStartPath(), true);
+				boost::filesystem::path gamePath((*fit)->getPath());
+				if(nodePath == gamePath || (Utils::FileSystem::exists(nodePath.generic_string()) && Utils::FileSystem::exists(gamePath.generic_string()) && Utils::FileSystem::isEquivalent(nodePath.generic_string(), gamePath.generic_string())))
 				{
 					// found it
 					root.remove_child(fileNode);
@@ -262,7 +249,7 @@ void updateGamelist(SystemData* system)
 		if (numUpdated > 0) {
 			//make sure the folders leading up to this path exist (or the write will fail)
 			boost::filesystem::path xmlWritePath(system->getGamelistPath(true));
-			boost::filesystem::create_directories(xmlWritePath.parent_path());
+			Utils::FileSystem::createDirectory(xmlWritePath.parent_path().generic_string());
 
 			LOG(LogInfo) << "Added/Updated " << numUpdated << " entities in '" << xmlReadPath << "'";
 
