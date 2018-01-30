@@ -1,4 +1,3 @@
-#include <boost/filesystem.hpp>
 #include <utils/FileSystemUtil.h>
 #include "GridTileComponent.h"
 #include "AnimationUtil.h"
