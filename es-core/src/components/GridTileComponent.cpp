@@ -1,4 +1,5 @@
 #include <boost/filesystem.hpp>
+#include <utils/FileSystemUtil.h>
 #include "GridTileComponent.h"
 #include "AnimationUtil.h"
 #include "Renderer.h"
@@ -326,7 +327,7 @@ void GridTileComponent::setUppercase(bool uppercase) {
 }
 
 void GridTileComponent::setBackgroundPath(const std::string& path) {
-	if (boost::filesystem::exists(path) || ResourceManager::getInstance()->fileExists(path)) {
+	if (Utils::FileSystem::exists(path) || ResourceManager::getInstance()->fileExists(path)) {
 		if (!bThemeBackground) mBackground.setImagePath(path);
 	}
 	else {
