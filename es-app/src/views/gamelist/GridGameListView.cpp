@@ -1,4 +1,5 @@
 #include <boost/filesystem.hpp>
+#include <utils/FileSystemUtil.h>
 #include "views/gamelist/GridGameListView.h"
 #include "animations/LambdaAnimation.h"
 #include "views/ViewController.h"
@@ -158,8 +159,8 @@ void GridGameListView::launch(FileData* game)
 void GridGameListView::remove(FileData *game, bool deleteFile)
 {
 	if (deleteFile)
-		boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
 	if (getCursor() == game)                     // Select next element in list, or prev if none
+		Utils::FileSystem::removeFile(game->getPath().generic_string()); // actually delete the file on the filesystem
 	{
 		std::vector<FileData*> siblings = game->getParent()->getChildrenListToDisplay();
 		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
