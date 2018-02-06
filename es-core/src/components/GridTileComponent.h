@@ -4,11 +4,6 @@
 #include "components/TextComponent.h"
 #include "components/ImageComponent.h"
 
-class TextComponent;
-class ImageComponent;
-
-const Vector2f NULLVECT = { 0,0 };
-
 struct KeyframeVariables {
 	Vector2f size;
 	Vector2f pos;
