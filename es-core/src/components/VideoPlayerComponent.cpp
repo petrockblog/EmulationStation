@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Settings.h"
 #include <fcntl.h>
+#include <unistd.h>
 #include <wait.h>
 
 class VolumeControl
@@ -40,7 +41,7 @@ void VideoPlayerComponent::setResize(float width, float height)
 	setSize(width, height);
 	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = false;
-	mStaticImage.setSize(width, height);
+	mStaticImage.setResize(width, height);
 	onSizeChanged();
 }
 
