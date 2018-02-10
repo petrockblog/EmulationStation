@@ -67,7 +67,7 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 bool GuiMsgBox::input(InputConfig* config, Input input)
 {
 	// special case for when GuiMsgBox comes up to report errors before anything has been configured
-	if(config->getDeviceId() == DEVICE_KEYBOARD && !config->isConfigured() && input.value && 
+	if(config->getDeviceId() == Input::DEVICE_KEYBOARD && !config->isConfigured() && input.value && 
 		(input.id == SDLK_RETURN || input.id == SDLK_ESCAPE || input.id == SDLK_SPACE))
 	{
 		mAcceleratorFunc();

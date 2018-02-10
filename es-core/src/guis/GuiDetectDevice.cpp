@@ -71,7 +71,7 @@ bool GuiDetectDevice::input(InputConfig* config, Input input)
 {
 	PowerSaver::pause();
 
-	if(!mFirstRun && input.device == DEVICE_KEYBOARD && input.type == TYPE_KEY && input.value && input.id == SDLK_ESCAPE)
+	if(!mFirstRun && input.device == Input::DEVICE_KEYBOARD && input.type == Input::TYPE_KEY && input.value && input.id == SDLK_ESCAPE)
 	{
 		// cancel configuring
 		PowerSaver::resume();
@@ -79,7 +79,7 @@ bool GuiDetectDevice::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(input.type == TYPE_BUTTON || input.type == TYPE_KEY ||input.type == TYPE_CEC_BUTTON)
+	if(input.type == Input::TYPE_BUTTON || input.type == Input::TYPE_KEY ||input.type == Input::TYPE_CEC_BUTTON)
 	{
 		if(input.value && mHoldingConfig == NULL)
 		{

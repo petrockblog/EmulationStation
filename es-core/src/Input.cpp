@@ -15,7 +15,7 @@ static std::string getHatDir(int val)
 
 } // getHatDir
 
-Input::Input(const int _device, const InputType _type, const int _id, const int _value, const bool _configured)
+Input::Input(const int _device, const Type _type, const int _id, const int _value, const bool _configured)
 : type(_type)
 , device(_device)
 , id(_id)

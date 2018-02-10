@@ -156,9 +156,9 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	mGrid.setEntry(mTitle, Vector2i(0, 1), false, true);
 	
 	std::stringstream ss;
-	if(target->getDeviceId() == DEVICE_KEYBOARD)
+	if(target->getDeviceId() == Input::DEVICE_KEYBOARD)
 		ss << "KEYBOARD";
-	else if(target->getDeviceId() == DEVICE_CEC)
+	else if(target->getDeviceId() == Input::DEVICE_CEC)
 		ss << "CEC";
 	else
 		ss << "GAMEPAD " << (target->getDeviceId() + 1);
@@ -282,7 +282,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 				"NO", [this, okFunction] {
 					// for a disabled hotkey enable button, set to a key with id 0,
 					// so the input configuration script can be backwards compatible.
-					mTargetConfig->mapInput("HotKeyEnable", Input(DEVICE_KEYBOARD, TYPE_KEY, 0, 1, true));
+					mTargetConfig->mapInput("HotKeyEnable", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, 0, 1, true));
 					okFunction();
 				}
 			));

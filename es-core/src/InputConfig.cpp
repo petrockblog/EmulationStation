@@ -5,28 +5,28 @@
 #include "Log.h"
 #include <pugixml/src/pugixml.hpp>
 
-static std::string inputTypeToString(const InputType _type)
+static std::string inputTypeToString(const Input::Type _type)
 {
 	switch(_type)
 	{
-		case TYPE_AXIS:       return "axis";
-		case TYPE_BUTTON:     return "button";
-		case TYPE_HAT:        return "hat";
-		case TYPE_KEY:        return "key";
-		case TYPE_CEC_BUTTON: return "cec-button";
-		default:              return "error";
+		case Input::TYPE_AXIS:       return "axis";
+		case Input::TYPE_BUTTON:     return "button";
+		case Input::TYPE_HAT:        return "hat";
+		case Input::TYPE_KEY:        return "key";
+		case Input::TYPE_CEC_BUTTON: return "cec-button";
+		default:                     return "error";
 	}
 
 } // inputTypeToString
 
-static InputType stringToInputType(const std::string& _type)
+static Input::Type stringToInputType(const std::string& _type)
 {
-	if(     _type == "axis")       return TYPE_AXIS;
-	else if(_type == "button")     return TYPE_BUTTON;
-	else if(_type == "hat")        return TYPE_HAT;
-	else if(_type == "key")        return TYPE_KEY;
-	else if(_type == "cec-button") return TYPE_CEC_BUTTON;
-	else                           return TYPE_COUNT;
+	if(     _type == "axis")       return Input::TYPE_AXIS;
+	else if(_type == "button")     return Input::TYPE_BUTTON;
+	else if(_type == "hat")        return Input::TYPE_HAT;
+	else if(_type == "key")        return Input::TYPE_KEY;
+	else if(_type == "cec-button") return Input::TYPE_CEC_BUTTON;
+	else                           return Input::TYPE_COUNT;
 
 } // stringToInputType
 
@@ -66,9 +66,9 @@ bool InputConfig::isMappedTo(const Input& _compare, const Input& _input)
 		(_compare.type   == _input.type)   &&
 		(_compare.id     == _input.id))
 	{
-		if(     _compare.type == TYPE_HAT)  return ((_input.value == 0) || (_input.value &  _compare.value));
-		else if(_compare.type == TYPE_AXIS) return ((_input.value == 0) || (_input.value == _compare.value));
-		else                                return true;
+		if(     _compare.type == Input::TYPE_HAT)  return ((_input.value == 0) || (_input.value &  _compare.value));
+		else if(_compare.type == Input::TYPE_AXIS) return ((_input.value == 0) || (_input.value == _compare.value));
+		else                                       return true;
 	}
 
 	return false;
@@ -124,9 +124,9 @@ void InputConfig::loadFromXML(pugi::xml_node& _node)
 		const std::string type     = input.attribute("type").as_string();
 		const int         id       = input.attribute("id").as_int();
 		const int         value    = input.attribute("value").as_int();
-		const InputType   typeEnum = stringToInputType(type);
+		const Input::Type typeEnum = stringToInputType(type);
 
-		if(typeEnum == TYPE_COUNT)
+		if(typeEnum == Input::TYPE_COUNT)
 		{
 			LOG(LogError) << "ERROR: InputConfig type \"" << type << "\" is invalid! Skipping input \"" << name << "\".\n";
 			continue;
@@ -144,12 +144,12 @@ void InputConfig::writeToXML(pugi::xml_node& _parent)
 {
 	pugi::xml_node config = _parent.append_child("inputConfig");
 
-	if(mDeviceId == DEVICE_KEYBOARD)
+	if(mDeviceId == Input::DEVICE_KEYBOARD)
 	{
 		config.append_attribute("type")       = "keyboard";
 		config.append_attribute("deviceName") = "Keyboard";
 	}
-	else if(mDeviceId == DEVICE_CEC)
+	else if(mDeviceId == Input::DEVICE_CEC)
 	{
 		config.append_attribute("type")       = "cec";
 		config.append_attribute("deviceName") = "cec";

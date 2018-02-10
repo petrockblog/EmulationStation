@@ -65,13 +65,13 @@ void InputManager::init()
 		addJoystickByDeviceIndex(i);
 	}
 
-	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD, "Keyboard", KEYBOARD_GUID_STRING);
+	mKeyboardInputConfig = new InputConfig(Input::DEVICE_KEYBOARD, "Keyboard", KEYBOARD_GUID_STRING);
 	loadInputConfig(mKeyboardInputConfig);
 
 	SDL_USER_CECBUTTONDOWN = SDL_RegisterEvents(2);
 	SDL_USER_CECBUTTONUP   = SDL_USER_CECBUTTONDOWN + 1;
 	CECInput::init();
-	mCECInputConfig = new InputConfig(DEVICE_CEC, "CEC", CEC_GUID_STRING);
+	mCECInputConfig = new InputConfig(Input::DEVICE_CEC, "CEC", CEC_GUID_STRING);
 	loadInputConfig(mCECInputConfig);
 }
 
@@ -174,9 +174,9 @@ void InputManager::deinit()
 int InputManager::getNumJoysticks() { return (int)mJoysticks.size(); }
 int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 {
-	if(id == DEVICE_KEYBOARD)
+	if(id == Input::DEVICE_KEYBOARD)
 		return 120; //it's a lot, okay.
-	else if(id == DEVICE_CEC)
+	else if(id == Input::DEVICE_CEC)
 #ifdef HAVE_CECLIB
 		return CEC::CEC_USER_CONTROL_CODE_MAX;
 #else // HAVE_LIBCEF
@@ -188,9 +188,9 @@ int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 
 InputConfig* InputManager::getInputConfigByDevice(int device)
 {
-	if(device == DEVICE_KEYBOARD)
+	if(device == Input::DEVICE_KEYBOARD)
 		return mKeyboardInputConfig;
-	else if(device == DEVICE_CEC)
+	else if(device == Input::DEVICE_CEC)
 		return mCECInputConfig;
 	else
 		return mInputConfigs[device];
@@ -214,7 +214,7 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 				else
 					normValue = -1;
 
-			window->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, TYPE_AXIS, ev.jaxis.axis, normValue, false));
+			window->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, Input::TYPE_AXIS, ev.jaxis.axis, normValue, false));
 			causedEvent = true;
 		}
 
@@ -223,11 +223,11 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
-		window->input(getInputConfigByDevice(ev.jbutton.which), Input(ev.jbutton.which, TYPE_BUTTON, ev.jbutton.button, ev.jbutton.state == SDL_PRESSED, false));
+		window->input(getInputConfigByDevice(ev.jbutton.which), Input(ev.jbutton.which, Input::TYPE_BUTTON, ev.jbutton.button, ev.jbutton.state == SDL_PRESSED, false));
 		return true;
 
 	case SDL_JOYHATMOTION:
-		window->input(getInputConfigByDevice(ev.jhat.which), Input(ev.jhat.which, TYPE_HAT, ev.jhat.hat, ev.jhat.value, false));
+		window->input(getInputConfigByDevice(ev.jhat.which), Input(ev.jhat.which, Input::TYPE_HAT, ev.jhat.hat, ev.jhat.value, false));
 		return true;
 
 	case SDL_KEYDOWN:
@@ -247,11 +247,11 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 			return false;
 		}
 
-		window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 1, false));
+		window->input(getInputConfigByDevice(Input::DEVICE_KEYBOARD), Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, ev.key.keysym.sym, 1, false));
 		return true;
 
 	case SDL_KEYUP:
-		window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
+		window->input(getInputConfigByDevice(Input::DEVICE_KEYBOARD), Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, ev.key.keysym.sym, 0, false));
 		return true;
 
 	case SDL_TEXTINPUT:
@@ -269,7 +269,7 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 
 	if((ev.type == (unsigned int)SDL_USER_CECBUTTONDOWN) || (ev.type == (unsigned int)SDL_USER_CECBUTTONUP))
 	{
-		window->input(getInputConfigByDevice(DEVICE_CEC), Input(DEVICE_CEC, TYPE_CEC_BUTTON, ev.user.code, ev.type == (unsigned int)SDL_USER_CECBUTTONDOWN, false));
+		window->input(getInputConfigByDevice(Input::DEVICE_CEC), Input(Input::DEVICE_CEC, Input::TYPE_CEC_BUTTON, ev.user.code, ev.type == (unsigned int)SDL_USER_CECBUTTONDOWN, false));
 		return true;
 	}
 
@@ -309,21 +309,21 @@ bool InputManager::loadInputConfig(InputConfig* config)
 //allows the user to select to reconfigure in menus if this happens without having to delete es_input.cfg manually
 void InputManager::loadDefaultKBConfig()
 {
-	InputConfig* cfg = getInputConfigByDevice(DEVICE_KEYBOARD);
+	InputConfig* cfg = getInputConfigByDevice(Input::DEVICE_KEYBOARD);
 
 	cfg->clear();
-	cfg->mapInput("up", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_UP, 1, true));
-	cfg->mapInput("down", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_DOWN, 1, true));
-	cfg->mapInput("left", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_LEFT, 1, true));
-	cfg->mapInput("right", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_RIGHT, 1, true));
+	cfg->mapInput("up", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_UP, 1, true));
+	cfg->mapInput("down", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_DOWN, 1, true));
+	cfg->mapInput("left", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_LEFT, 1, true));
+	cfg->mapInput("right", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_RIGHT, 1, true));
 
-	cfg->mapInput("a", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_RETURN, 1, true));
-	cfg->mapInput("b", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_ESCAPE, 1, true));
-	cfg->mapInput("start", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F1, 1, true));
-	cfg->mapInput("select", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F2, 1, true));
+	cfg->mapInput("a", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_RETURN, 1, true));
+	cfg->mapInput("b", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_ESCAPE, 1, true));
+	cfg->mapInput("start", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_F1, 1, true));
+	cfg->mapInput("select", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_F2, 1, true));
 
-	cfg->mapInput("pageup", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_RIGHTBRACKET, 1, true));
-	cfg->mapInput("pagedown", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_LEFTBRACKET, 1, true));
+	cfg->mapInput("pageup", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_RIGHTBRACKET, 1, true));
+	cfg->mapInput("pagedown", Input(Input::DEVICE_KEYBOARD, Input::TYPE_KEY, SDLK_LEFTBRACKET, 1, true));
 }
 
 void InputManager::writeDeviceConfig(InputConfig* config)
@@ -470,10 +470,10 @@ int InputManager::getNumConfiguredDevices()
 
 std::string InputManager::getDeviceGUIDString(int deviceId)
 {
-	if(deviceId == DEVICE_KEYBOARD)
+	if(deviceId == Input::DEVICE_KEYBOARD)
 		return KEYBOARD_GUID_STRING;
 
-	if(deviceId == DEVICE_CEC)
+	if(deviceId == Input::DEVICE_CEC)
 		return CEC_GUID_STRING;
 
 	auto it = mJoysticks.find(deviceId);

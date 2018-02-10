@@ -151,7 +151,7 @@ void UIModeController::logInput(InputConfig * config, Input input)
 bool UIModeController::isValidInput(InputConfig * config, Input input)
 {
 	if((config->getMappedTo(input).size() == 0)  || // not a mapped input, so ignore.
-		(input.type == TYPE_HAT) ||  // ignore all HAT inputs
+		(input.type == Input::TYPE_HAT) ||  // ignore all HAT inputs
 		(!input.value))	// not a key-down event
 	{
 		return false;
