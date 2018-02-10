@@ -2,6 +2,7 @@
 
 #include "views/gamelist/IGameListView.h"
 #include "FileSorts.h"
+#include "Input.h"
 #include "SystemData.h"
 
 static const std::string LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

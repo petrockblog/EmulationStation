@@ -379,7 +379,7 @@ void GuiInputConfig::setNotDefined(const std::shared_ptr<TextComponent>& text)
 
 void GuiInputConfig::setAssignedTo(const std::shared_ptr<TextComponent>& text, Input input)
 {
-	text->setText(Utils::String::toUpper(input.string()));
+	text->setText(Utils::String::toUpper(input.asString()));
 	text->setColor(0x777777FF);
 }
 
@@ -406,7 +406,7 @@ bool GuiInputConfig::assign(Input input, int inputId)
 	input.configured = true;
 	mTargetConfig->mapInput(inputName[inputId], input);
 
-	LOG(LogInfo) << "  Mapping [" << input.string() << "] -> " << inputName[inputId];
+	LOG(LogInfo) << "  Mapping [" << input.asString() << "] -> " << inputName[inputId];
 
 	return true;
 }

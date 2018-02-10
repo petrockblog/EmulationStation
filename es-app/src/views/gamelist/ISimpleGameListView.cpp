@@ -3,6 +3,7 @@
 #include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
+#include "Input.h"
 #include "Settings.h"
 #include "Sound.h"
 #include "SystemData.h"

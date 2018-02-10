@@ -4,6 +4,7 @@
 #include "views/ViewController.h"
 #include "Sound.h"
 #include "Window.h"
+#include <SDL_keyboard.h>
 
 bool IGameListView::input(InputConfig* config, Input input)
 {

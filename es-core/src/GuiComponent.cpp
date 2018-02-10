@@ -2,6 +2,7 @@
 
 #include "animations/Animation.h"
 #include "animations/AnimationController.h"
+#include "Input.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "ThemeData.h"

@@ -4,11 +4,13 @@
 #include "guis/GuiMsgBox.h"
 #include "views/UIModeController.h"
 #include "views/ViewController.h"
+#include "Input.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "Settings.h"
 #include "SystemData.h"
 #include "Window.h"
+#include <SDL_keyboard.h>
 
 // buffer values for scrolling velocity (left, stopped, right)
 const int logoBuffersLeft[] = { -5, -2, -1 };

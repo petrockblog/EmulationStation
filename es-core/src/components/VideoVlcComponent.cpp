@@ -7,6 +7,7 @@
 #include "Settings.h"
 #include <vlc/vlc.h>
 #include <SDL_mutex.h>
+#include <SDL_surface.h>
 
 #ifdef WIN32
 #include <codecvt>

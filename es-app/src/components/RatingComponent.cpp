@@ -1,6 +1,7 @@
 #include "components/RatingComponent.h"
 
 #include "resources/TextureResource.h"
+#include "Input.h"
 #include "Renderer.h"
 #include "ThemeData.h"
 

@@ -2,6 +2,7 @@
 
 #include "utils/StringUtil.h"
 #include "views/ViewController.h"
+#include "Input.h"
 #include "Log.h"
 #include "Window.h"
 
@@ -144,7 +145,7 @@ void UIModeController::logInput(InputConfig * config, Input input)
 		mapname += mn;
 		mapname += ", ";
 	}
-	LOG(LogDebug) << "UIModeController::logInput( " << config->getDeviceName() <<" ):" << input.string() << ", isMappedTo= " << mapname << ", value=" << input.value;
+	LOG(LogDebug) << "UIModeController::logInput( " << config->getDeviceName() <<" ):" << input.asString() << ", isMappedTo= " << mapname << ", value=" << input.value;
 }
 
 bool UIModeController::isValidInput(InputConfig * config, Input input)

@@ -6,6 +6,7 @@
 #include "components/ComponentGrid.h"
 #include "components/NinePatchComponent.h"
 #include "GuiComponent.h"
+#include "Input.h"
 
 class ComponentList;
 class TextComponent;

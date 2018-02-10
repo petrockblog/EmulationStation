@@ -1,5 +1,6 @@
 #include "components/ComponentGrid.h"
 
+#include "Input.h"
 #include "Renderer.h"
 #include "Settings.h"
 

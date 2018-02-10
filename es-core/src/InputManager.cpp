@@ -2,6 +2,7 @@
 
 #include "utils/FileSystemUtil.h"
 #include "CECInput.h"
+#include "Input.h"
 #include "Log.h"
 #include "platform.h"
 #include "Window.h"

@@ -8,6 +8,7 @@
 #include "PowerSaver.h"
 #include "Renderer.h"
 #include "Window.h"
+#include <SDL_keyboard.h>
 
 #define HOLD_TIME 1000
 

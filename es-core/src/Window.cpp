@@ -4,9 +4,11 @@
 #include "components/ImageComponent.h"
 #include "resources/Font.h"
 #include "resources/TextureResource.h"
+#include "Input.h"
 #include "InputManager.h"
 #include "Log.h"
 #include "Renderer.h"
+#include <SDL_keyboard.h>
 #include <algorithm>
 #include <iomanip>
 

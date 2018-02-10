@@ -1,210 +1,180 @@
 #include "InputConfig.h"
 
+#include "utils/StringUtil.h"
+#include "Input.h"
 #include "Log.h"
 #include <pugixml/src/pugixml.hpp>
 
-//some util functions
-std::string inputTypeToString(InputType type)
+static std::string inputTypeToString(const InputType _type)
 {
-	switch(type)
+	switch(_type)
 	{
-	case TYPE_AXIS:
-		return "axis";
-	case TYPE_BUTTON:
-		return "button";
-	case TYPE_HAT:
-		return "hat";
-	case TYPE_KEY:
-		return "key";
-	case TYPE_CEC_BUTTON:
-		return "cec-button";
-	default:
-		return "error";
-	}
-}
-
-InputType stringToInputType(const std::string& type)
-{
-	if(type == "axis")
-		return TYPE_AXIS;
-	if(type == "button")
-		return TYPE_BUTTON;
-	if(type == "hat")
-		return TYPE_HAT;
-	if(type == "key")
-		return TYPE_KEY;
-	if(type == "cec-button")
-		return TYPE_CEC_BUTTON;
-	return TYPE_COUNT;
-}
-
-
-std::string toLower(std::string str)
-{
-	for(unsigned int i = 0; i < str.length(); i++)
-	{
-		str[i] = (char)tolower(str[i]);
+		case TYPE_AXIS:       return "axis";
+		case TYPE_BUTTON:     return "button";
+		case TYPE_HAT:        return "hat";
+		case TYPE_KEY:        return "key";
+		case TYPE_CEC_BUTTON: return "cec-button";
+		default:              return "error";
 	}
 
-	return str;
-}
-//end util functions
+} // inputTypeToString
 
-InputConfig::InputConfig(int deviceId, const std::string& deviceName, const std::string& deviceGUID) : mDeviceId(deviceId), mDeviceName(deviceName), mDeviceGUID(deviceGUID)
+static InputType stringToInputType(const std::string& _type)
 {
-}
+	if(     _type == "axis")       return TYPE_AXIS;
+	else if(_type == "button")     return TYPE_BUTTON;
+	else if(_type == "hat")        return TYPE_HAT;
+	else if(_type == "key")        return TYPE_KEY;
+	else if(_type == "cec-button") return TYPE_CEC_BUTTON;
+	else                           return TYPE_COUNT;
+
+} // stringToInputType
+
+InputConfig::InputConfig(const int _deviceId, const std::string& _deviceName, const std::string& _deviceGUID)
+: mDeviceId(_deviceId)
+, mDeviceName(_deviceName)
+, mDeviceGUID(_deviceGUID)
+{
+
+} // InputConfig
 
 void InputConfig::clear()
 {
 	mNameMap.clear();
-}
 
-bool InputConfig::isConfigured()
-{
-	return mNameMap.size() > 0;
-}
+} // clear
 
-void InputConfig::mapInput(const std::string& name, Input input)
+void InputConfig::mapInput(const std::string& _name, const Input& _input)
 {
-	mNameMap[toLower(name)] = input;
-}
+	mNameMap[Utils::String::toLower(_name)] = _input;
 
-void InputConfig::unmapInput(const std::string& name)
+} // mapInput
+
+void InputConfig::unmapInput(const std::string& _name)
 {
-	auto it = mNameMap.find(toLower(name));
+	inputMap::const_iterator it = mNameMap.find(Utils::String::toLower(_name));
+
 	if(it != mNameMap.cend())
 		mNameMap.erase(it);
-}
 
-bool InputConfig::getInputByName(const std::string& name, Input* result)
+} // unmapInput
+
+bool InputConfig::isMappedTo(const Input& _compare, const Input& _input)
 {
-	auto it = mNameMap.find(toLower(name));
+	if(  _compare.configured               &&
+		(_compare.device == _input.device) &&
+		(_compare.type   == _input.type)   &&
+		(_compare.id     == _input.id))
+	{
+		if(     _compare.type == TYPE_HAT)  return ((_input.value == 0) || (_input.value &  _compare.value));
+		else if(_compare.type == TYPE_AXIS) return ((_input.value == 0) || (_input.value == _compare.value));
+		else                                return true;
+	}
+
+	return false;
+
+} // isMappedTo
+
+bool InputConfig::isMappedTo(const std::string& _name, const Input& _input)
+{
+	Input compare;
+
+	if(!getInputByName(_name, &compare))
+		return false;
+	
+	return isMappedTo(compare, _input);
+
+} // isMappedTo
+
+bool InputConfig::getInputByName(const std::string& _name, Input* _result)
+{
+	inputMap::const_iterator it = mNameMap.find(Utils::String::toLower(_name));
+
 	if(it != mNameMap.cend())
 	{
-		*result = it->second;
+		*_result = it->second;
 		return true;
 	}
 
 	return false;
-}
 
-bool InputConfig::isMappedTo(const std::string& name, Input input)
+} // getInputByName
+
+InputConfig::stringVector InputConfig::getMappedTo(const Input& _input)
 {
-	Input comp;
-	if(!getInputByName(name, &comp))
-		return false;
-	
-	if(comp.configured && comp.type == input.type && comp.id == input.id)
+	stringVector maps;
+
+	for(inputMap::const_iterator it = mNameMap.cbegin(); it != mNameMap.cend(); ++it)
 	{
-		if(comp.type == TYPE_HAT)
-		{
-			return (input.value == 0 || input.value & comp.value);
-		}
-
-		if(comp.type == TYPE_AXIS)
-		{
-			return input.value == 0 || comp.value == input.value;
-		}else{
-			return true;
-		}
-	}
-	return false;
-}
-
-std::vector<std::string> InputConfig::getMappedTo(Input input)
-{
-	std::vector<std::string> maps;
-
-	typedef std::map<std::string, Input>::const_iterator it_type;
-	for(it_type iterator = mNameMap.cbegin(); iterator != mNameMap.cend(); iterator++)
-	{
-		Input chk = iterator->second;
-
-		if(!chk.configured)
-			continue;
-
-		if(chk.device == input.device && chk.type == input.type && chk.id == input.id)
-		{
-			if(chk.type == TYPE_HAT)
-			{
-				if(input.value == 0 || input.value & chk.value)
-				{
-					maps.push_back(iterator->first);
-				}
-				continue;
-			}
-
-			if(input.type == TYPE_AXIS)
-			{
-				if(input.value == 0 || chk.value == input.value)
-					maps.push_back(iterator->first);
-			}else{
-				maps.push_back(iterator->first);
-			}
-		}
+		if(isMappedTo(it->second, _input))
+			maps.push_back(it->first);
 	}
 
 	return maps;
-}
 
-void InputConfig::loadFromXML(pugi::xml_node& node)
+} // getMappedTo
+
+void InputConfig::loadFromXML(pugi::xml_node& _node)
 {
 	clear();
 
-	for(pugi::xml_node input = node.child("input"); input; input = input.next_sibling("input"))
+	for(pugi::xml_node input = _node.child("input"); input; input = input.next_sibling("input"))
 	{
-		std::string name = input.attribute("name").as_string();
-		std::string type = input.attribute("type").as_string();
-		InputType typeEnum = stringToInputType(type);
+		const std::string name     = input.attribute("name").as_string();
+		const std::string type     = input.attribute("type").as_string();
+		const int         id       = input.attribute("id").as_int();
+		const int         value    = input.attribute("value").as_int();
+		const InputType   typeEnum = stringToInputType(type);
 
 		if(typeEnum == TYPE_COUNT)
 		{
-			LOG(LogError) << "InputConfig load error - input of type \"" << type << "\" is invalid! Skipping input \"" << name << "\".\n";
+			LOG(LogError) << "ERROR: InputConfig type \"" << type << "\" is invalid! Skipping input \"" << name << "\".\n";
 			continue;
 		}
-
-		int id = input.attribute("id").as_int();
-		int value = input.attribute("value").as_int();
 
 		if(value == 0)
 			LOG(LogWarning) << "WARNING: InputConfig value is 0 for " << type << " " << id << "!\n";
 
-		mNameMap[toLower(name)] = Input(mDeviceId, typeEnum, id, value, true);
+		mNameMap[Utils::String::toLower(name)] = Input(mDeviceId, typeEnum, id, value, true);
 	}
-}
 
-void InputConfig::writeToXML(pugi::xml_node& parent)
+} // loadFromXML
+
+void InputConfig::writeToXML(pugi::xml_node& _parent)
 {
-	pugi::xml_node cfg = parent.append_child("inputConfig");
+	pugi::xml_node config = _parent.append_child("inputConfig");
 
 	if(mDeviceId == DEVICE_KEYBOARD)
 	{
-		cfg.append_attribute("type") = "keyboard";
-		cfg.append_attribute("deviceName") = "Keyboard";
+		config.append_attribute("type")       = "keyboard";
+		config.append_attribute("deviceName") = "Keyboard";
 	}
 	else if(mDeviceId == DEVICE_CEC)
 	{
-		cfg.append_attribute("type") = "cec";
-		cfg.append_attribute("deviceName") = "CEC";
+		config.append_attribute("type")       = "cec";
+		config.append_attribute("deviceName") = "cec";
 	}
 	else
 	{
-		cfg.append_attribute("type") = "joystick";
-		cfg.append_attribute("deviceName") = mDeviceName.c_str();
+		config.append_attribute("type")       = "joystick";
+		config.append_attribute("deviceName") = mDeviceName.c_str();
 	}
 
-	cfg.append_attribute("deviceGUID") = mDeviceGUID.c_str();
+//////////////////////////////////////////////////////////////////////////
 
-	typedef std::map<std::string, Input>::const_iterator it_type;
-	for(it_type iterator = mNameMap.cbegin(); iterator != mNameMap.cend(); iterator++)
+	config.append_attribute("deviceGUID") = mDeviceGUID.c_str();
+
+	for(inputMap::const_iterator it = mNameMap.cbegin(); it != mNameMap.cend(); ++it)
 	{
-		if(!iterator->second.configured)
+		if(!it->second.configured)
 			continue;
 
-		pugi::xml_node input = cfg.append_child("input");
-		input.append_attribute("name") = iterator->first.c_str();
-		input.append_attribute("type") = inputTypeToString(iterator->second.type).c_str();
-		input.append_attribute("id").set_value(iterator->second.id);
-		input.append_attribute("value").set_value(iterator->second.value);
+		pugi::xml_node input = config.append_child("input");
+
+		input.append_attribute("name")  = it->first.c_str();
+		input.append_attribute("type")  = inputTypeToString(it->second.type).c_str();
+		input.append_attribute("id")    = it->second.id;
+		input.append_attribute("value") = it->second.value;
 	}
-}
+
+} // writeToXML

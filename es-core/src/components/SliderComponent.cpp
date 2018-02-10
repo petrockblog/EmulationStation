@@ -1,6 +1,7 @@
 #include "components/SliderComponent.h"
 
 #include "resources/Font.h"
+#include "Input.h"
 #include "Renderer.h"
 
 #define MOVE_REPEAT_DELAY 500

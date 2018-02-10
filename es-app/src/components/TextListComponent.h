@@ -5,6 +5,7 @@
 #include "components/IList.h"
 #include "math/Misc.h"
 #include "utils/StringUtil.h"
+#include "Input.h"
 #include "Log.h"
 #include "Sound.h"
 #include <memory>
