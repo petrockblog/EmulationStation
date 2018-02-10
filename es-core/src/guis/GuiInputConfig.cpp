@@ -205,7 +205,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 			// if we're not configuring, start configuring when A is pressed
 			if(!mConfiguringRow)
 			{
-				if(config->isMappedTo("a", input) && input.value)
+				if(config->isMappedTo("a", input) && input.mValue)
 				{
 					mList->stopScrolling();
 					mConfiguringRow = true;
@@ -218,7 +218,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 			}
 
 			// we are configuring
-			if(input.value != 0)
+			if(input.mValue != 0)
 			{
 				// input down
 				// if we're already holding something, ignore this, otherwise plan to map this input
@@ -234,7 +234,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 			}else{
 				// input up
 				// make sure we were holding something and we let go of what we were previously holding
-				if(!mHoldingInput || mHeldInput.device != input.device || mHeldInput.id != input.id || mHeldInput.type != input.type)
+				if(!mHoldingInput || mHeldInput.mDevice != input.mDevice || mHeldInput.mId != input.mId || mHeldInput.mType != input.mType)
 					return true;
 
 				mHoldingInput = false;
@@ -403,7 +403,7 @@ bool GuiInputConfig::assign(Input input, int inputId)
 
 	setAssignedTo(mMappings.at(inputId), input);
 	
-	input.configured = true;
+	input.mConfigured = true;
 	mTargetConfig->mapInput(inputName[inputId], input);
 
 	LOG(LogInfo) << "  Mapping [" << input.asString() << "] -> " << inputName[inputId];

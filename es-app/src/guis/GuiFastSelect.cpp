@@ -47,7 +47,7 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 
 bool GuiFastSelect::input(InputConfig* config, Input input)
 {
-	if(input.value == 0 && config->isMappedTo("select", input))
+	if(input.mValue == 0 && config->isMappedTo("select", input))
 	{
 		// the user let go of select; make our changes to the gamelist and close this gui
 		updateGameListSort();
@@ -58,7 +58,7 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 
 	if(config->isMappedTo("up", input))
 	{
-		if(input.value != 0)
+		if(input.mValue != 0)
 			setScrollDir(-1);
 		else
 			setScrollDir(0);
@@ -66,18 +66,18 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 		return true;
 	}else if(config->isMappedTo("down", input))
 	{
-		if(input.value != 0)
+		if(input.mValue != 0)
 			setScrollDir(1);
 		else
 			setScrollDir(0);
 
 		return true;
-	}else if(config->isMappedTo("left", input) && input.value != 0)
+	}else if(config->isMappedTo("left", input) && input.mValue != 0)
 	{
 		mSortId = (mSortId + 1) % FileSorts::SortTypes.size();
 		updateSortText();
 		return true;
-	}else if(config->isMappedTo("right", input) && input.value != 0)
+	}else if(config->isMappedTo("right", input) && input.mValue != 0)
 	{
 		mSortId--;
 		if(mSortId < 0)

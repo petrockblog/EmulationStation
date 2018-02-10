@@ -67,14 +67,14 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 bool GuiMsgBox::input(InputConfig* config, Input input)
 {
 	// special case for when GuiMsgBox comes up to report errors before anything has been configured
-	if(config->getDeviceId() == Input::DEVICE_KEYBOARD && !config->isConfigured() && input.value && 
-		(input.id == SDLK_RETURN || input.id == SDLK_ESCAPE || input.id == SDLK_SPACE))
+	if(config->getDeviceId() == Input::DEVICE_KEYBOARD && !config->isConfigured() && input.mValue && 
+		(input.mId == SDLK_RETURN || input.mId == SDLK_ESCAPE || input.mId == SDLK_SPACE))
 	{
 		mAcceleratorFunc();
 		return true;
 	}
 
-	if(mAcceleratorFunc && config->isMappedTo("b", input) && input.value != 0)
+	if(mAcceleratorFunc && config->isMappedTo("b", input) && input.mValue != 0)
 	{
 		mAcceleratorFunc();
 		return true;

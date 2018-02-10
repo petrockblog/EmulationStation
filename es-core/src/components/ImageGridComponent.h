@@ -113,7 +113,7 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 template<typename T>
 bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 {
-	if(input.value != 0)
+	if(input.mValue != 0)
 	{
 		Vector2i dir = Vector2i::Zero();
 		if(config->isMappedTo("up", input))

@@ -250,7 +250,7 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 {
 	if(size() > 0)
 	{
-		if(input.value != 0)
+		if(input.mValue != 0)
 		{
 			if(config->isMappedTo("down", input))
 			{

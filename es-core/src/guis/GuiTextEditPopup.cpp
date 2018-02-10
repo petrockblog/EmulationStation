@@ -56,7 +56,7 @@ bool GuiTextEditPopup::input(InputConfig* config, Input input)
 		return true;
 
 	// pressing back when not text editing closes us
-	if(config->isMappedTo("b", input) && input.value)
+	if(config->isMappedTo("b", input) && input.mValue)
 	{
 		delete this;
 		return true;

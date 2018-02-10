@@ -265,7 +265,7 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 		return true;
 
 	const bool isStart = config->isMappedTo("start", input);
-	if(input.value != 0 && (config->isMappedTo("b", input) || isStart))
+	if(input.mValue != 0 && (config->isMappedTo("b", input) || isStart))
 	{
 		close(isStart);
 		return true;

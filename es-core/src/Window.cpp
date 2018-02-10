@@ -126,13 +126,13 @@ void Window::input(InputConfig* config, Input input)
 			{
 				if(config->isMappedTo("right", input) || config->isMappedTo("select", input))
 				{
-					if (input.value != 0) {
+					if (input.mValue != 0) {
 						// handle screensaver control
 						mScreenSaver->nextVideo();
 					}
 					return;
 				}
-				else if(config->isMappedTo("start", input) && input.value != 0)
+				else if(config->isMappedTo("start", input) && input.mValue != 0)
 				{
 					// launch game!
 					cancelScreenSaver();
@@ -161,17 +161,17 @@ void Window::input(InputConfig* config, Input input)
 	mTimeSinceLastInput = 0;
 	cancelScreenSaver();
 
-	if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.value && input.id == SDLK_g && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
+	if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mValue && input.mId == SDLK_g && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 	{
 		// toggle debug grid with Ctrl-G
 		Settings::getInstance()->setBool("DebugGrid", !Settings::getInstance()->getBool("DebugGrid"));
 	}
-	else if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.value && input.id == SDLK_t && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
+	else if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mValue && input.mId == SDLK_t && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 	{
 		// toggle TextComponent debug view with Ctrl-T
 		Settings::getInstance()->setBool("DebugText", !Settings::getInstance()->getBool("DebugText"));
 	}
-	else if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.value && input.id == SDLK_i && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
+	else if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mValue && input.mId == SDLK_i && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 	{
 		// toggle TextComponent debug view with Ctrl-I
 		Settings::getInstance()->setBool("DebugImage", !Settings::getInstance()->getBool("DebugImage"));

@@ -101,13 +101,13 @@ bool GuiScraperStart::input(InputConfig* config, Input input)
 	if(consumed)
 		return true;
 	
-	if(input.value != 0 && config->isMappedTo("b", input))
+	if(input.mValue != 0 && config->isMappedTo("b", input))
 	{
 		delete this;
 		return true;
 	}
 
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if(config->isMappedTo("start", input) && input.mValue != 0)
 	{
 		// close everything
 		Window* window = mWindow;

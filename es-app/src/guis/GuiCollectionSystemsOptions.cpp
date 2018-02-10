@@ -197,7 +197,7 @@ bool GuiCollectionSystemsOptions::input(InputConfig* config, Input input)
 	if(consumed)
 		return true;
 
-	if(config->isMappedTo("b", input) && input.value != 0)
+	if(config->isMappedTo("b", input) && input.mValue != 0)
 	{
 		applySettings();
 	}

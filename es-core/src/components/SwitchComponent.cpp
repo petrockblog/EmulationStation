@@ -18,7 +18,7 @@ void SwitchComponent::onSizeChanged()
 
 bool SwitchComponent::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("a", input) && input.value)
+	if(config->isMappedTo("a", input) && input.mValue)
 	{
 		mState = !mState;
 		onStateChanged();

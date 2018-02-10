@@ -93,11 +93,11 @@ void TextEditComponent::stopEditing()
 bool TextEditComponent::input(InputConfig* config, Input input)
 {
 	bool const cursor_left = (config->getDeviceId() != Input::DEVICE_KEYBOARD && config->isMappedTo("left", input)) ||
-		(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.id == SDLK_LEFT);
+		(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mId == SDLK_LEFT);
 	bool const cursor_right = (config->getDeviceId() != Input::DEVICE_KEYBOARD && config->isMappedTo("right", input)) ||
-		(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.id == SDLK_RIGHT);
+		(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mId == SDLK_RIGHT);
 
-	if(input.value == 0)
+	if(input.mValue == 0)
 	{
 		if(cursor_left || cursor_right)
 			mCursorRepeatDir = 0;
@@ -105,7 +105,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 		return false;
 	}
 
-	if((config->isMappedTo("a", input) || (config->getDeviceId() == Input::DEVICE_KEYBOARD && input.id == SDLK_RETURN)) && mFocused && !mEditing)
+	if((config->isMappedTo("a", input) || (config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mId == SDLK_RETURN)) && mFocused && !mEditing)
 	{
 		startEditing();
 		return true;
@@ -113,7 +113,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 
 	if(mEditing)
 	{
-		if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.id == SDLK_RETURN)
+		if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mId == SDLK_RETURN)
 		{
 			if(isMultiline())
 			{
@@ -125,7 +125,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 			return true;
 		}
 
-		if((config->getDeviceId() == Input::DEVICE_KEYBOARD && input.id == SDLK_ESCAPE) || (config->getDeviceId() != Input::DEVICE_KEYBOARD && config->isMappedTo("b", input)))
+		if((config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mId == SDLK_ESCAPE) || (config->getDeviceId() != Input::DEVICE_KEYBOARD && config->isMappedTo("b", input)))
 		{
 			stopEditing();
 			return true;
@@ -144,7 +144,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 			moveCursor(mCursorRepeatDir);
 		} else if(config->getDeviceId() == Input::DEVICE_KEYBOARD)
 		{
-			switch(input.id)
+			switch(input.mId)
 			{
 				case SDLK_HOME:
 					setCursor(0);

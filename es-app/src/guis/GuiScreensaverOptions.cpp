@@ -33,13 +33,13 @@ void GuiScreensaverOptions::save()
 
 bool GuiScreensaverOptions::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("b", input) && input.value != 0)
+	if(config->isMappedTo("b", input) && input.mValue != 0)
 	{
 		delete this;
 		return true;
 	}
 
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if(config->isMappedTo("start", input) && input.mValue != 0)
 	{
 		// close everything
 		Window* window = mWindow;

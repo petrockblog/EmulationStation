@@ -231,7 +231,7 @@ bool ComponentGrid::input(InputConfig* config, Input input)
 	if(cursorEntry && cursorEntry->component->input(config, input))
 		return true;
 
-	if(!input.value)
+	if(!input.mValue)
 		return false;
 
 	if(config->isMappedTo("down", input))

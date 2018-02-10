@@ -77,16 +77,16 @@ bool ComponentList::input(InputConfig* config, Input input)
 	// input handler didn't consume the input - try to scroll
 	if(config->isMappedTo("up", input))
 	{
-		return listInput(input.value != 0 ? -1 : 0);
+		return listInput(input.mValue != 0 ? -1 : 0);
 	}else if(config->isMappedTo("down", input))
 	{
-		return listInput(input.value != 0 ? 1 : 0);
+		return listInput(input.mValue != 0 ? 1 : 0);
 
 	}else if(config->isMappedTo("pageup", input))
 	{
-		return listInput(input.value != 0 ? -6 : 0);
+		return listInput(input.mValue != 0 ? -6 : 0);
 	}else if(config->isMappedTo("pagedown", input)){
-		return listInput(input.value != 0 ? 6 : 0);
+		return listInput(input.mValue != 0 ? 6 : 0);
 	}
 
 	return false;

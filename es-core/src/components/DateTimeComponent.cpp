@@ -20,7 +20,7 @@ void DateTimeComponent::setDisplayMode(DisplayMode mode)
 
 bool DateTimeComponent::input(InputConfig* config, Input input)
 {
-	if(input.value == 0)
+	if(input.mValue == 0)
 		return false;
 
 	if(config->isMappedTo("a", input))

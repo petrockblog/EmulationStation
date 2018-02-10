@@ -71,7 +71,7 @@ bool GuiDetectDevice::input(InputConfig* config, Input input)
 {
 	PowerSaver::pause();
 
-	if(!mFirstRun && input.device == Input::DEVICE_KEYBOARD && input.type == Input::TYPE_KEY && input.value && input.id == SDLK_ESCAPE)
+	if(!mFirstRun && input.mDevice == Input::DEVICE_KEYBOARD && input.mType == Input::TYPE_KEY && input.mValue && input.mId == SDLK_ESCAPE)
 	{
 		// cancel configuring
 		PowerSaver::resume();
@@ -79,15 +79,15 @@ bool GuiDetectDevice::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(input.type == Input::TYPE_BUTTON || input.type == Input::TYPE_KEY ||input.type == Input::TYPE_CEC_BUTTON)
+	if(input.mType == Input::TYPE_BUTTON || input.mType == Input::TYPE_KEY ||input.mType == Input::TYPE_CEC_BUTTON)
 	{
-		if(input.value && mHoldingConfig == NULL)
+		if(input.mValue && mHoldingConfig == NULL)
 		{
 			// started holding
 			mHoldingConfig = config;
 			mHoldTime = HOLD_TIME;
 			mDeviceHeld->setText(Utils::String::toUpper(config->getDeviceName()));
-		}else if(!input.value && mHoldingConfig == config)
+		}else if(!input.mValue && mHoldingConfig == config)
 		{
 			// cancel
 			mHoldingConfig = NULL;

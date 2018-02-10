@@ -139,9 +139,9 @@ void SystemView::goToSystem(SystemData* system, bool animate)
 
 bool SystemView::input(InputConfig* config, Input input)
 {
-	if(input.value != 0)
+	if(input.mValue != 0)
 	{
-		if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.value && input.id == SDLK_r && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
+		if(config->getDeviceId() == Input::DEVICE_KEYBOARD && input.mValue && input.mId == SDLK_r && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 		{
 			LOG(LogInfo) << " Reloading all";
 			ViewController::get()->reloadAll();

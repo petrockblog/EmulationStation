@@ -116,7 +116,7 @@ private:
 
 		bool input(InputConfig* config, Input input) override
 		{
-			if(config->isMappedTo("b", input) && input.value != 0)
+			if(config->isMappedTo("b", input) && input.mValue != 0)
 			{
 				delete this;
 				return true;
@@ -178,7 +178,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override
 	{
-		if(input.value != 0)
+		if(input.mValue != 0)
 		{
 			if(config->isMappedTo("a", input))
 			{

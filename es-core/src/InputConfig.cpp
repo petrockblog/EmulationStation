@@ -31,7 +31,8 @@ static Input::Type stringToInputType(const std::string& _type)
 } // stringToInputType
 
 InputConfig::InputConfig(const int _deviceId, const std::string& _deviceName, const std::string& _deviceGUID)
-: mDeviceId(_deviceId)
+//: mNameMap
+: mDeviceId  (_deviceId)
 , mDeviceName(_deviceName)
 , mDeviceGUID(_deviceGUID)
 {
@@ -61,14 +62,14 @@ void InputConfig::unmapInput(const std::string& _name)
 
 bool InputConfig::isMappedTo(const Input& _compare, const Input& _input)
 {
-	if(  _compare.configured               &&
-		(_compare.device == _input.device) &&
-		(_compare.type   == _input.type)   &&
-		(_compare.id     == _input.id))
+	if(  _compare.mConfigured                &&
+		(_compare.mDevice == _input.mDevice) &&
+		(_compare.mType   == _input.mType)   &&
+		(_compare.mId     == _input.mId))
 	{
-		if(     _compare.type == Input::TYPE_HAT)  return ((_input.value == 0) || (_input.value &  _compare.value));
-		else if(_compare.type == Input::TYPE_AXIS) return ((_input.value == 0) || (_input.value == _compare.value));
-		else                                       return true;
+		if(     _compare.mType == Input::TYPE_HAT)  return ((_input.mValue == 0) || (_input.mValue &  _compare.mValue));
+		else if(_compare.mType == Input::TYPE_AXIS) return ((_input.mValue == 0) || (_input.mValue == _compare.mValue));
+		else                                        return true;
 	}
 
 	return false;
@@ -166,15 +167,15 @@ void InputConfig::writeToXML(pugi::xml_node& _parent)
 
 	for(inputMap::const_iterator it = mNameMap.cbegin(); it != mNameMap.cend(); ++it)
 	{
-		if(!it->second.configured)
+		if(!it->second.mConfigured)
 			continue;
 
 		pugi::xml_node input = config.append_child("input");
 
 		input.append_attribute("name")  = it->first.c_str();
-		input.append_attribute("type")  = inputTypeToString(it->second.type).c_str();
-		input.append_attribute("id")    = it->second.id;
-		input.append_attribute("value") = it->second.value;
+		input.append_attribute("type")  = inputTypeToString(it->second.mType).c_str();
+		input.append_attribute("id")    = it->second.mId;
+		input.append_attribute("value") = it->second.mValue;
 	}
 
 } // writeToXML

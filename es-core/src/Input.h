@@ -28,11 +28,11 @@ public:
 
 	std::string asString();
 
-	Type type;
-	int  device;
-	int  id;
-	int  value;
-	bool configured;
+	Type mType;
+	int  mDevice;
+	int  mId;
+	int  mValue;
+	bool mConfigured;
 
 }; // Input
 

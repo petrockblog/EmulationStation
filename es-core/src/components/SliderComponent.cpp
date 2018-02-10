@@ -25,19 +25,19 @@ bool SliderComponent::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("left", input))
 	{
-		if(input.value)
+		if(input.mValue)
 			setValue(mValue - mSingleIncrement);
 
-		mMoveRate = input.value ? -mSingleIncrement : 0;
+		mMoveRate = input.mValue ? -mSingleIncrement : 0;
 		mMoveAccumulator = -MOVE_REPEAT_DELAY;
 		return true;
 	}
 	if(config->isMappedTo("right", input))
 	{
-		if(input.value)
+		if(input.mValue)
 			setValue(mValue + mSingleIncrement);
 
-		mMoveRate = input.value ? mSingleIncrement : 0;
+		mMoveRate = input.mValue ? mSingleIncrement : 0;
 		mMoveAccumulator = -MOVE_REPEAT_DELAY;
 		return true;
 	}

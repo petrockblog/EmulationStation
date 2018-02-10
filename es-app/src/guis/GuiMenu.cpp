@@ -511,7 +511,7 @@ bool GuiMenu::input(InputConfig* config, Input input)
 	if(GuiComponent::input(config, input))
 		return true;
 
-	if((config->isMappedTo("b", input) || config->isMappedTo("start", input)) && input.value != 0)
+	if((config->isMappedTo("b", input) || config->isMappedTo("start", input)) && input.mValue != 0)
 	{
 		delete this;
 		return true;
