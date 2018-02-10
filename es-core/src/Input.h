@@ -4,7 +4,7 @@
 
 #include <string>
 
-struct Input
+class Input
 {
 public:
 

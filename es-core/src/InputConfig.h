@@ -7,7 +7,7 @@
 #include <vector>
 
 namespace pugi { class xml_node; }
-struct Input;
+class Input;
 
 class InputConfig
 {

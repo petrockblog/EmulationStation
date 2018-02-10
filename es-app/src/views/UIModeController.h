@@ -6,10 +6,9 @@
 #include <string>
 
 class FileData;
+class Input;
 class InputConfig;
 class ViewController;
-
-struct Input;
 
 class UIModeController {
 public:
