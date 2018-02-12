@@ -267,8 +267,8 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 		else
 		{
 			// we didn't find it here - we need to check if we should add it
-			if (name == "recent" && file->metadata.get("playcount") > "0" && includeFileInAutoCollections(file) ||
-				name == "favorites" && file->metadata.get("favorite") == "true") {
+			if ((name == "recent" && file->metadata.get("playcount") > "0" && includeFileInAutoCollections(file)) ||
+				(name == "favorites" && file->metadata.get("favorite") == "true")) {
 				CollectionFileData* newGame = new CollectionFileData(file, curSys);
 				rootFolder->addChild(newGame);
 				fileIndex->addToIndex(newGame);
