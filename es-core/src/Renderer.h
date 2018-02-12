@@ -4,7 +4,6 @@
 
 #include "math/Vector2i.h"
 #include "platform.h"
-#include GLHEADER
 
 class Font;
 class GuiComponent;

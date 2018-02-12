@@ -5,7 +5,6 @@
 #include "math/Vector2i.h"
 #include "GuiComponent.h"
 #include "platform.h"
-#include GLHEADER
 
 class TextureResource;
 

@@ -8,18 +8,16 @@
 //#define USE_OPENGL_ES
 //#define USE_OPENGL_DESKTOP
 
-#ifdef USE_OPENGL_ES
-	#define GLHEADER <GLES/gl.h>
+#if defined(USE_OPENGL_ES)
+#include <GLES/gl.h>
+#elif defined(USE_OPENGL_DESKTOP)
+#include <SDL_opengl.h>
 #endif
 
-#ifdef USE_OPENGL_DESKTOP
-	//why the hell this naming inconsistency exists is well beyond me
-	#ifdef WIN32
-		#define sleep Sleep
-	#endif
-
-	#define GLHEADER <SDL_opengl.h>
-#endif
+//why the hell this naming inconsistency exists is well beyond me
+#if defined(WIN32)
+#define sleep Sleep
+#endif // WIN32
 
 int runShutdownCommand(); // shut down the system (returns 0 if successful)
 int runRestartCommand(); // restart the system (returns 0 if successful)

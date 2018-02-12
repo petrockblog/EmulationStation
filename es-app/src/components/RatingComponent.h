@@ -4,7 +4,6 @@
 
 #include "GuiComponent.h"
 #include "platform.h"
-#include GLHEADER
 
 class TextureResource;
 

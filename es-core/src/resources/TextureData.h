@@ -3,7 +3,6 @@
 #define ES_CORE_RESOURCES_TEXTURE_DATA_H
 
 #include "platform.h"
-#include GLHEADER
 #include <mutex>
 #include <string>
 

@@ -5,7 +5,6 @@
 #include "ImageIO.h"
 #include "Log.h"
 #include "platform.h"
-#include GLHEADER
 #include <nanosvg/nanosvg.h>
 #include <nanosvg/nanosvgrast.h>
 #include <assert.h>
