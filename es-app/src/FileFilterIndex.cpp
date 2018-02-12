@@ -140,7 +140,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 						if (ratingNumber < 0)
 							ratingNumber = 0;
 
-						key = std::to_string(ratingNumber) + " STARS";
+						key = Utils::String::format("%d", ratingNumber) + " STARS";
 					}
 					catch (int e)
 					{

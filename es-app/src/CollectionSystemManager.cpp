@@ -361,7 +361,7 @@ std::string CollectionSystemManager::getValidNewCollectionName(std::string inNam
 	}
 	else
 	{
-		name += " (" + std::to_string(index) + ")";
+		name += " (" + Utils::String::format("%d", index) + ")";
 	}
 
 	if(name == "")
@@ -603,7 +603,7 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 			}
 		}
 
-		desc = "This collection contains " + std::to_string(games_counter) + " games, including " + games_list;
+		desc = "This collection contains " + Utils::String::format("%d", games_counter) + " games, including " + games_list;
 
 		FileData* randomGame = sys->getRandomGame();
 

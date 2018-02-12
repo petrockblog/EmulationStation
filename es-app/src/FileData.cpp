@@ -281,7 +281,7 @@ void FileData::launchGame(Window* window)
 	FileData* gameToUpdate = getSourceFileData();
 
 	int timesPlayed = gameToUpdate->metadata.getInt("playcount") + 1;
-	gameToUpdate->metadata.set("playcount", std::to_string(static_cast<long long>(timesPlayed)));
+	gameToUpdate->metadata.set("playcount", Utils::String::format("%d", timesPlayed));
 
 	//update last played time
 	gameToUpdate->metadata.set("lastplayed", Utils::Time::DateTime(Utils::Time::now()));

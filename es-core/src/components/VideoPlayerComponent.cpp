@@ -167,7 +167,7 @@ void VideoPlayerComponent::startVideo()
 				{
 					float percentVolume = (float)VolumeControl::getInstance()->getVolume();
 					int OMXVolume = (int)((percentVolume-98)*105);
-					argv[8] = std::to_string(OMXVolume).c_str();
+					argv[8] = Utils::String::format("%d", OMXVolume).c_str();
 				}
 
 				// test if there's a path for possible subtitles, meaning we're a screensaver video
