@@ -9,6 +9,7 @@
 #include "EmulationStation.h"
 #include "InputManager.h"
 #include "Log.h"
+#include "MameNames.h"
 #include "platform.h"
 #include "PowerSaver.h"
 #include "ScraperCmdLine.h"
@@ -30,6 +31,8 @@ bool scrape_cmdline = false;
 
 bool parseArgs(int argc, char* argv[])
 {
+	Settings::getInstance()->setString("ExePath", argv[0]);
+
 	for(int i = 1; i < argc; i++)
 	{
 		if(strcmp(argv[i], "--resolution") == 0)
@@ -280,6 +283,7 @@ int main(int argc, char* argv[])
 	PowerSaver::init();
 	ViewController::init(&window);
 	CollectionSystemManager::init(&window);
+	MameNames::init();
 	window.pushGui(ViewController::get());
 
 	if(!scrape_cmdline)
@@ -407,6 +411,7 @@ int main(int argc, char* argv[])
 		delete window.peekGui();
 	window.deinit();
 
+	MameNames::deinit();
 	CollectionSystemManager::deinit();
 	SystemData::deleteSystems();
 
