@@ -135,6 +135,14 @@ namespace Utils
 
 		} // getPathList
 
+		std::string getEnvVar(const std::string& name)
+		{
+			const char * tmp = getenv(name.c_str());
+			if (envDir != nullptr)
+				return std::string(tmp);
+			return "";
+		}
+
 		std::string getHomePath()
 		{
 			static std::string path;
@@ -143,7 +151,7 @@ namespace Utils
 			if(!path.length())
 			{
 				// this should give us something like "/home/YOUR_USERNAME" on Linux and "C:/Users/YOUR_USERNAME/" on Windows
-				std::string envHome(getenv("HOME"));
+				std::string envHome(getEnvVar("HOME"));
 				if(envHome.length())
 					path = getGenericPath(envHome);
 
@@ -151,8 +159,8 @@ namespace Utils
 				// but does not seem to work for Windows XP or Vista, so try something else
 				if(!path.length())
 				{
-					std::string envDir(getenv("HOMEDRIVE"));
-					std::string envPath(getenv("HOMEPATH"));
+					std::string envDir(getEnvVar("HOMEDRIVE"));
+					std::string envPath(getEnvVar("HOMEPATH"));
 					if(envDir.length() && envPath.length())
 						path = getGenericPath(envDir + "/" + envPath);
 				}
