@@ -138,7 +138,7 @@ namespace Utils
 		std::string getEnvVar(const std::string& name)
 		{
 			const char * tmp = getenv(name.c_str());
-			if (envDir != nullptr)
+			if (tmp != nullptr)
 				return std::string(tmp);
 			return "";
 		}
