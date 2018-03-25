@@ -2,12 +2,36 @@
 #ifndef ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 #define ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 
+#include "ThemeData.h"
+#include "GuiComponent.h"
 #include "components/IList.h"
+#include "components/ImageComponent.h"
+#include "components/TextComponent.h"
+#include "components/NinePatchComponent.h"
+#include "components/GridTileComponent.h"
+#include "Settings.h"
+#include "Renderer.h"
+#include "Log.h"
 #include "resources/TextureResource.h"
+#include "FileData.h"
 
 struct ImageGridData
 {
 	std::shared_ptr<TextureResource> texture;
+};
+
+// Keeps track of which direction the user is moving.  ( for dynamic loading )
+enum UserDirection 
+{
+	MOVING_UP,
+	MOVING_DOWN
+};
+
+// A range around the cursor's index used for loading in textures
+struct CursorRange {
+	int min = 0;
+	int max = 12;
+	int length = 0;
 };
 
 template<typename T>
@@ -20,9 +44,15 @@ protected:
 	using IList<ImageGridData, T>::listRenderTitleOverlay;
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
+	using IList<ImageGridData, T>::mPosition;
 	using IList<ImageGridData, T>::mCursor;
 	using IList<ImageGridData, T>::Entry;
 	using IList<ImageGridData, T>::mWindow;
+	using IList<ImageGridData, T>::mScrollTier;
+	using IList<ImageGridData, T>::mTotalLoadedTextures;
+	using IList<ImageGridData, T>::mLoadedTextureList;
+	using IList<ImageGridData, T>::mMissingBoxartTexture;
+	using IList<ImageGridData, T>::mFolderTexture;
 
 public:
 	using IList<ImageGridData, T>::size;
@@ -30,14 +60,32 @@ public:
 	using IList<ImageGridData, T>::stopScrolling;
 
 	ImageGridComponent(Window* window);
+	~ImageGridComponent();
 
-	void add(const std::string& name, const std::string& imagePath, const T& obj);
+	void remove();
+
+	void add(const std::string& name, const std::string& imagePath, const T& obj, bool loadTextureNow = true);
 	
 	void onSizeChanged() override;
+	
+	void setMargin(Vector2f marg) { mMargin = marg; }
+
+	void clear(bool clearall = false) override;
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
+	void setVisible(bool visible);
+	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 	void render(const Transform4x4f& parentTrans) override;
+
+	int getEntryCount();
+	int getCursorIndex();
+
+	void reloadTextures();
+	void dynamicImageLoader();
+	void clearImageAt(int index);
+	void updateLoadRange();
+	void unloadTextures(bool unloadAll = false);
 
 private:
 	Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
@@ -74,14 +122,20 @@ private:
 		return squareSize;
 	};
 
-	Vector2i getGridSize() const
+	Vector2i getGridDimensions() const
 	{
+		if (mRequestedGridDimensions.x() > 0)
+            return mRequestedGridDimensions;
+
 		Vector2f squareSize = getMaxSquareSize();
-		Vector2i gridSize((int)(mSize.x() / (squareSize.x() + getPadding().x())), (int)(mSize.y() / (squareSize.y() + getPadding().y())));
-		return gridSize;
+		if (!mTiles.empty()) squareSize = mTiles[0]->getSize();
+
+		Vector2i gridDimensions(mSize.x() / (squareSize.x() + getPadding().x()), mSize.y() / (squareSize.y() + getPadding().y()));
+		return gridDimensions;
 	};
 
 	Vector2f getPadding() const { return Vector2f(24, 24); }
+	Vector2f getMargin() { return mMargin; }
 	
 	void buildImages();
 	void updateImages();
@@ -90,24 +144,258 @@ private:
 
 	bool mEntriesDirty;
 
-	std::vector<ImageComponent> mImages;
+	Vector2f mMargin;
+	Vector2i mRequestedGridDimensions;
+
+	const int MAX_TEXTURES = 80;			// The maximum amount of images that can be loaded at once
+	const int CURSOR_RANGE = 34;			// How many images will be loaded around the cursor [ Cursor will be center of range ]
+
+	CursorRange mCursorRange;	
+	int mCurrentLoad = 0;					// The current loaded in texture
+	bool bLoading = false;					// Loading in textures in the cursor range.
+	bool bUnloaded = false;					// No longer loading and just finished unloading old textures.
+
+	int mPrevIndex = 0;
+	int mPrevScrollTier = 0;
+	int mCurrentDirection = MOVING_DOWN;	// Which direction the user is moving (Orientation based on grid, not index)
+
+	std::vector< std::shared_ptr<GridTileComponent> > mTiles;
+
+	std::shared_ptr<ThemeData> mTheme;
+	bool bThemeLoaded = false;
+	bool bVisible = false;
 };
 
 template<typename T>
 ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData, T>(window)
 {
 	mEntriesDirty = true;
+	setMargin(Vector2f(24, 24));
+	mRequestedGridDimensions.x() = 4;
+	mRequestedGridDimensions.y() = 2;
+	mMissingBoxartTexture = TextureResource::get(":/blank_game.png");
+	mFolderTexture = TextureResource::get(":/folder.png");
 }
 
 template<typename T>
-void ImageGridComponent<T>::add(const std::string& name, const std::string& imagePath, const T& obj)
+ImageGridComponent<T>::~ImageGridComponent() {
+	mTiles.clear();
+}
+
+template<typename T>
+void ImageGridComponent<T>::clear(bool clearall) {
+	unloadTextures(clearall);
+	mEntriesDirty = true;
+	mCurrentDirection = MOVING_DOWN;
+
+	mPrevIndex = 0;
+	bLoading = false;
+	bUnloaded = false;
+	mCurrentLoad = 0;
+
+	IList<ImageGridData, T>::clear();
+	mTiles.clear();
+}
+
+template<typename T>
+int ImageGridComponent<T>::getEntryCount() {
+	return mEntries.size();
+}
+
+template<typename T>
+int ImageGridComponent<T>::getCursorIndex() {
+	return static_cast<IList< ImageGridData, T >*>(this)->getCursorIndex();
+}
+
+template<typename T>
+void ImageGridComponent<T>::remove() {
+	static_cast<IList< ImageGridData, T >*>(this)->pop_back();
+
+	mEntriesDirty = true;
+}
+
+template<typename T>
+void ImageGridComponent<T>::add(const std::string& name, const std::string& imagePath, const T& obj, bool loadTextureNow)
 {
 	typename IList<ImageGridData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
-	entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png");
+	entry.strdata = imagePath;
+	if (obj->getType() == 2)
+        entry.data.texture = mFolderTexture;
+	else {
+		if (loadTextureNow)
+            entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/blank_game.png");
+		else
+            entry.data.texture = TextureResource::get(":/frame.png");
+	}
+
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
+}
+
+template<typename T>
+void ImageGridComponent<T>::unloadTextures(bool unloadAll) {
+	// Phase 1: Go through and unload textures based on list of indexes
+	if (mLoadedTextureList.size() > 0) {
+		for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++) {
+			// Ignore textures currently in range of cursor
+			if (!unloadAll)
+				if ((*i) > mCursorRange.min && (*i) < mCursorRange.max)
+                    continue;
+			if ((*i) > mEntries.size())
+                continue;
+			clearImageAt((*i));
+			i = mLoadedTextureList.erase(i);
+		}
+	}
+
+	// Phase 2: If there are still too many textures.  Just remove all
+	if (mLoadedTextureList.size() > MAX_TEXTURES || unloadAll) {
+		// If there are too many textures loaded, the user is likely out of
+		// Cursor range, so just delete every image.
+		for (int i = 1; i < getEntryCount() - 1; i++)
+			clearImageAt(i);
+		mLoadedTextureList.clear();
+	}
+
+	if (unloadAll)
+        mTiles.clear();
+
+	bLoading = true;		// Reload images now.
+	bUnloaded = false;
+}
+
+template<typename T>
+void ImageGridComponent<T>::reloadTextures() {
+	if (mEntries.size() > 0) {
+		bLoading = true;
+		mCurrentLoad = mCursorRange.min;
+	}
+}
+
+template<typename T>
+void ImageGridComponent<T>::dynamicImageLoader() {
+	if (mLoadedTextureList.size() > MAX_TEXTURES)
+		unloadTextures();
+
+	// if cursor is getting close to the ends of range; update
+	if (getCursorIndex() > mCursorRange.max - 5 && getCursorIndex() < mCursorRange.min + 5)
+		updateLoadRange();
+
+	// Update range if user is out of range and no loading/unloading is being performed.
+	if (!bLoading && bUnloaded && (getCursorIndex() > mCursorRange.max || getCursorIndex() < mCursorRange.min))
+		updateLoadRange();
+
+	// Load in Texture per cycle.
+	if (bLoading && mScrollTier < 1) {
+		// Make sure index is in range.
+		if (mCurrentLoad < getEntryCount() && mCurrentLoad > 0) {
+			if (mLoadedTextureList.size() > MAX_TEXTURES)
+				unloadTextures();
+			static_cast<IList <ImageGridData, T >*>(this)->loadTexture(mCurrentLoad);
+		}
+
+		// update images as they load in.
+		updateImages();
+
+		if (mCurrentLoad < mCursorRange.max)
+			mCurrentLoad++;
+		else
+			bLoading = false;
+	}
+	else
+	{
+		if (bUnloaded)
+			return;
+
+		// Unload images that are out of range in the opposite direction the user is going
+		switch (mCurrentDirection)
+		{
+			case MOVING_DOWN:
+				if (mCursorRange.min > 0) {
+					for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++)
+					{
+						if ((*i) >= mCursorRange.min)
+							break;
+						clearImageAt((*i));
+						i = mLoadedTextureList.erase(i);
+					}
+				}
+				break;
+
+			case MOVING_UP:
+				if (mCursorRange.max < getEntryCount()) {
+					for (auto i = mLoadedTextureList.begin(); i != mLoadedTextureList.end(); i++)
+					{
+						if ((*i) <= mCursorRange.max)
+							break;
+						clearImageAt((*i));
+						i = mLoadedTextureList.erase(i);
+					}
+				}
+				break;
+		}
+
+		bUnloaded = true;
+	}
+
+	// update and load after user exits out of fast scroll
+	if (mPrevScrollTier > 0 && mScrollTier == 0)
+	{
+		bLoading = false;
+		updateLoadRange();
+	}
+
+	mPrevScrollTier = mScrollTier;
+}
+
+template<typename T>
+void ImageGridComponent<T>::updateLoadRange() {
+	// Only update range if not loading and not within last built range
+	if (bLoading)
+		return;
+
+	int cursorRange = CURSOR_RANGE;
+
+	// Create a range based on cursor position
+	int cursor = getCursorIndex();
+
+	// return if index hasn't changed and range is setup
+	if (cursor == mPrevIndex && mCursorRange.length > 0)
+		return;
+
+	// Get minimum [ will stay at 0 until user moves past 12. ]
+	int rmin = cursor - (cursorRange / 2);
+	if (rmin < 0)
+		rmin = 0;
+
+	// get max [ will try to be just the viewable area based on mod size ]
+	int rmax = 0;
+	if (rmin < cursorRange / 2)
+		rmax = cursor + cursorRange;
+	else
+		rmax = cursor + (cursorRange / 2);
+	if (rmax > getEntryCount())
+		rmax = getEntryCount() - 1;
+
+	mCursorRange.min = rmin;
+	mCursorRange.max = rmax;
+	mCursorRange.length = rmax - rmin;
+
+	mCurrentLoad = mCursorRange.min;
+	bLoading = true;
+
+	// Determin user's direction
+	mCurrentDirection = (mPrevIndex > cursor ? MOVING_UP : MOVING_DOWN);
+
+	bUnloaded = false;
+	mPrevIndex = cursor;
+}
+
+template<typename T>
+void ImageGridComponent<T>::clearImageAt(int index) {
+	static_cast<IList <ImageGridData, T >*>(this)->clearImage(index);
 }
 
 template<typename T>
@@ -127,7 +415,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 
 		if(dir != Vector2i::Zero())
 		{
-			listInput(dir.x() + dir.y() * getGridSize().x());
+			listInput(dir.x() + dir.y() * getGridDimensions().x());
 			return true;
 		}
 	}else{
@@ -144,32 +432,118 @@ template<typename T>
 void ImageGridComponent<T>::update(int deltaTime)
 {
 	listUpdate(deltaTime);
+
+	for (auto t = mTiles.begin(); t != mTiles.end(); t++)
+		(*t)->update(deltaTime);
+}
+
+template<typename T>
+void ImageGridComponent<T>::setVisible(bool visible) {
+	bVisible = visible;
 }
 
 template<typename T>
 void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 {
+	// If this grid isn't in focus, return and do not render
+	if (!bVisible)
+		return;
+
 	Transform4x4f trans = getTransform() * parentTrans;
 
-	if(mEntriesDirty)
+	if (mEntriesDirty)
 	{
 		buildImages();
 		updateImages();
 		mEntriesDirty = false;
 	}
 
-	for(auto it = mImages.begin(); it != mImages.end(); it++)
+	int i = 0;
+	std::shared_ptr<GridTileComponent> pTile;
+	bool bSelected = false;
+	for (auto ti = mTiles.begin(); ti != mTiles.end(); ti++)
 	{
-		it->render(trans);
+		if (i > getEntryCount() - 1)
+			break;
+		// Keep the selected tile and render it later (so it draws on top others)
+		if ((*ti)->isSelected())
+		{
+			i++;
+			pTile = (*ti);
+			bSelected = true;
+		}
+		else
+		{
+			i++;
+			(*ti)->render(trans);
+		}
 	}
 
+	if (bSelected)
+		pTile->render(trans);
+
+	listRenderTitleOverlay(trans);
+
 	GuiComponent::renderChildren(trans);
+}
+
+template<typename T>
+void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+    GuiComponent::applyTheme(theme, view, element, properties);
+
+    using namespace ThemeFlags;
+
+    Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+	// Keep theme data pointer.
+	mTheme = theme;
+	bThemeLoaded = true;
+
+	// Get hacked-in theme stuff
+	// Margin:
+	auto elem = theme->getElement(view, "md_grid_margin", "container");
+	if (elem) {
+		if (elem->has("size")) 
+			setMargin(elem->get<Vector2f>("size") * screen);
+	} 
+
+	// Grid Size (Columns and Rows)
+	elem = theme->getElement(view, "gridRowsAndColumns", "container");
+	if (elem) {
+		if (elem->has("size")) {
+			Vector2f RequestedGridDimensions = elem->get<Vector2f>("size");
+			mRequestedGridDimensions.x() = (int)RequestedGridDimensions.x();
+			mRequestedGridDimensions.y() = (int)RequestedGridDimensions.y();
+		}
+	}
+
+	// Change default missing boxart icon
+	elem = theme->getElement(view, "missing_boxart", "image");
+	if (elem) {
+		std::string path = elem->get<std::string>("path");
+		if (ResourceManager::getInstance()->fileExists(path))
+			mMissingBoxartTexture = TextureResource::get(path);
+		else
+			LOG(LogWarning) << "Could not replace MissingBoxart, check path: " << path;
+	}
+
+	// Change default folder icon
+	elem = theme->getElement(view, "folder", "image");
+	if (elem) {
+		std::string path = elem->get<std::string>("path");
+		if (ResourceManager::getInstance()->fileExists(path))
+			mFolderTexture = TextureResource::get(path);
+		else
+			LOG(LogWarning) << "Could not replace folder image, check path: " << path;
+	}
 }
 
 template<typename T>
 void ImageGridComponent<T>::onCursorChanged(const CursorState& /*state*/)
 {
 	updateImages();
+	updateLoadRange();
 }
 
 template<typename T>
@@ -183,72 +557,102 @@ void ImageGridComponent<T>::onSizeChanged()
 template<typename T>
 void ImageGridComponent<T>::buildImages()
 {
-	mImages.clear();
+	mTiles.clear();
 
-	Vector2i gridSize = getGridSize();
+	Vector2i gridDimensions = getGridDimensions();
 	Vector2f squareSize = getMaxSquareSize();
-	Vector2f padding = getPadding();
 
-	// attempt to center within our size
-	Vector2f totalSize(gridSize.x() * (squareSize.x() + padding.x()), gridSize.y() * (squareSize.y() + padding.y()));
-	Vector2f offset(mSize.x() - totalSize.x(), mSize.y() - totalSize.y());
-	offset /= 2;
+	// Get distance between tile points.
+	float tileDistanceX = (mSize.x() / mRequestedGridDimensions.x()) - getMargin().x();
+	float tileDistanceY = (mSize.y() / mRequestedGridDimensions.y()) - getMargin().y();
 
-	for(int y = 0; y < gridSize.y(); y++)
+	// Scale image by aspect ratio.
+	float ratioW = tileDistanceX / squareSize.x();
+	float ratioH = tileDistanceY / squareSize.y();
+	float ratio = ratioW < ratioH ? ratioW : ratioH;
+	squareSize.x() *= ratio;
+	squareSize.y() *= ratio;
+	
+	// The margin to add to have all tiles be evenly spaced and be flush with sides.
+	float realMargin = mSize.x() - (squareSize.x() * mRequestedGridDimensions.x());
+	realMargin /= mRequestedGridDimensions.x() - 1;
+	float realMarginY = mSize.y() - (squareSize.y() * mRequestedGridDimensions.y());
+	realMarginY /= mRequestedGridDimensions.y() - 1;
+
+	// Layout tile size and position
+	float tdy = 0;
+	for(int y = 0; y < gridDimensions.y(); y++)
 	{
-		for(int x = 0; x < gridSize.x(); x++)
+		float tdx = 0;
+		for(int x = 0; x < gridDimensions.x(); x++)
 		{
-			mImages.push_back(ImageComponent(mWindow));
-			ImageComponent& image = mImages.at(y * gridSize.x() + x);
+			// Create tiles
+			auto tile = std::make_shared<GridTileComponent>(mWindow, y * gridDimensions.x() + x);
+			tile->setImageSize(squareSize.x(), squareSize.y());
+			tile->setPosition(tdx, tdy);
+			tile->setTextAlignment(ALIGN_CENTER);
 
-			image.setPosition((squareSize.x() + padding.x()) * (x + 0.5f) + offset.x(), (squareSize.y() + padding.y()) * (y + 0.5f) + offset.y());
-			image.setOrigin(0.5f, 0.5f);
-			image.setResize(squareSize.x(), squareSize.y());
-			image.setImage("");
+			if (bThemeLoaded)
+                tile->applyTheme(mTheme);
+
+			mTiles.push_back(tile);
+
+			// Increase X position
+			tdx += squareSize.x() + realMargin;
 		}
+
+		// Increase y position
+		tdy += squareSize.y() + realMarginY;
 	}
+
 }
 
 template<typename T>
 void ImageGridComponent<T>::updateImages()
 {
-	if(mImages.empty())
+	if (mTiles.empty())
 		buildImages();
 
-	Vector2i gridSize = getGridSize();
+	Vector2i gridDimensions = getGridDimensions();
 
-	int cursorRow = mCursor / gridSize.x();
+	int cursorRow = mCursor / gridDimensions.x();
 
-	int start = (cursorRow - (gridSize.y() / 2)) * gridSize.x();
+	int start = (cursorRow - (gridDimensions.y() / 2)) * gridDimensions.x();
 
 	//if we're at the end put the row as close as we can and no higher
-	if(start + (gridSize.x() * gridSize.y()) >= (int)mEntries.size())
-		start = gridSize.x() * ((int)mEntries.size()/gridSize.x() - gridSize.y() + 1);
+	if(start + (gridDimensions.x() * gridDimensions.y()) >= (int)mEntries.size())
+		start = gridDimensions.x() * ((int)mEntries.size()/gridDimensions.x() - gridDimensions.y() + 1);
 
 	if(start < 0)
 		start = 0;
 
 	unsigned int i = (unsigned int)start;
-	for(unsigned int img = 0; img < mImages.size(); img++)
+	for(unsigned int img = 0; img < mTiles.size(); img++)
 	{
-		ImageComponent& image = mImages.at(img);
+		// SET IMAGE FROM TEXUTRE
+		auto tile = mTiles.at(img);
 		if(i >= (unsigned int)size())
 		{
-			image.setImage("");
+			tile->setSelected(false);
+			tile->hide();
 			continue;
 		}
 
-		Vector2f squareSize = getSquareSize(mEntries.at(i).data.texture);
+		tile->show();
+
 		if(i == (unsigned int)mCursor)
 		{
-			image.setColorShift(0xFFFFFFFF);
-			image.setResize(squareSize.x() + getPadding().x() * 0.95f, squareSize.y() + getPadding().y() * 0.95f);
-		}else{
-			image.setColorShift(0xAAAAAABB);
-			image.setResize(squareSize.x(), squareSize.y());
+			tile->setSelected(true);
+			tile->show();
 		}
+		else
+			tile->setSelected(false);
 
-		image.setImage(mEntries.at(i).data.texture);
+		tile->setBackgroundPath(":/frame.png");
+		tile->setImage(mEntries.at(i).data.texture);
+		tile->setText(mEntries.at(i).name);
+		tile->setImageToFit(true);
+
 		i++;
 	}
 }
