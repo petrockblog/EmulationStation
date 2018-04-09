@@ -40,6 +40,7 @@ public:
 	//4. Tell your children to render, based on your component's transform - renderChildren(t).
 	virtual void render(const Transform4x4f& parentTrans);
 
+	bool isPositionOffscreen() const;
 	Vector3f getPosition() const;
 	inline void setPosition(const Vector3f& offset) { setPosition(offset.x(), offset.y(), offset.z()); }
 	void setPosition(float x, float y, float z = 0.0f);
