@@ -74,6 +74,12 @@ void GuiComponent::renderChildren(const Transform4x4f& transform) const
 	}
 }
 
+bool GuiComponent::isPositionOffscreen() const
+{
+	return (mPosition.x() < 0.0f || mPosition.x() >= Renderer::getScreenWidth()
+		 || mPosition.y() < 0.0f || mPosition.y() >= Renderer::getScreenHeight());
+};
+
 Vector3f GuiComponent::getPosition() const
 {
 	return mPosition;
