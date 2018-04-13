@@ -1,3 +1,4 @@
+#include <components/IGameListExtra.h>
 #include "views/gamelist/VideoGameListView.h"
 
 #include "animations/LambdaAnimation.h"

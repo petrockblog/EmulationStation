@@ -1,3 +1,6 @@
+#include <components/GameListExtra.h>
+#include <iostream>
+#include <MetadataFactory.h>
 #include "views/gamelist/GridGameListView.h"
 
 #include "animations/LambdaAnimation.h"
@@ -10,13 +13,11 @@
 GridGameListView::GridGameListView(Window* window, FileData* root) :
 	ISimpleGameListView(window, root),
 	mGrid(window),
+	mWindow(window),
 	mDescContainer(window), mDescription(window),
 
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window),
-	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window),
-
-	mRating(window), mReleaseDate(window), mDeveloper(window), mPublisher(window),
-	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window)
+	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window)
 {
 	const float padding = 0.01f;
 
@@ -30,29 +31,29 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	// metadata labels + values
 	mLblRating.setText("Rating: ");
 	addChild(&mLblRating);
-	addChild(&mRating);
 	mLblReleaseDate.setText("Released: ");
 	addChild(&mLblReleaseDate);
-	addChild(&mReleaseDate);
 	mLblDeveloper.setText("Developer: ");
 	addChild(&mLblDeveloper);
-	addChild(&mDeveloper);
 	mLblPublisher.setText("Publisher: ");
 	addChild(&mLblPublisher);
-	addChild(&mPublisher);
 	mLblGenre.setText("Genre: ");
 	addChild(&mLblGenre);
-	addChild(&mGenre);
 	mLblPlayers.setText("Players: ");
 	addChild(&mLblPlayers);
-	addChild(&mPlayers);
 	mLblLastPlayed.setText("Last played: ");
 	addChild(&mLblLastPlayed);
-	mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
-	addChild(&mLastPlayed);
 	mLblPlayCount.setText("Times played: ");
 	addChild(&mLblPlayCount);
-	addChild(&mPlayCount);
+
+	addMetadataElement("md_rating");
+	addMetadataElement("md_releasedate");
+	addMetadataElement("md_developer");
+	addMetadataElement("md_publisher");
+	addMetadataElement("md_genre");
+	addMetadataElement("md_players");
+	addMetadataElement("md_lastplayed");
+	addMetadataElement("md_playcount");
 
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2*padding), mSize.y() - mDescContainer.getPosition().y());
@@ -63,7 +64,6 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
-
 
 	initMDLabels();
 	initMDValues();
@@ -140,19 +140,8 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 		labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
 	}
 
-
-	initMDValues();
-	std::vector<GuiComponent*> values = getMDValues();
-	assert(values.size() == 8);
-	const char* valElements[8] = {
-			"md_rating", "md_releasedate", "md_developer", "md_publisher",
-			"md_genre", "md_players", "md_lastplayed", "md_playcount"
-	};
-
-	for(unsigned int i = 0; i < values.size(); i++)
-	{
-		values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
-	}
+	for (auto i = mExtras.begin(); i != mExtras.end(); i++)
+		(*i)->applyTheme(theme, getName());
 
 	mDescContainer.applyTheme(theme, getName(), "md_description", POSITION | ThemeFlags::SIZE | Z_INDEX);
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
@@ -194,35 +183,7 @@ void GridGameListView::initMDLabels()
 
 void GridGameListView::initMDValues()
 {
-	std::vector<TextComponent*> labels = getMDLabels();
-	std::vector<GuiComponent*> values = getMDValues();
-
-	std::shared_ptr<Font> defaultFont = Font::get(FONT_SIZE_SMALL);
-	mRating.setSize(defaultFont->getHeight() * 5.0f, (float)defaultFont->getHeight());
-	mReleaseDate.setFont(defaultFont);
-	mDeveloper.setFont(defaultFont);
-	mPublisher.setFont(defaultFont);
-	mGenre.setFont(defaultFont);
-	mPlayers.setFont(defaultFont);
-	mLastPlayed.setFont(defaultFont);
-	mPlayCount.setFont(defaultFont);
-
-	float bottom = 0.0f;
-
-	const float colSize = (mSize.x() * 0.48f) / 2;
-	for(unsigned int i = 0; i < labels.size(); i++)
-	{
-		const float heightDiff = (labels[i]->getSize().y() - values[i]->getSize().y()) / 2;
-		values[i]->setPosition(labels[i]->getPosition() + Vector3f(labels[i]->getSize().x(), heightDiff, 0));
-		values[i]->setSize(colSize - labels[i]->getSize().x(), values[i]->getSize().y());
-		values[i]->setDefaultZIndex(40);
-
-		float testBot = values[i]->getPosition().y() + values[i]->getSize().y();
-		if(testBot > bottom)
-			bottom = testBot;
-	}
-
-	mDescContainer.setPosition(mDescContainer.getPosition().x(), bottom + mSize.y() * 0.01f);
+	mDescContainer.setPosition(mDescContainer.getPosition().x(), mSize.y() * 0.01f);
 	mDescContainer.setSize(mDescContainer.getSize().x(), mSize.y() - mDescContainer.getPosition().y());
 }
 
@@ -239,23 +200,21 @@ void GridGameListView::updateInfoPanel()
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
-		mRating.setValue(file->metadata.get("rating"));
-		mReleaseDate.setValue(file->metadata.get("releasedate"));
-		mDeveloper.setValue(file->metadata.get("developer"));
-		mPublisher.setValue(file->metadata.get("publisher"));
-		mGenre.setValue(file->metadata.get("genre"));
-		mPlayers.setValue(file->metadata.get("players"));
+		std::cout << mExtras.size() << std::endl;
 
-		if(file->getType() == GAME)
-		{
-			mLastPlayed.setValue(file->metadata.get("lastplayed"));
-			mPlayCount.setValue(file->metadata.get("playcount"));
-		}
+		for (auto i = mExtras.begin(); i != mExtras.end(); i++)
+			(*i)->updateInfo(file);
 
 		fadingOut = false;
 	}
 
-	std::vector<GuiComponent*> comps = getMDValues();
+	// TODO : replace this duck tape with something cleaner
+	std::vector<GuiComponent*> comps;
+
+	for (auto i = mExtras.begin(); i != mExtras.end(); i++)
+		comps.push_back((*i)->getComponent());
+
+	//
 	comps.push_back(&mDescription);
 	std::vector<TextComponent*> labels = getMDLabels();
 	comps.insert(comps.cend(), labels.cbegin(), labels.cend());
@@ -334,18 +293,18 @@ std::vector<TextComponent*> GridGameListView::getMDLabels()
 	return ret;
 }
 
-std::vector<GuiComponent*> GridGameListView::getMDValues()
+bool GridGameListView::addMetadataElement(const std::string& name)
 {
-	std::vector<GuiComponent*> ret;
-	ret.push_back(&mRating);
-	ret.push_back(&mReleaseDate);
-	ret.push_back(&mDeveloper);
-	ret.push_back(&mPublisher);
-	ret.push_back(&mGenre);
-	ret.push_back(&mPlayers);
-	ret.push_back(&mLastPlayed);
-	ret.push_back(&mPlayCount);
-	return ret;
+	IGameListExtra* elem = MetadataFactory::create(mWindow, name);
+
+	if (elem)
+	{
+		mExtras.push_back(elem);
+		addChild(elem->getComponent());
+		return true;
+	}
+
+	return false;
 }
 
 std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
