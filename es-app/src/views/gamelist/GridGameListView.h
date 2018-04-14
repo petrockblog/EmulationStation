@@ -7,6 +7,7 @@
 #include "components/ScrollableContainer.h"
 #include "components/ImageGridComponent.h"
 #include "views/gamelist/ISimpleGameListView.h"
+#include "components/GameListExtra.h"
 
 class GridGameListView : public ISimpleGameListView
 {
@@ -40,8 +41,11 @@ private:
 	void initMDLabels();
 	void initMDValues();
 
+	bool addMetadataElement(const std::string& name);
+
 	TextComponent mLblRating, mLblReleaseDate, mLblDeveloper, mLblPublisher, mLblGenre, mLblPlayers, mLblLastPlayed, mLblPlayCount;
 
+	/*
 	RatingComponent mRating;
 	DateTimeComponent mReleaseDate;
 	TextComponent mDeveloper;
@@ -50,12 +54,15 @@ private:
 	TextComponent mPlayers;
 	DateTimeComponent mLastPlayed;
 	TextComponent mPlayCount;
+	*/
 
 	std::vector<TextComponent*> getMDLabels();
-	std::vector<GuiComponent*> getMDValues();
 
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;
+
+	std::vector<IGameListExtra*> mExtras;
+	Window* mWindow;
 };
 
 #endif // ES_APP_VIEWS_GAME_LIST_GRID_GAME_LIST_VIEW_H
