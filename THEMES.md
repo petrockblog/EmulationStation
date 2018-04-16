@@ -566,8 +566,8 @@ Can be created as an extra.
 	- Where on the image `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the image exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
 * `rotation` - type: FLOAT.
 	- angle in degrees that the image should be rotated.  Positive values will rotate clockwise, negative values will rotate counterclockwise.
-* `rotationOrigin` - type: NORMALIZED_PAIR.
-	- Point around which the image will be rotated. Defaults to `0.5 0.5`.
+* `rotationOrigin` - type: NORMALIZED_PAIR. - default: `0.5 0.5`.
+	- Point around which the image will be rotated.
 * `path` - type: PATH.
 	- Path to the image file.  Most common extensions are supported (including .jpg, .png, and unanimated .gif).
 * `default` - type: PATH.
@@ -589,21 +589,21 @@ Can be created as an extra.
     - The default image used for games which doesn't have an image.
 * `folderImage` - type: PATH.
     - The default image used for folders which doesn't have an image.
-* `scrollDirection` - type: STRING.
-    - `vertical` by default, can also be set to `horizontal`. Not that in `horizontal` mod, the tiles are ordered from top to bottom, then from left to right.
+* `scrollDirection` - type: STRING. - default: `vertical`.
+    - Note that in `horizontal` mod, the tiles are ordered from top to bottom, then from left to right.
 
 #### gridtile
 
 * `size` - type: NORMALIZED_PAIR.
     - The size of the default gridtile is used to calculate how many tiles can fit in the imagegrid. If not explicitly set, the size of the selected gridtile is equal the size of the default gridtile * 1.2
-* `padding` - type: NORMALIZED_PAIR.
-    - The padding around the gridtile content. Default `16 16`. If not explicitly set, the selected tile padding will be equal to the default tile padding.
+* `padding` - type: NORMALIZED_PAIR. - default: `16 16`.
+    - The padding around the gridtile content.  If not explicitly set, the selected tile padding will be equal to the default tile padding.
 * `imageColor` - type: COLOR.
     - The default tile image color and selected tile image color have no influence on each others.
 * `backgroundImage` - type: PATH.
     - If not explicitly set, the selected tile background image will be the same as the default tile background image.
-* `backgroundCornerSize` - type: NORMALIZED_PAIR.
-    - The corner size of the ninepatch used for the tile background. Default is `16 16`.
+* `backgroundCornerSize` - type: NORMALIZED_PAIR. - default: `16 16`.
+    - The corner size of the ninepatch used for the tile background.
 * `backgroundColor` - type: COLOR.
     - A shortcut to define both the center color and edge color at the same time. The default tile background color and selected tile background color have no influence on each others.
 * `backgroundCenterColor` - type: COLOR.
@@ -622,9 +622,9 @@ Can be created as an extra.
 	- Where on the image `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the image exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
 * `rotation` - type: FLOAT.
 	- angle in degrees that the text should be rotated.  Positive values will rotate clockwise, negative values will rotate counterclockwise.
-* `rotationOrigin` - type: NORMALIZED_PAIR.
-	- Point around which the text will be rotated. Defaults to `0.5 0.5`.
-* `delay` - type: FLOAT.  Default is false.
+* `rotationOrigin` - type: NORMALIZED_PAIR. - default: `0.5 0.5`.
+	- Point around which the text will be rotated.
+* `delay` - type: FLOAT. - default: `false`.
 	- Delay in seconds before video will start playing.
 * `default` - type: PATH.
 	- Path to default video file.  Default video will be played when selected game does not have a video.
@@ -649,8 +649,8 @@ Can be created as an extra.
 	- Where on the component `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the component exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
 * `rotation` - type: FLOAT.
 	- angle in degrees that the text should be rotated.  Positive values will rotate clockwise, negative values will rotate counterclockwise.
-* `rotationOrigin` - type: NORMALIZED_PAIR.
-	- Point around which the text will be rotated. Defaults to `0.5 0.5`.
+* `rotationOrigin` - type: NORMALIZED_PAIR. - default: `0.5 0.5`.
+	- Point around which the text will be rotated.
 * `text` - type: STRING.
 * `color` - type: COLOR.
 * `backgroundColor` - type: COLOR;
@@ -661,7 +661,8 @@ Can be created as an extra.
 * `alignment` - type: STRING.
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.  "center" will also align vertically.
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
-* `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
+* `lineSpacing` - type: FLOAT. - default: `1.5`.
+	- Controls the space between lines (as a multiple of font height).
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
@@ -696,7 +697,8 @@ Can be created as an extra.
 * `horizontalMargin` - type: FLOAT.
 	- Horizontal offset for text from the alignment point.  If `alignment` is "left", offsets the text to the right.  If `alignment` is "right", offsets text to the left.  No effect if `alignment` is "center".  Given as a percentage of the element's parent's width (same unit as `size`'s X value).
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
-* `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
+* `lineSpacing` - type: FLOAT. - default: `1.5`.
+	- Controls the space between lines (as a multiple of font height).
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
@@ -719,8 +721,8 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 	- Where on the component `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the component exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
 * `rotation` - type: FLOAT.
 	- angle in degrees that the rating should be rotated.  Positive values will rotate clockwise, negative values will rotate counterclockwise.
-* `rotationOrigin` - type: NORMALIZED_PAIR.
-	- Point around which the rating will be rotated. Defaults to `0.5 0.5`.
+* `rotationOrigin` - type: NORMALIZED_PAIR. - default: `0.5 0.5`.
+	- Point around which the rating will be rotated.
 * `filledPath` - type: PATH.
 	- Path to the "filled star" image.  Image must be square (width equals height).
 * `unfilledPath` - type: PATH.
@@ -747,46 +749,40 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 
 #### helpsystem
 
-* `pos` - type: NORMALIZED_PAIR.  Default is "0.012 0.9515"
+* `pos` - type: NORMALIZED_PAIR. - default: `0.012 0.9515`.
 * `origin` - type: NORMALIZED_PAIR.
 	- Where on the component `pos` refers to. For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the component exactly in the middle of the screen.
-* `textColor` - type: COLOR.  Default is 777777FF.
-* `iconColor` - type: COLOR.  Default is 777777FF.
+* `textColor` - type: COLOR. - default: `777777FF`.
+* `iconColor` - type: COLOR. - default: `777777FF`.
 * `fontPath` - type: PATH.
 * `fontSize` - type: FLOAT.
 
 #### carousel
 
-* `type` - type: STRING.
+* `type` - type: STRING. - default: `horizontal`
 	- Sets the scoll direction of the carousel.
 	- Accepted values are "horizontal", "vertical", "horizontal_wheel" or "vertical_wheel".
-	- Default is "horizontal".
-* `size` - type: NORMALIZED_PAIR. Default is "1 0.2325"
-* `pos` - type: NORMALIZED_PAIR.  Default is "0 0.38375".
+* `size` - type: NORMALIZED_PAIR. - default: `1 0.2325`.
+* `pos` - type: NORMALIZED_PAIR. - default: `0 0.38375`.
 * `origin` - type: NORMALIZED_PAIR.
 	- Where on the carousel `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the carousel exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
-* `color` - type: COLOR.
+* `color` - type: COLOR. - default: `FFFFFFD8`.
 	- Controls the color of the carousel background.
-	- Default is FFFFFFD8
-* `logoSize` - type: NORMALIZED_PAIR.  Default is "0.25 0.155"
-* `logoScale` - type: FLOAT.
+* `logoSize` - type: NORMALIZED_PAIR. - default: `0.25 0.155`
+* `logoScale` - type: FLOAT. - default: `1.2`.
 	- Selected logo is increased in size by this scale
-	- Default is 1.2
-* `logoRotation` - type: FLOAT.
+* `logoRotation` - type: FLOAT. - default: `7.5`.
 	- Angle in degrees that the logos should be rotated.  Value should be positive.
-	- Default is 7.5
 	- This property only applies when `type` is "horizontal_wheel" or "vertical_wheel".
-* `logoRotationOrigin` - type: NORMALIZED_PAIR.
-	- Point around which the logos will be rotated. Defaults to `-5 0.5`.
+* `logoRotationOrigin` - type: NORMALIZED_PAIR. - default: `-5 0.5`.
+	- Point around which the logos will be rotated.
 	- This property only applies when `type` is "horizontal_wheel" or "vertical_wheel".
-* `logoAlignment` - type: STRING.
+* `logoAlignment` - type: STRING. - default: `center`.
 	- Sets the alignment of the logos relative to the carousel.
 	- Accepted values are "top", "bottom" or "center" when `type` is "horizontal" or "horizontal_wheel".
 	- Accepted values are "left", "right" or "center" when `type` is "vertical" or "vertical_wheel".
-	- Default is "center"
-* `maxLogoCount` - type: FLOAT.
+* `maxLogoCount` - type: FLOAT. - default: `3`.
 	- Sets the number of logos to display in the carousel.
-	- Default is 3
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.  
 
