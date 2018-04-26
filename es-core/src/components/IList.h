@@ -77,7 +77,8 @@ protected:
 	std::vector<Entry> mEntries;
 	
 public:
-	IList(Window* window, const ScrollTierList& tierList = LIST_SCROLL_STYLE_QUICK, const ListLoopType& loopType = LIST_PAUSE_AT_END) : GuiComponent(window), 
+	IList(Window* window, const ScrollTierList& tierList = LIST_SCROLL_STYLE_QUICK, const ListLoopType& loopType = LIST_PAUSE_AT_END) :
+		GuiComponent(window),
 		mGradient(window), mTierList(tierList), mLoopType(loopType)
 	{
 		mCursor = 0;
@@ -98,7 +99,7 @@ public:
 		return (mScrollVelocity != 0 && mScrollTier > 0);
 	}
 
-	int getScrollingVelocity() 
+	int getScrollingVelocity() const
 	{
 		return mScrollVelocity;
 	}
@@ -106,7 +107,6 @@ public:
 	void stopScrolling()
 	{
 		listInput(0);
-		onCursorChanged(CURSOR_STOPPED);
 	}
 
 	void clear()
@@ -114,10 +114,9 @@ public:
 		mEntries.clear();
 		mCursor = 0;
 		listInput(0);
-		onCursorChanged(CURSOR_STOPPED);
 	}
 
-	inline const std::string& getSelectedName()
+	inline const std::string& getSelectedName() const
 	{
 		assert(size() > 0);
 		return mEntries.at(mCursor).name;
@@ -133,6 +132,7 @@ public:
 	{
 		assert(it != mEntries.cend());
 		mCursor = it - mEntries.cbegin();
+		onCursorChanged(CURSOR_SCROLLING);
 		onCursorChanged(CURSOR_STOPPED);
 	}
 
@@ -144,6 +144,7 @@ public:
 			if((*it).object == obj)
 			{
 				mCursor = (int)(it - mEntries.cbegin());
+				onCursorChanged(CURSOR_SCROLLING);
 				onCursorChanged(CURSOR_STOPPED);
 				return true;
 			}
@@ -180,6 +181,7 @@ protected:
 		if(mCursor > 0 && it - mEntries.cbegin() <= mCursor)
 		{
 			mCursor--;
+			onCursorChanged(CURSOR_SCROLLING);
 			onCursorChanged(CURSOR_STOPPED);
 		}
 
@@ -261,7 +263,7 @@ protected:
 		mGradient.setOpacity(mTitleOverlayOpacity);
 		mGradient.render(identTrans);
 
-		TextCache* cache = mTitleOverlayFont->buildTextCache(text, off.x(), off.y(), 0xFFFFFF00 | mTitleOverlayOpacity);
+		TextCache* cache = mTitleOverlayFont->buildTextCache(text, off.x(), off.y(), mTitleOverlayColor | mTitleOverlayOpacity);
 		mTitleOverlayFont->renderTextCache(cache); // relies on mGradient's render for Renderer::setMatrix()
 		delete cache;
 	}
@@ -298,11 +300,13 @@ protected:
 				cursor -= size();
 		}
 
-		if(cursor != mCursor)
+		bool cursorChanged = cursor != mCursor;
+
+		if(cursorChanged)
 			onScroll(absAmt);
 
 		mCursor = cursor;
-		onCursorChanged((mScrollTier > 0) ? CURSOR_SCROLLING : CURSOR_STOPPED);
+		onCursorChanged(cursorChanged ? CURSOR_SCROLLING : CURSOR_STOPPED);
 	}
 
 	virtual void onCursorChanged(const CursorState& /*state*/) {}

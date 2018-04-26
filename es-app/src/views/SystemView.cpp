@@ -213,8 +213,11 @@ void SystemView::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void SystemView::onCursorChanged(const CursorState& /*state*/)
+void SystemView::onCursorChanged(const CursorState& state)
 {
+	if (state != CURSOR_SCROLLING)
+		return;
+
 	// update help style
 	updateHelpPrompts();
 

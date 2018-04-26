@@ -106,6 +106,9 @@ void ComponentList::update(int deltaTime)
 
 void ComponentList::onCursorChanged(const CursorState& state)
 {
+	if (state != CURSOR_SCROLLING)
+		return;
+
 	// update the selector bar position
 	// in the future this might be animated
 	mSelectorBarOffset = 0;

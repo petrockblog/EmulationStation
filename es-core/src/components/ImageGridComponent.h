@@ -276,7 +276,8 @@ void ImageGridComponent<T>::onSizeChanged()
 template<typename T>
 void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 {
-	updateTiles();
+	if (state == CURSOR_SCROLLING)
+		updateTiles();
 
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
