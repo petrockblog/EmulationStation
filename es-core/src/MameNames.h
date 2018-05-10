@@ -9,10 +9,11 @@ class MameNames
 {
 public:
 
-	static void       init       ();
-	static void       deinit     ();
-	static MameNames* getInstance();
-	std::string       getRealName(const std::string& _mameName);
+	static void              init       ();
+	static void              deinit     ();
+	static MameNames*        getInstance();
+	const bool               isAsset    (const std::string& _mameName);
+	std::string              getRealName(const std::string& _mameName);
 
 private:
 
@@ -27,9 +28,10 @@ private:
 	 MameNames();
 	~MameNames();
 
-	static MameNames* sInstance;
+	static MameNames*        sInstance;
 
-	namePairVector    mNamePairs;
+	namePairVector           mNamePairs;
+	std::vector<std::string> mMameAssets;
 
 }; // MameNames
 

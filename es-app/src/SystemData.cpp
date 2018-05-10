@@ -112,7 +112,8 @@ void SystemData::populateFolder(FileData* folder)
 		if(std::find(mEnvData->mSearchExtensions.cbegin(), mEnvData->mSearchExtensions.cend(), extension) != mEnvData->mSearchExtensions.cend())
 		{
 			FileData* newGame = new FileData(GAME, filePath, mEnvData, this);
-			folder->addChild(newGame);
+			if(!newGame->isArcadeAsset())
+			  folder->addChild(newGame);
 			isGame = true;
 		}
 
