@@ -78,7 +78,7 @@ MameNames::MameNames()
 	for(pugi::xml_node biosNode = doc.child("bios"); biosNode; biosNode = biosNode.next_sibling("bios"))
 	{
 		std::string bios = biosNode.text().get();
-		mMameAssets.push_back(bios);
+		mMameBioses.push_back(bios);
 	}
 	
 	// Read devices
@@ -100,10 +100,8 @@ MameNames::MameNames()
 	for(pugi::xml_node deviceNode = doc.child("device"); deviceNode; deviceNode = deviceNode.next_sibling("device"))
 	{
 		std::string device = deviceNode.text().get();
-		mMameAssets.push_back(device);
+		mMameDevices.push_back(device);
 	}
-	
-	std::sort(mMameAssets.begin(), mMameAssets.end());
 
 } // MameNames
 
@@ -131,8 +129,14 @@ std::string MameNames::getRealName(const std::string& _mameName)
 
 } // getRealName
 
-const bool MameNames::isAsset(const std::string& _mameName)
+const bool MameNames::isBios(const std::string& _biosName)
 {
-	return std::binary_search(mMameAssets.begin(), mMameAssets.end(), _mameName);
+	return std::binary_search(mMameBioses.begin(), mMameBioses.end(), _biosName);
 	
-} // isAsset
+} // isBios
+
+const bool MameNames::isDevice(const std::string& _deviceName)
+{
+	return std::binary_search(mMameDevices.begin(), mMameDevices.end(), _deviceName);
+	
+} // isDevice

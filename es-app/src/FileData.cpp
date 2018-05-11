@@ -202,7 +202,7 @@ const bool FileData::isArcadeAsset()
 	return ( 
 		(mSystem && (mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO)))
 		&&
-		MameNames::getInstance()->isAsset(stem)
+		(MameNames::getInstance()->isBios(stem) || MameNames::getInstance()->isDevice(stem))
 	);
 }
 
