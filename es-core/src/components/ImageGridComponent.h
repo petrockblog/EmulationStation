@@ -48,6 +48,7 @@ public:
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	void onSizeChanged() override;
+	void setVisible(bool visible);
 	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
 
 protected:
@@ -78,6 +79,7 @@ private:
 	std::vector< std::shared_ptr<GridTileComponent> > mTiles;
 
 	// MISCELLANEOUS
+	bool mVisible;
 	ScrollDirection mScrollDirection;
 	std::function<void(CursorState state)> mCursorChangedCallback;
 };
@@ -96,6 +98,7 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 	mMargin = screen * 0.07f;
 	mTileSize = GridTileComponent::getDefaultTileSize();
 
+	mVisible = false;
 	mScrollDirection = SCROLL_VERTICALLY;
 }
 
@@ -153,6 +156,9 @@ void ImageGridComponent<T>::update(int deltaTime)
 template<typename T>
 void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 {
+	if (!mVisible)
+		return;
+
 	Transform4x4f trans = getTransform() * parentTrans;
 
 	if(mEntriesDirty)
@@ -287,6 +293,12 @@ void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
+}
+
+template<typename T>
+void ImageGridComponent<T>::setVisible(bool visible)
+{
+	mVisible = visible;
 }
 
 // Create and position tiles (mTiles)

@@ -25,6 +25,9 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 	virtual void launch(FileData* game) override;
 
+	virtual void onShow() override;
+	virtual void onHide() override;
+
 protected:
 	virtual std::string getQuickSystemSelectRightButton() override;
 	virtual std::string getQuickSystemSelectLeftButton() override;
@@ -57,6 +60,8 @@ private:
 
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;
+
+	int mSkipHideEvent; // Do not hide the grid if we just launched a game from this gamelist
 };
 
 #endif // ES_APP_VIEWS_GAME_LIST_GRID_GAME_LIST_VIEW_H

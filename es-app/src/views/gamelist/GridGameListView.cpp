@@ -19,6 +19,8 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window),
 	mName(window)
 {
+	mSkipHideEvent = 0;
+
 	const float padding = 0.01f;
 
 	mGrid.setPosition(mSize.x() * 0.1f, mSize.y() * 0.1f);
@@ -299,6 +301,8 @@ void GridGameListView::addPlaceholder()
 
 void GridGameListView::launch(FileData* game)
 {
+	mSkipHideEvent = 2;
+
 	ViewController::get()->launch(game);
 }
 
@@ -378,4 +382,26 @@ std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 		prompts.push_back(HelpPrompt("y", prompt));
 	}
 	return prompts;
+}
+
+void GridGameListView::onShow()
+{
+	ISimpleGameListView::onShow();
+	mGrid.setVisible(true);
+}
+
+void GridGameListView::onHide()
+{
+	ISimpleGameListView::onHide();
+
+	// Do not hide the grid if we just launched a game from this gamelist
+	/*
+	if (mSkipHideEvent > 0)
+	{
+		mSkipHideEvent--;
+		return;
+	}
+	*/
+
+	mGrid.setVisible(false);
 }

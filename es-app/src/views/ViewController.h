@@ -38,6 +38,7 @@ public:
 	void goToStart();
 	void ReloadAndGoToStart();
 
+	std::shared_ptr<GuiComponent> getCurrentView() const { return mCurrentView; };
 	void onFileChanged(FileData* file, FileChangeType change);
 
 	// Plays a nice launch effect and launches the game at the end of it.

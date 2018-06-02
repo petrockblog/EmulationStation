@@ -14,6 +14,7 @@
 #include "VolumeControl.h"
 #include "Window.h"
 #include <assert.h>
+#include <views/ViewController.h>
 
 FileData::FileData(FileType type, const std::string& path, SystemEnvironmentData* envData, SystemData* system)
 	: mType(type), mPath(path), mSystem(system), mEnvData(envData), mSourceFileData(NULL), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
@@ -283,6 +284,7 @@ void FileData::launchGame(Window* window)
 	window->init();
 	VolumeControl::getInstance()->init();
 	window->normalizeNextUpdate();
+	ViewController::get()->getCurrentView()->onShow();
 
 	//update number of times the game has been launched
 
