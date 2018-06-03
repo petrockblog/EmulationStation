@@ -14,9 +14,12 @@
 #define unlink _unlink
 #define S_ISREG(x) (((x) & S_IFMT) == S_IFREG)
 #define S_ISDIR(x) (((x) & S_IFMT) == S_IFDIR)
+#define stat64 _stat64
+#define lstat64 _lstat64
 #else // _WIN32
 #include <dirent.h>
 #include <unistd.h>
+#define __stat64 stat64
 #endif // _WIN32
 
 namespace Utils
@@ -497,7 +500,7 @@ namespace Utils
 				CloseHandle(hFile);
 			}
 #else // _WIN32
-			struct stat64 info;
+			struct __stat64 info;
 
 			// check if lstat succeeded
 			if(lstat64(path.c_str(), &info) == 0)
@@ -553,7 +556,7 @@ namespace Utils
 		bool exists(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
-			struct stat64 info;
+			struct __stat64 info;
 
 			// check if stat succeeded
 			return (stat64(path.c_str(), &info) == 0);
@@ -575,7 +578,7 @@ namespace Utils
 		bool isRegularFile(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
-			struct stat64 info;
+			struct __stat64 info;
 
 			// check if stat succeeded
 			if(stat64(path.c_str(), &info) != 0)
@@ -589,7 +592,7 @@ namespace Utils
 		bool isDirectory(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
-			struct stat64 info;
+			struct __stat64 info;
 
 			// check if stat succeeded
 			if(stat64(path.c_str(), &info) != 0)
@@ -610,7 +613,7 @@ namespace Utils
 			if((Attributes != INVALID_FILE_ATTRIBUTES) && (Attributes & FILE_ATTRIBUTE_REPARSE_POINT))
 				return true;
 #else // _WIN32
-			struct stat64 info;
+			struct __stat64 info;
 
 			// check if lstat succeeded
 			if(lstat64(path.c_str(), &info) != 0)
@@ -649,8 +652,8 @@ namespace Utils
 		{
 			std::string path1 = getGenericPath(_path1);
 			std::string path2 = getGenericPath(_path2);
-			struct stat64 info1;
-			struct stat64 info2;
+			struct __stat64 info1;
+			struct __stat64 info2;
 
 			// check if stat succeeded
 			if((stat64(path1.c_str(), &info1) != 0) || (stat64(path2.c_str(), &info2) != 0))
