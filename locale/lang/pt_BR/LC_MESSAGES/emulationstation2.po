@@ -296,7 +296,7 @@ msgstr "GÊNERO:"
 
 # plural is too large
 msgid "PLAYERS:"
-msgstr "JOGADOR:"
+msgstr "JOGADORES:"
 
 msgid "NO GAMES FOUND - SKIP"
 msgstr "NENHUM JOGO ENCONTRADO - PULAR"
@@ -548,7 +548,7 @@ msgid "instant"
 msgstr "INSTANT"
 
 msgid "THEME SET"
-msgstr "CONJUNTO DE TEMA"
+msgstr "ESCOLHER TEMA"
 
 msgid "GAMELIST VIEW STYLE"
 msgstr "VISUALIZAR ESTILO LISTA"
