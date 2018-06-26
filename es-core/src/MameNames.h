@@ -34,6 +34,8 @@ private:
 	namePairVector mNamePairs;
 	std::vector<std::string> mMameBioses;
 	std::vector<std::string> mMameDevices;
+	
+	const bool find(const std::vector<std::string> devices, const std::string& name);
 
 }; // MameNames
 
