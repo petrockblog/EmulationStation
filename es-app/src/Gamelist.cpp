@@ -48,7 +48,12 @@ FileData* findOrCreateFile(SystemData* system, const std::string& path, FileType
 			}
 
 			FileData* file = new FileData(type, path, system->getSystemEnvData(), system);
-			treeNode->addChild(file);
+
+			// skipping arcade assets from gamelist
+			if(!treeNode->isArcadeAsset())
+			{
+				treeNode->addChild(file);
+			}
 			return file;
 		}
 
@@ -128,11 +133,11 @@ void parseGamelist(SystemData* system)
 			//load the metadata
 			std::string defaultName = file->metadata.get("name");
 			file->metadata = MetaDataList::createFromXML(GAME_METADATA, fileNode, relativeTo);
-
+			
 			//make sure name gets set if one didn't exist
 			if(file->metadata.get("name").empty())
 				file->metadata.set("name", defaultName);
-
+			
 			file->metadata.resetChangedFlag();
 		}
 	}

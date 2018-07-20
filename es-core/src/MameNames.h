@@ -12,9 +12,9 @@ public:
 	static void       init       ();
 	static void       deinit     ();
 	static MameNames* getInstance();
-	const bool isBios(const std::string& _biosName);
-	const bool isDevice(const std::string& _deviceName);
-	std::string getRealName(const std::string& _mameName);
+	std::string       getRealName(const std::string& _mameName);
+	const bool        isBios(const std::string& _biosName);
+	const bool        isDevice(const std::string& _deviceName);
 
 private:
 
