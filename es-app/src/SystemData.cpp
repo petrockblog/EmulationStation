@@ -117,7 +117,7 @@ void SystemData::populateFolder(FileData* folder)
 			if(!newGame->isArcadeAsset())
 			{
 				folder->addChild(newGame);
-				isGame = true;				
+				isGame = true;
 			}
 		}
 
