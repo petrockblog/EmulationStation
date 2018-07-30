@@ -52,7 +52,7 @@ FileData* findOrCreateFile(SystemData* system, const std::string& path, FileType
 			// skipping arcade assets from gamelist
 			if(!file->isArcadeAsset())
 			{
-				file->addChild(file);
+				treeNode->addChild(file);
 			}
 			return file;
 		}
