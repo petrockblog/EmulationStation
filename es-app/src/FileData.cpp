@@ -199,7 +199,7 @@ std::string FileData::getKey() {
 const bool FileData::isArcadeAsset()
 {
 	const std::string stem = Utils::FileSystem::getStem(mPath);
-	return ( 
+	return (
 		(mSystem && (mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO)))
 		&&
 		(MameNames::getInstance()->isBios(stem) || MameNames::getInstance()->isDevice(stem))

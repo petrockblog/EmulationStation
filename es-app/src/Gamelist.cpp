@@ -50,9 +50,9 @@ FileData* findOrCreateFile(SystemData* system, const std::string& path, FileType
 			FileData* file = new FileData(type, path, system->getSystemEnvData(), system);
 
 			// skipping arcade assets from gamelist
-			if(!treeNode->isArcadeAsset())
+			if(!file->isArcadeAsset())
 			{
-				treeNode->addChild(file);
+				file->addChild(file);
 			}
 			return file;
 		}
