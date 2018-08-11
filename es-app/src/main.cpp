@@ -225,7 +225,13 @@ void onExit()
 	Log::close();
 }
 
+#if WIN32
+#define argc __argc
+#define argv __argv
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nShowCmd)
+#else
 int main(int argc, char* argv[])
+#endif
 {
 	srand((unsigned int)time(NULL));
 
