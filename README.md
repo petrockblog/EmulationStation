@@ -1,7 +1,7 @@
 EmulationStation
 ================
 
-This is a fork of EmulationStation for RetroPie.
+This is a fork of EmulationStation for Windows.
 EmulationStation is a cross-platform graphical front-end for emulators with controller navigation.
 
 Building
@@ -11,61 +11,110 @@ EmulationStation uses some C++11 code, which means you'll need to use at least g
 
 EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, FreeImage, FreeType, and cURL.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
 
-**On Debian/Ubuntu:**
-All of this be easily installed with apt-get:
-```bash
-sudo apt-get install libsdl2-dev libfreeimage-dev libfreetype6-dev libcurl4-openssl-dev \
-  libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid \
-  libvlc-dev libvlccore-dev vlc-nox
-```
-**On Fedora:**
-All of this be easily installed with dnf ( With rpmfusion activated) :
-```bash
-sudo dnf install SDL2-devel freeimage-devel freetype-devel curl-devel \
-  alsa-lib-devel mesa-libGL-devel cmake \
-  vlc-devel
-```
-
-Note this Repository uses a git submodule - to checkout the source and all submodules, use
-
-```bash
-git clone --recursive https://github.com/RetroPie/EmulationStation.git
-```
-
-or 
-
-```bash
-git clone https://github.com/RetroPie/EmulationStation.git
-cd EmulationStation
-git submodule update --init
-```
-
-Then, generate and build the Makefile with CMake:
-```bash
-cd YourEmulationStationDirectory
-cmake .
-make
-```
-
-**On the Raspberry Pi:**
-
-Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
-
 **On Windows:**
 
-[FreeImage](http://downloads.sourceforge.net/freeimage/FreeImage3154Win32.zip)
+    Pre-requisites
 
-[FreeType2](http://download.savannah.gnu.org/releases/freetype/freetype-2.4.9.tar.bz2) (you'll need to compile)
+    A few tools are required on the Windows system in order to build ES:
 
-[SDL2](http://www.libsdl.org/release/SDL2-devel-2.0.3-VC.zip)
+    [7-zip](http://7-zip.org/a/7z1604-x64.exe)
+    Download from http://7-zip.org and install.
 
-[cURL](http://curl.haxx.se/download.html) (you'll need to compile or get the pre-compiled DLL version)
-
-(Remember to copy necessary .DLLs into the same folder as the executable: probably FreeImage.dll, freetype6.dll, SDL2.dll, libcurl.dll, and zlib1.dll. Exact list depends on if you built your libraries in "static" mode or not.)
-
-[CMake](http://www.cmake.org/cmake/resources/software.html) (this is used for generating the Visual Studio project)
-
+    [CMake](https://cmake.org/files/v3.7/cmake-3.7.0-rc3-win64-x64.msi) (this is used for generating the Visual Studio project)
+    Download from https://cmake.org/files/v3.7/cmake-3.7.0-rc3-win64-x64.msi
+    Ensure you select "Add CMake to the path for all users" during installation
+	
 (If you don't know how to use CMake, here are some hints: run cmake-gui and point it at your EmulationStation folder.  Point the "build" directory somewhere - I use EmulationStation/build.  Click configure, choose "Visual Studio [year] Project", fill in red fields as they appear and keep clicking Configure (you may need to check "Advanced"), then click Generate.)
+	
+	
+    [Visual Studio Community 2015]
+    Use the web setup at https://www.visualstudio.com/vs/community/ selecting the following options:
+        Custom install
+        Select Visual C++->Common Tools (nothing else)
+        Select Common Tools->Git & GitHub
+        Everything else off
+    
+	[Libraries]
+    Next we need to download and build all the dependent libraries for ES. I have linked to specific versions of the libraries in each case because I know these build without issue with ES.
+
+    [FreeImage](http://downloads.sourceforge.net/freeimage/FreeImage3170.zip)
+    Unzip to c:\src\lib\FreeImage
+    Open c:\src\lib\FreeImage\FreeImage.2013.sln in Visual Studio
+    Allow VisualStudio to convert project to 2015	
+    Edit tif_config.h to remove #define snprintf _snprintf
+	Build Debug | Win32
+    Build Release | Win32
+
+    [FreeType2](http://download.savannah.gnu.org/releases/freetype/freetype-2.7.tar.gz) (you'll need to compile)
+    Extract to c:\src\lib\freetype-2.7
+    Open C:\src\lib\freetype-2.7\builds\windows\vc2010\freetype.sln in VisualStudio
+    Allow VisualStudio to convert project to 2015
+    Build Debug | Win32
+    Build Release | Win32
+
+    [cURL](https://curl.haxx.se/download/curl-7.50.3.zip)
+    Unzip to c:\src\lib\curl-7.50.3
+    Open a VisualStudio Developer Command Prompt
+    Enter these commands:
+
+```
+c:
+cd \src\lib\curl-7.50.3\winbuild
+nmake /f Makefile.vc mode=dll VC=14 DEBUG=yes
+nmake /f Makefile.vc mode=dll VC=14 DEBUG=no
+```
+    [SDL2](https://www.libsdl.org/release/SDL2-2.0.5.zip)
+    Extract to c:\src\lib\SDL2-2.0.5
+    Open a Visual Studio Developer Command Prompt
+    Enter these commands:
+
+```
+         c:
+         cd \src\lib\SDL2-2.0.5
+         mkdir build
+         cd build
+         cmake -G "Visual Studio 15 2017" ..
+```
+    Open c:\src\lib\SDL2-2.0.5\build\SDL2.sln in VisualStudio
+    Build Debug | Win32
+    Build Release | Win32
+		
+    [VLC] (required for fieldofcows fork)
+    https://github.com/RSATom/libvlc-sdk/archive/64ca3daa475a6539073f7544c740725b818642b2.zip (This is for V2.2.2)
+    Extract to c:\src\lib\libvlc-2.2.2
+    Download http://download.videolan.org/pub/videolan/vlc/2.2.2/win32/vlc-2.2.2-win32.zip (You will need the DLLs from this in a bit)
+	
+    [Building EmulationStation]
+    The final step is to do the actual build of EmulationStation. This requires setting up CMake to find all of the libraries that we have just configured. The steps below build current fork. The instructions should work for other forks too, including the RetroPie fork. Just replace the URL in the git clone command.
+
+    Open a Visual Studio Developer Command Prompt
+    Enter these commands:
+```
+     c:
+     cd \src
+     git clone https://github.com/ironwolf86/EmulationStation.git EmulationStation
+     cd EmulationStation
+     mkdir build
+     cd build
+     set ES_LIB_DIR=c:\src\lib
+     cmake -g "Visual Studio 15 2017" .. -DFREETYPE_INCLUDE_DIRS=%ES_LIB_DIR%\freetype-2.7\include  -DFREETYPE_LIBRARY=%ES_LIB_DIR%\freetype-2.7\objs\vc2010\Win32\freetype27.lib -DFreeImage_INCLUDE_DIR=%ES_LIB_DIR%\FreeImage\Source  -DFreeImage_LIBRARY=%ES_LIB_DIR%\FreeImage\Dist\x32\FreeImage.lib -DSDL2_INCLUDE_DIR=%ES_LIB_DIR%\SDL2-2.0.5\include  -DSDL2_LIBRARY=%ES_LIB_DIR%\SDL2-2.0.5\build\Release\SDL2.lib;%ES_LIB_DIR%\SDL2-2.0.5\build\Release\SDL2main.lib  -DCURL_INCLUDE_DIR=%ES_LIB_DIR%\curl-7.50.3\include  -DCURL_LIBRARY=%ES_LIB_DIR%\curl-7.50.3\builds\libcurl-vc14-x86-release-dll-ipv6-sspi-winssl\lib\libcurl.lib  -DVLC_INCLUDE_DIR=%ES_LIB_DIR%\libvlc-2.2.2\include  -DVLC_LIBRARIES=%ES_LIB_DIR%\libvlc-2.2.2\lib\msvc\libvlc.lib;%ES_LIB_DIR%\libvlc-2.2.2\lib\msvc\libvlccore.lib -DVLC_VERSION=1.0.0
+```
+    When CMake has finished, open c:\src\EmulationStation\build\emulationstation-all.sln in Visual Studio 2015 and build.
+  
+	[Running EmulationStation]
+	
+    In order to run ES you need to make sure any DLLs required by ES are in the right place including resources folder. The DLLs you need can all be found under the libraries subdirectory in c:\src\libs. The easiest thing to do is search for all the DLLs here and copy them to c:\src\EmulationStation\Release or c:\src\EmulationStation\Debug depending on which version you built.
+
+    The required DLLs are:
+		SDL2.dll
+        FreeImage.dll
+        libcurl.dll
+
+    And if you're building my fork then you need the VLC DLLs from vlc-2.2.2-win32.zip:
+        libvlc.dll
+        libvlccore.dll
+
+    I hope I've remembered to cover everything :D I'm here to help if anyone gets stuck
 
 
 Configuring
