@@ -453,6 +453,7 @@ void GuiMenu::openQuitMenu()
 	row.makeAcceptInputHandler([window] {
 		window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
 			[] {
+			runRestartCommand();
 			if (quitES("/tmp/es-sysrestart") != 0)
 				LOG(LogWarning) << "Restart terminated with non-zero result!";
 		}, "NO", nullptr));
@@ -464,6 +465,7 @@ void GuiMenu::openQuitMenu()
 	row.makeAcceptInputHandler([window] {
 		window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
 			[] {
+			runShutdownCommand();
 			if (quitES("/tmp/es-shutdown") != 0)
 				LOG(LogWarning) << "Shutdown terminated with non-zero result!";
 		}, "NO", nullptr));
