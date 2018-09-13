@@ -73,6 +73,10 @@ void TextComponent::setOpacity(unsigned char opacity)
 
 	onColorChanged();
 
+	// Save the opacity values
+	mColorOpacity = opacity;
+	mBgColorOpacity = opacity;
+
 	GuiComponent::setOpacity(opacity);
 }
 
