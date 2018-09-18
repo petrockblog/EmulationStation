@@ -15,7 +15,7 @@ enum ScrollDirection
 
 struct ImageGridData
 {
-	std::shared_ptr<TextureResource> texture;
+	std::string texturePath;
 };
 
 template<typename T>
@@ -23,6 +23,7 @@ class ImageGridComponent : public IList<ImageGridData, T>
 {
 protected:
 	using IList<ImageGridData, T>::mEntries;
+	using IList<ImageGridData, T>::mScrollTier;
 	using IList<ImageGridData, T>::listUpdate;
 	using IList<ImageGridData, T>::listInput;
 	using IList<ImageGridData, T>::listRenderTitleOverlay;
@@ -47,7 +48,6 @@ public:
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	void onSizeChanged() override;
-
 	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
 
 protected:
@@ -57,13 +57,17 @@ private:
 	// TILES
 	void buildTiles();
 	void updateTiles();
+	void updateTileAtPos(int tilePos, int imgPos, int bufferTop, int bufferBot);
 	int getStartPosition() const;
 	void calcGridDimension();
 
 	// IMAGES & ENTRIES
+	const int texBuffersBehind[4] = { 1, 1, 1, 1 };
+	const int texBuffersForward[4] = { 1, 2, 3, 3 };
 	bool mEntriesDirty;
-	std::shared_ptr<TextureResource> mDefaultGameTexture;
-	std::shared_ptr<TextureResource> mDefaultFolderTexture;
+	int mLastCursor;
+	std::string mDefaultGameTexture;
+	std::string mDefaultFolderTexture;
 
 	// TILES
 	bool mLastRowPartial;
@@ -84,8 +88,9 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 	Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	mEntriesDirty = true;
-	mDefaultGameTexture = TextureResource::get(":/blank_game.png");
-	mDefaultFolderTexture = TextureResource::get(":/folder.png");
+	mLastCursor = 0;
+	mDefaultGameTexture = ":/cartridge.svg";
+	mDefaultFolderTexture = ":/folder.svg";
 
 	mSize = screen * 0.80f;
 	mMargin = screen * 0.07f;
@@ -100,20 +105,7 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	typename IList<ImageGridData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
-
-	if (ResourceManager::getInstance()->fileExists(imagePath))
-	{
-		entry.data.texture = TextureResource::get(imagePath);
-	}
-	else
-	{
-		// FileType::FOLDER = 2, but FileData is our template parameter T,
-		// so we don't want to bring that dependence to FileData here
-		if (obj->getType() == 2)
-			entry.data.texture = mDefaultFolderTexture;
-		else
-			entry.data.texture = mDefaultGameTexture;
-	}
+	entry.data.texturePath = imagePath;
 
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
@@ -179,7 +171,6 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 	Renderer::pushClipRect(pos, size);
 
 	// Render all the tiles but the selected one
-
 	std::shared_ptr<GridTileComponent> selectedTile = NULL;
 	for(auto it = mTiles.begin(); it != mTiles.end(); it++)
 	{
@@ -198,16 +189,16 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 	if (selectedTile != NULL)
 		selectedTile->render(trans);
 
+	listRenderTitleOverlay(trans);
+
 	GuiComponent::renderChildren(trans);
 }
 
 template<typename T>
 void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
-	using namespace ThemeFlags;
-
 	// Apply theme to GuiComponent but not size property, which will be applied at the end of this function
-	GuiComponent::applyTheme(theme, view, element, properties ^ SIZE);
+	GuiComponent::applyTheme(theme, view, element, properties ^ ThemeFlags::SIZE);
 
 	// Keep the theme pointer to apply it on the tiles later on
 	mTheme = theme;
@@ -231,16 +222,15 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 				LOG(LogWarning) << "Could not replace default game image, check path: " << path;
 			else
 			{
-				std::shared_ptr<TextureResource> oldDefaultGameTexture = mDefaultGameTexture;
-
-				mDefaultGameTexture = TextureResource::get(path);
+				std::string oldDefaultGameTexture = mDefaultGameTexture;
+				mDefaultGameTexture = path;
 
 				// mEntries are already loaded at this point,
 				// so we need to update them with new game image texture
 				for (auto it = mEntries.begin(); it != mEntries.end(); it++)
 				{
-					if ((*it).data.texture == oldDefaultGameTexture)
-						(*it).data.texture = mDefaultGameTexture;
+					if ((*it).data.texturePath == oldDefaultGameTexture)
+						(*it).data.texturePath = mDefaultGameTexture;
 				}
 			}
 		}
@@ -253,16 +243,15 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 				LOG(LogWarning) << "Could not replace default folder image, check path: " << path;
 			else
 			{
-				std::shared_ptr<TextureResource> oldDefaultFolderTexture = mDefaultFolderTexture;
-
-				mDefaultFolderTexture = TextureResource::get(path);
+				std::string oldDefaultFolderTexture = mDefaultFolderTexture;
+				mDefaultFolderTexture = path;
 
 				// mEntries are already loaded at this point,
 				// so we need to update them with new folder image texture
 				for (auto it = mEntries.begin(); it != mEntries.end(); it++)
 				{
-					if ((*it).data.texture == oldDefaultFolderTexture)
-						(*it).data.texture = mDefaultFolderTexture;
+					if ((*it).data.texturePath == oldDefaultFolderTexture)
+						(*it).data.texturePath = mDefaultFolderTexture;
 				}
 			}
 		}
@@ -277,7 +266,7 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 				GridTileComponent::getDefaultTileSize();
 
 	// Apply size property, will trigger a call to onSizeChanged() which will build the tiles
-	GuiComponent::applyTheme(theme, view, element, SIZE);
+	GuiComponent::applyTheme(theme, view, element, ThemeFlags::SIZE);
 
 	// Trigger the call manually if the theme have no "imagegrid" element
 	if (!elem)
@@ -308,8 +297,10 @@ void ImageGridComponent<T>::buildTiles()
 
 	calcGridDimension();
 
-	Vector2f startPosition = mTileSize / 2;
 	Vector2f tileDistance = mTileSize + mMargin;
+	Vector2f bufferSize = Vector2f(mScrollDirection == SCROLL_HORIZONTALLY ? tileDistance.x() * texBuffersForward[3] : 0,
+								   mScrollDirection == SCROLL_VERTICALLY ? tileDistance.y() * texBuffersForward[3] : 0);
+	Vector2f startPosition = mTileSize / 2 - bufferSize;
 
 	int X, Y;
 
@@ -344,26 +335,83 @@ void ImageGridComponent<T>::updateTiles()
 	if (!mTiles.size())
 		return;
 
-	int img = getStartPosition();
-
-	for(int ti = 0; ti < mTiles.size(); ti++)
+	// Stop updating the tiles at highest scroll speed
+	if (mScrollTier == 3)
 	{
-		std::shared_ptr<GridTileComponent> tile = mTiles.at(ti);
-
-		// If we have more tiles than we have to display images on screen, hide them
-		if(img >= size())
+		for (int ti = 0; ti < mTiles.size(); ti++)
 		{
-			tile->setSelected(false);
-			tile->setImage("");
-			tile->setVisible(false);
-			continue;
-		}
+			std::shared_ptr<GridTileComponent> tile = mTiles.at(ti);
 
-		tile->setSelected(img == mCursor);
-		tile->setImage(mEntries.at(img).data.texture);
+			tile->setSelected(false);
+			tile->setImage(mDefaultGameTexture);
+			tile->setVisible(false);
+		}
+		return;
+	}
+
+	// 1 if scrolling down, -1 if scrolling up
+	int scrollDirection = mCursor >= mLastCursor ? 1 : -1;
+
+	// If going down, update from top to bottom
+	// If going up, update from bottom to top
+	int ti = scrollDirection == 1 ? 0 : mTiles.size() - 1;
+	int end = scrollDirection == 1 ? mTiles.size() : -1;
+
+	int img = getStartPosition();
+	if (scrollDirection == -1)
+		img += mTiles.size() - 1;
+
+	// Calculate buffer size depending on scroll speed and direction
+	int bufferBehind = (texBuffersForward[3] - texBuffersBehind[mScrollTier]) * mGridDimension.x();
+	int bufferForward = (texBuffersForward[3] - texBuffersForward[mScrollTier]) * mGridDimension.x();
+
+	int bufferTop = scrollDirection == 1 ? bufferBehind : bufferForward;
+	int bufferBot = scrollDirection == 1 ? bufferForward : bufferBehind;
+
+	// Update the tiles
+	while (ti != end)
+	{
+		updateTileAtPos(ti, img, bufferTop, bufferBot);
+
+		ti += scrollDirection;
+		img += scrollDirection;
+	}
+
+	mLastCursor = mCursor;
+}
+
+template<typename T>
+void ImageGridComponent<T>::updateTileAtPos(int tilePos, int imgPos, int bufferTop, int bufferBot)
+{
+	std::shared_ptr<GridTileComponent> tile = mTiles.at(tilePos);
+
+	// If we have more tiles than we have to display images on screen, hide them
+	if(imgPos < 0 || imgPos >= size()
+	   || tilePos < bufferTop || tilePos >= mTiles.size() - bufferBot) // Same for tiles out of the buffer
+	{
+		tile->setSelected(false);
+		tile->setImage("");
+		tile->setVisible(false);
+	}
+	else
+	{
+		tile->setSelected(imgPos == mCursor);
 		tile->setVisible(true);
 
-		img++;
+		std::string imagePath = mEntries.at(imgPos).data.texturePath;
+		if (ResourceManager::getInstance()->fileExists(imagePath))
+		{
+			tile->setImage(imagePath);
+		}
+		else
+		{
+			// FileType::FOLDER = 2, but FileData is our template parameter T,
+			// so we don't want to bring that dependence to FileData here
+			if (mEntries.at(imgPos).object->getType() == 2)
+				tile->setImage(mDefaultFolderTexture);
+			else
+				tile->setImage(mDefaultGameTexture);
+		}
 	}
 }
 
@@ -375,23 +423,28 @@ int ImageGridComponent<T>::getStartPosition() const
 	// case, whenever we have an integer number of rows or not (the last partial row is ignored when
 	// calculating position and the cursor shouldn't end up in this row when close to the end)
 	int partialRow = (int)mLastRowPartial;
-	if ((int)mEntries.size() < mGridDimension.x() * (mGridDimension.y() - (int)mLastRowPartial))
-		partialRow = 0;
 
 	int cursorRow = mCursor / mGridDimension.x();
 
 	int start = (cursorRow - ((mGridDimension.y() - partialRow) / 2)) * mGridDimension.x();
 
-	// If we are at the end put the row as close as we can and no higher, using the following formula
-	// Where E is the nb of entries, X the grid x dim (nb of column), Y the grid y dim (nb of line)
-	// start = first tile of last row - nb column * (nb line - 1)
-	//       = (E - 1) / X * X        - X * (Y - 1)
-	//       = X * ((E - 1) / X - Y + 1)
-	if(start + (mGridDimension.x() * (mGridDimension.y() - partialRow)) >= (int)mEntries.size())
-		start = mGridDimension.x() * (((int)mEntries.size() - 1) / mGridDimension.x() - mGridDimension.y() + 1 + partialRow);
+	// Number of tiles which are just used as a buffer for texture loading
+	int bufferSize = texBuffersForward[3] * mGridDimension.x();
 
-	if(start < 0)
-		start = 0;
+	if(start + (mGridDimension.x() * (mGridDimension.y() - partialRow)) >= (int)mEntries.size() + bufferSize)
+	{
+		// If we are at the end put the row as close as we can and no higher, using the following formula
+		// Where E is the nb of entries, X the grid x dim (nb of column), Y the grid y dim (nb of line)
+		// start = first tile of last row - nb column * (nb line - 1)
+		//       = (E - 1) / X * X        - X * (Y - 1)
+		//       = X * ((E - 1) / X - Y + 1)
+		start = mGridDimension.x() * (((int)mEntries.size() - 1) / mGridDimension.x() - mGridDimension.y() + 1 + partialRow) + bufferSize;
+	}
+
+	if(start < -bufferSize)
+	{
+		start = -bufferSize;
+	}
 
 	return start;
 }
@@ -404,20 +457,23 @@ void ImageGridComponent<T>::calcGridDimension()
 	// <=> COLUMNS = (GRID_SIZE + MARGIN) / (TILE_SIZE + MARGIN)
 	Vector2f gridDimension = (mSize + mMargin) / (mTileSize + mMargin);
 
-	// Invert dimensions for horizontally scrolling grid
-	if (mScrollDirection == SCROLL_HORIZONTALLY)
-		gridDimension = Vector2f(gridDimension.y(), gridDimension.x());
-
 	mLastRowPartial = Math::floorf(gridDimension.y()) != gridDimension.y();
 
 	// Ceil y dim so we can display partial last row
 	mGridDimension = Vector2i(gridDimension.x(), Math::ceilf(gridDimension.y()));
+
+	// Invert dimensions for horizontally scrolling grid
+	if (mScrollDirection == SCROLL_HORIZONTALLY)
+		mGridDimension = Vector2i(mGridDimension.y(), mGridDimension.x());
 
 	// Grid dimension validation
 	if (mGridDimension.x() < 1)
 		LOG(LogError) << "Theme defined grid X dimension below 1";
 	if (mGridDimension.y() < 1)
 		LOG(LogError) << "Theme defined grid Y dimension below 1";
+
+	// Add extra tiles to both side depending on max texture buffer
+	mGridDimension.y() += texBuffersForward[3] * 2;
 };
 
 

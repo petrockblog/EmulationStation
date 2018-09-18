@@ -358,7 +358,7 @@ Reference
 * `text name="logoText"` - ALL
 	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
 * `image name="logo"` - ALL
-	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
+	- A header image.  If a non-empty `path` is specified, `text name="logoText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `textlist name="gamelist"` - ALL
 	- The gamelist.  `primaryColor` is for games, `secondaryColor` is for folders.  Centered by default.
 
@@ -372,7 +372,7 @@ Reference
 * `text name="logoText"` - ALL
 	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
 * `image name="logo"` - ALL
-	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
+	- A header image.  If a non-empty `path` is specified, `text name="logoText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `textlist name="gamelist"` - ALL
 	- The gamelist.  `primaryColor` is for games, `secondaryColor` is for folders.  Left aligned by default.
 
@@ -421,7 +421,7 @@ Reference
 * `text name="logoText"` - ALL
 	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
 * `image name="logo"` - ALL
-	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
+	- A header image.  If a non-empty `path` is specified, `text name="logoText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `textlist name="gamelist"` - ALL
 	- The gamelist.  `primaryColor` is for games, `secondaryColor` is for folders.  Left aligned by default.
 
@@ -476,7 +476,7 @@ Reference
 * `text name="logoText"` - ALL
 	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
 * `image name="logo"` - ALL
-	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
+	- A header image.  If a non-empty `path` is specified, `text name="logoText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `imagegrid name="gamegrid"` - ALL
 	- The gamegrid. The number of tile displayed is controlled by its size, margin and the default tile max size.
 * `gridtile name="default"` - ALL
@@ -528,7 +528,7 @@ Reference
 	- The system logo carousel
 * `image name="logo"` - PATH | COLOR
 	- A logo image, to be displayed in the system logo carousel.
-* `text name="logoText"` - FONT_PATH | COLOR | FORCE_UPPERCASE
+* `text name="logoText"` - FONT_PATH | COLOR | FORCE_UPPERCASE | LINE_SPACING | TEXT
 	- A logo text, to be displayed system name in the system logo carousel when no logo is available.
 * `text name="systemInfo"` - ALL
 	- Displays details of the system currently selected in the carousel.
@@ -598,12 +598,18 @@ Can be created as an extra.
     - The size of the default gridtile is used to calculate how many tiles can fit in the imagegrid. If not explicitly set, the size of the selected gridtile is equal the size of the default gridtile * 1.2
 * `padding` - type: NORMALIZED_PAIR.
     - The padding around the gridtile content. Default `16 16`. If not explicitly set, the selected tile padding will be equal to the default tile padding.
-* `backgroundImage` - type: PATH.
-    - If not explicitly set, the selected tile background image will be the same as the default tile background image.
 * `imageColor` - type: COLOR.
     - The default tile image color and selected tile image color have no influence on each others.
+* `backgroundImage` - type: PATH.
+    - If not explicitly set, the selected tile background image will be the same as the default tile background image.
+* `backgroundCornerSize` - type: NORMALIZED_PAIR.
+    - The corner size of the ninepatch used for the tile background. Default is `16 16`.
 * `backgroundColor` - type: COLOR.
-    - The default tile background color and selected tile background color have no influence on each others.
+    - A shortcut to define both the center color and edge color at the same time. The default tile background color and selected tile background color have no influence on each others.
+* `backgroundCenterColor` - type: COLOR.
+    - Set the color of the center part of the ninepatch. The default tile background center color and selected tile background center color have no influence on each others.
+* `backgroundEdgeColor` - type: COLOR.
+    - Set the color of the edge parts of the ninepatch. The default tile background edge color and selected tile background edge color have no influence on each others.
 
 #### video
 
