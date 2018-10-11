@@ -735,6 +735,8 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `pos` - type: NORMALIZED_PAIR.
 * `size` - type: NORMALIZED_PAIR.
 	- You should probably not set this.  Leave it to `fontSize`.
+* `origin` - type: NORMALIZED_PAIR.
+	- Where on the component `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the component exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
 * `color` - type: COLOR.
 * `fontPath` - type: PATH.
 * `fontSize` - type: FLOAT.
