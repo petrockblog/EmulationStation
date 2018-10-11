@@ -90,6 +90,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 	{ "datetime", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
+		{ "origin", NORMALIZED_PAIR },
 		{ "color", COLOR },
 		{ "fontPath", PATH },
 		{ "fontSize", FLOAT },
