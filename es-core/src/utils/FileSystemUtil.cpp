@@ -656,15 +656,51 @@ namespace Utils
 		{
 			std::string path1 = getGenericPath(_path1);
 			std::string path2 = getGenericPath(_path2);
-			struct stat64 info1;
-			struct stat64 info2;
 
-			// check if stat64 succeeded
-			if((stat64(path1.c_str(), &info1) != 0) || (stat64(path2.c_str(), &info2) != 0))
-				return false;
+			#if defined(_WIN32)
 
-			// check if attributes are identical
-			return ((info1.st_dev == info2.st_dev) && (info1.st_ino == info2.st_ino) && (info1.st_size == info2.st_size) && (info1.st_mtime == info2.st_mtime));
+						HANDLE handle1, handle2;
+						BY_HANDLE_FILE_INFORMATION info1, info2;
+						memset(&info1, 0, sizeof(BY_HANDLE_FILE_INFORMATION));
+						memset(&info2, 0, sizeof(BY_HANDLE_FILE_INFORMATION));
+
+						handle1 = CreateFile(path1.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+						if (handle1 == INVALID_HANDLE_VALUE)
+							return false;
+
+						handle2 = CreateFile(path2.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+						if (handle2 == INVALID_HANDLE_VALUE)
+							return false;
+
+						if (GetFileInformationByHandle(handle1, &info1) && GetFileInformationByHandle(handle2, &info2))
+						{
+							if ((info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber) &&
+								(info1.nFileIndexHigh == info2.nFileIndexHigh) &&
+								(info1.nFileIndexLow == info2.nFileIndexLow) &&
+								(info1.nFileSizeHigh == info2.nFileSizeHigh) &&
+								(info1.nFileSizeLow == info2.nFileSizeLow) &&
+								(info1.ftLastWriteTime.dwHighDateTime == info2.ftLastWriteTime.dwHighDateTime) &&
+								(info1.ftLastWriteTime.dwLowDateTime == info2.ftLastWriteTime.dwLowDateTime))
+								return true;
+						}
+
+						return false;
+
+			#else // _WIN32
+
+						struct __stat64 info1;
+						struct __stat64 info2;
+
+						// check if stat succeeded
+						if((stat64(path1.c_str(), &info1) != 0) || (stat64(path2.c_str(), &info2) != 0))
+							return false;
+
+						// check if attributes are identical
+						return ((info1.st_dev == info2.st_dev) && (info1.st_ino == info2.st_ino) && (info1.st_size == info2.st_size) && (info1.st_mtime == info2.st_mtime));
+
+			#endif // _WIN32
 
 		} // isEquivalent
 
