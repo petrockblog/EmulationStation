@@ -2,26 +2,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: retropie-emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-09 11:21+0200\n"
-"PO-Revision-Date: \n"
+"POT-Creation-Date: 2019-02-03 10:27+0100\n"
 "Last-Translator: heloisa \n"
-"Language-Team: https://github.com/heloisatech/emulationstationBR/blob/master/"
-"emulationstation2.po \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
 
 msgid "NAME"
 msgstr "NOME"
 
 msgid "ENTER GAME NAME"
-msgstr "DIGITAR NOME DO JOGO"
+msgstr "NOME DO JOGO"
 
 msgid "SORTNAME"
-msgstr "NOME SORTIDO"
+msgstr "COMEÇAR COM LETRA"
 
 msgid "ENTER GAME SORT NAME"
 msgstr "DIGITAR NOME SORTIDO"
@@ -30,7 +26,7 @@ msgid "DESCRIPTION"
 msgstr "DESCRIÇÃO"
 
 msgid "ENTER DESCRIPTION"
-msgstr "DIGITAR DESCRIÇÃO"
+msgstr "DESCRIÇÃO DO JOGO"
 
 msgid "IMAGE"
 msgstr "IMAGEM"
@@ -57,10 +53,10 @@ msgid "ENTER PATH TO THUMBNAIL"
 msgstr "CAMINHO DA MINIATURA"
 
 msgid "RATING"
-msgstr "AVALIAÇÃO"
+msgstr "CLASSIFICAÇÃO"
 
 msgid "ENTER RATING"
-msgstr "DIGITAR AVALIAÇÃO"
+msgstr "DIGITAR CLASSIFICAÇÃO"
 
 msgid "RELEASE DATE"
 msgstr "DATA DE LANÇAMENTO"
@@ -75,25 +71,25 @@ msgid "DEVELOPER"
 msgstr "DESENVOLVEDOR"
 
 msgid "ENTER GAME DEVELOPER"
-msgstr "DIGITAR DESENVOLVEDOR"
+msgstr "DESENVOLVEDOR DO JOGO"
 
 msgid "PUBLISHER"
 msgstr "EDITOR"
 
 msgid "ENTER GAME PUBLISHER"
-msgstr "DIGITAR EDITOR"
+msgstr "EDITOR DO JOGO"
 
 msgid "GENRE"
 msgstr "GÊNERO"
 
 msgid "ENTER GAME GENRE"
-msgstr "DIGITAR GÊNERO"
+msgstr "GÊNERO DO JOGO"
 
 msgid "PLAYERS"
 msgstr "JOGADORES"
 
 msgid "ENTER NUMBER OF PLAYERS"
-msgstr "DIGITAR NÚMERO DE JOGADORES"
+msgstr "NÚMERO DE JOGADORES"
 
 msgid "FAVORITE"
 msgstr "FAVORITO"
@@ -108,10 +104,10 @@ msgid "ENTER HIDDEN OFF/ON"
 msgstr "OCULTO ON/OFF"
 
 msgid "KIDGAME"
-msgstr "JOGO INFANTIL"
+msgstr "INFANTIL"
 
 msgid "ENTER KIDGAME OFF/ON"
-msgstr "JOGO INFANTIL ON/OFF"
+msgstr "INFANTIL ON/OFF"
 
 msgid "PLAY COUNT"
 msgstr "NÚMERO DE PARTIDAS"
@@ -123,7 +119,7 @@ msgid "LAST PLAYED"
 msgstr "ÚLTIMOS JOGADOS"
 
 msgid "ENTER LAST PLAYED DATE"
-msgstr "DIGITAR DATA DA ÚLTIMA PARTIDA"
+msgstr "DATA DA ÚLTIMA PARTIDA"
 
 msgid "collections"
 msgstr "coleções"
@@ -188,8 +184,8 @@ msgid ""
 "\n"
 "VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION."
 msgstr ""
-"SEU ARQUIVO DE CONFIGURAÇÃO DE SISTEMAS NÃO FOI CONFIGURADO OU É INVÁLIDO. "
-"VOCÊ PRECISA FAZER ISSO DE NOVO, INFELIZMENTE.\n"
+"SEU ARQUIVO DE CONFIGURAÇÃO NÃO FOI CONFIGURADO OU É INVÁLIDO. VOCÊ PRECISA "
+"FAZER ISSO DE NOVO, INFELIZMENTE.\n"
 "\n"
 "VISITE EMULATIONSTATION.ORG PARA MAIS INFORMAÇÕES."
 
@@ -200,10 +196,9 @@ msgid ""
 "\n"
 "VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION."
 msgstr ""
-"NÓS NÃO ENCONTRAMOS NENHUM SISTEMA !\n"
-"VERIFIQUE SE OS CAMINHOS ESTÃO CORRIGIDOS NO ARQUIVO DE CONFIGURAÇÃO DOS "
-"SISTEMAS, E SE O SEU DIRETÓRIO TEM PELO MENOS UM JOGO COM A EXTENSÃO "
-"CORRETA.\n"
+"NÃO ENCONTRAMOS NENHUM SISTEMA!\n"
+"VERIFIQUE SE OS CAMINHOS ESTÃO CORRIGIDOS NO ARQUIVO DE CONFIGURAÇÃO E SE O "
+"SEU DIRETÓRIO TEM PELO MENOS UM JOGO COM A EXTENSÃO CORRETA.\n"
 "\n"
 "VISITE EMULATIONSTATION.ORG PARA MAIS INFORMAÇÕES."
 
@@ -223,10 +218,10 @@ msgid "FILENAME, DESCENDING"
 msgstr "NOME ↓"
 
 msgid "RATING, ASCENDING"
-msgstr "AVALIAÇÃO ↑"
+msgstr "CLASSIFICAÇÃO ↑"
 
 msgid "RATING, DESCENDING"
-msgstr "AVALIAÇÃO ↓"
+msgstr "CLASSIFICAÇÃO ↓"
 
 msgid "TIMES PLAYED, ASCENDING"
 msgstr "TEMPO JOGADO ↑"
@@ -280,7 +275,7 @@ msgid "CANCEL"
 msgstr "CANCELAR"
 
 msgid "RATING:"
-msgstr "AVALIAÇÃO:"
+msgstr "CLASSIFICAÇÃO:"
 
 msgid "RELEASED:"
 msgstr "LANÇAMENTO:"
@@ -294,9 +289,17 @@ msgstr "EDITOR:"
 msgid "GENRE:"
 msgstr "GÊNERO:"
 
-# plural is too large
 msgid "PLAYERS:"
-msgstr "JOGADORES:"
+msgstr "PLAYERS:"
+
+msgid ""
+"Configured scraper is no longer available.\n"
+"Please change the scraping source in the settings."
+msgstr "O scraper configurado não está mais disponível.\n"
+"Por favor, altere o tipo scraper nas configurações."
+
+msgid "FINISH"
+msgstr "FINALIZADO"
 
 msgid "NO GAMES FOUND - SKIP"
 msgstr "NENHUM JOGO ENCONTRADO - PULAR"
@@ -314,7 +317,7 @@ msgid "SEARCH"
 msgstr "PROCURAR"
 
 msgid "ACCEPT RESULT"
-msgstr "ACEITAR RESULTADO"
+msgstr "ACEITAR"
 
 msgid "MENU"
 msgstr "MENU"
@@ -383,13 +386,13 @@ msgid "CLOSE"
 msgstr "FECHAR"
 
 msgid "SCREENSAVER AFTER"
-msgstr "PROTETOR DE TELA DEPOIS"
+msgstr "TEMPO DO PROTETOR"
 
 msgid "SCREENSAVER CONTROLS"
-msgstr "CONTROLE DE PROTETOR TELA"
+msgstr "CONTROLE DO PROTETOR"
 
 msgid "SCREENSAVER BEHAVIOR"
-msgstr "TIPO DE PROTETOR DE TELA"
+msgstr "TIPO DE PROTETOR"
 
 msgid "dim"
 msgstr "ILUMINADO"
@@ -421,13 +424,13 @@ msgstr ""
 "Vídeo\"."
 
 msgid "USE HARDWARE BACKLIGHT CONTROL"
-msgstr "USE O CONTROLE DE LUZ DE FUNDO DO HARDWARE"
+msgstr "CONTROLE DE LUZ DE FUNDO DO HARDWARE"
 
 msgid "VIDEO SCREENSAVER SETTINGS"
-msgstr "CONFIGURAÇÃO PROTETOR DE TELA VÍDEO"
+msgstr "CONFIGURAR PROTETOR DE TELA VÍDEO"
 
 msgid "SLIDESHOW SCREENSAVER SETTINGS"
-msgstr "CONFIGURAÇÃO PROTETOR DE TELA APRESENTAÇÃO"
+msgstr "CONFIGURAR PROTETOR DE TELA APRESENTAÇÃO"
 
 msgid "VIDEO SCREENSAVER"
 msgstr "PROTETOR DE TELA VÍDEO"
@@ -442,13 +445,13 @@ msgid "SCRAPER"
 msgstr "SCRAPER"
 
 msgid "SOUND SETTINGS"
-msgstr "CONFIGURAÇÕES DE SOM"
+msgstr "CONFIGURAR SOM"
 
 msgid "UI SETTINGS"
 msgstr "INTERFACE DO USUÁRIO"
 
 msgid "GAME COLLECTION SETTINGS"
-msgstr "CONFIGURAÇÃO DE COLEÇÃO DE JOGOS"
+msgstr "CONFIGURAR COLEÇÃO DE JOGOS"
 
 msgid "OTHER SETTINGS"
 msgstr "OUTRAS CONFIGURAÇÕES"
@@ -460,13 +463,28 @@ msgid "SCRAPE FROM"
 msgstr "SCRAPE DE"
 
 msgid "SCRAPE RATINGS"
-msgstr "SCRAPE AVALIAÇÕES"
+msgstr "SCRAPE DAS CLASSIFICAÇÕES"
 
 msgid "SCRAPE NOW"
-msgstr "SCRAPE AGORA"
+msgstr "FAZER SCRAPE AGORA"
 
 msgid "SYSTEM VOLUME"
 msgstr "VOLUME DO SISTEMA"
+
+msgid "AUDIO CARD"
+msgstr "CARTÃO DE ÁUDIO"
+
+msgid "local"
+msgstr "LOCAL"
+
+msgid "hdmi"
+msgstr "HDMI"
+
+msgid "both"
+msgstr "BOTH"
+
+msgid "default"
+msgstr "PADRÃO"
 
 msgid "AUDIO DEVICE"
 msgstr "DISPOSITIVO DE ÁUDIO"
@@ -480,6 +498,12 @@ msgstr "Caixa de som"
 msgid "Master"
 msgstr "Master"
 
+msgid "Digital"
+msgstr "Digital"
+
+msgid "Analogue"
+msgstr "Analógico"
+
 msgid "ENABLE NAVIGATION SOUNDS"
 msgstr "HABILITAR SONS DE NAVEGAÇÃO"
 
@@ -488,15 +512,6 @@ msgstr "HABILITAR ÁUDIO NO VÍDEO"
 
 msgid "OMX PLAYER AUDIO DEVICE"
 msgstr "OMX PLAYER DISPOSITIVO DE ÁUDIO"
-
-msgid "local"
-msgstr "LOCAL"
-
-msgid "hdmi"
-msgstr "HDMI"
-
-msgid "both"
-msgstr "BOTH"
 
 msgid "UI MODE"
 msgstr "MODO DE INTERFACE"
@@ -527,7 +542,7 @@ msgid "NO"
 msgstr "NÃO"
 
 msgid "SCREENSAVER SETTINGS"
-msgstr "CONFIGURAÇÃO PROTETOR DE TELA"
+msgstr "CONFIGURAR PROTETOR DE TELA"
 
 msgid "QUICK SYSTEM SELECT"
 msgstr "SELEÇÃO RÁPIDA DO SISTEMA"
@@ -569,7 +584,7 @@ msgid "grid"
 msgstr "GRADE"
 
 msgid "START ON SYSTEM"
-msgstr "IINICIAR NO SISTEMA"
+msgstr "INICIAR COM O SISTEMA"
 
 msgid "NONE"
 msgstr "NENHUM"
@@ -591,9 +606,6 @@ msgstr "ECONOMIA DE ENERGIA"
 
 msgid "disabled"
 msgstr "DESATIVADO"
-
-msgid "default"
-msgstr "PADRÃO"
 
 msgid "enhanced"
 msgstr "MELHORADO"
@@ -665,7 +677,7 @@ msgid "AUTOMATIC GAME COLLECTIONS"
 msgstr "COLEÇÃO AUTOMÁTICA DE JOGOS"
 
 msgid "CUSTOM GAME COLLECTIONS"
-msgstr "COLEÇÃO DE JOGOS PERSONALIZADOS"
+msgstr "COLEÇÃO PERSONALIZADA DE JOGOS"
 
 msgid "EDIT METADATA"
 msgstr "EDITAR DADOS"
@@ -677,10 +689,9 @@ msgid "SAVE"
 msgstr "SALVAR"
 
 msgid ""
-"THIS WILL DELETE A FILE!\n"
+"THIS WILL DELETE THE ACTUAL GAME FILE(S)!\n"
 "ARE YOU SURE?"
-msgstr ""
-"ISSO DELETARÁ O ARQUIVO!\n"
+msgstr "ISSO DELETARÁ O ARQUIVO ATUAL!\n"
 "TEM CERTEZA?"
 
 msgid "DELETE"
@@ -705,10 +716,10 @@ msgid "EDIT THIS GAME'S METADATA"
 msgstr "EDITAR DADOS DO JOGO"
 
 msgid "SWAP IMAGE AFTER (SECS)"
-msgstr "TROCAR IMAGEM APÓS (S)"
+msgstr "MUDAR IMAGEM APÓS (S)"
 
 msgid "STRETCH IMAGES"
-msgstr "ESTICAR IMAGENS"
+msgstr "ESTENDER IMAGENS"
 
 msgid "BACKGROUND AUDIO"
 msgstr "ÁUDIO DE FUNDO"
@@ -738,7 +749,7 @@ msgid "TRUE"
 msgstr "VERDADEIRO"
 
 msgid "SWAP VIDEO AFTER (SECS)"
-msgstr "TROCAR VÍDEO APÓS (S)"
+msgstr "MUDAR VÍDEO APÓS (S)"
 
 msgid "USE OMX PLAYER FOR SCREENSAVER"
 msgstr "USAR OMX PLAYER PARA PROTETOR TELA"
@@ -756,13 +767,13 @@ msgid "never"
 msgstr "NUNCA"
 
 msgid "SHOW GAME INFO ON SCREENSAVER"
-msgstr "MOSTRAR INFORMAÇÕES DO JOGO NA PROTEÇÃO DE TELA"
+msgstr "MOSTRAR INFORMAÇÕES DO JOGO"
 
 msgid "USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS"
 msgstr "USE BAIXA RESOLUÇÃO COMPATÍVEL PARA LEGENDA"
 
 msgid "STRETCH VIDEO ON SCREENSAVER"
-msgstr "ESTICAR VÍDEO NA PROTEÇÃO DE TELA"
+msgstr "ESTENDER VÍDEO NA PROTEÇÃO DE TELA"
 
 msgid ""
 "Using OMX Player and displaying Game Info may result in the video flickering "
@@ -936,11 +947,11 @@ msgstr "D-PAD BAIXO"
 
 msgctxt "button"
 msgid "D-PAD LEFT"
-msgstr "D-PAD ESQUERDA"
+msgstr "D-PAD ESQUERDO"
 
 msgctxt "button"
 msgid "D-PAD RIGHT"
-msgstr "D-PAD DIREITA"
+msgstr "D-PAD DIREITO"
 
 msgctxt "button"
 msgid "START"
@@ -951,19 +962,19 @@ msgid "SELECT"
 msgstr "SELECIONAR"
 
 msgctxt "button"
-msgid "A"
+msgid "BUTTON A / EAST"
 msgstr "A"
 
 msgctxt "button"
-msgid "B"
+msgid "BUTTON B / SOUTH"
 msgstr "B"
 
 msgctxt "button"
-msgid "X"
+msgid "BUTTON X / NORTH"
 msgstr "X"
 
 msgctxt "button"
-msgid "Y"
+msgid "BUTTON Y / WEST"
 msgstr "Y"
 
 msgctxt "button"
@@ -984,11 +995,11 @@ msgstr "R2"
 
 msgctxt "button"
 msgid "LEFT THUMB"
-msgstr "THUMB ESQUERDA"
+msgstr "THUMB ESQUERDO"
 
 msgctxt "button"
 msgid "RIGHT THUMB"
-msgstr "THUMB DIREITA"
+msgstr "THUMB DIREITO"
 
 msgctxt "button"
 msgid "LEFT ANALOG UP"
@@ -1000,11 +1011,11 @@ msgstr "ANALÓGICO ESQUERDO, BAIXO"
 
 msgctxt "button"
 msgid "LEFT ANALOG LEFT"
-msgstr "ANALÓGICO ESQUERDO, ESQUERDA"
+msgstr "ANALÓGICO ESQUERDO, ESQUERDO"
 
 msgctxt "button"
 msgid "LEFT ANALOG RIGHT"
-msgstr "ANALÓGICO ESQUERDO, DIREITA"
+msgstr "ANALÓGICO ESQUERDO, DIREITO"
 
 msgctxt "button"
 msgid "RIGHT ANALOG UP"
@@ -1016,11 +1027,11 @@ msgstr "ANALÓGICO DIREITO, BAIXO"
 
 msgctxt "button"
 msgid "RIGHT ANALOG LEFT"
-msgstr "ANALÓGICO DIREITO, ESQUERDA"
+msgstr "ANALÓGICO DIREITO, ESQUERDO"
 
 msgctxt "button"
 msgid "RIGHT ANALOG RIGHT"
-msgstr "ANALÓGICO DIREITO, DIREITA"
+msgstr "ANALÓGICO DIREITO, DIREITO"
 
 msgctxt "button"
 msgid "HOTKEY ENABLE"
