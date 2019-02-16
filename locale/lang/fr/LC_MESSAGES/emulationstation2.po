@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: retropie-emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-08 12:36+0200\n"
+"POT-Creation-Date: 2019-01-26 17:58+0100\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -292,6 +292,16 @@ msgstr "GENRE :"
 msgid "PLAYERS:"
 msgstr "JOUEURS :"
 
+msgid ""
+"Configured scraper is no longer available.\n"
+"Please change the scraping source in the settings."
+msgstr ""
+"Le scraper configuré n'est plus disponible.\n"
+"Veuillez changer la source de scraping dans les réglages."
+
+msgid "FINISH"
+msgstr "TERMINER"
+
 msgid "NO GAMES FOUND - SKIP"
 msgstr "PAS DE JEU TROUVÉ - PASSER"
 
@@ -462,6 +472,21 @@ msgstr "SCRAPER MAINTENANT"
 msgid "SYSTEM VOLUME"
 msgstr "VOLUME SON"
 
+msgid "AUDIO CARD"
+msgstr "CARTE AUDIO"
+
+msgid "local"
+msgstr "LOCAL"
+
+msgid "hdmi"
+msgstr "HDMI"
+
+msgid "both"
+msgstr "LES DEUX"
+
+msgid "default"
+msgstr "NORMAL"
+
 msgid "AUDIO DEVICE"
 msgstr "SORTIE SON"
 
@@ -474,6 +499,12 @@ msgstr "Haut-parleur"
 msgid "Master"
 msgstr "Master"
 
+msgid "Digital"
+msgstr "Digital"
+
+msgid "Analogue"
+msgstr "Analogue"
+
 msgid "ENABLE NAVIGATION SOUNDS"
 msgstr "ACTIVER LES SONS DE NAVIGATION"
 
@@ -482,15 +513,6 @@ msgstr "ACTIVER LE SON DES VIDÉOS"
 
 msgid "OMX PLAYER AUDIO DEVICE"
 msgstr "PÉRIPHÉRIQUE SON POUR OMX PLAYER"
-
-msgid "local"
-msgstr "LOCAL"
-
-msgid "hdmi"
-msgstr "HDMI"
-
-msgid "both"
-msgstr "LES DEUX"
 
 msgid "UI MODE"
 msgstr "MODE INTERFACE"
@@ -585,9 +607,6 @@ msgstr "ÉCONOMIE D'ÉNERGIE"
 msgid "disabled"
 msgstr "DÉSACTIVÉ"
 
-msgid "default"
-msgstr "NORMAL"
-
 msgid "enhanced"
 msgstr "AMÉLIORÉ"
 
@@ -670,10 +689,10 @@ msgid "SAVE"
 msgstr "SAUVER"
 
 msgid ""
-"THIS WILL DELETE A FILE!\n"
+"THIS WILL DELETE THE ACTUAL GAME FILE(S)!\n"
 "ARE YOU SURE?"
 msgstr ""
-"LE FICHIER SERA SUPPRIMÉ !\n"
+"LE(S) FICHIER(S) DU JEU SERA SUPPRIMÉ !\n"
 "ÊTES-VOUS SÛR ?"
 
 msgid "DELETE"
@@ -945,20 +964,20 @@ msgid "SELECT"
 msgstr "SELECT"
 
 msgctxt "button"
-msgid "A"
-msgstr "A"
+msgid "BUTTON A / EAST"
+msgstr "BOUTON A / EST"
 
 msgctxt "button"
-msgid "B"
-msgstr "B"
+msgid "BUTTON B / SOUTH"
+msgstr "BOUTON B / SUD"
 
 msgctxt "button"
-msgid "X"
-msgstr "X"
+msgid "BUTTON X / NORTH"
+msgstr "BOUTON X / NORD"
 
 msgctxt "button"
-msgid "Y"
-msgstr "Y"
+msgid "BUTTON Y / WEST"
+msgstr "BOUTON Y / OUEST"
 
 msgctxt "button"
 msgid "LEFT SHOULDER"

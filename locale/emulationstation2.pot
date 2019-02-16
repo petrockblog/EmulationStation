@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-08 12:48+0200\n"
+"POT-Creation-Date: 2019-01-26 18:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -291,6 +291,14 @@ msgstr ""
 msgid "PLAYERS:"
 msgstr ""
 
+msgid ""
+"Configured scraper is no longer available.\n"
+"Please change the scraping source in the settings."
+msgstr ""
+
+msgid "FINISH"
+msgstr ""
+
 msgid "NO GAMES FOUND - SKIP"
 msgstr ""
 
@@ -451,6 +459,21 @@ msgstr ""
 msgid "SYSTEM VOLUME"
 msgstr ""
 
+msgid "AUDIO CARD"
+msgstr ""
+
+msgid "local"
+msgstr ""
+
+msgid "hdmi"
+msgstr ""
+
+msgid "both"
+msgstr ""
+
+msgid "default"
+msgstr ""
+
 msgid "AUDIO DEVICE"
 msgstr ""
 
@@ -463,6 +486,12 @@ msgstr ""
 msgid "Master"
 msgstr ""
 
+msgid "Digital"
+msgstr ""
+
+msgid "Analogue"
+msgstr ""
+
 msgid "ENABLE NAVIGATION SOUNDS"
 msgstr ""
 
@@ -470,15 +499,6 @@ msgid "ENABLE VIDEO AUDIO"
 msgstr ""
 
 msgid "OMX PLAYER AUDIO DEVICE"
-msgstr ""
-
-msgid "local"
-msgstr ""
-
-msgid "hdmi"
-msgstr ""
-
-msgid "both"
 msgstr ""
 
 msgid "UI MODE"
@@ -566,9 +586,6 @@ msgstr ""
 msgid "disabled"
 msgstr ""
 
-msgid "default"
-msgstr ""
-
 msgid "enhanced"
 msgstr ""
 
@@ -651,7 +668,7 @@ msgid "SAVE"
 msgstr ""
 
 msgid ""
-"THIS WILL DELETE A FILE!\n"
+"THIS WILL DELETE THE ACTUAL GAME FILE(S)!\n"
 "ARE YOU SURE?"
 msgstr ""
 
@@ -913,19 +930,19 @@ msgid "SELECT"
 msgstr ""
 
 msgctxt "button"
-msgid "A"
+msgid "BUTTON A / EAST"
 msgstr ""
 
 msgctxt "button"
-msgid "B"
+msgid "BUTTON B / SOUTH"
 msgstr ""
 
 msgctxt "button"
-msgid "X"
+msgid "BUTTON X / NORTH"
 msgstr ""
 
 msgctxt "button"
-msgid "Y"
+msgid "BUTTON Y / WEST"
 msgstr ""
 
 msgctxt "button"

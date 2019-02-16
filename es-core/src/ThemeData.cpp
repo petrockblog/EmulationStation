@@ -90,10 +90,19 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 	{ "datetime", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
-		{ "color", COLOR },
+		{ "origin", NORMALIZED_PAIR },
+		{ "rotation", FLOAT },
+		{ "rotationOrigin", NORMALIZED_PAIR },
+		{ "backgroundColor", COLOR },
 		{ "fontPath", PATH },
 		{ "fontSize", FLOAT },
+		{ "color", COLOR },
+		{ "alignment", STRING },
 		{ "forceUppercase", BOOLEAN },
+		{ "lineSpacing", FLOAT },
+		{ "value", STRING },
+		{ "format", STRING },
+		{ "displayRelative", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "rating", {
 		{ "pos", NORMALIZED_PAIR },
@@ -239,7 +248,7 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 
 	for(pugi::xml_node node = root.child("include"); node; node = node.next_sibling("include"))
 	{
-		const char* relPath = node.text().get();
+		std::string relPath = resolvePlaceholders(node.text().as_string());
 		std::string path = Utils::FileSystem::resolveRelativePath(relPath, mPaths.back(), true);
 		if(!ResourceManager::getInstance()->fileExists(path))
 			throw error << "Included file \"" << relPath << "\" not found! (resolved to \"" << path << "\")";

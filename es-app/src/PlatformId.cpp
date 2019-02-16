@@ -2,8 +2,6 @@
 
 #include <string.h>
 
-extern const char* mameNameToRealName[];
-
 namespace PlatformIds
 {
 	const char* PlatformNames[PLATFORM_COUNT + 1] = {
@@ -63,7 +61,10 @@ namespace PlatformIds
 		"psvita",
 		"psp", // playstation portable
 		"snes", // super nintendo entertainment system
-		"pcengine", // turbografx-16/pcengine
+		"scummvm",
+		"x6800",
+		"pcengine", // (aka turbografx-16) HuCards only
+		"pcenginecd", // (aka turbografx-16) CD-ROMs only
 		"wonderswan",
 		"wonderswancolor",
 		"zxspectrum",

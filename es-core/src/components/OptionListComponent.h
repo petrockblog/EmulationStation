@@ -144,6 +144,9 @@ public:
 		mText.setHorizontalAlignment(ALIGN_CENTER);
 		addChild(&mText);
 
+		mLeftArrow.setResize(0, mText.getFont()->getLetterHeight());
+		mRightArrow.setResize(0, mText.getFont()->getLetterHeight());
+
 		if(mMultiSelect)
 		{
 			mRightArrow.setImage(":/arrow.svg");
@@ -188,7 +191,7 @@ public:
 			}
 			if(!mMultiSelect)
 			{
-				if(config->isMappedTo("left", input))
+				if(config->isMappedLike("left", input))
 				{
 					// move selection to previous
 					unsigned int i = getSelectedId();
@@ -201,7 +204,7 @@ public:
 					onSelectedChanged();
 					return true;
 
-				}else if(config->isMappedTo("right", input))
+				}else if(config->isMappedLike("right", input))
 				{
 					// move selection to next
 					unsigned int i = getSelectedId();

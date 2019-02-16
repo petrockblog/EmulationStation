@@ -1,0 +1,1078 @@
+#
+# ja_JP locale for EmulationStation i18n.
+#
+#    Jun Wakaya 2019/02/14
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: retropie-emulationstation\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-02-14 14:04+0100\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "NAME"
+msgstr "名前"
+
+msgid "ENTER GAME NAME"
+msgstr "ゲーム名入力"
+
+msgid "SORTNAME"
+msgstr "ソート名"
+
+msgid "ENTER GAME SORT NAME"
+msgstr "ソート名入力"
+
+msgid "DESCRIPTION"
+msgstr "説明"
+
+msgid "ENTER DESCRIPTION"
+msgstr "説明入力"
+
+msgid "IMAGE"
+msgstr "画像"
+
+msgid "ENTER PATH TO IMAGE"
+msgstr "画像のパス名入力"
+
+msgid "VIDEO"
+msgstr "動画"
+
+msgid "ENTER PATH TO VIDEO"
+msgstr "動画のパス名入力"
+
+msgid "MARQUEE"
+msgstr "マーキー"
+
+msgid "ENTER PATH TO MARQUEE"
+msgstr "マーキーのパス名入力"
+
+msgid "THUMBNAIL"
+msgstr "サムネイル"
+
+msgid "ENTER PATH TO THUMBNAIL"
+msgstr "サムネイルのパス名入力"
+
+msgid "RATING"
+msgstr "レーティング"
+
+msgid "ENTER RATING"
+msgstr "レーティング入力"
+
+msgid "RELEASE DATE"
+msgstr "発売日"
+
+msgid "ENTER RELEASE DATE"
+msgstr "発売日入力"
+
+msgid "unknown"
+msgstr "不明"
+
+msgid "DEVELOPER"
+msgstr "開発元"
+
+msgid "ENTER GAME DEVELOPER"
+msgstr "ゲーム開発元入力"
+
+msgid "PUBLISHER"
+msgstr "発売元"
+
+msgid "ENTER GAME PUBLISHER"
+msgstr "ゲーム発売元入力"
+
+msgid "GENRE"
+msgstr "ジャンル"
+
+msgid "ENTER GAME GENRE"
+msgstr "ジャンル入力"
+
+msgid "PLAYERS"
+msgstr "プレイヤー人数"
+
+msgid "ENTER NUMBER OF PLAYERS"
+msgstr "プレイヤー人数入力"
+
+msgid "FAVORITE"
+msgstr "お気に入り"
+
+msgid "ENTER FAVORITE OFF/ON"
+msgstr "お気に入り Off/On"
+
+msgid "HIDDEN"
+msgstr "隠す"
+
+msgid "ENTER HIDDEN OFF/ON"
+msgstr "隠す Off/On"
+
+msgid "KIDGAME"
+msgstr "子供向け"
+
+msgid "ENTER KIDGAME OFF/ON"
+msgstr "子供向け Off/On"
+
+msgid "PLAY COUNT"
+msgstr "起動回数"
+
+msgid "ENTER NUMBER OF TIMES PLAYED"
+msgstr "起動回数入力"
+
+msgid "LAST PLAYED"
+msgstr "最終起動日時"
+
+msgid "ENTER LAST PLAYED DATE"
+msgstr "最終起動日時入力"
+
+msgid "collections"
+msgstr "コレクション"
+
+msgid "all"
+msgstr "全て"
+
+msgid "ALL GAMES"
+msgstr "全ゲーム"
+
+msgid "FILENAME, ASCENDING"
+msgstr "ファイル名で昇順"
+
+msgid "recent"
+msgstr "直近"
+
+msgid "LAST PLAYED, DESCENDING"
+msgstr "最終起動から降順"
+
+msgid "favorites"
+msgstr "お気に入り"
+
+msgid "FAVORITES"
+msgstr "お気に入り"
+
+msgid "COLLECTIONS"
+msgstr "コレクション"
+
+msgid "New Collection"
+msgstr "新規コレクション"
+
+msgid "Editing the '{1}' Collection. Add/remove games with Y."
+msgstr "コレクション '{1}' を編集。 Yでゲームを追加/削除。"
+
+msgid "Finished editing the '{1}' Collection."
+msgstr "'{1}' の編集を終了。"
+
+msgid "Added '{1}' to '{2}'"
+msgstr "'{1}' を '{2}' に追加しました。"
+
+msgid "Removed '{1}' from '{2}'"
+msgstr "'{1}' を '{2}' から削除しました。"
+
+msgid "This collection is empty."
+msgstr "コレクションが空です。"
+
+msgid "None"
+msgstr "なし"
+
+msgid "Various"
+msgstr "混在"
+
+msgid " among other titles."
+msgstr " ほかのタイトル間に混在。"
+
+msgid "This collection contains {1} games, including {2}"
+msgstr "このコレクションには {1} あり、 {2} を含みます。"
+
+msgid ""
+"IT LOOKS LIKE YOUR SYSTEMS CONFIGURATION FILE HAS NOT BEEN SET UP OR IS "
+"INVALID. YOU'LL NEED TO DO THIS BY HAND, UNFORTUNATELY.\n"
+"\n"
+"VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION."
+msgstr ""
+"システムの設定ファイルが設定されていないかただしくありません。残念ながら手作"
+"業で設定する必要があります。\n"
+"\n"
+"詳しくは EMULATIONSTATION.ORG をご覧ください。"
+
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION."
+msgstr ""
+"システムが見つかりません！\n"
+"設定ファイル内でファイルパスが正しいか、ロム置き場に少なくとも一つは正しい拡"
+"張子を持つゲームファイルが存在するかを確認してください。\n"
+"\n"
+"詳しくは EMULATIONSTATION.ORG をご覧ください。"
+
+msgid "QUIT"
+msgstr "終了"
+
+msgid "PUBLISHER / DEVELOPER"
+msgstr "版元 / 販売元"
+
+msgid "{1} STARS"
+msgstr "星 {1} 個"
+
+msgid "0 STARS"
+msgstr "星 0 個"
+
+msgid "FILENAME, DESCENDING"
+msgstr "ファイル名 ↓"
+
+msgid "RATING, ASCENDING"
+msgstr "レーティング ↑"
+
+msgid "RATING, DESCENDING"
+msgstr "レーティング ↓"
+
+msgid "TIMES PLAYED, ASCENDING"
+msgstr "プレイ時間 ↑"
+
+msgid "TIMES PLAYED, DESCENDING"
+msgstr "プレイ時間 ↓"
+
+msgid "LAST PLAYED, ASCENDING"
+msgstr "最終プレイ ↑"
+
+msgid "NUMBER PLAYERS, ASCENDING"
+msgstr "プレイヤー人数 ↑"
+
+msgid "NUMBER PLAYERS, DESCENDING"
+msgstr "プレイヤー人数 ↓"
+
+msgid "RELEASE DATE, ASCENDING"
+msgstr "発売日 ↑"
+
+msgid "RELEASE DATE, DESCENDING"
+msgstr "発売日 ↓"
+
+msgid "GENRE, ASCENDING"
+msgstr "ジャンル ↑"
+
+msgid "GENRE, DESCENDING"
+msgstr "ジャンル ↓"
+
+msgid "DEVELOPER, ASCENDING"
+msgstr "発売元 ↑"
+
+msgid "DEVELOPER, DESCENDING"
+msgstr "発売元 ↓"
+
+msgid "PUBLISHER, ASCENDING"
+msgstr "版元 ↑"
+
+msgid "PUBLISHER, DESCENDING"
+msgstr "版元 ↓"
+
+msgid "SYSTEM, ASCENDING"
+msgstr "システム ↑"
+
+msgid "SYSTEM, DESCENDING"
+msgstr "システム ↓"
+
+msgid "ADD STAR"
+msgstr "星追加"
+
+msgid "CANCEL"
+msgstr "取り消し"
+
+msgid "RATING:"
+msgstr "レーティング:"
+
+msgid "RELEASED:"
+msgstr "発売日:"
+
+msgid "DEVELOPER:"
+msgstr "発売元:"
+
+msgid "PUBLISHER:"
+msgstr "版元:"
+
+msgid "GENRE:"
+msgstr "ジャンル:"
+
+msgid "PLAYERS:"
+msgstr "プレイヤー数:"
+
+msgid ""
+"Configured scraper is no longer available.\n"
+"Please change the scraping source in the settings."
+msgstr ""
+"設定済みの scraper が存在しません。\n"
+"設定からscrapingソースを変更してください。"
+
+msgid "FINISH"
+msgstr "完了"
+
+msgid "NO GAMES FOUND - SKIP"
+msgstr "ゲームがありません - スキップ"
+
+msgid "RETRY"
+msgstr "再試行"
+
+msgid "SKIP"
+msgstr "スキップ"
+
+msgid "SEARCH FOR"
+msgstr "以下を検索"
+
+msgid "SEARCH"
+msgstr "検索"
+
+msgid "ACCEPT RESULT"
+msgstr "結果を確認"
+
+msgid "MENU"
+msgstr "メニュー"
+
+msgid ""
+"The selected UI mode has nothing to show,\n"
+" returning to UI mode: FULL"
+msgstr ""
+"選択されたUIモードには対応していません。\n"
+" フルに戻します。"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "CONFIGURATION"
+msgstr "設定"
+
+msgid "{1} GAME AVAILABLE"
+msgid_plural "{1} GAMES AVAILABLE"
+msgstr[0] "{1} 個のゲーム"
+msgstr[1] "{1} 個のゲーム"
+
+msgid "CHOOSE"
+msgstr "選択"
+
+msgid "SELECT"
+msgstr "選択"
+
+msgid "RANDOM"
+msgstr "ランダム"
+
+msgid "LAUNCH SCREENSAVER"
+msgstr "スクリーンセーバー"
+
+msgid "Full"
+msgstr "フル"
+
+msgid "Kiosk"
+msgstr "かんたん"
+
+msgid "Kid"
+msgstr "キッズ"
+
+msgid "<No Entries Found>"
+msgstr "<エントリーなし>"
+
+msgid "SYSTEM"
+msgstr "システム"
+
+msgid "LAUNCH"
+msgstr "起動"
+
+msgid "BACK"
+msgstr "戻る"
+
+msgid "OPTIONS"
+msgstr "オプション"
+
+msgid "LAST PLAYED:"
+msgstr "最終プレイ:"
+
+msgid "TIMES PLAYED:"
+msgstr "プレイ回数:"
+
+msgid "CLOSE"
+msgstr "閉じる"
+
+msgid "SCREENSAVER AFTER"
+msgstr "スクリーンセーバー(after)"
+
+msgid "SCREENSAVER CONTROLS"
+msgstr "スクリーンセーバー操作"
+
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "スクリーンセーバーの挙動"
+
+msgid "dim"
+msgstr "輝度を落とす"
+
+msgid "black"
+msgstr "暗転"
+
+msgid "random video"
+msgstr "ランダム動画"
+
+msgid "slideshow"
+msgstr "スライドショー"
+
+msgid ""
+"The \"Random Video\" screensaver shows videos from your gamelist.\n"
+"\n"
+"If you do not have videos, or if in several consecutive attempts the games "
+"it selects don't have videos it will default to black.\n"
+"\n"
+"More options in the \"UI Settings\" > \"Video Screensaver\" menu."
+msgstr ""
+"「ランダム動画」スクリーンセーバーはゲームリスト中の動画を再生します。\n"
+"\n"
+"ビデオがないか、連続するいくつかのゲームに動画が存在しない場合、\n"
+"暗転に切り替わります。\n"
+"\n"
+"「UI設定→動画スクリーンセーバー」でより詳しく設定できます。"
+
+msgid "USE HARDWARE BACKLIGHT CONTROL"
+msgstr "ハードウェアバックライド制御を使用"
+
+msgid "VIDEO SCREENSAVER SETTINGS"
+msgstr "動画スクリーンセーバー設定"
+
+msgid "SLIDESHOW SCREENSAVER SETTINGS"
+msgstr "スライドショーセーバー設定"
+
+msgid "VIDEO SCREENSAVER"
+msgstr "動画スクリーンセーバー"
+
+msgid "SLIDESHOW SCREENSAVER"
+msgstr "スライドショーセーバー"
+
+msgid "MAIN MENU"
+msgstr "メインメニュー"
+
+msgid "SCRAPER"
+msgstr "SCRAPER"
+
+msgid "SOUND SETTINGS"
+msgstr "サウンド設定"
+
+msgid "UI SETTINGS"
+msgstr "UI設定"
+
+msgid "GAME COLLECTION SETTINGS"
+msgstr "ゲームコレクション設定"
+
+msgid "OTHER SETTINGS"
+msgstr "その他の設定"
+
+msgid "CONFIGURE INPUT"
+msgstr "入力設定"
+
+msgid "SCRAPE FROM"
+msgstr "SCRAPER ソース："
+
+msgid "SCRAPE RATINGS"
+msgstr "SCRAPERレーティング"
+
+msgid "SCRAPE NOW"
+msgstr "SCRAPER を起動"
+
+msgid "SYSTEM VOLUME"
+msgstr "システム音量"
+
+msgid "AUDIO CARD"
+msgstr "オーディオカード"
+
+msgid "local"
+msgstr "ローカル"
+
+msgid "hdmi"
+msgstr "HDMI"
+
+msgid "both"
+msgstr "両方"
+
+msgid "default"
+msgstr "デフォルト"
+
+msgid "AUDIO DEVICE"
+msgstr "オーディオデバイス"
+
+msgid "PCM"
+msgstr "PCM"
+
+msgid "Speaker"
+msgstr "スピーカー"
+
+msgid "Master"
+msgstr "マスター"
+
+msgid "Digital"
+msgstr "デジタル"
+
+msgid "Analogue"
+msgstr "アナログ"
+
+msgid "ENABLE NAVIGATION SOUNDS"
+msgstr "ナビゲーションサウンドを有効化"
+
+msgid "ENABLE VIDEO AUDIO"
+msgstr "ビデオの音声を有効化"
+
+msgid "OMX PLAYER AUDIO DEVICE"
+msgstr "OMX PLAYER用オーディオデバイス"
+
+msgid "UI MODE"
+msgstr "UIモード"
+
+msgid ""
+"You are changing the UI to a restricted mode:\n"
+"{1}\n"
+"This will hide most menu-options to prevent changes to the system.\n"
+"To unlock and return to the full UI, enter this code: \n"
+"\"{2}\"\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"以下の制限されたUIに切り替えようとしています:\n"
+"{1}\n"
+"これはシステム変更を防ぐために大半のメニューを隠します。\n"
+"再度フルに戻す場合、以下のコマンドを入力します: \n"
+"\"{2}\"\n"
+"\n"
+"切り替えていいですか？"
+
+msgid "YES"
+msgstr "はい"
+
+msgid "NO"
+msgstr "いいえ"
+
+msgid "SCREENSAVER SETTINGS"
+msgstr "スクリーンセーバー設定"
+
+msgid "QUICK SYSTEM SELECT"
+msgstr "クイックシステム選択"
+
+msgid "CAROUSEL TRANSITIONS"
+msgstr "くるくる方式"
+
+msgid "TRANSITION STYLE"
+msgstr "遷移スタイル"
+
+msgid "fade"
+msgstr "フェード"
+
+msgid "slide"
+msgstr "スライド"
+
+msgid "instant"
+msgstr "簡易"
+
+msgid "THEME SET"
+msgstr "テーマセット"
+
+msgid "GAMELIST VIEW STYLE"
+msgstr "ゲームリスト表示スタイル"
+
+msgid "automatic"
+msgstr "自動"
+
+msgid "basic"
+msgstr "基本"
+
+msgid "detailed"
+msgstr "詳細"
+
+msgid "video"
+msgstr "ビデオ"
+
+msgid "grid"
+msgstr "グリッド"
+
+msgid "START ON SYSTEM"
+msgstr "開始システム"
+
+msgid "NONE"
+msgstr "なし"
+
+msgid "ON-SCREEN HELP"
+msgstr "オンスクリーンヘルプ"
+
+msgid "ENABLE FILTERS"
+msgstr "フィルター有効化"
+
+msgid "Mb"
+msgstr "MB"
+
+msgid "VRAM LIMIT"
+msgstr "VRAM上限"
+
+msgid "POWER SAVER MODES"
+msgstr "パワーセーブモード"
+
+msgid "disabled"
+msgstr "無効"
+
+msgid "enhanced"
+msgstr "拡張"
+
+msgid "SAVE METADATA ON EXIT"
+msgstr "終了時にメタデータを保存"
+
+msgid "PARSE GAMESLISTS ONLY"
+msgstr "ゲームリストのみパース"
+
+msgid "SHOW HIDDEN FILES"
+msgstr "隠しファイルを表示"
+
+msgid "USE OMX PLAYER (HW ACCELERATED)"
+msgstr "OMX PLAYER (HWアクセラレート)を使用"
+
+msgid "SHOW FRAMERATE"
+msgstr "フレームレート表示"
+
+msgid "ARE YOU SURE YOU WANT TO CONFIGURE INPUT?"
+msgstr "本当に入力設定を行っていいですか？"
+
+msgid "REALLY RESTART?"
+msgstr "本当に再起動しますか？"
+
+msgid "RESTART EMULATIONSTATION"
+msgstr "EMULATIONSTATIONを再起動"
+
+msgid "REALLY QUIT?"
+msgstr "本当に終了しますか？"
+
+msgid "QUIT EMULATIONSTATION"
+msgstr "EMULATIONSTATIONを終了"
+
+msgid "RESTART SYSTEM"
+msgstr "システムを再起動"
+
+msgid "REALLY SHUTDOWN?"
+msgstr "本当に終了しますか？"
+
+msgid "SHUTDOWN SYSTEM"
+msgstr "システムを終了"
+
+msgid "CREATE NEW CUSTOM COLLECTION FROM THEME"
+msgstr "テーマから新規カスタムコレクションを生成"
+
+msgid "SELECT THEME FOLDER"
+msgstr "テーマフォルダを選択"
+
+msgid "CREATE NEW CUSTOM COLLECTION"
+msgstr "新規カスタムコレクションを生成"
+
+msgid "New Collection Name"
+msgstr "新しいコレクション名"
+
+msgid "GROUP UNTHEMED CUSTOM COLLECTIONS"
+msgstr "テーマのないカスタムコレクションをグループ化"
+
+msgid "SORT CUSTOM COLLECTIONS AND SYSTEMS"
+msgstr "カスタムコレクションとシステムを並べ替え"
+
+msgid "FINISH EDITING '{1}' COLLECTION"
+msgstr "コレクション '{1}' の編集を終了"
+
+msgid "SELECT COLLECTIONS"
+msgstr "コレクションを選択"
+
+msgid "AUTOMATIC GAME COLLECTIONS"
+msgstr "自動ゲームコレクション"
+
+msgid "CUSTOM GAME COLLECTIONS"
+msgstr "カスタムゲームコレクション"
+
+msgid "EDIT METADATA"
+msgstr "メタデータを編集"
+
+msgid "SCRAPE"
+msgstr "SCRAPE"
+
+msgid "SAVE"
+msgstr "保存"
+
+msgid ""
+"THIS WILL DELETE THE ACTUAL GAME FILE(S)!\n"
+"ARE YOU SURE?"
+msgstr ""
+"この操作はゲームファイルを削除します！\n"
+"実行しますか？"
+
+msgid "DELETE"
+msgstr "削除"
+
+msgid "SAVE CHANGES?"
+msgstr "変更を保存しますか？"
+
+msgid "JUMP TO..."
+msgstr "ジャンプ..."
+
+msgid "SORT GAMES BY"
+msgstr "以下の条件でソート"
+
+msgid "FILTER GAMELIST"
+msgstr "ゲームリストをフィルタ"
+
+msgid "ADD/REMOVE GAMES TO THIS GAME COLLECTION"
+msgstr "このコレクションにゲームを追加/削除"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "このゲームのメタデータを編集"
+
+msgid "SWAP IMAGE AFTER (SECS)"
+msgstr "(秒)後に画像を入れ替え"
+
+msgid "STRETCH IMAGES"
+msgstr "画像を拡大"
+
+msgid "BACKGROUND AUDIO"
+msgstr "BGM"
+
+msgid "USE CUSTOM IMAGES"
+msgstr "カスタム画像を使用"
+
+msgid "CUSTOM IMAGE DIR"
+msgstr "カスタム画像フォルダ"
+
+msgid "CUSTOM IMAGE DIR RECURSIVE"
+msgstr "カスタム画像フォルダ(再帰)"
+
+msgid "CUSTOM IMAGE FILTER"
+msgstr "カスタム画像フィルタ"
+
+msgid "FILTER GAMELIST BY"
+msgstr "以下でゲームリストをフィルタ"
+
+msgid "RESET ALL FILTERS"
+msgstr "全フィルタをリセット"
+
+msgid "FALSE"
+msgstr "偽"
+
+msgid "TRUE"
+msgstr "真"
+
+msgid "SWAP VIDEO AFTER (SECS)"
+msgstr "(秒)後に動画を入れ替え"
+
+msgid "USE OMX PLAYER FOR SCREENSAVER"
+msgstr "スクリーンセーバーにOMX PLAYERを使用"
+
+msgid "SHOW GAME INFO"
+msgstr "ゲーム情報を表示"
+
+msgid "always"
+msgstr "常に"
+
+msgid "start & end"
+msgstr "開始＆終了"
+
+msgid "never"
+msgstr "禁止"
+
+msgid "SHOW GAME INFO ON SCREENSAVER"
+msgstr "スクリーンセーバーでゲーム情報を表示"
+
+msgid "USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS"
+msgstr "説明で互換性のある低解像度を使用"
+
+msgid "STRETCH VIDEO ON SCREENSAVER"
+msgstr "スクリーンセーバーで動画を拡大"
+
+msgid ""
+"Using OMX Player and displaying Game Info may result in the video flickering "
+"in some TV modes. If that happens, consider:\n"
+"\n"
+"- Disabling the \"Show Game Info\" option;\n"
+"- Disabling \"Overscan\" on the Pi configuration menu might help:\n"
+"RetroPie > Raspi-Config > Advanced Options > Overscan > \"No\".\n"
+"- Disabling the use of OMX Player for the screensaver."
+msgstr ""
+"OMX Playerとゲーム情報表示を併用すると、モニター環境によって画面がちらつく場"
+"合があります。その場合は以下をご検討ください:\n"
+"\n"
+"- 「ゲーム情報を表示」の無効化\n"
+"- Pi configurationメニューで「オーバースキャン」を無効化:\n"
+"RetroPie > Raspi-Config > Advanced Options > Overscan > \"No\"。\n"
+"- OMX Playerをスクリーンセーバーで使わない。"
+
+msgid "GOT IT!"
+msgstr "了解"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "これらのゲームをSCRAPE"
+
+msgid "All Games"
+msgstr "全ゲーム"
+
+msgid "Only missing image"
+msgstr "見つからない画像のみ"
+
+msgid "FILTER"
+msgstr "フィルタ"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "これらのシステムをSCRAPE"
+
+msgid "SYSTEMS"
+msgstr "システム"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "衝突時に使用者が決定"
+
+msgid "START"
+msgstr "スタート"
+
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+"警告: 選択されたシステムのいくつかにプラットフォームセットがありません。結果"
+"はいつもより不正確になるでしょう。\n"
+"続けますか？"
+
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr "条件に合致するゲームがありません。"
+
+msgid "INPUT"
+msgstr "入力"
+
+msgid "SCRAPING IN PROGRESS"
+msgstr "SCRAPE実行中"
+
+msgid "subtitle text"
+msgstr "サブタイトル"
+
+msgid "STOP"
+msgstr "停止"
+
+msgid "STOP (PROGRESS SAVED)"
+msgstr "停止(経過保存済み)"
+
+msgid "GAME {1} OF {2}"
+msgstr "ゲーム {1} の {2}"
+
+msgid "NO GAMES WERE SCRAPED."
+msgstr "SCRAPEされたゲームはありません。"
+
+msgid "{1} GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "{1} GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] "{1} 個のゲームがSCRAPEされました。"
+msgstr[1] "{1} 個のゲームがSCRAPEされました。"
+
+msgid "{1} GAME SKIPPED."
+msgid_plural "{1} GAMES SKIPPED."
+msgstr[0] "{1} 個のゲームがスキップされました。"
+msgstr[1] "{1} 個のゲームがスキップされました。"
+
+msgid "LOADING..."
+msgstr "読み込み中..."
+
+msgid "CHANGE"
+msgstr "変更"
+
+msgid "{1} day ago"
+msgid_plural "{1} days ago"
+msgstr[0] "昨日"
+msgstr[1] "{1} 日前"
+
+msgid "{1} hour ago"
+msgid_plural "{1} hours ago"
+msgstr[0] "一時間前"
+msgstr[1] "{1} 時間前"
+
+msgid "{1} minute ago"
+msgid_plural "{1} minutes ago"
+msgstr[0] "一分前"
+msgstr[1] "{1} 分前"
+
+msgid "{1} second ago"
+msgid_plural "{1} seconds ago"
+msgstr[0] "一秒前"
+msgstr[1] "{1} 秒前"
+
+msgid "WORKING..."
+msgstr "作業中..."
+
+msgid "ACCEPT"
+msgstr "同意"
+
+msgid "SELECT ALL"
+msgstr "全選択"
+
+msgid "SELECT NONE"
+msgstr "選択解除"
+
+msgid "{1} SELECTED"
+msgid_plural "{1} SELECTED"
+msgstr[0] "{1} 個選択"
+msgstr[1] "{1} 個選択"
+
+msgid "MOVE CURSOR"
+msgstr "カーソル移動"
+
+msgid "STOP EDITING"
+msgstr "編集中止"
+
+msgid "EDIT"
+msgstr "編集"
+
+msgid "WELCOME"
+msgstr "ようこそ"
+
+msgid "{1} GAMEPAD DETECTED"
+msgid_plural "{1} GAMEPADS DETECTED"
+msgstr[0] "ゲームパッドを検出"
+msgstr[1] "{1} 個のゲームパッドを検出"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "ゲームパッドが見つかりません"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "ボタンかキーを押し続けるとそのデバイスの設定を開始します。"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "F4キーでいつでも中断できます。"
+
+msgid "PRESS ESC TO CANCEL."
+msgstr "ESCキーで取り消しします。"
+
+msgid "DISCARD CHANGES"
+msgstr "変更を破棄"
+
+msgctxt "button"
+msgid "D-PAD UP"
+msgstr "D-PAD ↑"
+
+msgctxt "button"
+msgid "D-PAD DOWN"
+msgstr "D-PAD ↓"
+
+msgctxt "button"
+msgid "D-PAD LEFT"
+msgstr "D-PAD ←"
+
+msgctxt "button"
+msgid "D-PAD RIGHT"
+msgstr "D-PAD →"
+
+msgctxt "button"
+msgid "START"
+msgstr "START"
+
+msgctxt "button"
+msgid "SELECT"
+msgstr "SELECT"
+
+msgctxt "button"
+msgid "BUTTON A / EAST"
+msgstr "BOUTON A / 東"
+
+msgctxt "button"
+msgid "BUTTON B / SOUTH"
+msgstr "BOUTON B / 南"
+
+msgctxt "button"
+msgid "BUTTON X / NORTH"
+msgstr "BOUTON X / 北"
+
+msgctxt "button"
+msgid "BUTTON Y / WEST"
+msgstr "BOUTON Y / 西"
+
+msgctxt "button"
+msgid "LEFT SHOULDER"
+msgstr "L1"
+
+msgctxt "button"
+msgid "RIGHT SHOULDER"
+msgstr "R1"
+
+msgctxt "button"
+msgid "LEFT TRIGGER"
+msgstr "L2"
+
+msgctxt "button"
+msgid "RIGHT TRIGGER"
+msgstr "R2"
+
+msgctxt "button"
+msgid "LEFT THUMB"
+msgstr "左親指"
+
+msgctxt "button"
+msgid "RIGHT THUMB"
+msgstr "右親指"
+
+msgctxt "button"
+msgid "LEFT ANALOG UP"
+msgstr "左アナログ↑"
+
+msgctxt "button"
+msgid "LEFT ANALOG DOWN"
+msgstr "左アナログ↓"
+
+msgctxt "button"
+msgid "LEFT ANALOG LEFT"
+msgstr "左アナログ←"
+
+msgctxt "button"
+msgid "LEFT ANALOG RIGHT"
+msgstr "左アナログ→"
+
+msgctxt "button"
+msgid "RIGHT ANALOG UP"
+msgstr "右アナログ↑"
+
+msgctxt "button"
+msgid "RIGHT ANALOG DOWN"
+msgstr "右アナログ↓"
+
+msgctxt "button"
+msgid "RIGHT ANALOG LEFT"
+msgstr "右アナログ←"
+
+msgctxt "button"
+msgid "RIGHT ANALOG RIGHT"
+msgstr "右アナログ→"
+
+msgctxt "button"
+msgid "HOTKEY ENABLE"
+msgstr "ホットキー(重ね掛けOK)"
+
+msgid "CONFIGURING"
+msgstr "設定"
+
+msgid "KEYBOARD"
+msgstr "キーボード"
+
+msgid "CEC"
+msgstr "Consumer Electronics Control"
+
+msgid "GAMEPAD {1}"
+msgstr "ゲームパッド {1}"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "適当なボタンを押しっぱなしにするとスキップ"
+
+msgid "-NOT DEFINED-"
+msgstr "-割り当てなし-"
+
+msgid ""
+"YOU DIDN'T CHOOSE A HOTKEY ENABLE BUTTON. THIS IS REQUIRED FOR EXITING GAMES "
+"WITH A CONTROLLER. DO YOU WANT TO USE THE SELECT BUTTON DEFAULT ? PLEASE "
+"ANSWER YES TO USE SELECT OR NO TO NOT SET A HOTKEY ENABLE BUTTON."
+msgstr ""
+"ホットキーが割り当てられませんでした。これはコントローラからゲームを終了する"
+"際に必要です。デフォルトでSELECTボタンを割り当てますか？「はい」でSELECTを割"
+"り当て、「いいえ」ではホットキーを使用しません。"
+
+msgid "HOLD FOR {1}S TO SKIP"
+msgid_plural "HOLD FOR {1}S TO SKIP"
+msgstr[0] "{1} 秒でスキップします"
+msgstr[1] "{1} 秒でスキップします"
+
+msgid "PRESS ANYTHING"
+msgstr "どれかキーを押してください"
+
+msgid "ALREADY TAKEN"
+msgstr "割り当て済みです"

@@ -64,7 +64,7 @@ bool UIModeController::inputIsMatch(InputConfig * config, Input input)
 {
 	for (auto valstring : mInputVals)
 	{
-		if (config->isMappedTo(valstring, input) &&
+		if (config->isMappedLike(valstring, input) &&
 			(mPassKeySequence[mPassKeyCounter] == valstring[0]))
 		{
 			mPassKeyCounter++;
@@ -92,6 +92,12 @@ bool UIModeController::isUIModeKid()
 {
 	return (Settings::getInstance()->getBool("ForceKid") ||
 		((mCurrentUIMode == "Kid") && !Settings::getInstance()->getBool("ForceKiosk")));
+}
+
+bool UIModeController::isUIModeKiosk()
+{
+	return (Settings::getInstance()->getBool("ForceKiosk") ||
+		((mCurrentUIMode == "Kiosk") && !Settings::getInstance()->getBool("ForceKid")));
 }
 
 std::string UIModeController::getFormattedPassKeyStr()

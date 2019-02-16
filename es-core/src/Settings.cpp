@@ -18,7 +18,6 @@ std::vector<const char*> settings_dont_save {
 	{ "DebugImage" },
 	{ "ForceKid" },
 	{ "ForceKiosk" },
-	{ "ForceDisableFilters" },
 	{ "IgnoreGamelist" },
 	{ "HideConsole" },
 	{ "ShowExit" },
@@ -136,6 +135,7 @@ void Settings::setDefaults()
 		mStringMap["AudioDevice"] = "Master";
 	#endif
 
+	mStringMap["AudioCard"] = "default";
 	mStringMap["UIMode"] = "Full";
 	mStringMap["UIMode_passkey"] = "uuddlrlrba";
 	mBoolMap["ForceKiosk"] = false;

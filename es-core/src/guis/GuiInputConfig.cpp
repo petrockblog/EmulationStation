@@ -8,129 +8,44 @@
 #include "Window.h"
 #include "Locale.h"
 
-// static const int inputCount = 10;
-// static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown" };
-// static const bool inputSkippable[inputCount] = { false, false, false, false, false, false, false, false, true, true };
-// static const char* inputDispName[inputCount] = { "UP", "DOWN", "LEFT", "RIGHT", "A", "B", "START", "SELECT", "PAGE UP", "PAGE DOWN" };
-// static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
-// 											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
-// 											":/help/button_l.svg", ":/help/button_r.svg" };
-
-static const int inputCount = 25;
-static const char* inputName[inputCount] =
+struct InputConfigStructure
 {
-	"Up",
-	"Down",
-	"Left",
-	"Right",
-	"Start",
-	"Select",
-	"A",
-	"B",
-	"X",
-	"Y",
-	"LeftShoulder",
-	"RightShoulder",
-	"LeftTrigger",
-	"RightTrigger",
-	"LeftThumb",
-	"RightThumb",
-	"LeftAnalogUp",
-	"LeftAnalogDown",
-	"LeftAnalogLeft",
-	"LeftAnalogRight",
-	"RightAnalogUp",
-	"RightAnalogDown",
-	"RightAnalogLeft",
-	"RightAnalogRight",
-	"HotKeyEnable"
-};
-static const bool inputSkippable[inputCount] =
-{
-	false,
-	false,
-	false,
-	false,
-	true,
-	true,
-	false,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true
+	const char* name;
+	const bool  skippable;
+	const char* dispName;
+	const char* icon;
 };
 
 #define pgettext_noop(context, id) id
 
-static const char *inputDispName[inputCount] =
+static const int inputCount = 25;
+static const InputConfigStructure GUI_INPUT_CONFIG_LIST[inputCount] =
 {
-	pgettext_noop("button", "D-PAD UP"),
-	pgettext_noop("button", "D-PAD DOWN"),
-	pgettext_noop("button", "D-PAD LEFT"),
-	pgettext_noop("button", "D-PAD RIGHT"),
-	pgettext_noop("button", "START"),
-	pgettext_noop("button", "SELECT"),
-	pgettext_noop("button", "A"),
-	pgettext_noop("button", "B"),
-	pgettext_noop("button", "X"),
-	pgettext_noop("button", "Y"),
-	pgettext_noop("button", "LEFT SHOULDER"),
-	pgettext_noop("button", "RIGHT SHOULDER"),
-	pgettext_noop("button", "LEFT TRIGGER"),
-	pgettext_noop("button", "RIGHT TRIGGER"),
-	pgettext_noop("button", "LEFT THUMB"),
-	pgettext_noop("button", "RIGHT THUMB"),
-	pgettext_noop("button", "LEFT ANALOG UP"),
-	pgettext_noop("button", "LEFT ANALOG DOWN"),
-	pgettext_noop("button", "LEFT ANALOG LEFT"),
-	pgettext_noop("button", "LEFT ANALOG RIGHT"),
-	pgettext_noop("button", "RIGHT ANALOG UP"),
-	pgettext_noop("button", "RIGHT ANALOG DOWN"),
-	pgettext_noop("button", "RIGHT ANALOG LEFT"),
-	pgettext_noop("button", "RIGHT ANALOG RIGHT"),
-	pgettext_noop("button", "HOTKEY ENABLE")
-};
-static const char* inputIcon[inputCount] =
-{
-	":/help/dpad_up.svg",
-	":/help/dpad_down.svg",
-	":/help/dpad_left.svg",
-	":/help/dpad_right.svg",
-	":/help/button_start.svg",
-	":/help/button_select.svg",
-	":/help/button_a.svg",
-	":/help/button_b.svg",
-	":/help/button_x.svg",
-	":/help/button_y.svg",
-	":/help/button_l.svg",
-	":/help/button_r.svg",
-	":/help/button_l.svg",
-	":/help/button_r.svg",
-	":/help/analog_thumb.svg",
-	":/help/analog_thumb.svg",
-	":/help/analog_up.svg",
-	":/help/analog_down.svg",
-	":/help/analog_left.svg",
-	":/help/analog_right.svg",
-	":/help/analog_up.svg",
-	":/help/analog_down.svg",
-	":/help/analog_left.svg",
-	":/help/analog_right.svg",
-	":/help/button_hotkey.svg"
+	{ "Up",               false, pgettext_noop("button", "D-PAD UP"),           ":/help/dpad_up.svg" },
+	{ "Down",             false, pgettext_noop("button", "D-PAD DOWN"),         ":/help/dpad_down.svg" },
+	{ "Left",             false, pgettext_noop("button", "D-PAD LEFT"),         ":/help/dpad_left.svg" },
+	{ "Right",            false, pgettext_noop("button", "D-PAD RIGHT"),        ":/help/dpad_right.svg" },
+	{ "Start",            true,  pgettext_noop("button", "START"),              ":/help/button_start.svg" },
+	{ "Select",           true,  pgettext_noop("button", "SELECT"),             ":/help/button_select.svg" },
+	{ "A",                false, pgettext_noop("button", "BUTTON A / EAST"),    ":/help/buttons_east.svg" },		// FIXME symbol changed
+	{ "B",                true,  pgettext_noop("button", "BUTTON B / SOUTH"),   ":/help/buttons_south.svg" },		// FIXME
+	{ "X",                true,  pgettext_noop("button", "BUTTON X / NORTH"),   ":/help/buttons_north.svg" },		// FIXME
+	{ "Y",                true,  pgettext_noop("button", "BUTTON Y / WEST"),    ":/help/buttons_west.svg" },		// FIXME
+	{ "LeftShoulder",     true,  pgettext_noop("button", "LEFT SHOULDER"),      ":/help/button_l.svg" },
+	{ "RightShoulder",    true,  pgettext_noop("button", "RIGHT SHOULDER"),     ":/help/button_r.svg" },
+	{ "LeftTrigger",      true,  pgettext_noop("button", "LEFT TRIGGER"),       ":/help/button_lt.svg" },
+	{ "RightTrigger",     true,  pgettext_noop("button", "RIGHT TRIGGER"),      ":/help/button_rt.svg" },
+	{ "LeftThumb",        true,  pgettext_noop("button", "LEFT THUMB"),         ":/help/analog_thumb.svg" },
+	{ "RightThumb",       true,  pgettext_noop("button", "RIGHT THUMB"),        ":/help/analog_thumb.svg" },
+	{ "LeftAnalogUp",     true,  pgettext_noop("button", "LEFT ANALOG UP"),     ":/help/analog_up.svg" },
+	{ "LeftAnalogDown",   true,  pgettext_noop("button", "LEFT ANALOG DOWN"),   ":/help/analog_down.svg" },
+	{ "LeftAnalogLeft",   true,  pgettext_noop("button", "LEFT ANALOG LEFT"),   ":/help/analog_left.svg" },
+	{ "LeftAnalogRight",  true,  pgettext_noop("button", "LEFT ANALOG RIGHT"),  ":/help/analog_right.svg" },
+	{ "RightAnalogUp",    true,  pgettext_noop("button", "RIGHT ANALOG UP"),    ":/help/analog_up.svg" },
+	{ "RightAnalogDown",  true,  pgettext_noop("button", "RIGHT ANALOG DOWN"),  ":/help/analog_down.svg" },
+	{ "RightAnalogLeft",  true,  pgettext_noop("button", "RIGHT ANALOG LEFT"),  ":/help/analog_left.svg" },
+	{ "RightAnalogRight", true,  pgettext_noop("button", "RIGHT ANALOG RIGHT"), ":/help/analog_right.svg" },
+	{ "HotKeyEnable",     true,  pgettext_noop("button", "HOTKEY ENABLE"),      ":/help/button_hotkey.svg" }
 };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
@@ -169,7 +84,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	mSubtitle1 = std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(deviceName), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle1, Vector2i(0, 2), false, true);
 
-	mSubtitle2 = std::make_shared<TextComponent>(mWindow, _("HOLD ANY BUTTON TO SKIP"), Font::get(FONT_SIZE_SMALL), 0x99999900, ALIGN_CENTER);
+	mSubtitle2 = std::make_shared<TextComponent>(mWindow, _("HOLD ANY BUTTON TO SKIP"), Font::get(FONT_SIZE_SMALL), 0x999999FF, ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle2, Vector2i(0, 3), false, true);
 
 	// 4 is a spacer row
@@ -182,7 +97,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		
 		// icon
 		auto icon = std::make_shared<ImageComponent>(mWindow);
-		icon->setImage(inputIcon[i]);
+		icon->setImage(GUI_INPUT_CONFIG_LIST[i].icon);
 		icon->setColorShift(0x777777FF);
 		icon->setResize(0, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight() * 1.25f);
 		row.addElement(icon, false);
@@ -192,7 +107,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		spacer->setSize(16, 0);
 		row.addElement(spacer, false);
 
-		auto text = std::make_shared<TextComponent>(mWindow, boost::locale::pgettext("button", inputDispName[i]), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+		auto text = std::make_shared<TextComponent>(mWindow, boost::locale::pgettext("button", GUI_INPUT_CONFIG_LIST[i].dispName), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 		row.addElement(text, true);
 
 		auto mapping = std::make_shared<TextComponent>(mWindow, _("-NOT DEFINED-"), Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT), 0x999999FF, ALIGN_RIGHT);
@@ -255,7 +170,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 	// only show "HOLD TO SKIP" if this input is skippable
 	mList->setCursorChangedCallback([this](CursorState /*state*/) {
-		bool skippable = inputSkippable[mList->getCursorId()];
+		bool skippable = GUI_INPUT_CONFIG_LIST[mList->getCursorId()].skippable;
 		mSubtitle2->setOpacity(skippable * 255);
 	});
 
@@ -321,7 +236,7 @@ void GuiInputConfig::onSizeChanged()
 
 void GuiInputConfig::update(int deltaTime)
 {
-	if(mConfiguringRow && mHoldingInput && inputSkippable[mHeldInputId])
+	if(mConfiguringRow && mHoldingInput && GUI_INPUT_CONFIG_LIST[mHeldInputId].skippable)
 	{
 		int prevSec = mHeldTime / 1000;
 		mHeldTime += deltaTime;
@@ -399,7 +314,7 @@ bool GuiInputConfig::assign(Input input, int inputId)
 
 	// if this input is mapped to something other than "nothing" or the current row, error
 	// (if it's the same as what it was before, allow it)
-	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(inputName[inputId], input) && strcmp(inputName[inputId], "HotKeyEnable") != 0)
+	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(GUI_INPUT_CONFIG_LIST[inputId].name, input) && strcmp(GUI_INPUT_CONFIG_LIST[inputId].name, "HotKeyEnable") != 0)
 	{
 		error(mMappings.at(inputId), "Already mapped!");
 		return false;
@@ -408,14 +323,14 @@ bool GuiInputConfig::assign(Input input, int inputId)
 	setAssignedTo(mMappings.at(inputId), input);
 	
 	input.configured = true;
-	mTargetConfig->mapInput(inputName[inputId], input);
+	mTargetConfig->mapInput(GUI_INPUT_CONFIG_LIST[inputId].name, input);
 
-	LOG(LogInfo) << "  Mapping [" << input.string() << "] -> " << inputName[inputId];
+	LOG(LogInfo) << "  Mapping [" << input.string() << "] -> " << GUI_INPUT_CONFIG_LIST[inputId].name;
 
 	return true;
 }
 
 void GuiInputConfig::clearAssignment(int inputId)
 {
-	mTargetConfig->unmapInput(inputName[inputId]);
+	mTargetConfig->unmapInput(GUI_INPUT_CONFIG_LIST[inputId].name);
 }

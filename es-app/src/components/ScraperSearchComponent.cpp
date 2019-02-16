@@ -1,7 +1,7 @@
 #include "components/ScraperSearchComponent.h"
 
 #include "components/ComponentList.h"
-#include "components/DateTimeComponent.h"
+#include "components/DateTimeEditComponent.h"
 #include "components/ImageComponent.h"
 #include "components/RatingComponent.h"
 #include "components/ScrollableContainer.h"
@@ -44,7 +44,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	const unsigned int mdColor = 0x777777FF;
 	const unsigned int mdLblColor = 0x666666FF;
 	mMD_Rating = std::make_shared<RatingComponent>(mWindow);
-	mMD_ReleaseDate = std::make_shared<DateTimeComponent>(mWindow);
+	mMD_ReleaseDate = std::make_shared<DateTimeEditComponent>(mWindow);
 	mMD_ReleaseDate->setColor(mdColor);
 	mMD_Developer = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
 	mMD_Publisher = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
@@ -232,14 +232,23 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 	unsigned int color = 0x777777FF;
 	if(results.empty())
 	{
-		ComponentListRow row;
-		row.addElement(std::make_shared<TextComponent>(mWindow, _("NO GAMES FOUND - SKIP"), font, color), true);
+		// Check if the scraper used is still valid
+		if (!isValidConfiguredScraper())
+		{
+			mWindow->pushGui(new GuiMsgBox(mWindow, Utils::String::toUpper(_("Configured scraper is no longer available.\nPlease change the scraping source in the settings.")),
+				_("FINISH"), mSkipCallback));
+		}
+		else
+		{
+			ComponentListRow row;
+			row.addElement(std::make_shared<TextComponent>(mWindow, _("NO GAMES FOUND - SKIP"), font, color), true);
 
-		if(mSkipCallback)
-			row.makeAcceptInputHandler(mSkipCallback);
+			if(mSkipCallback)
+				row.makeAcceptInputHandler(mSkipCallback);
 
-		mResultList->addRow(row);
-		mGrid.resetCursor();
+			mResultList->addRow(row);
+			mGrid.resetCursor();
+		}
 	}else{
 		ComponentListRow row;
 		for(size_t i = 0; i < results.size(); i++)
