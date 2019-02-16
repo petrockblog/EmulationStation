@@ -17,7 +17,7 @@ msgid "ENTER GAME NAME"
 msgstr "NOME DO JOGO"
 
 msgid "SORTNAME"
-msgstr "NOME SORTIDO"
+msgstr "COMEÇAR COM LETRA"
 
 msgid "ENTER GAME SORT NAME"
 msgstr "DIGITAR NOME SORTIDO"
@@ -53,10 +53,10 @@ msgid "ENTER PATH TO THUMBNAIL"
 msgstr "CAMINHO DA MINIATURA"
 
 msgid "RATING"
-msgstr "AVALIAÇÃO"
+msgstr "CLASSIFICAÇÃO"
 
 msgid "ENTER RATING"
-msgstr "DIGITAR AVALIAÇÃO"
+msgstr "DIGITAR CLASSIFICAÇÃO"
 
 msgid "RELEASE DATE"
 msgstr "DATA DE LANÇAMENTO"
@@ -196,7 +196,7 @@ msgid ""
 "\n"
 "VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION."
 msgstr ""
-"NÃO ENCONTRAMOS NENHUM SISTEMA !\n"
+"NÃO ENCONTRAMOS NENHUM SISTEMA!\n"
 "VERIFIQUE SE OS CAMINHOS ESTÃO CORRIGIDOS NO ARQUIVO DE CONFIGURAÇÃO E SE O "
 "SEU DIRETÓRIO TEM PELO MENOS UM JOGO COM A EXTENSÃO CORRETA.\n"
 "\n"
@@ -218,10 +218,10 @@ msgid "FILENAME, DESCENDING"
 msgstr "NOME ↓"
 
 msgid "RATING, ASCENDING"
-msgstr "AVALIAÇÃO ↑"
+msgstr "CLASSIFICAÇÃO ↑"
 
 msgid "RATING, DESCENDING"
-msgstr "AVALIAÇÃO ↓"
+msgstr "CLASSIFICAÇÃO ↓"
 
 msgid "TIMES PLAYED, ASCENDING"
 msgstr "TEMPO JOGADO ↑"
@@ -275,7 +275,7 @@ msgid "CANCEL"
 msgstr "CANCELAR"
 
 msgid "RATING:"
-msgstr "AVALIAÇÃO:"
+msgstr "CLASSIFICAÇÃO:"
 
 msgid "RELEASED:"
 msgstr "LANÇAMENTO:"
@@ -295,10 +295,11 @@ msgstr "PLAYERS:"
 msgid ""
 "Configured scraper is no longer available.\n"
 "Please change the scraping source in the settings."
-msgstr ""
+msgstr "O scraper configurado não está mais disponível.\n"
+"Por favor, altere o tipo scraper nas configurações."
 
 msgid "FINISH"
-msgstr ""
+msgstr "FINALIZADO"
 
 msgid "NO GAMES FOUND - SKIP"
 msgstr "NENHUM JOGO ENCONTRADO - PULAR"
@@ -385,13 +386,13 @@ msgid "CLOSE"
 msgstr "FECHAR"
 
 msgid "SCREENSAVER AFTER"
-msgstr "PROTETOR DE TELA DEPOIS"
+msgstr "TEMPO DO PROTETOR"
 
 msgid "SCREENSAVER CONTROLS"
-msgstr "CONTROLE DE PROTETOR TELA"
+msgstr "CONTROLE DO PROTETOR"
 
 msgid "SCREENSAVER BEHAVIOR"
-msgstr "TIPO DE PROTETOR DE TELA"
+msgstr "TIPO DE PROTETOR"
 
 msgid "dim"
 msgstr "ILUMINADO"
@@ -423,7 +424,7 @@ msgstr ""
 "Vídeo\"."
 
 msgid "USE HARDWARE BACKLIGHT CONTROL"
-msgstr "USE O CONTROLE DE LUZ DE FUNDO DO HARDWARE"
+msgstr "CONTROLE DE LUZ DE FUNDO DO HARDWARE"
 
 msgid "VIDEO SCREENSAVER SETTINGS"
 msgstr "CONFIGURAR PROTETOR DE TELA VÍDEO"
@@ -462,10 +463,10 @@ msgid "SCRAPE FROM"
 msgstr "SCRAPE DE"
 
 msgid "SCRAPE RATINGS"
-msgstr "SCRAPE AVALIAÇÕES"
+msgstr "SCRAPE DAS CLASSIFICAÇÕES"
 
 msgid "SCRAPE NOW"
-msgstr "SCRAPE AGORA"
+msgstr "FAZER SCRAPE AGORA"
 
 msgid "SYSTEM VOLUME"
 msgstr "VOLUME DO SISTEMA"
@@ -498,7 +499,7 @@ msgid "Master"
 msgstr "Master"
 
 msgid "Digital"
-msgstr ""
+msgstr "Digital"
 
 msgid "Analogue"
 msgstr "Analógico"
@@ -583,7 +584,7 @@ msgid "grid"
 msgstr "GRADE"
 
 msgid "START ON SYSTEM"
-msgstr "IINICIAR NO SISTEMA"
+msgstr "INICIAR COM O SISTEMA"
 
 msgid "NONE"
 msgstr "NENHUM"
@@ -766,7 +767,7 @@ msgid "never"
 msgstr "NUNCA"
 
 msgid "SHOW GAME INFO ON SCREENSAVER"
-msgstr "MOSTRAR INFORMAÇÕES DO JOGO NA PROTEÇÃO DE TELA"
+msgstr "MOSTRAR INFORMAÇÕES DO JOGO"
 
 msgid "USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS"
 msgstr "USE BAIXA RESOLUÇÃO COMPATÍVEL PARA LEGENDA"
@@ -946,11 +947,11 @@ msgstr "D-PAD BAIXO"
 
 msgctxt "button"
 msgid "D-PAD LEFT"
-msgstr "D-PAD ESQUERDA"
+msgstr "D-PAD ESQUERDO"
 
 msgctxt "button"
 msgid "D-PAD RIGHT"
-msgstr "D-PAD DIREITA"
+msgstr "D-PAD DIREITO"
 
 msgctxt "button"
 msgid "START"
@@ -994,11 +995,11 @@ msgstr "R2"
 
 msgctxt "button"
 msgid "LEFT THUMB"
-msgstr "THUMB ESQUERDA"
+msgstr "THUMB ESQUERDO"
 
 msgctxt "button"
 msgid "RIGHT THUMB"
-msgstr "THUMB DIREITA"
+msgstr "THUMB DIREITO"
 
 msgctxt "button"
 msgid "LEFT ANALOG UP"
@@ -1010,11 +1011,11 @@ msgstr "ANALÓGICO ESQUERDO, BAIXO"
 
 msgctxt "button"
 msgid "LEFT ANALOG LEFT"
-msgstr "ANALÓGICO ESQUERDO, ESQUERDA"
+msgstr "ANALÓGICO ESQUERDO, ESQUERDO"
 
 msgctxt "button"
 msgid "LEFT ANALOG RIGHT"
-msgstr "ANALÓGICO ESQUERDO, DIREITA"
+msgstr "ANALÓGICO ESQUERDO, DIREITO"
 
 msgctxt "button"
 msgid "RIGHT ANALOG UP"
@@ -1026,11 +1027,11 @@ msgstr "ANALÓGICO DIREITO, BAIXO"
 
 msgctxt "button"
 msgid "RIGHT ANALOG LEFT"
-msgstr "ANALÓGICO DIREITO, ESQUERDA"
+msgstr "ANALÓGICO DIREITO, ESQUERDO"
 
 msgctxt "button"
 msgid "RIGHT ANALOG RIGHT"
-msgstr "ANALÓGICO DIREITO, DIREITA"
+msgstr "ANALÓGICO DIREITO, DIREITO"
 
 msgctxt "button"
 msgid "HOTKEY ENABLE"
