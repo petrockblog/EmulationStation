@@ -20,7 +20,7 @@ msgid "SORTNAME"
 msgstr "ORDEM ALFABÉTICA"
 
 msgid "ENTER GAME SORT NAME"
-msgstr "NOME DA ORDEM ALFABÉTICA"
+msgstr "DIGITAR NOME"
 
 msgid "DESCRIPTION"
 msgstr "DESCRIÇÃO"
