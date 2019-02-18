@@ -14,55 +14,55 @@ msgid "NAME"
 msgstr "NOM"
 
 msgid "ENTER GAME NAME"
-msgstr "INTRODUEIX EL NOM DEL JOC"
+msgstr "INTRODUÏU EL NOM DEL JOC"
 
 msgid "SORTNAME"
-msgstr "NOM DE CLASSIFICACIÓ"
+msgstr "NOM DE LA CLASSIFICACIÓ"
 
 msgid "ENTER GAME SORT NAME"
-msgstr "INTRODUEIX EL NOM DE LA CLASSIFICACIÓ DEL JOC"
+msgstr "INTRODUÏU EL NOM DE LA CLASSIFICACIÓ DEL JOC"
 
 msgid "DESCRIPTION"
 msgstr "DESCRIPCIÓ"
 
 msgid "ENTER DESCRIPTION"
-msgstr "INTRODUEIX LA DESCRIPCIÓ"
+msgstr "INTRODUÏU LA DESCRIPCIÓ"
 
 msgid "IMAGE"
 msgstr "IMATGE"
 
 msgid "ENTER PATH TO IMAGE"
-msgstr "INTRODUEIX LA RUTA DE LA IMATGE"
+msgstr "INTRODUÏU LA RUTA DE LA IMATGE"
 
 msgid "VIDEO"
 msgstr "VÍDEO"
 
 msgid "ENTER PATH TO VIDEO"
-msgstr "INTRODUEIX LA RUTA DEL VÍDEO"
+msgstr "INTRODUÏU LA RUTA DEL VÍDEO"
 
 msgid "MARQUEE"
 msgstr "MARQUESINA"
 
 msgid "ENTER PATH TO MARQUEE"
-msgstr "INTRODUEIX LA RUTA DE LA MARQUESINA"
+msgstr "INTRODUÏU LA RUTA DE LA MARQUESINA"
 
 msgid "THUMBNAIL"
 msgstr "MINIATURA"
 
 msgid "ENTER PATH TO THUMBNAIL"
-msgstr "INTRODUEIX LA RUTA DE LA MINIATURA"
+msgstr "INTRODUÏU LA RUTA DE LA MINIATURA"
 
 msgid "RATING"
 msgstr "PUNTUACIÓ"
 
 msgid "ENTER RATING"
-msgstr "INTRODUEIX LA PUNTUACIÓ"
+msgstr "INTRODUÏU LA PUNTUACIÓ"
 
 msgid "RELEASE DATE"
 msgstr "DATA DE PUBLICACIÓ"
 
 msgid "ENTER RELEASE DATE"
-msgstr "INTRODUEIX LA DATA DE PUBLICACIÓ"
+msgstr "INTRODUÏU LA DATA DE PUBLICACIÓ"
 
 msgid "unknown"
 msgstr "desconegut"
@@ -71,25 +71,25 @@ msgid "DEVELOPER"
 msgstr "DESENVOLUPADOR"
 
 msgid "ENTER GAME DEVELOPER"
-msgstr "INTRODUEIX EL DESENVOLUPADOR DEL JOC"
+msgstr "INTRODUÏU EL DESENVOLUPADOR DEL JOC"
 
 msgid "PUBLISHER"
 msgstr "EDITOR"
 
 msgid "ENTER GAME PUBLISHER"
-msgstr "INTRODUEIX L'EDITOR DEL JOC"
+msgstr "INTRODUÏU L'EDITOR DEL JOC"
 
 msgid "GENRE"
 msgstr "GÈNERE"
 
 msgid "ENTER GAME GENRE"
-msgstr "INTRODUEIX EL GÈNERE DEL JOC"
+msgstr "INTRODUÏU EL GÈNERE DEL JOC"
 
 msgid "PLAYERS"
 msgstr "JUGADORS"
 
 msgid "ENTER NUMBER OF PLAYERS"
-msgstr "INTRODUEIX EL NÚMERO DE JUGADORS"
+msgstr "INTRODUÏU EL NÚMERO DE JUGADORS"
 
 msgid "FAVORITE"
 msgstr "FAVORIT"
@@ -113,13 +113,13 @@ msgid "PLAY COUNT"
 msgstr "NÚMERO DE PARTIDES"
 
 msgid "ENTER NUMBER OF TIMES PLAYED"
-msgstr "INTRODUEIX EL NÚMERO DE VEGADES JUGAT"
+msgstr "INTRODUÏU EL NÚMERO DE VEGADES JUGAT"
 
 msgid "LAST PLAYED"
-msgstr "ÚLTIMS JUGATS"
+msgstr "ÚLTIMS JOCS JUGATS"
 
 msgid "ENTER LAST PLAYED DATE"
-msgstr "INTRODUEIX LA DATA DE L'ÚLTIMA PARTIDA"
+msgstr "INTRODUÏU LA DATA DE L'ÚLTIMA PARTIDA"
 
 msgid "collections"
 msgstr "col·leccions"
@@ -137,7 +137,7 @@ msgid "recent"
 msgstr "recent"
 
 msgid "LAST PLAYED, DESCENDING"
-msgstr "ÚLTIMS JUGATS ↓"
+msgstr "ÚLTIMS JOCS JUGATS ↓"
 
 msgid "favorites"
 msgstr "favorits"
@@ -203,7 +203,7 @@ msgstr ""
 "VISITA EMULATIONSTATION.ORG PER A MÉS INFORMACIÓ."
 
 msgid "QUIT"
-msgstr "SORTIR"
+msgstr "SURT"
 
 msgid "PUBLISHER / DEVELOPER"
 msgstr "EDITOR / DESENVOLUPADOR"
@@ -230,7 +230,7 @@ msgid "TIMES PLAYED, DESCENDING"
 msgstr "VEGADES JUGAT ↓"
 
 msgid "LAST PLAYED, ASCENDING"
-msgstr "ÚLTIMS JUGATS ↑"
+msgstr "ÚLTIMS JOCS JUGATS ↑"
 
 msgid "NUMBER PLAYERS, ASCENDING"
 msgstr "NÚMERO DE JUGADORS ↑"
@@ -378,7 +378,7 @@ msgid "OPTIONS"
 msgstr "OPCIONS"
 
 msgid "LAST PLAYED:"
-msgstr "ÚLTIM JUGAT:"
+msgstr "ÚLTIM JOC JUGAT:"
 
 msgid "TIMES PLAYED:"
 msgstr "VEGADES JUGAT:"
@@ -387,7 +387,7 @@ msgid "CLOSE"
 msgstr "TANCA"
 
 msgid "SCREENSAVER AFTER"
-msgstr "ESTALVI DE PANTALLA DESRPRÉS"
+msgstr "INICIA L'ESTALVI DE PANTALLA DESRPRÉS DE"
 
 msgid "SCREENSAVER CONTROLS"
 msgstr "CONTROLS DE L'ESTALVI DE PANTALLA"
@@ -415,27 +415,27 @@ msgid ""
 "\n"
 "More options in the \"UI Settings\" > \"Video Screensaver\" menu."
 msgstr ""
-"L'estalvi de pantalla \"Vídeos Aleatoris\" mostra els vídeos de la teva llista de jocs.\n"
+"L'opció \"Vídeo Aleatori\" de l'estalvi de pantalla mostra els vídeos de la llista de jocs.\n"
 "\n"
-"Si no tens vídeos, o si en diversos intents consecutius els jocs "
-"que selecciona no tenen vídeos, serà per defecte negre.\n"
+"Si no hi ha vídeos, o si en diversos intents consecutius els jocs "
+"seleccionats no tenen vídeos, l'estalvi de pantalla es quedarà en negre.\n"
 "\n"
-"Més opcions en el menú \"Configuració de la interfície de l'usuari\" > \"Estalvi de pantalla de vídeo\"."
+"Veieu més opcions en el menú \"Configuració de la interfície de l'usuari\" > \"Estalvi de pantalla (mode vídeo)\"."
 
 msgid "USE HARDWARE BACKLIGHT CONTROL"
-msgstr "UTILIZA EL CONTROL DE LA LLU DE FONS DEL MAQUINARI"
+msgstr "UTILIZA EL CONTROL DE LA LLUM DE FONS DEL MAQUINARI"
 
 msgid "VIDEO SCREENSAVER SETTINGS"
-msgstr "CONFIGURACIÓ DE L'ESTALVI DE PANTALLA DE VÍDEO"
+msgstr "CONFIGURACIÓ DE L'ESTALVI DE PANTALLA (MODE VÍDEO)"
 
 msgid "SLIDESHOW SCREENSAVER SETTINGS"
-msgstr "CONFIGURACIÓ DE L'ESTALVI DE PANTALLA DE PRESENTACIÓ"
+msgstr "CONFIGURACIÓ DE L'ESTALVI DE PANTALLA (MODE PRESENTACIÓ)"
 
 msgid "VIDEO SCREENSAVER"
-msgstr "ESTALVI DE PANTALLA DE VÍDEO"
+msgstr "ESTALVI DE PANTALLA (MODE VÍDEO)"
 
 msgid "SLIDESHOW SCREENSAVER"
-msgstr "ESTALVI DE PANTALLA DE PRESENTACIÓ"
+msgstr "ESTALVI DE PANTALLA (MODE PRESENTACIÓ)"
 
 msgid "MAIN MENU"
 msgstr "MENÚ PRINCIPAL"
@@ -524,13 +524,13 @@ msgid ""
 "\n"
 "Do you want to proceed?"
 msgstr ""
-"Estàs canviant la interfície d'usuari a un mode restringit:\n"
+"Esteu canviant la interfície d'usuari a un mode restringit:\n"
 "{1}\n"
 "S'ocultarà la majoria de les opcions del menú per evitar canvis al sistema.\n"
-"Per a desbloquejar i tornar a la interfície d'usuari completa, introdueix aquest codi:\n"
+"Per a desbloquejar i tornar a la interfície d'usuari completa, introduïu aquest codi:\n"
 "\"{2}\"\n"
 "\n"
-"Vols continuar?"
+"Voleu continuar?"
 
 msgid "YES"
 msgstr "SÍ"
@@ -560,7 +560,7 @@ msgid "instant"
 msgstr "instantània"
 
 msgid "THEME SET"
-msgstr "TRIA TEMA"
+msgstr "TRIA EL TEMA"
 
 msgid "GAMELIST VIEW STYLE"
 msgstr "ESTIL DE LA VISTA LLISTA DE JOCS"
@@ -590,7 +590,7 @@ msgid "ON-SCREEN HELP"
 msgstr "AJUDA EN PANTALLA"
 
 msgid "ENABLE FILTERS"
-msgstr "ACTIVA FILTRES"
+msgstr "ACTIVA ELS FILTRES"
 
 msgid "Mb"
 msgstr "Mb"
@@ -614,34 +614,34 @@ msgid "PARSE GAMESLISTS ONLY"
 msgstr "ANALITZA NOMÉS 'LLISTES DE JOCS'"
 
 msgid "SHOW HIDDEN FILES"
-msgstr "MOSTRA FITXERS OCULTS"
+msgstr "MOSTRA ELS FITXERS OCULTS"
 
 msgid "USE OMX PLAYER (HW ACCELERATED)"
-msgstr "FES SERVIR EL REPRODUCTOR OMX (ACCELERAT PER MAQUINARI)"
+msgstr "UTILITZA EL REPRODUCTOR OMX (ACCELERAT PER MAQUINARI)"
 
 msgid "SHOW FRAMERATE"
-msgstr "MOSTRA LA VELOCITAT DEL MARC"
+msgstr "MOSTRA LA VELOCITAT DEL MARC (FRAMERATE)"
 
 msgid "ARE YOU SURE YOU WANT TO CONFIGURE INPUT?"
-msgstr "ESTÀS SEGUR QUE VOLS CONFIGURAR L'ENTRADA DE DISPOSITIUS?"
+msgstr "ESTEU SEGUR QUE VOLEU CONFIGURAR L'ENTRADA DE DISPOSITIUS?"
 
 msgid "REALLY RESTART?"
-msgstr "REALMENT VOLS REINICIAR?"
+msgstr "REALMENT VOLEU REINICIAR EL SISTEMA?"
 
 msgid "RESTART EMULATIONSTATION"
-msgstr "REINICIA EMULATIONSTATION"
+msgstr "REINICIA L'EMULATIONSTATION"
 
 msgid "REALLY QUIT?"
-msgstr "REALMENT VOLS SORTIR?"
+msgstr "REALMENT VOLEU SORTIR?"
 
 msgid "QUIT EMULATIONSTATION"
-msgstr "SORTIR DE EMULATIONSTATION"
+msgstr "SURT DE L'EMULATIONSTATION"
 
 msgid "RESTART SYSTEM"
 msgstr "REINICIA EL SISTEMA"
 
 msgid "REALLY SHUTDOWN?"
-msgstr "REALMENT VOLS APAGAR EL SISTEMA?"
+msgstr "REALMENT VOLEU APAGAR EL SISTEMA?"
 
 msgid "SHUTDOWN SYSTEM"
 msgstr "APAGA EL SISTEMA"
@@ -665,13 +665,13 @@ msgid "SORT CUSTOM COLLECTIONS AND SYSTEMS"
 msgstr "ORDENA LES COL·LECCIONS PERSONALITZADES I ELS SISTEMES"
 
 msgid "FINISH EDITING '{1}' COLLECTION"
-msgstr "FINALITA L'EDICIÓ DE LA COL·LECCIÓ '{1}'"
+msgstr "FINALITZA L'EDICIÓ DE LA COL·LECCIÓ '{1}'"
 
 msgid "SELECT COLLECTIONS"
-msgstr "SELECIONA LES COL·LECCIONS"
+msgstr "SELECCIONEU LES COL·LECCIONS"
 
 msgid "AUTOMATIC GAME COLLECTIONS"
-msgstr "COL·LECCIONS AUTOOMÀTIQUES DE JOCS"
+msgstr "COL·LECCIONS AUTOMÀTIQUES DE JOCS"
 
 msgid "CUSTOM GAME COLLECTIONS"
 msgstr "COL·LECCIONS PERSONALITZADES DE JOCS"
@@ -689,16 +689,16 @@ msgid ""
 "THIS WILL DELETE THE ACTUAL GAME FILE(S)!\n"
 "ARE YOU SURE?"
 msgstr "S'ELIMINARAN EL(S) FITXER(S) REAL(S)!\n"
-"N'ESTÀS SEGUR?"
+"N'ESTEU SEGUR?"
 
 msgid "DELETE"
-msgstr "ELIMINAR"
+msgstr "ELIMINA"
 
 msgid "SAVE CHANGES?"
-msgstr "DESAR ELS CANVIS?"
+msgstr "VOLEU DESAR ELS CANVIS?"
 
 msgid "JUMP TO..."
-msgstr "ANAR A..."
+msgstr "VÉS A..."
 
 msgid "SORT GAMES BY"
 msgstr "ORDENA ELS JOCS PER"
@@ -707,13 +707,13 @@ msgid "FILTER GAMELIST"
 msgstr "FILTRA LA LLISTA DE JOCS"
 
 msgid "ADD/REMOVE GAMES TO THIS GAME COLLECTION"
-msgstr "AFEGIR/ELIMINAR JOCS A AQUESTA COL·LECCIÓ DE JOCS"
+msgstr "AFEGEIX/ELIMINA JOCS A AQUESTA COL·LECCIÓ DE JOCS"
 
 msgid "EDIT THIS GAME'S METADATA"
 msgstr "EDITA LES METADADES D'AQUEST JOC"
 
 msgid "SWAP IMAGE AFTER (SECS)"
-msgstr "INTERCANVIA LA IMATGE DESPRÉS DE (S)"
+msgstr "INTERCANVIA LA IMATGE DESPRÉS DE"
 
 msgid "STRETCH IMAGES"
 msgstr "ESTIRA LES IMATGES"
@@ -722,7 +722,7 @@ msgid "BACKGROUND AUDIO"
 msgstr "ÀUDIO DE FONS"
 
 msgid "USE CUSTOM IMAGES"
-msgstr "FES SERVIR IMATGES PERSONALITZADES"
+msgstr "UTILITZA IMATGES PERSONALITZADES"
 
 msgid "CUSTOM IMAGE DIR"
 msgstr "DIRECTORI DE LES IMATGES PERSONALITZADES"
@@ -737,7 +737,7 @@ msgid "FILTER GAMELIST BY"
 msgstr "FILTRA LA LLISTA DE JOCS PER"
 
 msgid "RESET ALL FILTERS"
-msgstr "RESTABLIR TOT ELS FILTRES"
+msgstr "RESTABLEIX TOT ELS FILTRES"
 
 msgid "FALSE"
 msgstr "FALSE"
@@ -746,10 +746,10 @@ msgid "TRUE"
 msgstr "VERITAT"
 
 msgid "SWAP VIDEO AFTER (SECS)"
-msgstr "INTERCANVIA EL VÍDEO DESPRÉS DE (S)"
+msgstr "INTERCANVIA EL VÍDEO DESPRÉS D"
 
 msgid "USE OMX PLAYER FOR SCREENSAVER"
-msgstr "FES SERVIR EL REPRODUCTOR OMX PER A L'ESTALVI DE PANTALLA"
+msgstr "UTILITZA EL REPRODUCTOR OMX PER A L'ESTALVI DE PANTALLA"
 
 msgid "SHOW GAME INFO"
 msgstr "MOSTRA LA INFORMACIÓ DEL JOC"
@@ -758,7 +758,7 @@ msgid "always"
 msgstr "sempre"
 
 msgid "start & end"
-msgstr "inici & fi"
+msgstr "inici i fi"
 
 msgid "never"
 msgstr "mai"
@@ -767,10 +767,10 @@ msgid "SHOW GAME INFO ON SCREENSAVER"
 msgstr "MOSTRA LA INFORMACIÓ DEL JOC A L'ESTALVI DE PANTALLA"
 
 msgid "USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS"
-msgstr "FES SERVIR BAIXA RESOLUCIÓ COMPATIBLE PER ALS SUBTÍTOLS"
+msgstr "UTILITZA BAIXA RESOLUCIÓ COMPATIBLE PER ALS SUBTÍTOLS"
 
 msgid "STRETCH VIDEO ON SCREENSAVER"
-msgstr "ESTIRAR EL VÍDEO A L'ESTALVI DE PANTALLA"
+msgstr "ESTIRA EL VÍDEO A L'ESTALVI DE PANTALLA"
 
 msgid ""
 "Using OMX Player and displaying Game Info may result in the video flickering "
@@ -823,7 +823,7 @@ msgid ""
 msgstr ""
 "AVÍS: ALGUNS DELS SISTEMES SELECCIONATS NO TENEN UNA PLATAFORMA CONFIGURADA. ELS RESULTATS "
 "PODEN SER ENCARA MÉS INEXACTES DEL QUE ÉS HABITUAL!\n"
-"VOLS CONTINUAR IGUALMENT?"
+"VOLEU CONTINUAR IGUALMENT?"
 
 msgid "NO GAMES FIT THAT CRITERIA."
 msgstr "NO HI HA JOCS QUE S'AJUSTIN A AQUEST CRITERI."
@@ -892,7 +892,7 @@ msgid "ACCEPT"
 msgstr "ACCEPTA"
 
 msgid "SELECT ALL"
-msgstr "SELECCIONA TOTS"
+msgstr "SELECCIONA TOT"
 
 msgid "SELECT NONE"
 msgstr "SELECCIONA CAP"
@@ -912,7 +912,7 @@ msgid "EDIT"
 msgstr "EDITA"
 
 msgid "WELCOME"
-msgstr "BENVINGUT"
+msgstr "US DONEM LA BENVINGUDA"
 
 msgid "{1} GAMEPAD DETECTED"
 msgid_plural "{1} GAMEPADS DETECTED"
@@ -923,13 +923,13 @@ msgid "NO GAMEPADS DETECTED"
 msgstr "NO S'HA DETECTAT CAP COMANDAMENT"
 
 msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "MANTINGUES PREMUT UN BOTÓ PER A CONFIGURAR-LO."
+msgstr "MANTINGUEU PREMUT UN BOTÓ PER A CONFIGURAR-LO."
 
 msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr "PREM F4 PER A SORTIR EN QUALSEVOL MOMENT."
+msgstr "PREMEU F4 PER A SORTIR EN QUALSEVOL MOMENT."
 
 msgid "PRESS ESC TO CANCEL."
-msgstr "PREM ESC PER A CANCEL·LAR."
+msgstr "PREMEU ESC PER A CANCEL·LAR."
 
 msgid "DISCARD CHANGES"
 msgstr "DESCARTA ELS CANVI"
@@ -956,7 +956,7 @@ msgstr "INICIAR"
 
 msgctxt "button"
 msgid "SELECT"
-msgstr "SELECIONAR"
+msgstr "SELECCIONAR"
 
 msgctxt "button"
 msgid "BUTTON A / EAST"
@@ -1032,7 +1032,7 @@ msgstr "ANALÒGIC DRETA DRETA"
 
 msgctxt "button"
 msgid "HOTKEY ENABLE"
-msgstr "ACTIVA HOTKEY"
+msgstr "ACTIVADOR DE LA HOTKEY"
 
 msgid "CONFIGURING"
 msgstr "CONFIGURANT"
@@ -1047,7 +1047,7 @@ msgid "GAMEPAD {1}"
 msgstr "COMANDAMENT {1}"
 
 msgid "HOLD ANY BUTTON TO SKIP"
-msgstr "MANTINGUES PREMUT QUALSEVOL BOTÓ PER A OMETRE"
+msgstr "MANTINGUEU PREMUT QUALSEVOL BOTÓ PER A OMETRE"
 
 msgid "-NOT DEFINED-"
 msgstr "-NO DEFINIT-"
@@ -1057,14 +1057,14 @@ msgid ""
 "WITH A CONTROLLER. DO YOU WANT TO USE THE SELECT BUTTON DEFAULT ? PLEASE "
 "ANSWER YES TO USE SELECT OR NO TO NOT SET A HOTKEY ENABLE BUTTON."
 msgstr ""
-"NO HAS TRIAT CAP BOTÓ PER A ACTIVAR LA 'HOTKEY'. ÉS NECESSARI PER A SORTIR DELS JOCS "
-"AMB UN COMANDAMENT. VOLS FER SERVIR EL BOTÓ 'SELECCIONAR' PER DEFECTE? "
-"CONTESTA 'SÍ' PER A FER SERVIR EL BOTO 'SELECCIONAR' O 'NO' PER A NO CONFIGURAR CAP BOTÓ PER A ACTIVAR LA 'HOTKEY'."
+"NO S'HA TRIAT CAP BOTÓ PER A ACTIVAR LA 'HOTKEY'. ÉS NECESSARI PER A SORTIR DELS JOCS "
+"AMB UN COMANDAMENT. VOLEU FER SERVIR EL BOTÓ 'SELECCIONAR' PER DEFECTE? "
+"CONTESTEU 'SÍ' PER A FER SERVIR EL BOTO 'SELECCIONAR' O 'NO' PER A NO CONFIGURAR CAP BOTÓ PER A ACTIVAR LA 'HOTKEY'."
 
 msgid "HOLD FOR {1}S TO SKIP"
 msgid_plural "HOLD FOR {1}S TO SKIP"
-msgstr[0] "MANTINGUES PREMUT DURANT {1}S PER A OMETRE"
-msgstr[1] "MANTINGUES PREMUT DURANT {1}S PER A OMETRE"
+msgstr[0] "MANTINGUEU PREMUT DURANT {1}S PER A OMETRE"
+msgstr[1] "MANTINGUEU PREMUT DURANT {1}S PER A OMETRE"
 
 msgid "PRESS ANYTHING"
 msgstr "PREM QUALSEVOL"
