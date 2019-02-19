@@ -14,55 +14,55 @@ msgid "NAME"
 msgstr "NOM"
 
 msgid "ENTER GAME NAME"
-msgstr "INTRODUÏU EL NOM DEL JOC"
+msgstr "NOM DEL JOC"
 
 msgid "SORTNAME"
 msgstr "NOM DE LA CLASSIFICACIÓ"
 
 msgid "ENTER GAME SORT NAME"
-msgstr "INTRODUÏU EL NOM DE LA CLASSIFICACIÓ DEL JOC"
+msgstr "NOM DE LA CLASSIFICACIÓ DEL JOC"
 
 msgid "DESCRIPTION"
 msgstr "DESCRIPCIÓ"
 
 msgid "ENTER DESCRIPTION"
-msgstr "INTRODUÏU LA DESCRIPCIÓ"
+msgstr "DESCRIPCIÓ"
 
 msgid "IMAGE"
 msgstr "IMATGE"
 
 msgid "ENTER PATH TO IMAGE"
-msgstr "INTRODUÏU LA RUTA DE LA IMATGE"
+msgstr "RUTA DE LA IMATGE"
 
 msgid "VIDEO"
 msgstr "VÍDEO"
 
 msgid "ENTER PATH TO VIDEO"
-msgstr "INTRODUÏU LA RUTA DEL VÍDEO"
+msgstr "RUTA DEL VÍDEO"
 
 msgid "MARQUEE"
 msgstr "MARQUESINA"
 
 msgid "ENTER PATH TO MARQUEE"
-msgstr "INTRODUÏU LA RUTA DE LA MARQUESINA"
+msgstr "RUTA DE LA MARQUESINA"
 
 msgid "THUMBNAIL"
 msgstr "MINIATURA"
 
 msgid "ENTER PATH TO THUMBNAIL"
-msgstr "INTRODUÏU LA RUTA DE LA MINIATURA"
+msgstr "RUTA DE LA MINIATURA"
 
 msgid "RATING"
 msgstr "PUNTUACIÓ"
 
 msgid "ENTER RATING"
-msgstr "INTRODUÏU LA PUNTUACIÓ"
+msgstr "PUNTUACIÓ"
 
 msgid "RELEASE DATE"
 msgstr "DATA DE PUBLICACIÓ"
 
 msgid "ENTER RELEASE DATE"
-msgstr "INTRODUÏU LA DATA DE PUBLICACIÓ"
+msgstr "DATA DE PUBLICACIÓ"
 
 msgid "unknown"
 msgstr "desconegut"
@@ -71,25 +71,25 @@ msgid "DEVELOPER"
 msgstr "DESENVOLUPADOR"
 
 msgid "ENTER GAME DEVELOPER"
-msgstr "INTRODUÏU EL DESENVOLUPADOR DEL JOC"
+msgstr "DESENVOLUPADOR DEL JOC"
 
 msgid "PUBLISHER"
 msgstr "EDITOR"
 
 msgid "ENTER GAME PUBLISHER"
-msgstr "INTRODUÏU L'EDITOR DEL JOC"
+msgstr "EDITOR DEL JOC"
 
 msgid "GENRE"
 msgstr "GÈNERE"
 
 msgid "ENTER GAME GENRE"
-msgstr "INTRODUÏU EL GÈNERE DEL JOC"
+msgstr "GÈNERE DEL JOC"
 
 msgid "PLAYERS"
 msgstr "JUGADORS"
 
 msgid "ENTER NUMBER OF PLAYERS"
-msgstr "INTRODUÏU EL NÚMERO DE JUGADORS"
+msgstr "NÚMERO DE JUGADORS"
 
 msgid "FAVORITE"
 msgstr "FAVORIT"
@@ -113,13 +113,13 @@ msgid "PLAY COUNT"
 msgstr "NÚMERO DE PARTIDES"
 
 msgid "ENTER NUMBER OF TIMES PLAYED"
-msgstr "INTRODUÏU EL NÚMERO DE VEGADES JUGAT"
+msgstr "NÚMERO DE VEGADES JUGAT"
 
 msgid "LAST PLAYED"
 msgstr "ÚLTIMS JOCS JUGATS"
 
 msgid "ENTER LAST PLAYED DATE"
-msgstr "INTRODUÏU LA DATA DE L'ÚLTIMA PARTIDA"
+msgstr "DATA DE L'ÚLTIMA PARTIDA"
 
 msgid "collections"
 msgstr "col·leccions"
@@ -137,7 +137,7 @@ msgid "recent"
 msgstr "recent"
 
 msgid "LAST PLAYED, DESCENDING"
-msgstr "ÚLTIMS JOCS JUGATS ↓"
+msgstr "ÚLTIMS JUGATS ↓"
 
 msgid "favorites"
 msgstr "favorits"
@@ -230,7 +230,7 @@ msgid "TIMES PLAYED, DESCENDING"
 msgstr "VEGADES JUGAT ↓"
 
 msgid "LAST PLAYED, ASCENDING"
-msgstr "ÚLTIMS JOCS JUGATS ↑"
+msgstr "ÚLTIMS JUGATS ↑"
 
 msgid "NUMBER PLAYERS, ASCENDING"
 msgstr "NÚMERO DE JUGADORS ↑"
@@ -272,7 +272,7 @@ msgid "ADD STAR"
 msgstr "AFEGIR ESTRELLA"
 
 msgid "CANCEL"
-msgstr "CANCEL·LAR"
+msgstr "CANCEL·LA"
 
 msgid "RATING:"
 msgstr "PUNTUACIÓ:"
@@ -599,7 +599,7 @@ msgid "VRAM LIMIT"
 msgstr "LÍMIT DE LA VRAM"
 
 msgid "POWER SAVER MODES"
-msgstr "MODES D'ESTALVI D'ENERGIA"
+msgstr "MODE D'ESTALVI D'ENERGIA"
 
 msgid "disabled"
 msgstr "desactivat"
