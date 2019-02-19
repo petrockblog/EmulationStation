@@ -28,6 +28,7 @@ sudo apt-get install libboost1.62-*
 ### Create a clone from GitHub
 
 ```
+cd /home/pi/
 git clone --recursive https://github.com/flyinghead/EmulationStation.git
 ```
 
@@ -57,3 +58,17 @@ cd EmulationStation
 sudo cp ./emulationstation /opt/retropie/supplementary/emulationstation/
 sudo cp -r locale /opt/retropie/supplementary/emulationstation/
 ```
+
+## Author
+
+[flyinghead](https://github.com/flyinghead).
+
+## Credits
+
+Thanks to:
+
+* [heloisa](https://github.com/heloisatech) - For the Portuguese (Brazilian) and Spanish translations.
+* [hiulit](https://github.com/hiulit) - For the Catalan translations.
+* [wakaya](https://retropie.org.uk/forum/user/wakaya) - For the Japanese translations.
+* Unknown - For the Italian translations.
+* Unknown - For the French translations.
