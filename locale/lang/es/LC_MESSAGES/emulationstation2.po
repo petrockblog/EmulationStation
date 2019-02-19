@@ -32,7 +32,7 @@ msgid "IMAGE"
 msgstr "IMAGEN"
 
 msgid "ENTER PATH TO IMAGE"
-msgstr "RUTA A IMAGEN"
+msgstr "RUTA DE LA IMAGEN"
 
 msgid "VIDEO"
 msgstr "VIDEO"
@@ -41,10 +41,10 @@ msgid "ENTER PATH TO VIDEO"
 msgstr "RUTA DEL VIDEO"
 
 msgid "MARQUEE"
-msgstr "MARQUEE"
+msgstr "MARQUESINA"
 
 msgid "ENTER PATH TO MARQUEE"
-msgstr "RUTA A MARQUEE"
+msgstr "RUTA DE LA MARQUESINA"
 
 msgid "THUMBNAIL"
 msgstr "MINIATURA"
@@ -95,31 +95,31 @@ msgid "FAVORITE"
 msgstr "FAVORITO"
 
 msgid "ENTER FAVORITE OFF/ON"
-msgstr "FAVORITO SI/NO"
+msgstr "FAVORITO SÍ/NO"
 
 msgid "HIDDEN"
 msgstr "OCULTO"
 
 msgid "ENTER HIDDEN OFF/ON"
-msgstr "OCULTO SI/NO"
+msgstr "OCULTO SÍ/NO"
 
 msgid "KIDGAME"
-msgstr "INFANTIL"
+msgstr "JUEGO INFANTIL"
 
 msgid "ENTER KIDGAME OFF/ON"
-msgstr "INFANTIL SI/NO"
+msgstr "JUEGO INFANTIL SÍ/NO"
 
 msgid "PLAY COUNT"
 msgstr "NÚMERO DE PARTIDAS"
 
 msgid "ENTER NUMBER OF TIMES PLAYED"
-msgstr "NUMERO DE VECES JUGADO"
+msgstr "NÚMERO DE VECES JUGADO"
 
 msgid "LAST PLAYED"
-msgstr "ÚLTIMA VEZ JUGADO"
+msgstr "ÚLTIMOS JUGADOS"
 
 msgid "ENTER LAST PLAYED DATE"
-msgstr "FECHA DE ÚLTIMA PARTIDA"
+msgstr "FECHA DE LA ÚLTIMA PARTIDA"
 
 msgid "collections"
 msgstr "colecciones"
@@ -152,10 +152,10 @@ msgid "New Collection"
 msgstr "Nueva colección"
 
 msgid "Editing the '{1}' Collection. Add/remove games with Y."
-msgstr "Editando '{1}' Colección. Agregar/quitar juegos con Y."
+msgstr "Editando la colección '{1}'. Agregar/quitar juegos con Y."
 
 msgid "Finished editing the '{1}' Collection."
-msgstr "Finalizar la edición '{1}' colección."
+msgstr "Finalizada la edición de la colección '{1}'."
 
 msgid "Added '{1}' to '{2}'"
 msgstr "Agregado '{1}' a '{2}'"
@@ -184,8 +184,8 @@ msgid ""
 "\n"
 "VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION."
 msgstr ""
-"PACECE SER QUE EL ARCHIVO DE CONFIGURACIÓN DE SISTEMAS NO FUE CONFIGURADO O ES INVÁLIDO. USTED NECESITARÁ "
-"HACER ESTO DE NUEVO, DESAFORTUNADAMENTE.\n"
+"PACECE SER QUE EL ARCHIVO DE CONFIGURACIÓN DE SISTEMAS NO FUE CONFIGURADO O ES INVÁLIDO. DESAFORTUNADAMENTE NECESITARÁ "
+"HACERLO DE NUEVO, .\n"
 "\n"
 "VISITE EMULATIONSTATION.ORG PARA MÁS INFORMACIÓN."
 
@@ -196,11 +196,11 @@ msgid ""
 "\n"
 "VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION."
 msgstr ""
-"NO ENCONTRAMOS NINGÚN SISTEMA!\n"
+"NO SE HA ENCONTRADO NINGÚN SISTEMA!\n"
 "VERIFIQUE SI LA RUTA ES CORRECTA EN EL ARCHIVO DE CONFIGURACIÓN DE SISTEMAS, Y "
 "SI EN SU DIRECTORIO DE JUEGOS TIENE AL MENOS UN JUEGO CON LA EXTENSIÓN CORRECTA.\n"
 "\n"
-"VISITE EMULATIONSTATION.ORG PARA MÁS INFORMACIONES."
+"VISITE EMULATIONSTATION.ORG PARA MÁS INFORMACIÓN."
 
 msgid "QUIT"
 msgstr "SALIR"
@@ -224,13 +224,13 @@ msgid "RATING, DESCENDING"
 msgstr "CLASIFICACIÓN ↓"
 
 msgid "TIMES PLAYED, ASCENDING"
-msgstr "TIEMPO JUGADO ↑"
+msgstr "VECES JUGADOS ↑"
 
 msgid "TIMES PLAYED, DESCENDING"
-msgstr "TIEMPO JUGADO ↓"
+msgstr "VECES JUGADOS ↓"
 
 msgid "LAST PLAYED, ASCENDING"
-msgstr "ÚLTIMO JUGADO ↑"
+msgstr "ÚLTIMOS JUGADOS ↑"
 
 msgid "NUMBER PLAYERS, ASCENDING"
 msgstr "NÚMERO DE JUGADORES ↑"
@@ -297,10 +297,10 @@ msgid ""
 "Please change the scraping source in the settings."
 msgstr ""
 "El scraper configurado ya no está disponible.\n"
-"Por favor, cambie la fuente de scraper en la configuración."
+"Por favor, cambie la fuente del scraper en la configuración."
 
 msgid "FINISH"
-msgstr "TERMINADO"
+msgstr "FINALIZAR"
 
 msgid "NO GAMES FOUND - SKIP"
 msgstr "NINGÚN JUEGO ENCONTRADO - SALTAR"
@@ -351,7 +351,7 @@ msgid "RANDOM"
 msgstr "ALEATORIO"
 
 msgid "LAUNCH SCREENSAVER"
-msgstr "LANZAR SALVAPANTALLAS"
+msgstr "INICIAR SALVAPANTALLAS"
 
 msgid "Full"
 msgstr "COMPLETO"
@@ -369,7 +369,7 @@ msgid "SYSTEM"
 msgstr "SISTEMA"
 
 msgid "LAUNCH"
-msgstr "COMENZAR"
+msgstr "INICIAR"
 
 msgid "BACK"
 msgstr "VOLVER"
@@ -381,7 +381,7 @@ msgid "LAST PLAYED:"
 msgstr "ÚLTIMO JUGADO:"
 
 msgid "TIMES PLAYED:"
-msgstr "TIEMPO JUGADO:"
+msgstr "VECES JUGADO:"
 
 msgid "CLOSE"
 msgstr "CERRAR"
@@ -390,10 +390,10 @@ msgid "SCREENSAVER AFTER"
 msgstr "SALVAPANTALLAS TRAS"
 
 msgid "SCREENSAVER CONTROLS"
-msgstr "CONTROL DE SALVAPANTALLA"
+msgstr "CONTROL DEL SALVAPANTALLAS"
 
 msgid "SCREENSAVER BEHAVIOR"
-msgstr "TIPO DE SALVAPANTALLA"
+msgstr "COMPORTAMIENTO DEL SALVAPANTALLAS"
 
 msgid "dim"
 msgstr "ILUMINADO"
@@ -402,7 +402,7 @@ msgid "black"
 msgstr "NEGRO"
 
 msgid "random video"
-msgstr "VÍDEO ALEATÓRIO"
+msgstr "VÍDEO ALEATORIO"
 
 msgid "slideshow"
 msgstr "PRESENTACIÓN"
@@ -422,13 +422,13 @@ msgstr ""
 "seleccionados no tienen vídeo, el valor predeterminado será negro.\n"
 "\n"
 "Más opciones en el menú \"Interfaz del usuario\"> \"Salvapantallas de "
-"vídeo\" menú."
+"vídeo\"."
 
 msgid "USE HARDWARE BACKLIGHT CONTROL"
-msgstr "USE EL CONTROL DE LUZ DE FONDO DEL HARDWARE"
+msgstr "USAR EL CONTROL DE LUZ DE FONDO DEL HARDWARE"
 
 msgid "VIDEO SCREENSAVER SETTINGS"
-msgstr "VIDEO SALVAPANTALLAS OPCIONES"
+msgstr "VÍDEO SALVAPANTALLAS OPCIONES"
 
 msgid "SLIDESHOW SCREENSAVER SETTINGS"
 msgstr "PRESENTACIÓN SALVAPANTALLAS OPCIONES"
@@ -476,13 +476,13 @@ msgid "AUDIO CARD"
 msgstr "TARJETA DE AUDIO"
 
 msgid "local"
-msgstr "LOCAL"
+msgstr "local"
 
 msgid "hdmi"
-msgstr "HDMI"
+msgstr "hdmi"
 
 msgid "both"
-msgstr "AMBOS"
+msgstr "ambos"
 
 msgid "default"
 msgstr "por defecto"
@@ -515,7 +515,7 @@ msgid "OMX PLAYER AUDIO DEVICE"
 msgstr "OMX PLAYER DISPOSITIVO DE AUDIO"
 
 msgid "UI MODE"
-msgstr "MODO DE INTERFAZ"
+msgstr "MODO DE INTERFAZ DE USUARIO"
 
 msgid ""
 "You are changing the UI to a restricted mode:\n"
@@ -526,7 +526,7 @@ msgid ""
 "\n"
 "Do you want to proceed?"
 msgstr ""
-"Usted está cambiando la interfaz del usuario a modo restringido:\n"
+"Está cambiando la interfaz del usuario a un modo restringido:\n"
 "{1}\n"
 "Esto ocultará la mayoría de las opciones del menú para prevenir cambios en el "
 "sistema.\n"
@@ -537,13 +537,13 @@ msgstr ""
 "¿Desea continuar?"
 
 msgid "YES"
-msgstr "SI"
+msgstr "SÍ"
 
 msgid "NO"
 msgstr "NO"
 
 msgid "SCREENSAVER SETTINGS"
-msgstr "CONFIGURAR SALVAPANTALLAS"
+msgstr "CONFIGURAR EL SALVAPANTALLAS"
 
 msgid "QUICK SYSTEM SELECT"
 msgstr "SELECCIÓN RÁPIDA DEL SISTEMA"
@@ -561,7 +561,7 @@ msgid "slide"
 msgstr "DESLIZAR"
 
 msgid "instant"
-msgstr "INSTANTANEA"
+msgstr "INSTANTÁNEA"
 
 msgid "THEME SET"
 msgstr "ELEGIR TEMA"
@@ -570,19 +570,19 @@ msgid "GAMELIST VIEW STYLE"
 msgstr "VISUALIZAR ESTILO LISTA"
 
 msgid "automatic"
-msgstr "AUTOMÁTICO"
+msgstr "automático"
 
 msgid "basic"
-msgstr "BÁSICO"
+msgstr "básico"
 
 msgid "detailed"
-msgstr "DETALLADO"
+msgstr "detallado"
 
 msgid "video"
-msgstr "VÍDEO"
+msgstr "vídeo"
 
 msgid "grid"
-msgstr "REJILLA"
+msgstr "rejilla"
 
 msgid "START ON SYSTEM"
 msgstr "INICIAR EN EL SISTEMA"
@@ -600,22 +600,22 @@ msgid "Mb"
 msgstr "Mb"
 
 msgid "VRAM LIMIT"
-msgstr "LÍMITE VRAM"
+msgstr "LÍMITE DE LA VRAM"
 
 msgid "POWER SAVER MODES"
 msgstr "MODO DE ENERGÍA"
 
 msgid "disabled"
-msgstr "DESACTIVADO"
+msgstr "deshabilitado"
 
 msgid "enhanced"
-msgstr "MEJORADO"
+msgstr "mejorado"
 
 msgid "SAVE METADATA ON EXIT"
 msgstr "SALVAR METADATOS AL SALIR"
 
 msgid "PARSE GAMESLISTS ONLY"
-msgstr "ANALIZAR LISTA SOLAMENTE"
+msgstr "ANALIZAR LAS LISTAS DE JUEGOS SOLAMENTE"
 
 msgid "SHOW HIDDEN FILES"
 msgstr "MOSTRAR ARCHIVOS OCULTOS"
@@ -627,28 +627,28 @@ msgid "SHOW FRAMERATE"
 msgstr "MOSTRAR FRAMERATE"
 
 msgid "ARE YOU SURE YOU WANT TO CONFIGURE INPUT?"
-msgstr "¿ESTAS SEGURO DE QUE QUIERES CONFIGURAR LAS ENTRADAS (MAPEAR)?"
+msgstr "¿ESTÁ SEGURO DE QUE QUIERE CONFIGURAR LAS ENTRADAS (MAPEAR)?"
 
 msgid "REALLY RESTART?"
-msgstr "REALMENTE REINICIAR?"
+msgstr "¿REALMENTE QUIERE REINICIAR?"
 
 msgid "RESTART EMULATIONSTATION"
 msgstr "REINICIAR EMULATIONSTATION"
 
 msgid "REALLY QUIT?"
-msgstr "SALIR?"
+msgstr "¿REALMENTE QUIERE SALIR?"
 
 msgid "QUIT EMULATIONSTATION"
-msgstr "SALIR DEL EMULATIONSTATION"
+msgstr "SALIR DE EMULATIONSTATION"
 
 msgid "RESTART SYSTEM"
-msgstr "REINICIAR SISTEMA"
+msgstr "REINICIAR EL SISTEMA"
 
 msgid "REALLY SHUTDOWN?"
-msgstr "REALMENTE APAGAR?"
+msgstr "¿REALMENTE QUIERE APAGAR EL SISTEMA?"
 
 msgid "SHUTDOWN SYSTEM"
-msgstr "APAGAR SISTEMA"
+msgstr "APAGAR EL SISTEMA"
 
 msgid "CREATE NEW CUSTOM COLLECTION FROM THEME"
 msgstr "CREAR NUEVA COLECCIÓN DESDE EL TEMA"
@@ -660,25 +660,25 @@ msgid "CREATE NEW CUSTOM COLLECTION"
 msgstr "CREAR NUEVA COLECCIÓN PERSONALIZADA"
 
 msgid "New Collection Name"
-msgstr "Nombre de la colección"
+msgstr "Nombre de la nueva colección"
 
 msgid "GROUP UNTHEMED CUSTOM COLLECTIONS"
-msgstr "GRUPO DE COLECCIONES PERSONALIZADAS SIN TEMA"
+msgstr "AGRUPAR LAS COLECCIONES PERSONALIZADAS SIN TEMA"
 
 msgid "SORT CUSTOM COLLECTIONS AND SYSTEMS"
-msgstr "ORDENAR COLECCIONES PERSONALIZADAS Y SISTEMAS"
+msgstr "ORDENAR LAS COLECCIONES PERSONALIZADAS Y SISTEMAS"
 
 msgid "FINISH EDITING '{1}' COLLECTION"
-msgstr "FINALIZAR EDICIÓN '{1}' COLECCIÓN"
+msgstr "FINALIZAR LA EDICIÓN DE LA COLECCIÓN '{1}'"
 
 msgid "SELECT COLLECTIONS"
 msgstr "SELECCIONAR COLECCIONES"
 
 msgid "AUTOMATIC GAME COLLECTIONS"
-msgstr "COLECCIÓN AUTOMÁTICA DE JUEGOS"
+msgstr "COLECCIONES AUTOMÁTICAS DE JUEGOS"
 
 msgid "CUSTOM GAME COLLECTIONS"
-msgstr "COLECCIÓN PERSONALIZADA DE JUEGOS"
+msgstr "COLECCIONES PERSONALIZADAS DE JUEGOS"
 
 msgid "EDIT METADATA"
 msgstr "EDITAR METADATOS"
@@ -700,10 +700,10 @@ msgid "DELETE"
 msgstr "BORRAR"
 
 msgid "SAVE CHANGES?"
-msgstr "GUARDAR CAMBIOS?"
+msgstr "¿GUARDAR CAMBIOS?"
 
 msgid "JUMP TO..."
-msgstr "IR A LETRA..."
+msgstr "IR A..."
 
 msgid "SORT GAMES BY"
 msgstr "ORDENAR JUEGOS POR"
@@ -712,34 +712,34 @@ msgid "FILTER GAMELIST"
 msgstr "FILTRAR POR LISTA DE JUEGOS"
 
 msgid "ADD/REMOVE GAMES TO THIS GAME COLLECTION"
-msgstr "AÑADIR / QUITAR JUEGOS DE ESTA COLECCIÓN"
+msgstr "AÑADIR/QUITAR JUEGOS A ESTA COLECCIÓN"
 
 msgid "EDIT THIS GAME'S METADATA"
-msgstr "EDITAR METADATOS DEL JUEGO"
+msgstr "EDITAR LOS METADATOS DE ESTE JUEGO"
 
 msgid "SWAP IMAGE AFTER (SECS)"
-msgstr "CAMBIAR IMAGEN DESPUÉS (S)"
+msgstr "CAMBIAR IMAGEN DESPUÉS DE"
 
 msgid "STRETCH IMAGES"
-msgstr "AMPLIAR IMÁGENES"
+msgstr "ESTIRAR LAS IMÁGENES"
 
 msgid "BACKGROUND AUDIO"
 msgstr "AUDIO DE FONDO"
 
 msgid "USE CUSTOM IMAGES"
-msgstr "USAR IMÁGENES PERSONALIZADOS"
+msgstr "USAR IMÁGENES PERSONALIZADAS"
 
 msgid "CUSTOM IMAGE DIR"
-msgstr "DIRECTORIO DE IMÁGENES PERSONALIZADAS"
+msgstr "DIRECTORIO DE LAS IMÁGENES PERSONALIZADAS"
 
 msgid "CUSTOM IMAGE DIR RECURSIVE"
-msgstr "DIRECTORIO RECURSIVO DE IMÁGENES"
+msgstr "DIRECTORIO RECURSIVO DE LAS IMÁGENES"
 
 msgid "CUSTOM IMAGE FILTER"
-msgstr "FILTRO DE IMÁGENES PERSONALIZADAS"
+msgstr "FILTRO DE LAS IMÁGENES PERSONALIZADAS"
 
 msgid "FILTER GAMELIST BY"
-msgstr "FILTRAR LISTA DE JUEGO POR"
+msgstr "FILTRAR LA LISTA DE JUEGO POR"
 
 msgid "RESET ALL FILTERS"
 msgstr "RESTABLECER TODOS LOS FILTROS"
@@ -751,31 +751,31 @@ msgid "TRUE"
 msgstr "VERDADERO"
 
 msgid "SWAP VIDEO AFTER (SECS)"
-msgstr "CAMBIAR VÍDEO DESPUÉS (S)"
+msgstr "CAMBIAR VÍDEO DESPUÉS DE"
 
 msgid "USE OMX PLAYER FOR SCREENSAVER"
-msgstr "UTILIZA OMX PLAYER PARA EL SALVAPANTALLA"
+msgstr "UTILIZA OMX PLAYER PARA EL SALVAPANTALLAS"
 
 msgid "SHOW GAME INFO"
 msgstr "MOSTRAR INFORMACIÓN DEL JUEGO"
 
 msgid "always"
-msgstr "SIEMPRE"
+msgstr "siempre"
 
 msgid "start & end"
-msgstr "COMIENZO Y FINAL"
+msgstr "inicio y final"
 
 msgid "never"
-msgstr "NUNCA"
+msgstr "nunca"
 
 msgid "SHOW GAME INFO ON SCREENSAVER"
-msgstr "MOSTRAR INFORMACIÓN DEL JUEGO EN SALVAPANTALLAS"
+msgstr "MOSTRAR INFORMACIÓN DEL JUEGO EN EL SALVAPANTALLAS"
 
 msgid "USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS"
-msgstr "USAR BAJA RESOLUCIÓN COMPATIBLE PARA LEYENDA"
+msgstr "USAR BAJA RESOLUCIÓN COMPATIBLE PARA LOS SUBTÍTULOS"
 
 msgid "STRETCH VIDEO ON SCREENSAVER"
-msgstr "AMPLIAR VÍDEO EN LA PROTECCIÓN DE PANTALLA"
+msgstr "ESTIRAR EL VÍDEO EN EL SALVAPANTALLAS"
 
 msgid ""
 "Using OMX Player and displaying Game Info may result in the video flickering "
@@ -795,16 +795,16 @@ msgstr ""
 "- Deshabilitar el uso de OMX Player para salvapantallas."
 
 msgid "GOT IT!"
-msgstr "OK!"
+msgstr "¡ENTENDIDO!"
 
 msgid "SCRAPE THESE GAMES"
 msgstr "SCRAPEAR ESTOS JUEGOS"
 
 msgid "All Games"
-msgstr "Todos los Juegos"
+msgstr "Todos los juegos"
 
 msgid "Only missing image"
-msgstr "Sólo imágenes faltantes"
+msgstr "Sólo las imágenes que faltan"
 
 msgid "FILTER"
 msgstr "FILTRO"
@@ -816,10 +816,10 @@ msgid "SYSTEMS"
 msgstr "SISTEMAS"
 
 msgid "USER DECIDES ON CONFLICTS"
-msgstr "EL USUARIO DECIDE EN CONFLICTOS"
+msgstr "EL USUARIO DECIDE EN LOS CONFLICTOS"
 
 msgid "START"
-msgstr "COMENZAR"
+msgstr "INICIAR"
 
 msgid ""
 "WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
@@ -828,7 +828,7 @@ msgid ""
 msgstr ""
 "ADVERTENCIA: ALGUNOS DE SUS SISTEMAS SELECCIONADOS NO TIENEN UNA "
 "PLATAFORMA SELECCIONADA. ¡LOS RESULTADOS PUEDEN SER IMPRECISOS!\n"
-"CONTINUAR DE TODOS MODOS?"
+"¿CONTINUAR DE TODOS MODOS?"
 
 msgid "NO GAMES FIT THAT CRITERIA."
 msgstr "NINGÚN JUEGO CORRESPONDE AL CRITERIO."
@@ -840,13 +840,13 @@ msgid "SCRAPING IN PROGRESS"
 msgstr "SCRAPING EN PROGRESO"
 
 msgid "subtitle text"
-msgstr "leyenda texto"
+msgstr "texto del subtítulo"
 
 msgid "STOP"
 msgstr "DETENER"
 
 msgid "STOP (PROGRESS SAVED)"
-msgstr "DETENER (PROGRESO SALVO)"
+msgstr "DETENER (PROGRESO GUARDADO)"
 
 msgid "GAME {1} OF {2}"
 msgstr "JUEGO {1} DE {2}"
@@ -856,8 +856,8 @@ msgstr "NINGÚN JUEGO SCRAPED."
 
 msgid "{1} GAME SUCCESSFULLY SCRAPED!"
 msgid_plural "{1} GAMES SUCCESSFULLY SCRAPED!"
-msgstr[0] "{1} JUEGO SCRAPEADO CON ÉXITO!"
-msgstr[1] "{1} ¡JUEGOS SCRAPEADOS CON ÉXITO!"
+msgstr[0] "¡{1} JUEGO SCRAPEADO CON ÉXITO!"
+msgstr[1] "¡{1} JUEGOS SCRAPEADOS CON ÉXITO!"
 
 msgid "{1} GAME SKIPPED."
 msgid_plural "{1} GAMES SKIPPED."
@@ -872,23 +872,23 @@ msgstr "CAMBIAR"
 
 msgid "{1} day ago"
 msgid_plural "{1} days ago"
-msgstr[0] "{1} día"
-msgstr[1] "{1} días"
+msgstr[0] "hace {1} día"
+msgstr[1] "hace {1} días"
 
 msgid "{1} hour ago"
 msgid_plural "{1} hours ago"
-msgstr[0] "{1} hora"
-msgstr[1] "{1} horas"
+msgstr[0] "hace {1} hora"
+msgstr[1] "hace {1} horas"
 
 msgid "{1} minute ago"
 msgid_plural "{1} minutes ago"
-msgstr[0] "{1} minuto"
-msgstr[1] "{1} minutos"
+msgstr[0] "hace {1} minuto"
+msgstr[1] "hace {1} minutos"
 
 msgid "{1} second ago"
 msgid_plural "{1} seconds ago"
-msgstr[0] "{1} segundo"
-msgstr[1] "{1} segundos"
+msgstr[0] "hace {1} segundo"
+msgstr[1] "hace {1} segundos"
 
 msgid "WORKING..."
 msgstr "TRABAJANDO..."
@@ -900,7 +900,7 @@ msgid "SELECT ALL"
 msgstr "SELECCIONAR TODOS"
 
 msgid "SELECT NONE"
-msgstr "NINGÚN SELECCIONADO"
+msgstr "SELECCIONAR NINGUNO"
 
 msgid "{1} SELECTED"
 msgid_plural "{1} SELECTED"
@@ -908,10 +908,10 @@ msgstr[0] "{1} SELECCIONADO"
 msgstr[1] "{1} SELECCIONADOS"
 
 msgid "MOVE CURSOR"
-msgstr "CURSOR DE MOVIMIENTO"
+msgstr "MOVER CURSOR"
 
 msgid "STOP EDITING"
-msgstr "PARAR EDICIÓN"
+msgstr "DETENER EDICIÓN"
 
 msgid "EDIT"
 msgstr "EDITAR"
@@ -928,7 +928,7 @@ msgid "NO GAMEPADS DETECTED"
 msgstr "NINGÚN CONTROL DETECTADO"
 
 msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "MANTENGA PRESIONADO UN BOTÓN PARA CONFIGURAR."
+msgstr "MANTENGA PRESIONADO UN BOTÓN PARA CONFIGURARLO."
 
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "PRESIONE F4 PARA SALIR."
@@ -957,7 +957,7 @@ msgstr "CRUCETA DERECHA"
 
 msgctxt "button"
 msgid "START"
-msgstr "COMENZAR"
+msgstr "INICIAR"
 
 msgctxt "button"
 msgid "SELECT"
@@ -965,19 +965,19 @@ msgstr "SELECCIONAR"
 
 msgctxt "button"
 msgid "BUTTON A / EAST"
-msgstr "BOTON A / ESTE"
+msgstr "BOTÓN A / ESTE"
 
 msgctxt "button"
 msgid "BUTTON B / SOUTH"
-msgstr "BOTON B / SUR"
+msgstr "BOTÓN B / SUR"
 
 msgctxt "button"
 msgid "BUTTON X / NORTH"
-msgstr "BOTON X / NORTE"
+msgstr "BOTÓN X / NORTE"
 
 msgctxt "button"
 msgid "BUTTON Y / WEST"
-msgstr "BOTON Y / OESTE"
+msgstr "BOTÓN Y / OESTE"
 
 msgctxt "button"
 msgid "LEFT SHOULDER"
@@ -1062,15 +1062,15 @@ msgid ""
 "WITH A CONTROLLER. DO YOU WANT TO USE THE SELECT BUTTON DEFAULT ? PLEASE "
 "ANSWER YES TO USE SELECT OR NO TO NOT SET A HOTKEY ENABLE BUTTON."
 msgstr ""
-"USTED NO HA ELEGIDO UN BOTÓN DE ACCESO DIRECTO (HOTKEY). ESO ES NECESARIO PARA "
+"NO SE HA ELEGIDO UN BOTÓN DE ACCESO DIRECTO (HOTKEY). ES NECESARIO PARA "
 "SALIR DE LOS JUEGOS CON UN CONTROL. USTED QUIERE USAR EL ESTÁNDAR DE "
-"SELECCIÓN DEL BOTÓN? POR FAVOR, RESPONDA SI PARA USAR SELECCIONAR O NO PARA "
+"SELECCIÓN DEL BOTÓN? POR FAVOR, RESPONDA SÍ PARA USAR SELECCIONAR O NO PARA "
 "DEFINIR UN BOTÓN DE ACTIVACIÓN DE HOTKEY."
 
 msgid "HOLD FOR {1}S TO SKIP"
 msgid_plural "HOLD FOR {1}S TO SKIP"
-msgstr[0] "PRESIONE DURANTE {1} S PARA SALTAR"
-msgstr[1] "PRESSIONE DURANTE {1}S PARA SALTAR"
+msgstr[0] "PRESIONE DURANTE {1}S PARA SALTAR"
+msgstr[1] "PRESIONE DURANTE {1}S PARA SALTAR"
 
 msgid "PRESS ANYTHING"
 msgstr "PRESIONAR CUALQUIERA"
