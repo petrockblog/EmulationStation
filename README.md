@@ -12,3 +12,48 @@ Inspired by similar work on the Recalbox fork.
 * Japanese
 * Portuguese (Bralizian)
 * Spanish
+
+## How to use the localized EmulationStation
+
+### Resolve dependencies of libraries
+
+```bash
+sudo apt-get install -y libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev cmake libsdl2-dev
+```
+
+```bash
+sudo apt-get install libboost1.62-*
+```
+
+### Create a clone from GitHub
+
+```
+git clone --recursive https://github.com/flyinghead/EmulationStation.git
+```
+
+### Compile EmulationStation
+
+```
+cd EmulationStation
+mkdir build
+cd build
+cmake ..
+make
+```
+
+### Run EmulationStation
+
+> Be aware that your system must be set to the same locale that you want EmulationStation to run on.
+
+```
+cd EmulationStation
+LANG=[your-locale].UTF8 ./emulationstation
+```
+
+### Install EmulationStation
+
+```
+cd EmulationStation
+sudo cp ./emulationstation /opt/retropie/supplementary/emulationstation/
+sudo cp -r locale /opt/retropie/supplementary/emulationstation/
+```
