@@ -7,6 +7,7 @@
 #include "utils/FileSystemUtil.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
+#include "views/UIModeController.h"
 #include "FileData.h"
 #include "FileFilterIndex.h"
 #include "Log.h"
@@ -279,8 +280,18 @@ unsigned long SystemScreenSaver::countGameListNodes(const char *nodeName)
 					continue;
 				for(pugi::xml_node fileNode = root.child("game"); fileNode; fileNode = fileNode.next_sibling("game"))
 				{
-					pugi::xml_node node = fileNode.child(nodeName);
-					if (node)
+					pugi::xml_node node = fileNode.child(nodeName);	
+					
+					bool isHidden = node.child("hidden").text().as_bool();
+					bool isKidGame = node.child("kidgame").text().as_bool();
+
+					// Take into account Kid/Kiosk mode when considering this game entry
+					if (!isKidGame && UIModeController::getInstance()->isUIModeKid())
+						continue;
+					if (isHidden && UIModeController::getInstance()->isUIModeKiosk())
+						continue;
+
+					if (node && !node.text().empty())
 						++nodeCount;
 				}
 			}
@@ -332,7 +343,17 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 			for(pugi::xml_node fileNode = root.child("game"); fileNode; fileNode = fileNode.next_sibling("game"))
 			{
 				pugi::xml_node node = fileNode.child(nodeName);
-				if (node)
+
+				bool isHidden = node.child("hidden").text().as_bool();
+				bool isKidGame = node.child("kidgame").text().as_bool();
+
+				// Take into account Kid/Kiosk mode when considering this game entry
+				if (UIModeController::getInstance()->isUIModeKid() && !isKidGame)
+					continue;
+				if (UIModeController::getInstance()->isUIModeKiosk() && isHidden)
+					continue;
+
+				if (node && !node.text().empty())
 				{
 					// See if this is the desired index
 					if (index-- == 0)
