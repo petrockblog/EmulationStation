@@ -10,7 +10,7 @@ Inspired by similar work on the Recalbox fork.
 * French
 * Italian
 * Japanese
-* Portuguese (Bralizian)
+* Portuguese (Brazilian)
 * Spanish
 
 ## How to use the localized EmulationStation
