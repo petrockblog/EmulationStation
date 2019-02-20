@@ -57,7 +57,7 @@ sudo cp -r locale /opt/retropie/supplementary/emulationstation/
 
 ## How to add a translation
 
-> You should have, at least, [created a clone from GitHub](/#create-a-clone-from-github) before continuing with the following steps.
+> You should have, at least, [created a clone from GitHub](#create-a-clone-from-github) before continuing with the following steps.
 
 ### Create files for the new locale
 
@@ -70,6 +70,8 @@ cp emulationstation2.pot lang/[your_locale]/emulationstation2.po
 ### Translate the strings
 
 Open the newly created `emulationstation2.po` inside `[your_locale]` folder and start translating all the `msgstr` strings.
+
+Once you are done, you can [compile EmulationStation](#compile-emulationstation) and then [run](#run-emulationstation) it to test your translations.
 
 ## Author
 
