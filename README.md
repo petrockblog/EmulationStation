@@ -63,8 +63,8 @@ sudo cp -r locale /opt/retropie/supplementary/emulationstation/
 
 Thanks to:
 
-* [heloisa](https://github.com/heloisatech) - For the Portuguese (Brazilian) and Spanish translations.
-* [hiulit](https://github.com/hiulit) - For the Catalan translations.
-* [wakaya](https://retropie.org.uk/forum/user/wakaya) - For the Japanese translations.
+* [flyinghead](https://github.com/flyinghead) - For the French translations.
+* [heloisa](https://github.com/heloisatech) - For the Portuguese (Brazilian) and Spanish (Spain) translations.
+* [wakaya](https://retropie.org.uk/forum/user/wakaya) - For the Japanese translations and for the instructions on how to use the localized EmulationStation.
+* [hiulit](https://github.com/hiulit) - For the Catalan and Spanish (Spain) translations.
 * Unknown - For the Italian translations.
-* Unknown - For the French translations.
