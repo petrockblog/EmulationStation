@@ -21,10 +21,6 @@ Inspired by similar work on the Recalbox fork.
 sudo apt-get install -y libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev cmake libsdl2-dev
 ```
 
-```bash
-sudo apt-get install libboost1.62-*
-```
-
 ### Create a clone from GitHub
 
 ```
