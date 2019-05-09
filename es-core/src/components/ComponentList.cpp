@@ -82,10 +82,10 @@ bool ComponentList::input(InputConfig* config, Input input)
 	{
 		return listInput(input.value != 0 ? 1 : 0);
 
-	}else if(config->isMappedTo("pageup", input))
+	}else if(config->isMappedTo("leftshoulder", input))
 	{
 		return listInput(input.value != 0 ? -6 : 0);
-	}else if(config->isMappedTo("pagedown", input)){
+	}else if(config->isMappedTo("rightshoulder", input)){
 		return listInput(input.value != 0 ? 6 : 0);
 	}
 
