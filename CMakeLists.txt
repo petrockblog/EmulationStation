@@ -235,6 +235,17 @@ else()
     endif()
 endif()
 
+# i18n
+find_program (MSGFMT_EXECUTABLE msgfmt)
+find_program (MSGMERGE_EXECUTABLE msgmerge)
+find_program (XGETTEXT_EXECUTABLE xgettext)
+if(MSGFMT_EXECUTABLE AND MSGMERGE_EXECUTABLE AND XGETTEXT_EXECUTABLE)
+  message (STATUS "Native language support enabled.")
+  add_definitions(-DHAVE_GETTEXT)
+  add_subdirectory (locale)
+endif()
+add_definitions(-DINSTALLATION_PREFIX_DIR=\"${CMAKE_INSTALL_PREFIX}\")
+
 #-------------------------------------------------------------------------------
 # set up build directories
 set(dir ${CMAKE_CURRENT_SOURCE_DIR})
