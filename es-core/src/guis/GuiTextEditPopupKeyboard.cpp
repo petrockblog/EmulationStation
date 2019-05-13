@@ -86,7 +86,6 @@ GuiTextEditPopupKeyboard::GuiTextEditPopupKeyboard(Window* window, const std::st
 
 		// Special case for shift key
 		bButtons.push_back(std::make_shared<ButtonComponent>(mWindow, "SHIFT", "SHIFTS FOR UPPER,LOWER, AND SPECIAL", [this, okCallback] {
-			okCallback(mText->getValue());
 			if (mShift) mShift = false;
 			else mShift = true;
 			shiftKeys();
