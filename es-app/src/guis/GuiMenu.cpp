@@ -360,6 +360,12 @@ void GuiMenu::openUISettings()
 		if (enable_filter->getState() != filter_is_enabled) ViewController::get()->ReloadAndGoToStart();
 	});
 
+	// Enable OSK (On Screen Keyboard)
+	auto enable_osk = std::make_shared<SwitchComponent>(mWindow);
+	enable_osk->setState(Settings::getInstance()->getBool("OSK_Enable"));
+	s->addWithLabel("USE ON SCREEN KEYBOARD", enable_osk);
+	s->addSaveFunc([enable_osk] { Settings::getInstance()->setBool("OSK_Enable", enable_osk->getState()); });
+
 	mWindow->pushGui(s);
 
 }
