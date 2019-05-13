@@ -200,7 +200,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 			offset[0] = mHorizontalMargin;
 			break;
 		case ALIGN_CENTER:
-			offset[0] = (mSize.x() - entry.data.textCache->metrics.size.x()) / 2;
+			offset[0] = (int)((mSize.x() - entry.data.textCache->metrics.size.x()) / 2);
 			if(offset[0] < mHorizontalMargin)
 				offset[0] = mHorizontalMargin;
 			break;
@@ -251,13 +251,13 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 	{
 		if(input.value != 0)
 		{
-			if(config->isMappedTo("down", input))
+			if(config->isMappedLike("down", input))
 			{
 				listInput(1);
 				return true;
 			}
 
-			if(config->isMappedTo("up", input))
+			if(config->isMappedLike("up", input))
 			{
 				listInput(-1);
 				return true;
@@ -274,7 +274,7 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 				return true;
 			}
 		}else{
-			if(config->isMappedTo("down", input) || config->isMappedTo("up", input) || 
+			if(config->isMappedLike("down", input) || config->isMappedLike("up", input) || 
 				config->isMappedTo("pagedown", input) || config->isMappedTo("pageup", input))
 			{
 				stopScrolling();

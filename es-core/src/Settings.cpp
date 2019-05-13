@@ -2,6 +2,7 @@
 
 #include "utils/FileSystemUtil.h"
 #include "Log.h"
+#include "Scripting.h"
 #include "platform.h"
 #include <pugixml/src/pugixml.hpp>
 #include <algorithm>
@@ -18,12 +19,13 @@ std::vector<const char*> settings_dont_save {
 	{ "DebugImage" },
 	{ "ForceKid" },
 	{ "ForceKiosk" },
-	{ "ForceDisableFilters" },
 	{ "IgnoreGamelist" },
 	{ "HideConsole" },
 	{ "ShowExit" },
 	{ "SplashScreen" },
+	{ "SplashScreenProgress" },
 	{ "VSync" },
+	{ "FullscreenBorderless" },
 	{ "Windowed" },
 	{ "WindowWidth" },
 	{ "WindowHeight" },
@@ -59,8 +61,10 @@ void Settings::setDefaults()
 	mBoolMap["ShowHiddenFiles"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
+	mBoolMap["FullscreenBorderless"] = false;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["SplashScreen"] = true;
+	mBoolMap["SplashScreenProgress"] = true;
 	mStringMap["StartupSystem"] = "";
 
 	mBoolMap["VSync"] = true;
@@ -129,6 +133,8 @@ void Settings::setDefaults()
 	mBoolMap["SortAllSystems"] = false;
 	mBoolMap["UseCustomCollectionsSystem"] = true;
 
+	mBoolMap["LocalArt"] = false;
+
 	// Audio out device for volume control
 	#ifdef _RPI_
 		mStringMap["AudioDevice"] = "PCM";
@@ -136,6 +142,7 @@ void Settings::setDefaults()
 		mStringMap["AudioDevice"] = "Master";
 	#endif
 
+	mStringMap["AudioCard"] = "default";
 	mStringMap["UIMode"] = "Full";
 	mStringMap["UIMode_passkey"] = "uuddlrlrba";
 	mBoolMap["ForceKiosk"] = false;
@@ -188,6 +195,9 @@ void Settings::saveFile()
 	}
 
 	doc.save_file(path.c_str());
+
+	Scripting::fireEvent("config-changed");
+	Scripting::fireEvent("settings-changed");
 }
 
 void Settings::loadFile()

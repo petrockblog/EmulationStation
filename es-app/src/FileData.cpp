@@ -10,6 +10,7 @@
 #include "Log.h"
 #include "MameNames.h"
 #include "platform.h"
+#include "Scripting.h"
 #include "SystemData.h"
 #include "VolumeControl.h"
 #include "Window.h"
@@ -59,7 +60,7 @@ const std::string FileData::getThumbnailPath() const
 		thumbnail = metadata.get("image");
 
 		// no image, try to use local image
-		if(thumbnail.empty())
+		if(thumbnail.empty() && Settings::getInstance()->getBool("LocalArt"))
 		{
 			const char* extList[2] = { ".png", ".jpg" };
 			for(int i = 0; i < 2; i++)
@@ -115,7 +116,7 @@ const std::string FileData::getVideoPath() const
 	std::string video = metadata.get("video");
 
 	// no video, try to use local video
-	if(video.empty())
+	if(video.empty() && Settings::getInstance()->getBool("LocalArt"))
 	{
 		std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-video.mp4";
 		if(Utils::FileSystem::exists(path))
@@ -130,7 +131,7 @@ const std::string FileData::getMarqueePath() const
 	std::string marquee = metadata.get("marquee");
 
 	// no marquee, try to use local marquee
-	if(marquee.empty())
+	if(marquee.empty() && Settings::getInstance()->getBool("LocalArt"))
 	{
 		const char* extList[2] = { ".png", ".jpg" };
 		for(int i = 0; i < 2; i++)
@@ -194,6 +195,16 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool d
 
 std::string FileData::getKey() {
 	return getFileName();
+}
+
+const bool FileData::isArcadeAsset()
+{
+	const std::string stem = Utils::FileSystem::getStem(mPath);
+	return (
+		(mSystem && (mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO)))
+		&&
+		(MameNames::getInstance()->isBios(stem) || MameNames::getInstance()->isDevice(stem))
+	);
 }
 
 FileData* FileData::getSourceFileData()
@@ -272,6 +283,8 @@ void FileData::launchGame(Window* window)
 	command = Utils::String::replace(command, "%BASENAME%", basename);
 	command = Utils::String::replace(command, "%ROM_RAW%", rom_raw);
 
+	Scripting::fireEvent("game-start", rom, basename);
+
 	LOG(LogInfo) << "	" << command;
 	int exitCode = runSystemCommand(command);
 
@@ -279,6 +292,8 @@ void FileData::launchGame(Window* window)
 	{
 		LOG(LogWarning) << "...launch terminated with nonzero exit code " << exitCode << "!";
 	}
+
+	Scripting::fireEvent("game-end");
 
 	window->init();
 	VolumeControl::getInstance()->init();

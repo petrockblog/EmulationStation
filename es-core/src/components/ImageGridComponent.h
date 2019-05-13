@@ -117,13 +117,13 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 	if(input.value != 0)
 	{
 		Vector2i dir = Vector2i::Zero();
-		if(config->isMappedTo("up", input))
+		if(config->isMappedLike("up", input))
 			dir[1 ^ mScrollDirection] = -1;
-		else if(config->isMappedTo("down", input))
+		else if(config->isMappedLike("down", input))
 			dir[1 ^ mScrollDirection] = 1;
-		else if(config->isMappedTo("left", input))
+		else if(config->isMappedLike("left", input))
 			dir[0 ^ mScrollDirection] = -1;
-		else if(config->isMappedTo("right", input))
+		else if(config->isMappedLike("right", input))
 			dir[0 ^ mScrollDirection] = 1;
 
 		if(dir != Vector2i::Zero())
@@ -132,7 +132,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 			return true;
 		}
 	}else{
-		if(config->isMappedTo("up", input) || config->isMappedTo("down", input) || config->isMappedTo("left", input) || config->isMappedTo("right", input))
+		if(config->isMappedLike("up", input) || config->isMappedLike("down", input) || config->isMappedLike("left", input) || config->isMappedLike("right", input))
 		{
 			stopScrolling();
 		}
@@ -338,7 +338,7 @@ void ImageGridComponent<T>::updateTiles()
 	// Stop updating the tiles at highest scroll speed
 	if (mScrollTier == 3)
 	{
-		for (int ti = 0; ti < mTiles.size(); ti++)
+		for (int ti = 0; ti < (int)mTiles.size(); ti++)
 		{
 			std::shared_ptr<GridTileComponent> tile = mTiles.at(ti);
 
@@ -354,12 +354,12 @@ void ImageGridComponent<T>::updateTiles()
 
 	// If going down, update from top to bottom
 	// If going up, update from bottom to top
-	int ti = scrollDirection == 1 ? 0 : mTiles.size() - 1;
-	int end = scrollDirection == 1 ? mTiles.size() : -1;
+	int ti = scrollDirection == 1 ? 0 : (int)mTiles.size() - 1;
+	int end = scrollDirection == 1 ? (int)mTiles.size() : -1;
 
 	int img = getStartPosition();
 	if (scrollDirection == -1)
-		img += mTiles.size() - 1;
+		img += (int)mTiles.size() - 1;
 
 	// Calculate buffer size depending on scroll speed and direction
 	int bufferBehind = (texBuffersForward[3] - texBuffersBehind[mScrollTier]) * mGridDimension.x();
@@ -387,7 +387,7 @@ void ImageGridComponent<T>::updateTileAtPos(int tilePos, int imgPos, int bufferT
 
 	// If we have more tiles than we have to display images on screen, hide them
 	if(imgPos < 0 || imgPos >= size()
-	   || tilePos < bufferTop || tilePos >= mTiles.size() - bufferBot) // Same for tiles out of the buffer
+	   || tilePos < bufferTop || tilePos >= (int)mTiles.size() - bufferBot) // Same for tiles out of the buffer
 	{
 		tile->setSelected(false);
 		tile->setImage("");

@@ -4,6 +4,7 @@
 #include "CECInput.h"
 #include "Log.h"
 #include "platform.h"
+#include "Scripting.h"
 #include "Window.h"
 #include <pugixml/src/pugixml.hpp>
 #include <SDL.h>
@@ -171,6 +172,12 @@ void InputManager::deinit()
 }
 
 int InputManager::getNumJoysticks() { return (int)mJoysticks.size(); }
+
+int InputManager::getAxisCountByDevice(SDL_JoystickID id)
+{
+	return SDL_JoystickNumAxes(mJoysticks[id]);
+}
+
 int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 {
 	if(id == DEVICE_KEYBOARD)
@@ -382,6 +389,9 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 
 	config->writeToXML(root);
 	doc.save_file(path.c_str());
+
+	Scripting::fireEvent("config-changed");
+	Scripting::fireEvent("controls-changed");
 	
 	// execute any onFinish commands and re-load the config for changes
 	doOnFinish();

@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "Log.h"
 #include "Renderer.h"
+#include "Scripting.h"
 #include <algorithm>
 #include <iomanip>
 
@@ -120,9 +121,9 @@ void Window::input(InputConfig* config, Input input)
 		if(mScreenSaver->isScreenSaverActive() && Settings::getInstance()->getBool("ScreenSaverControls") &&
 		   (Settings::getInstance()->getString("ScreenSaverBehavior") == "random video"))
 		{
-			if(mScreenSaver->getCurrentGame() != NULL && (config->isMappedTo("right", input) || config->isMappedTo("start", input) || config->isMappedTo("select", input)))
+			if(mScreenSaver->getCurrentGame() != NULL && (config->isMappedLike("right", input) || config->isMappedTo("start", input) || config->isMappedTo("select", input)))
 			{
-				if(config->isMappedTo("right", input) || config->isMappedTo("select", input))
+				if(config->isMappedLike("right", input) || config->isMappedTo("select", input))
 				{
 					if (input.value != 0) {
 						// handle screensaver control
@@ -139,10 +140,6 @@ void Window::input(InputConfig* config, Input input)
 					mSleeping = true;
 				}
 			}
-			/*else if(input.value != 0)
-			{
-				return;
-			}*/
 		}
 	}
 
@@ -157,7 +154,8 @@ void Window::input(InputConfig* config, Input input)
 	}
 
 	mTimeSinceLastInput = 0;
-	cancelScreenSaver();
+	if (cancelScreenSaver())
+		return;
 
 	if(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_g && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 	{
@@ -277,8 +275,10 @@ void Window::render()
 		if (!isProcessing() && mAllowSleep && (!mScreenSaver || mScreenSaver->allowSleep()))
 		{
 			// go to sleep
-			mSleeping = true;
-			onSleep();
+			if (mSleeping == false) {
+				mSleeping = true;
+				onSleep();
+			}
 		}
 	}
 }
@@ -298,7 +298,7 @@ void Window::setAllowSleep(bool sleep)
 	mAllowSleep = sleep;
 }
 
-void Window::renderLoadingScreen()
+void Window::renderLoadingScreen(std::string text)
 {
 	Transform4x4f trans = Transform4x4f::Identity();
 	Renderer::setMatrix(trans);
@@ -311,9 +311,11 @@ void Window::renderLoadingScreen()
 	splash.render(trans);
 
 	auto& font = mDefaultFonts.at(1);
-	TextCache* cache = font->buildTextCache("LOADING...", 0, 0, 0x656565FF);
-	trans = trans.translate(Vector3f(Math::round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f),
-		Math::round(Renderer::getScreenHeight() * 0.835f), 0.0f));
+	TextCache* cache = font->buildTextCache(text, 0, 0, 0x656565FF);
+
+	float x = Math::round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f);
+	float y = Math::round(Renderer::getScreenHeight() * 0.835f);
+	trans = trans.translate(Vector3f(x, y, 0.0f));
 	Renderer::setMatrix(trans);
 	font->renderTextCache(cache);
 	delete cache;
@@ -399,11 +401,12 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 
 void Window::onSleep()
 {
+	Scripting::fireEvent("sleep");
 }
 
 void Window::onWake()
 {
-
+	Scripting::fireEvent("wake");
 }
 
 bool Window::isProcessing()
@@ -412,33 +415,38 @@ bool Window::isProcessing()
 }
 
 void Window::startScreenSaver()
- {
- 	if (mScreenSaver && !mRenderScreenSaver)
- 	{
- 		// Tell the GUI components the screensaver is starting
- 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
- 			(*i)->onScreenSaverActivate();
+{
+	if (mScreenSaver && !mRenderScreenSaver)
+	{
+		// Tell the GUI components the screensaver is starting
+		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
+			(*i)->onScreenSaverActivate();
 
- 		mScreenSaver->startScreenSaver();
- 		mRenderScreenSaver = true;
- 	}
- }
+		mScreenSaver->startScreenSaver();
+		mRenderScreenSaver = true;
+	}
+}
 
- void Window::cancelScreenSaver()
- {
- 	if (mScreenSaver && mRenderScreenSaver)
- 	{
- 		mScreenSaver->stopScreenSaver();
- 		mRenderScreenSaver = false;
+bool Window::cancelScreenSaver()
+{
+	if (mScreenSaver && mRenderScreenSaver)
+	{
+		mScreenSaver->stopScreenSaver();
+		mRenderScreenSaver = false;
+		mScreenSaver->resetCounts();
 
- 		// Tell the GUI components the screensaver has stopped
- 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
- 			(*i)->onScreenSaverDeactivate();
- 	}
- }
+		// Tell the GUI components the screensaver has stopped
+		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
+			(*i)->onScreenSaverDeactivate();
 
- void Window::renderScreenSaver()
- {
- 	if (mScreenSaver)
- 		mScreenSaver->renderScreenSaver();
- }
+		return true;
+	}
+
+	return false;
+}
+
+void Window::renderScreenSaver()
+{
+	if (mScreenSaver)
+		mScreenSaver->renderScreenSaver();
+}
