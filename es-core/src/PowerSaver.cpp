@@ -1,5 +1,5 @@
 #include "PowerSaver.h"
-
+#include <string>
 #include "AudioManager.h"
 #include "Settings.h"
 

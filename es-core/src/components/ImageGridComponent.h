@@ -30,7 +30,11 @@ protected:
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
 	using IList<ImageGridData, T>::mCursor;
+
+#ifndef __clang__
 	using IList<ImageGridData, T>::Entry;
+#endif
+
 	using IList<ImageGridData, T>::mWindow;
 
 public:

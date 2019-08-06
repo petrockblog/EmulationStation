@@ -4,8 +4,12 @@
 #include "utils/StringUtil.h"
 #include "PowerSaver.h"
 #include "Renderer.h"
+#ifdef __APPLE__
+    #include <vlc.h>
+#else
+    #include <vlc/vlc.h>
+#endif
 #include "Settings.h"
-#include <vlc/vlc.h>
 #include <SDL_mutex.h>
 
 #ifdef WIN32

@@ -5,6 +5,7 @@
 #include "components/ImageComponent.h"
 #include "resources/Font.h"
 #include "PowerSaver.h"
+#include <string>
 
 enum CursorState
 {

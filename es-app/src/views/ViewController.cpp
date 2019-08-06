@@ -315,8 +315,8 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	switch (selectedViewType)
 	{
 		case VIDEO:
-			view = std::shared_ptr<IGameListView>(new VideoGameListView(mWindow, system->getRootFolder()));
-			break;
+            view = std::shared_ptr<IGameListView>(new VideoGameListView(mWindow, system->getRootFolder()));
+            break;
 		case DETAILED:
 			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
 			break;
