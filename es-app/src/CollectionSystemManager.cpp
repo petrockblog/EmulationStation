@@ -284,7 +284,7 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 			trimCollectionCount(rootFolder, LAST_PLAYED_MAX);
 			ViewController::get()->onFileChanged(rootFolder, FILE_METADATA_CHANGED);
 		}
-		else 
+		else
 			ViewController::get()->onFileChanged(rootFolder, FILE_SORTED);
 	}
 }
@@ -292,7 +292,7 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 void CollectionSystemManager::trimCollectionCount(FileData* rootFolder, int limit)
 {
 	SystemData* curSys = rootFolder->getSystem();
-	while ((int)rootFolder->getChildren().size() > limit)
+	while ((int)rootFolder->getChildrenListToDisplay().size() > limit)
 	{
 		CollectionFileData* gameToRemove = (CollectionFileData*)rootFolder->getChildrenListToDisplay().back();
 		ViewController::get()->getGameListView(curSys).get()->remove(gameToRemove, false);
@@ -1031,7 +1031,6 @@ bool CollectionSystemManager::includeFileInAutoCollections(FileData* file)
 	// but for now a simple string comparison is more performant
 	return file->getName() != "kodi" && file->getSystem()->isGameSystem();
 }
-
 
 std::string getCustomCollectionConfigPath(std::string collectionName)
 {

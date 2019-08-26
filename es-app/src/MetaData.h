@@ -48,14 +48,12 @@ public:
 	void appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const std::string& relativeTo) const;
 
 	MetaDataList(MetaDataListType type);
-	
+
 	void set(const std::string& key, const std::string& value);
 
 	const std::string& get(const std::string& key) const;
 	int getInt(const std::string& key) const;
 	float getFloat(const std::string& key) const;
-
-	bool isDefault();
 
 	bool wasChanged() const;
 	void resetChangedFlag();

@@ -2,7 +2,6 @@
 
 #include "utils/FileSystemUtil.h"
 
-#include "Settings.h"
 #include <sys/stat.h>
 #include <string.h>
 
@@ -26,6 +25,8 @@ namespace Utils
 {
 	namespace FileSystem
 	{
+		static std::string homePath = "";
+		static std::string exePath  = "";
 
 #if defined(_WIN32)
 		static std::string convertFromWideString(const std::wstring wstring)
@@ -138,36 +139,47 @@ namespace Utils
 
 		} // getPathList
 
+		void setHomePath(const std::string& _path)
+		{
+			homePath = getGenericPath(_path);
+
+		} // setHomePath
+
 		std::string getHomePath()
 		{
-			static std::string path;
-
 			// only construct the homepath once
-			if(!path.length())
+			if(homePath.length())
+				return homePath;
+
+			// check if "getExePath()/.emulationstation/es_systems.cfg" exists
+			if(Utils::FileSystem::exists(getExePath() + "/.emulationstation/es_systems.cfg"))
+				homePath = getExePath();
+
+			// check for HOME environment variable
+			if(!homePath.length())
 			{
-				// this should give us something like "/home/YOUR_USERNAME" on Linux and "C:/Users/YOUR_USERNAME/" on Windows
 				char* envHome = getenv("HOME");
 				if(envHome)
-					path = getGenericPath(envHome);
-
-#if defined(_WIN32)
-				// but does not seem to work for Windows XP or Vista, so try something else
-				if(!path.length())
-				{
-					char* envHomeDrive = getenv("HOMEDRIVE");
-					char* envHomePath  = getenv("HOMEPATH");
-					if(envHomeDrive && envHomePath)
-						path = getGenericPath(std::string(envHomeDrive) + "/" + envHomePath);
-				}
-#endif // _WIN32
-
-				// no homepath found, fall back to current working directory
-				if(!path.length())
-					path = getCWDPath();
+					homePath = getGenericPath(envHome);
 			}
 
+#if defined(_WIN32)
+			// on Windows we need to check HOMEDRIVE and HOMEPATH
+			if(!homePath.length())
+			{
+				char* envHomeDrive = getenv("HOMEDRIVE");
+				char* envHomePath  = getenv("HOMEPATH");
+				if(envHomeDrive && envHomePath)
+					homePath = getGenericPath(std::string(envHomeDrive) + "/" + envHomePath);
+			}
+#endif // _WIN32
+
+			// no homepath found, fall back to current working directory
+			if(!homePath.length())
+				homePath = getCWDPath();
+
 			// return constructed homepath
-			return path;
+			return homePath;
 
 		} // getHomePath
 
@@ -180,23 +192,19 @@ namespace Utils
 
 		} // getCWDPath
 
+		void setExePath(const std::string& _path)
+		{
+			exePath = getCanonicalPath(_path);
+
+			if(isRegularFile(exePath))
+				exePath = getParent(exePath);
+
+		} // setExePath
+
 		std::string getExePath()
 		{
-			static std::string path;
-
-			// only construct the exepath once
-			if(!path.length())
-			{
-				path = getCanonicalPath(Settings::getInstance()->getString("ExePath"));
-
-				if(isRegularFile(path))
-				{
-					path = getParent(path);
-				}
-			}
-
 			// return constructed exepath
-			return path;
+			return exePath;
 
 		} // getExePath
 
@@ -445,21 +453,17 @@ namespace Utils
 			bool        contains = false;
 			std::string path     = removeCommonPath(_path, _relativeTo, contains);
 
+			// success
 			if(contains)
-			{
-				// success
 				return ("./" + path);
-			}
 
 			if(_allowHome)
 			{
 				path = removeCommonPath(_path, getHomePath(), contains);
 
+				// success
 				if(contains)
-				{
-					// success
 					return ("~/" + path);
-				}
 			}
 
 			// nothing to resolve

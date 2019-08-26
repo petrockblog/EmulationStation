@@ -1,9 +1,9 @@
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
 
+#include "renderers/Renderer.h"
 #include "utils/StringUtil.h"
 #include "AudioManager.h"
-#include "Renderer.h"
 #include "Settings.h"
 #include <fcntl.h>
 #include <unistd.h>
@@ -115,7 +115,7 @@ void VideoPlayerComponent::startVideo()
 
 					case 1:
 					{
-						const int x1 = (int)(Renderer::getScreenOffsetY() + Renderer::getScreenHeight() - y - mSize.y());
+						const int x1 = (int)(Renderer::getScreenWidth() - Renderer::getScreenOffsetY() - y - mSize.y());
 						const int y1 = (int)(Renderer::getScreenOffsetX() + x);
 						const int x2 = (int)(x1 + mSize.y());
 						const int y2 = (int)(y1 + mSize.x());
@@ -125,8 +125,8 @@ void VideoPlayerComponent::startVideo()
 
 					case 2:
 					{
-						const int x1 = (int)(Renderer::getScreenOffsetX() + Renderer::getScreenWidth()  - x - mSize.x());
-						const int y1 = (int)(Renderer::getScreenOffsetY() + Renderer::getScreenHeight() - y - mSize.y());
+						const int x1 = (int)(Renderer::getScreenWidth()  - Renderer::getScreenOffsetX() - x - mSize.x());
+						const int y1 = (int)(Renderer::getScreenHeight() - Renderer::getScreenOffsetY() - y - mSize.y());
 						const int x2 = (int)(x1 + mSize.x());
 						const int y2 = (int)(y1 + mSize.y());
 						sprintf(buf1, "%d,%d,%d,%d", x1, y1, x2, y2);
@@ -136,7 +136,7 @@ void VideoPlayerComponent::startVideo()
 					case 3:
 					{
 						const int x1 = (int)(Renderer::getScreenOffsetY() + y);
-						const int y1 = (int)(Renderer::getScreenOffsetX() + Renderer::getScreenWidth() - x - mSize.x());
+						const int y1 = (int)(Renderer::getScreenHeight() - Renderer::getScreenOffsetX() - x - mSize.x());
 						const int x2 = (int)(x1 + mSize.y());
 						const int y2 = (int)(y1 + mSize.x());
 						sprintf(buf1, "%d,%d,%d,%d", x1, y1, x2, y2);
@@ -156,7 +156,7 @@ void VideoPlayerComponent::startVideo()
 				// We need to specify the layer of 10000 or above to ensure the video is displayed on top
 				// of our SDL display
 
-				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf1, "--orientation", buf2, "", "", "", "", NULL };
+				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf1, "--orientation", buf2, "", "", "", "", "", "", "", "", "", "", "", NULL };
 
 				// check if we want to mute the audio
 				if (!Settings::getInstance()->getBool("VideoAudio") || (float)VolumeControl::getInstance()->getVolume() == 0)
@@ -187,6 +187,14 @@ void VideoPlayerComponent::startVideo()
 						argv[15] = "--subtitles";
 						argv[16] = subtitlePath.c_str();
 						argv[17] = mPlayingVideoPath.c_str();
+						argv[18] = "--font";
+						argv[19] = Settings::getInstance()->getString("SubtitleFont").c_str();
+						argv[20] = "--italic-font";
+						argv[21] = Settings::getInstance()->getString("SubtitleItalicFont").c_str();
+						argv[22] = "--font-size";
+						argv[23] = std::to_string(Settings::getInstance()->getInt("SubtitleSize")).c_str();
+						argv[24] = "--align";
+						argv[25] = Settings::getInstance()->getString("SubtitleAlignment").c_str();
 					}
 					else
 					{

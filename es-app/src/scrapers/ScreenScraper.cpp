@@ -127,19 +127,32 @@ void screenscraper_generate_scraper_requests(const ScraperSearchParams& params,
 
 	path = ssConfig.getGameSearchUrl(params.game->getFileName());
 	auto& platforms = params.system->getPlatformIds();
+	std::vector<unsigned short> p_ids;
 
+	// Get the IDs of each platform from the ScreenScraper list
 	for (auto platformIt = platforms.cbegin(); platformIt != platforms.cend(); platformIt++)
 	{
 		auto mapIt = screenscraper_platformid_map.find(*platformIt);
 
 		if (mapIt != screenscraper_platformid_map.cend())
 		{
-			path += "&systemeid=";
-			path += HttpReq::urlEncode(std::to_string(mapIt->second));
+			p_ids.push_back(mapIt->second);
 		}else{
 			LOG(LogWarning) << "ScreenScraper: no support for platform " << getPlatformName(*platformIt);
+			// Add the scrape request without a platform/system ID
+			requests.push(std::unique_ptr<ScraperRequest>(new ScreenScraperRequest(requests, results, path)));
 		}
+	}
 
+	// Sort the platform IDs and remove duplicates
+	std::sort(p_ids.begin(), p_ids.end());
+	auto last = std::unique(p_ids.begin(), p_ids.end());
+	p_ids.erase(last, p_ids.end());
+
+	for (auto platform = p_ids.cbegin(); platform != p_ids.cend(); platform++)
+	{
+		path += "&systemeid=";
+		path += HttpReq::urlEncode(std::to_string(*platform));
 		requests.push(std::unique_ptr<ScraperRequest>(new ScreenScraperRequest(requests, results, path)));
 	}
 
@@ -182,7 +195,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 		std::string region = Utils::String::toLower(ssConfig.region).c_str();
 		std::string language = Utils::String::toLower(ssConfig.language).c_str();
 
-		// Name fallback: US, WOR(LD). ( Xpath: Data/jeu[0]/noms/nom[*] ). 
+		// Name fallback: US, WOR(LD). ( Xpath: Data/jeu[0]/noms/nom[*] ).
 		result.mdl.set("name", find_child_by_attribute_list(game.child("noms"), "nom", "region", { region, "wor", "us" , "ss", "eu", "jp" }).text().get());
 
 		// Description fallback language: EN, WOR(LD)
@@ -243,7 +256,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 
 			// Do an XPath query for media[type='$media_type'], then filter by region
 			// We need to do this because any child of 'medias' has the form
-			// <media type="..." region="..." format="..."> 
+			// <media type="..." region="..." format="...">
 			// and we need to find the right media for the region.
 			pugi::xpath_node_set results = media_list.select_nodes((static_cast<std::string>("media[@type='") + ssConfig.media_name + "']").c_str());
 
@@ -268,7 +281,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 
 			if (art)
 			{
-				// Sending a 'softname' containing space will make the image URLs returned by the API also contain the space. 
+				// Sending a 'softname' containing space will make the image URLs returned by the API also contain the space.
 				//  Escape any spaces in the URL here
 				result.imageUrl = Utils::String::replace(art.text().get(), " ", "%20");
 

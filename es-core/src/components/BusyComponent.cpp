@@ -3,7 +3,6 @@
 #include "components/AnimatedImageComponent.h"
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
-#include "Renderer.h"
 
 // animation definition
 AnimationFrame BUSY_ANIMATION_FRAMES[] = {
@@ -46,7 +45,7 @@ void BusyComponent::onSizeChanged()
 	mGrid.setColWidthPerc(3, textWidth / mSize.x());
 
 	mGrid.setRowHeightPerc(1, textHeight / mSize.y());
-	
+
 	mBackground.fitTo(Vector2f(mGrid.getColWidth(1) + mGrid.getColWidth(2) + mGrid.getColWidth(3), textHeight + 2),
 		mAnimation->getPosition(), Vector2f(0, 0));
 }

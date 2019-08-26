@@ -27,7 +27,7 @@ public:
 		const std::string API_DEV_U = { 91, 32, 7, 17 };
 		const std::string API_DEV_P = { 108, 28, 54, 55, 83, 43, 91, 44, 30, 22, 41, 12, 0, 108, 38, 29 };
 		const std::string API_DEV_KEY = { 54, 73, 115, 100, 101, 67, 111, 107, 79, 66, 68, 66, 67, 56, 118, 77, 54, 88, 101, 54 };
-		const std::string API_URL_BASE = "https://screenscraper.fr/api2";
+		const std::string API_URL_BASE = "https://www.screenscraper.fr/api2";
 		const std::string API_SOFT_NAME = "Emulationstation " + static_cast<std::string>(PROGRAM_VERSION_STRING);
 
 		/** Which type of image artwork we need. Possible values (not a comprehensive list):
@@ -46,7 +46,7 @@ public:
 		std::string media_name = "box-2D";
 
 		// Which Region to use when selecting the artwork
-		// Applies to: artwork, name of the game, date of release 
+		// Applies to: artwork, name of the game, date of release
 		std::string region = "US";
 
 		// Which Language to use when selecting the textual information

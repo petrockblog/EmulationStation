@@ -2,9 +2,9 @@
 #ifndef ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H
 #define ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H
 
+#include "renderers/Renderer.h"
 #include "FileData.h"
 #include "GuiComponent.h"
-#include "Renderer.h"
 
 class ThemeData;
 class Window;
@@ -22,7 +22,7 @@ public:
 	// NOTE: FILE_SORTED is only reported for the topmost FileData, where the sort started.
 	//       Since sorts are recursive, that FileData's children probably changed too.
 	virtual void onFileChanged(FileData* file, FileChangeType change) = 0;
-	
+
 	// Called whenever the theme changes.
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) = 0;
 

@@ -1,9 +1,13 @@
 #include "resources/Font.h"
 
+#include "renderers/Renderer.h"
 #include "utils/FileSystemUtil.h"
 #include "utils/StringUtil.h"
 #include "Log.h"
-#include "Renderer.h"
+
+#ifdef WIN32
+#include <Windows.h>
+#endif
 
 FT_Library Font::sLibrary = NULL;
 
@@ -15,7 +19,7 @@ Font::FontFace::FontFace(ResourceData&& d, int size) : data(d)
 {
 	int err = FT_New_Memory_Face(sLibrary, data.ptr.get(), (FT_Long)data.length, 0, &face);
 	assert(!err);
-	
+
 	if(!err)
 		FT_Set_Pixel_Sizes(face, 0, size);
 }
@@ -71,7 +75,7 @@ size_t Font::getTotalMemUsage()
 Font::Font(int size, const std::string& path) : mSize(size), mPath(path)
 {
 	assert(mSize > 0);
-	
+
 	mMaxGlyphHeight = 0;
 
 	if(!sLibrary)
@@ -171,27 +175,14 @@ bool Font::FontTexture::findEmpty(const Vector2i& size, Vector2i& cursor_out)
 void Font::FontTexture::initTexture()
 {
 	assert(textureId == 0);
-
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureSize.x(), textureSize.y(), 0, GL_ALPHA, GL_UNSIGNED_BYTE, NULL);
+	textureId = Renderer::createTexture(Renderer::Texture::ALPHA, false, false, textureSize.x(), textureSize.y(), nullptr);
 }
 
 void Font::FontTexture::deinitTexture()
 {
 	if(textureId != 0)
 	{
-		glDeleteTextures(1, &textureId);
+		Renderer::destroyTexture(textureId);
 		textureId = 0;
 	}
 }
@@ -213,7 +204,7 @@ void Font::getTextureForNewGlyph(const Vector2i& glyphSize, FontTexture*& tex_ou
 	mTextures.push_back(FontTexture());
 	tex_out = &mTextures.back();
 	tex_out->initTexture();
-	
+
 	bool ok = tex_out->findEmpty(glyphSize, cursor_out);
 	if(!ok)
 	{
@@ -257,7 +248,7 @@ std::vector<std::string> getFallbackFontPaths()
 #else
 	// Linux
 
-	const char* paths[] = { 
+	const char* paths[] = {
 		"/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
 		"/usr/share/fonts/truetype/freefont/FreeMono.ttf",
 		"/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf" // japanese, chinese, present on Debian
@@ -346,7 +337,7 @@ Font::Glyph* Font::getGlyph(unsigned int id)
 
 	// create glyph
 	Glyph& glyph = mGlyphMap[id];
-	
+
 	glyph.texture = tex;
 	glyph.texPos = Vector2f(cursor.x() / (float)tex->textureSize.x(), cursor.y() / (float)tex->textureSize.y());
 	glyph.texSize = Vector2f(glyphSize.x() / (float)tex->textureSize.x(), glyphSize.y() / (float)tex->textureSize.y());
@@ -355,9 +346,7 @@ Font::Glyph* Font::getGlyph(unsigned int id)
 	glyph.bearing = Vector2f((float)g->metrics.horiBearingX / 64.0f, (float)g->metrics.horiBearingY / 64.0f);
 
 	// upload glyph bitmap to texture
-	glBindTexture(GL_TEXTURE_2D, tex->textureId);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, cursor.x(), cursor.y(), glyphSize.x(), glyphSize.y(), GL_ALPHA, GL_UNSIGNED_BYTE, g->bitmap.buffer);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	Renderer::updateTexture(tex->textureId, Renderer::Texture::ALPHA, cursor.x(), cursor.y(), glyphSize.x(), glyphSize.y(), g->bitmap.buffer);
 
 	// update max glyph height
 	if(glyphSize.y() > mMaxGlyphHeight)
@@ -386,17 +375,14 @@ void Font::rebuildTextures()
 		FT_Load_Char(face, it->first, FT_LOAD_RENDER);
 
 		FontTexture* tex = it->second.texture;
-		
+
 		// find the position/size
 		Vector2i cursor((int)(it->second.texPos.x() * tex->textureSize.x()), (int)(it->second.texPos.y() * tex->textureSize.y()));
 		Vector2i glyphSize((int)(it->second.texSize.x() * tex->textureSize.x()), (int)(it->second.texSize.y() * tex->textureSize.y()));
-		
-		// upload to texture
-		glBindTexture(GL_TEXTURE_2D, tex->textureId);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, cursor.x(), cursor.y(), glyphSize.x(), glyphSize.y(), GL_ALPHA, GL_UNSIGNED_BYTE, glyphSlot->bitmap.buffer);
-	}
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+		// upload to texture
+		Renderer::updateTexture(tex->textureId, Renderer::Texture::ALPHA, cursor.x(), cursor.y(), glyphSize.x(), glyphSize.y(), glyphSlot->bitmap.buffer);
+	}
 }
 
 void Font::renderTextCache(TextCache* cache)
@@ -413,27 +399,8 @@ void Font::renderTextCache(TextCache* cache)
 
 		auto vertexList = *it;
 
-		glBindTexture(GL_TEXTURE_2D, *it->textureIdPtr);
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
-
-		glVertexPointer(2, GL_FLOAT, sizeof(TextCache::Vertex), &it->verts[0].pos);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(TextCache::Vertex), &it->verts[0].tex);
-		glColorPointer(4, GL_UNSIGNED_BYTE, 0, it->colors.data());
-
-		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(it->verts.size()));
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_BLEND);
+		Renderer::bindTexture(*it->textureIdPtr);
+		Renderer::drawTriangleStrips(&it->verts[0], it->verts.size());
 	}
 }
 
@@ -599,13 +566,13 @@ float Font::getNewlineStartOffset(const std::string& text, const unsigned int& c
 TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsigned int color, float xLen, Alignment alignment, float lineSpacing)
 {
 	float x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, 0, xLen, alignment) : 0);
-	
+
 	float yTop = getGlyph('S')->bearing.y();
 	float yBot = getHeight(lineSpacing);
 	float y = offset[1] + (yBot + yTop)/2.0f;
 
 	// vertices by texture
-	std::map< FontTexture*, std::vector<TextCache::Vertex> > vertMap;
+	std::map< FontTexture*, std::vector<Renderer::Vertex> > vertMap;
 
 	size_t cursor = 0;
 	while(cursor < text.length())
@@ -628,37 +595,23 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 		if(glyph == NULL)
 			continue;
 
-		std::vector<TextCache::Vertex>& verts = vertMap[glyph->texture];
+		std::vector<Renderer::Vertex>& verts = vertMap[glyph->texture];
 		size_t oldVertSize = verts.size();
 		verts.resize(oldVertSize + 6);
-		TextCache::Vertex* tri = verts.data() + oldVertSize;
+		Renderer::Vertex* vertices = verts.data() + oldVertSize;
 
-		const float glyphStartX = x + glyph->bearing.x();
+		const float        glyphStartX    = x + glyph->bearing.x();
+		const Vector2i&    textureSize    = glyph->texture->textureSize;
+		const unsigned int convertedColor = Renderer::convertColor(color);
 
-		const Vector2i& textureSize = glyph->texture->textureSize;
+		vertices[1] = { { Math::round(glyphStartX                                       ), Math::round(y - glyph->bearing.y()                                         ) }, { glyph->texPos.x(),                      glyph->texPos.y()                      }, convertedColor };
+		vertices[2] = { { Math::round(glyphStartX                                       ), Math::round(y - glyph->bearing.y() + (glyph->texSize.y() * textureSize.y())) }, { glyph->texPos.x(),                      glyph->texPos.y() + glyph->texSize.y() }, convertedColor };
+		vertices[3] = { { Math::round(glyphStartX + glyph->texSize.x() * textureSize.x()), Math::round(y - glyph->bearing.y()                                         ) }, { glyph->texPos.x() + glyph->texSize.x(), glyph->texPos.y()                      }, convertedColor };
+		vertices[4] = { { Math::round(glyphStartX + glyph->texSize.x() * textureSize.x()), Math::round(y - glyph->bearing.y() + (glyph->texSize.y() * textureSize.y())) }, { glyph->texPos.x() + glyph->texSize.x(), glyph->texPos.y() + glyph->texSize.y() }, convertedColor };
 
-		// triangle 1
-		// round to fix some weird "cut off" text bugs
-		tri[0].pos = Vector2f(Math::round(glyphStartX), Math::round(y + (glyph->texSize.y() * textureSize.y() - glyph->bearing.y())));
-		tri[1].pos = Vector2f(Math::round(glyphStartX + glyph->texSize.x() * textureSize.x()), Math::round(y - glyph->bearing.y()));
-		tri[2].pos = Vector2f(tri[0].pos.x(), tri[1].pos.y());
-
-		//tri[0].tex = Vector2f(0, 0);
-		//tri[0].tex = Vector2f(1, 1);
-		//tri[0].tex = Vector2f(0, 1);
-
-		tri[0].tex = Vector2f(glyph->texPos.x(), glyph->texPos.y() + glyph->texSize.y());
-		tri[1].tex = Vector2f(glyph->texPos.x() + glyph->texSize.x(), glyph->texPos.y());
-		tri[2].tex = Vector2f(tri[0].tex.x(), tri[1].tex.y());
-
-		// triangle 2
-		tri[3].pos = tri[0].pos;
-		tri[4].pos = tri[1].pos;
-		tri[5].pos = Vector2f(tri[1].pos.x(), tri[0].pos.y());
-
-		tri[3].tex = tri[0].tex;
-		tri[4].tex = tri[1].tex;
-		tri[5].tex = Vector2f(tri[1].tex.x(), tri[0].tex.y());
+		// make duplicates of first and last vertex so this can be rendered as a triangle strip
+		vertices[0] = vertices[1];
+		vertices[5] = vertices[4];
 
 		// advance
 		x += glyph->advance.x();
@@ -677,9 +630,6 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 
 		vertList.textureIdPtr = &it->first->textureId;
 		vertList.verts = it->second;
-
-		vertList.colors.resize(4 * it->second.size());
-		Renderer::buildGLColorArray(vertList.colors.data(), color, (unsigned int)(it->second.size()));
 	}
 
 	clearFaceCache();
@@ -694,8 +644,11 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 
 void TextCache::setColor(unsigned int color)
 {
-	for(auto it = vertexLists.cbegin(); it != vertexLists.cend(); it++)
-		Renderer::buildGLColorArray((GLubyte*)(it->colors.data()), color, (unsigned int)(it->verts.size()));
+	const unsigned int convertedColor = Renderer::convertColor(color);
+
+	for(auto it = vertexLists.begin(); it != vertexLists.end(); it++)
+		for(auto it2 = it->verts.begin(); it2 != it->verts.end(); it2++)
+			it2->col = convertedColor;
 }
 
 std::shared_ptr<Font> Font::getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig)
@@ -703,13 +656,13 @@ std::shared_ptr<Font> Font::getFromTheme(const ThemeData::ThemeElement* elem, un
 	using namespace ThemeFlags;
 	if(!(properties & FONT_PATH) && !(properties & FONT_SIZE))
 		return orig;
-	
+
 	std::shared_ptr<Font> font;
 	int size = (orig ? orig->mSize : FONT_SIZE_MEDIUM);
 	std::string path = (orig ? orig->mPath : getDefaultPath());
 
 	float sh = (float)Renderer::getScreenHeight();
-	if(properties & FONT_SIZE && elem->has("fontSize")) 
+	if(properties & FONT_SIZE && elem->has("fontSize"))
 		size = (int)(sh * elem->get<float>("fontSize"));
 	if(properties & FONT_PATH && elem->has("fontPath"))
 		path = elem->get<std::string>("fontPath");

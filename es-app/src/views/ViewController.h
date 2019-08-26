@@ -2,9 +2,9 @@
 #ifndef ES_APP_VIEWS_VIEW_CONTROLLER_H
 #define ES_APP_VIEWS_VIEW_CONTROLLER_H
 
+#include "renderers/Renderer.h"
 #include "FileData.h"
 #include "GuiComponent.h"
-#include "Renderer.h"
 #include <vector>
 
 class IGameListView;
@@ -91,11 +91,11 @@ private:
 
 	void playViewTransition();
 	int getSystemId(SystemData* system);
-	
+
 	std::shared_ptr<GuiComponent> mCurrentView;
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
 	std::shared_ptr<SystemView> mSystemListView;
-	
+
 	Transform4x4f mCamera;
 	float mFadeOpacity;
 	bool mLockInput;

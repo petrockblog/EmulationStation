@@ -6,7 +6,6 @@
 #include "resources/TextureResource.h"
 #include "InputManager.h"
 #include "Log.h"
-#include "Renderer.h"
 #include "Scripting.h"
 #include <algorithm>
 #include <iomanip>
@@ -222,7 +221,7 @@ void Window::update(int deltaTime)
 
 	if(peekGui())
 		peekGui()->update(deltaTime);
-	
+
 	// Update the screensaver
 	if (mScreenSaver)
 		mScreenSaver->update(deltaTime);
@@ -260,7 +259,7 @@ void Window::render()
 	unsigned int screensaverTime = (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime");
 	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 		startScreenSaver();
-	
+
 	// Always call the screensaver render function regardless of whether the screensaver is active
 	// or not because it may perform a fade on transition
 	renderScreenSaver();
@@ -269,7 +268,7 @@ void Window::render()
 	{
 		mInfoPopup->render(transform);
 	}
-	
+
 	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 	{
 		if (!isProcessing() && mAllowSleep && (!mScreenSaver || mScreenSaver->allowSleep()))

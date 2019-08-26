@@ -108,7 +108,7 @@ void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, cons
 			// if it's just the default (and we ignore defaults), don't write it
 			if(ignoreDefaults && mapIter->second == mddIter->defaultValue)
 				continue;
-			
+
 			// try and make paths relative if we can
 			std::string value = mapIter->second;
 			if (mddIter->type == MD_PATH)
@@ -138,17 +138,6 @@ int MetaDataList::getInt(const std::string& key) const
 float MetaDataList::getFloat(const std::string& key) const
 {
 	return (float)atof(get(key).c_str());
-}
-
-bool MetaDataList::isDefault()
-{
-	const std::vector<MetaDataDecl>& mdd = getMDD();
-
-	for (unsigned int i = 1; i < mMap.size(); i++) {
-		if (mMap.at(mdd[i].key) != mdd[i].defaultValue) return false;
-	}
-
-	return true;
 }
 
 bool MetaDataList::wasChanged() const
