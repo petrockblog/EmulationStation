@@ -410,7 +410,7 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 		{
 			setSelectorHeight(elem->get<float>("selectorHeight") * Renderer::getScreenHeight());
 		}
-		if(elem->has("selectorOffsetY"))PR
+		if(elem->has("selectorOffsetY"))
 		{
 			float scale = this->mParent ? this->mParent->getSize().y() : (float)Renderer::getScreenHeight();
 			setSelectorOffsetY(elem->get<float>("selectorOffsetY") * scale);
@@ -425,7 +425,7 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 		bool tile = elem->has("selectorImageTile") && elem->get<bool>("selectorImageTile");
 		mSelectorImage.setImage(path, tile);
 		mSelectorImage.setSize(mSize.x(), mSelectorHeight);
-		mSelectorImage.setColorShift(mSelectorColor);PR
+		mSelectorImage.setColorShift(mSelectorColor);
 	} else {
 		mSelectorImage.setImage("");
 	}
