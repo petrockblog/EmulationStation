@@ -41,6 +41,16 @@ elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/libMali.so" OR
     EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/libmali.so")
     MESSAGE("libMali.so found")
     set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
+#-------------------------------------------------------------------------------
+#check if we're running on a system which provides a library for OpenGL ES 1.1
+elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/libGLESv1_CM.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/aarch64-linux-gnu/libGLESv1_CM.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabi/libGLESv1_CM.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/libGLESv1_CM.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/i386-linux-gnu/libGLESv1_CM.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/x86_64-linux-gnu/libGLESv1_CM.so")
+    MESSAGE("Embedded OpenGL: libGLESv1_CM.so found")
+    set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
 else()
     set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 endif(GLES)
