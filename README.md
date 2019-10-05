@@ -1,8 +1,11 @@
 EmulationStation
 ================
 
-This is a fork of EmulationStation for RetroPie.
+This is a fork of EmulationStation for RetroPie for macOS.
 EmulationStation is a cross-platform graphical front-end for emulators with controller navigation.
+
+The mac build process is still in the early process and builds to a Unix Executable and not a macOS 
+app bundle.  
 
 Building
 ========
@@ -10,6 +13,17 @@ Building
 EmulationStation uses some C++11 code, which means you'll need to use at least g++-4.7 on Linux, or VS2010 on Windows, to compile.
 
 EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, FreeImage, FreeType, cURL and RapidJSON.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
+
+**On macOS:**
+You will need to install the required libraries.  The way I did it was to use `brew`:
+```bash
+brew install sdl2 freeimage curl curl-openssl rapidjson cmake
+```
+and then `port`:
+```
+sudo port install libVLC
+```
+Then build as usual.
 
 **On Debian/Ubuntu:**
 All of this be easily installed with `apt-get`:
