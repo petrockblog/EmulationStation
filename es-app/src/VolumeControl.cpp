@@ -3,32 +3,35 @@
 #include "math/Misc.h"
 #include "Log.h"
 #include "Settings.h"
+
 #ifdef WIN32
 #include <mmdeviceapi.h>
 #endif
 #ifdef __APPLE__
+
 #include <string>
+
 #endif
 #if defined(__linux__)
-    #if defined(_RPI_) || defined(_VERO4K_)
-        const char * VolumeControl::mixerName = "PCM";
-    #else
-    	const char * VolumeControl::mixerName = "Master";
-    #endif
-    const char * VolumeControl::mixerCard = "default";
+#if defined(_RPI_) || defined(_VERO4K_)
+const char * VolumeControl::mixerName = "PCM";
+#else
+const char * VolumeControl::mixerName = "Master";
+#endif
+const char * VolumeControl::mixerCard = "default";
 #endif
 
 std::weak_ptr<VolumeControl> VolumeControl::sInstance;
 
 
 VolumeControl::VolumeControl()
-	: originalVolume(0), internalVolume(0)
+		: originalVolume(0), internalVolume(0)
 #if defined (__APPLE__)
-    //nothing at this time
+//nothing at this time
 #elif defined(__linux__)
-	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
 #elif defined(WIN32) || defined(_WIN32)
-	, mixerHandle(nullptr), endpointVolume(nullptr)
+, mixerHandle(nullptr), endpointVolume(nullptr)
 #endif
 {
 	init();
@@ -37,22 +40,21 @@ VolumeControl::VolumeControl()
 	originalVolume = getVolume();
 }
 
-VolumeControl::VolumeControl(const VolumeControl & right):
-	originalVolume(0), internalVolume(0)
+VolumeControl::VolumeControl(const VolumeControl &right) :
+		originalVolume(0), internalVolume(0)
 #if defined (__APPLE__)
-	//nothing at this time
+//nothing at this time
 #elif defined(__linux__)
-	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
 #elif defined(WIN32) || defined(_WIN32)
-	, mixerHandle(nullptr), endpointVolume(nullptr)
+, mixerHandle(nullptr), endpointVolume(nullptr)
 #endif
 {
-	(void)right;
+	(void) right;
 	sInstance = right.sInstance;
 }
 
-VolumeControl & VolumeControl::operator=(const VolumeControl & right)
-{
+VolumeControl &VolumeControl::operator=(const VolumeControl &right) {
 	if (this != &right) {
 		sInstance = right.sInstance;
 	}
@@ -60,16 +62,14 @@ VolumeControl & VolumeControl::operator=(const VolumeControl & right)
 	return *this;
 }
 
-VolumeControl::~VolumeControl()
-{
+VolumeControl::~VolumeControl() {
 	//set original volume levels for system
 	//setVolume(originalVolume);
 
 	deinit();
 }
 
-std::shared_ptr<VolumeControl> & VolumeControl::getInstance()
-{
+std::shared_ptr<VolumeControl> &VolumeControl::getInstance() {
 	//check if an VolumeControl instance is already created, if not create one
 	static std::shared_ptr<VolumeControl> sharedInstance = sInstance.lock();
 	if (sharedInstance == nullptr) {
@@ -79,11 +79,10 @@ std::shared_ptr<VolumeControl> & VolumeControl::getInstance()
 	return sharedInstance;
 }
 
-void VolumeControl::init()
-{
+void VolumeControl::init() {
 	//initialize audio mixer interface
 #if defined (__APPLE__)
-    //nothing at this time
+	//nothing at this time
 #elif defined(__linux__)
 	//try to open mixer device
 	if (mixerHandle == nullptr)
@@ -227,11 +226,10 @@ void VolumeControl::init()
 #endif
 }
 
-void VolumeControl::deinit()
-{
+void VolumeControl::deinit() {
 	//deinitialize audio mixer interface
 #if defined (__APPLE__)
-    //nothing at this time
+	//nothing at this time
 #elif defined(__linux__)
 	if (mixerHandle != nullptr) {
 		snd_mixer_detach(mixerHandle, mixerCard);
@@ -253,26 +251,25 @@ void VolumeControl::deinit()
 #endif
 }
 
-int VolumeControl::getVolume() const
-{
+int VolumeControl::getVolume() const {
 	int volume = 0;
 
 #if defined (__APPLE__)
 
 	const char *cmd = "osascript -e \"output volume of (get volume settings)\" 19, false";
-    FILE *pipe = popen(cmd, "r");
-    if (!pipe) {
-        volume = 0;
-    } else {
-        char buffer[128];
-        std::string result = "";
-        while (!feof(pipe)) {
-            if (fgets(buffer, 128, pipe) != NULL)
-                result += buffer;
-        }
-        pclose(pipe);
-        volume = std::stoi(result);
-    }
+	FILE *pipe = popen(cmd, "r");
+	if (!pipe) {
+		volume = 0;
+	} else {
+		char buffer[128];
+		std::string result = "";
+		while (!feof(pipe)) {
+			if (fgets(buffer, 128, pipe) != NULL)
+				result += buffer;
+		}
+		pclose(pipe);
+		volume = std::stoi(result);
+	}
 
 #elif defined(__linux__)
 	if (mixerElem != nullptr)
@@ -342,36 +339,31 @@ int VolumeControl::getVolume() const
 	}
 #endif
 	//clamp to 0-100 range
-	if (volume < 0)
-	{
+	if (volume < 0) {
 		volume = 0;
 	}
-	if (volume > 100)
-	{
+	if (volume > 100) {
 		volume = 100;
 	}
 	return volume;
 }
 
-void VolumeControl::setVolume(int volume)
-{
+void VolumeControl::setVolume(int volume) {
 	//clamp to 0-100 range
-	if (volume < 0)
-	{
+	if (volume < 0) {
 		volume = 0;
 	}
-	if (volume > 100)
-	{
+	if (volume > 100) {
 		volume = 100;
 	}
 	//store values in internal variables
 	internalVolume = volume;
 #if defined (__APPLE__)
 	std::string sVolume = std::to_string(volume);
-    std::string cmd1 = "osascript -e \"set volume output volume ";
-    std::string cmd2 = "\"";
-    std::string cmd = cmd1 + sVolume + cmd2;
-    system(cmd.c_str());
+	std::string cmd1 = "osascript -e \"set volume output volume ";
+	std::string cmd2 = "\"";
+	std::string cmd = cmd1 + sVolume + cmd2;
+	system(cmd.c_str());
 #elif defined(__linux__)
 	if (mixerElem != nullptr)
 	{

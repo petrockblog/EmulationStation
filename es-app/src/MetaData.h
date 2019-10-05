@@ -8,8 +8,7 @@
 
 namespace pugi { class xml_node; }
 
-enum MetaDataType
-{
+enum MetaDataType {
 	//generic types
 	MD_STRING,
 	MD_INT,
@@ -17,15 +16,14 @@ enum MetaDataType
 	MD_BOOL,
 
 	//specialized types
-	MD_MULTILINE_STRING,
+			MD_MULTILINE_STRING,
 	MD_PATH,
 	MD_RATING,
 	MD_DATE,
 	MD_TIME //used for lastplayed
 };
 
-struct MetaDataDecl
-{
+struct MetaDataDecl {
 	std::string key;
 	MetaDataType type;
 	std::string defaultValue;
@@ -34,35 +32,38 @@ struct MetaDataDecl
 	std::string displayPrompt; // phrase displayed in editors when prompted to enter value (currently only for strings)
 };
 
-enum MetaDataListType
-{
+enum MetaDataListType {
 	GAME_METADATA,
 	FOLDER_METADATA
 };
 
-const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type);
+const std::vector<MetaDataDecl> &getMDDByType(MetaDataListType type);
 
-class MetaDataList
-{
+class MetaDataList {
 public:
-	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node& node, const std::string& relativeTo);
-	void appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const std::string& relativeTo) const;
+	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node &node, const std::string &relativeTo);
+
+	void appendToXML(pugi::xml_node &parent, bool ignoreDefaults, const std::string &relativeTo) const;
 
 	MetaDataList(MetaDataListType type);
-	
-	void set(const std::string& key, const std::string& value);
 
-	const std::string& get(const std::string& key) const;
-	int getInt(const std::string& key) const;
-	float getFloat(const std::string& key) const;
+	void set(const std::string &key, const std::string &value);
+
+	const std::string &get(const std::string &key) const;
+
+	int getInt(const std::string &key) const;
+
+	float getFloat(const std::string &key) const;
 
 	bool isDefault();
 
 	bool wasChanged() const;
+
 	void resetChangedFlag();
 
 	inline MetaDataListType getType() const { return mType; }
-	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDByType(getType()); }
+
+	inline const std::vector<MetaDataDecl> &getMDD() const { return getMDDByType(getType()); }
 
 private:
 	MetaDataListType mType;

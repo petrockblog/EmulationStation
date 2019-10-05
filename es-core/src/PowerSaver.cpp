@@ -10,14 +10,12 @@ int PowerSaver::mWakeupTimeout = -1;
 int PowerSaver::mScreenSaverTimeout = -1;
 PowerSaver::mode PowerSaver::mMode = PowerSaver::DISABLED;
 
-void PowerSaver::init()
-{
+void PowerSaver::init() {
 	setState(true);
 	updateMode();
 }
 
-int PowerSaver::getTimeout()
-{
+int PowerSaver::getTimeout() {
 	if (SDL_GetAudioStatus() == SDL_AUDIO_PAUSED)
 		AudioManager::getInstance()->deinit();
 
@@ -25,8 +23,7 @@ int PowerSaver::getTimeout()
 	return mRunningScreenSaver ? mWakeupTimeout : mScreenSaverTimeout;
 }
 
-void PowerSaver::loadWakeupTime()
-{
+void PowerSaver::loadWakeupTime() {
 	// TODO : Move this to Screensaver Class
 	std::string behaviour = Settings::getInstance()->getString("ScreenSaverBehavior");
 	if (behaviour == "random video")
@@ -37,20 +34,17 @@ void PowerSaver::loadWakeupTime()
 		mWakeupTimeout = -1;
 }
 
-void PowerSaver::updateTimeouts()
-{
+void PowerSaver::updateTimeouts() {
 	mScreenSaverTimeout = (unsigned int) Settings::getInstance()->getInt("ScreenSaverTime");
 	mScreenSaverTimeout = mScreenSaverTimeout > 0 ? mScreenSaverTimeout - getMode() : -1;
 	loadWakeupTime();
 }
 
-PowerSaver::mode PowerSaver::getMode()
-{
+PowerSaver::mode PowerSaver::getMode() {
 	return mMode;
 }
 
-void PowerSaver::updateMode()
-{
+void PowerSaver::updateMode() {
 	std::string mode = Settings::getInstance()->getString("PowerSaverMode");
 
 	if (mode == "disabled") {
@@ -65,28 +59,23 @@ void PowerSaver::updateMode()
 	updateTimeouts();
 }
 
-bool PowerSaver::getState()
-{
+bool PowerSaver::getState() {
 	return mState;
 }
 
-void PowerSaver::setState(bool state)
-{
+void PowerSaver::setState(bool state) {
 	bool ps_enabled = Settings::getInstance()->getString("PowerSaverMode") != "disabled";
 	mState = ps_enabled && state;
 }
 
-void PowerSaver::runningScreenSaver(bool state)
-{
+void PowerSaver::runningScreenSaver(bool state) {
 	mRunningScreenSaver = state;
-	if (mWakeupTimeout < mMode)
-	{
+	if (mWakeupTimeout < mMode) {
 		// Disable PS if wake up time is less than mode as PS will never trigger
 		setState(!state);
 	}
 }
 
-bool PowerSaver::isScreenSaverActive()
-{
+bool PowerSaver::isScreenSaverActive() {
 	return mRunningScreenSaver;
 }

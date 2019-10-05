@@ -5,16 +5,18 @@
 #include "SystemData.h"
 #include <iostream>
 #include <signal.h>
+
 #if defined(__linux__) || defined(__APPLE__)
+
 #include <unistd.h>
+
 #elif defined(WIN32)
 #include <Windows.h>
 #endif
 
-std::ostream& out = std::cout;
+std::ostream &out = std::cout;
 
-void handle_interrupt_signal(int /*p*/)
-{
+void handle_interrupt_signal(int /*p*/) {
 	sleep(50);
 
 	LOG(LogInfo) << "Interrupt received during scrape...";
@@ -24,8 +26,7 @@ void handle_interrupt_signal(int /*p*/)
 	exit(1);
 }
 
-int run_scraper_cmdline()
-{
+int run_scraper_cmdline() {
 	out << "EmulationStation scraper\n";
 	out << "========================\n";
 	out << "\n";
@@ -35,8 +36,7 @@ int run_scraper_cmdline()
 	//==================================================================================
 	//filter
 	//==================================================================================
-	enum FilterChoice
-	{
+	enum FilterChoice {
 		FILTER_MISSING_IMAGES,
 		FILTER_ALL
 	};
@@ -49,7 +49,7 @@ int run_scraper_cmdline()
 
 		std::cin >> filter_choice;
 		std::cin.ignore(1, '\n'); //skip the unconsumed newline
-	} while(filter_choice < FILTER_MISSING_IMAGES || filter_choice > FILTER_ALL);
+	} while (filter_choice < FILTER_MISSING_IMAGES || filter_choice > FILTER_ALL);
 
 	out << "\n";
 
@@ -57,33 +57,30 @@ int run_scraper_cmdline()
 	//platforms
 	//==================================================================================
 
-	std::vector<SystemData*> systems;
+	std::vector<SystemData *> systems;
 
 	out << "You can scrape only specific platforms, or scrape all of them.\n";
 	out << "Would you like to scrape all platforms? (y/n)\n";
 
 	std::string system_choice;
 	std::getline(std::cin, system_choice);
-	
-	if(system_choice == "y" || system_choice == "Y")
-	{
+
+	if (system_choice == "y" || system_choice == "Y") {
 		out << "Will scrape all platforms.\n";
-		for(auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++)
-		{
+		for (auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++) {
 			out << "   " << (*i)->getName() << " (" << (*i)->getGameCount() << " games)\n";
 			systems.push_back(*i);
 		}
 
-	}else{
+	} else {
 		std::string sys_name;
 
 		out << "Enter the names of the platforms you would like to scrape, one at a time.\n";
 		out << "Type nothing and press enter when you are ready to continue.\n";
 
 		do {
-			for(auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++)
-			{
-				if(std::find(systems.cbegin(), systems.cend(), (*i)) != systems.cend())
+			for (auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++) {
+				if (std::find(systems.cbegin(), systems.cend(), (*i)) != systems.cend())
 					out << " C ";
 				else
 					out << "   ";
@@ -92,25 +89,23 @@ int run_scraper_cmdline()
 			}
 
 			std::getline(std::cin, sys_name);
-			
-			if(sys_name.empty())
+
+			if (sys_name.empty())
 				break;
 
 			bool found = false;
-			for(auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++)
-			{
-				if((*i)->getName() == sys_name)
-				{
+			for (auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++) {
+				if ((*i)->getName() == sys_name) {
 					systems.push_back(*i);
 					found = true;
 					break;
 				}
 			}
 
-			if(!found)
+			if (!found)
 				out << "System not found.\n";
 
-		} while(true);
+		} while (true);
 	}
 
 	//==================================================================================
@@ -128,11 +123,10 @@ int run_scraper_cmdline()
 
 	bool manual_mode = false;
 
-	if(manual_mode_str == "y" || manual_mode_str == "Y")
-	{
+	if (manual_mode_str == "y" || manual_mode_str == "Y") {
 		manual_mode = true;
 		out << "Scraping in manual mode!\n";
-	}else{
+	} else {
 		out << "Scraping in automatic mode!\n";
 	}
 
