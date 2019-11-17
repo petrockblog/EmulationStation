@@ -205,7 +205,7 @@ namespace Utils
 #elif defined(_WIN32)
 			WCHAR result[PATH_MAX];
 			DWORD len = GetModuleFileName(NULL, result, PATH_MAX);
-			if (len == 0) {
+			if (len != 0) {
 				result[len] = 0;
 				exePath = getCanonicalPath(_bstr_t(result));
 			}
