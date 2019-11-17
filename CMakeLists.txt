@@ -7,6 +7,10 @@ option(CEC "Set to ON to enable CEC" ${CEC})
 
 project(emulationstation-all)
 
+# program name to be used as a reference when looking up resources
+set(AppDataName "EmulationStation" CACHE STRING "Internal program name passed to compiler")
+add_definitions(-DAPPDATANAME="${AppDataName}")
+
 #-------------------------------------------------------------------------------
 #add local find scripts to CMAKE path
 LIST(APPEND CMAKE_MODULE_PATH
