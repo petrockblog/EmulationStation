@@ -7,6 +7,7 @@
 
 #if defined(_WIN32)
 // because windows...
+#include <comutil.h>
 #include <direct.h>
 #include <Windows.h>
 #define getcwd _getcwd
@@ -192,12 +193,30 @@ namespace Utils
 
 		} // getCWDPath
 
-		void setExePath(const std::string& _path)
+		void setExePath(const std::string& fallback)
 		{
-			exePath = getCanonicalPath(_path);
+#if defined(__linux__)
+			char result[PATH_MAX];
+			ssize_t len = readlink("/proc/self/exe", result, PATH_MAX);
+			if (len != -1) {
+				result[len] = 0;
+				exePath = getCanonicalPath(result);
+			}
+#elif defined(_WIN32)
+			WCHAR result[PATH_MAX];
+			DWORD len = GetModuleFileName(NULL, result, PATH_MAX);
+			if (len == 0) {
+				result[len] = 0;
+				exePath = getCanonicalPath(_bstr_t(result));
+			}
+#endif
+			if (exePath.empty()) {
+			    exePath = getCanonicalPath(fallback);
+			}
 
-			if(isRegularFile(exePath))
+			if (isRegularFile(exePath)) {
 				exePath = getParent(exePath);
+			}
 
 		} // setExePath
 
