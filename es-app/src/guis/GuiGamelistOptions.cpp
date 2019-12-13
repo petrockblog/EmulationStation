@@ -27,6 +27,8 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 		// define supported character range
 		// this range includes all numbers, capital letters, and most reasonable symbols
+		// However, if all the roms have not-reasonable names(i.e. Chinese), we need to fix it.
+		bool bHasAsciiName = false;
 		char startChar = '!';
 		char endChar = '_';
 
@@ -45,6 +47,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 				if (c == candidate)
 				{
 					mJumpToLetterList->add(std::string(1, c), c, c == curChar);
+					bHasAsciiName = true;
 					break;
 				}
 			}
@@ -64,7 +67,8 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 			}
 			return false;
 		};
-		mMenu.addRow(row);
+		if(bHasAsciiName)
+			mMenu.addRow(row);
 
 		// sort list by
 		mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
