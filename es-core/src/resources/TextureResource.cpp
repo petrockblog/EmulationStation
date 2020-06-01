@@ -83,7 +83,8 @@ bool TextureResource::isTiled() const
 {
 	if (mTextureData != nullptr)
 		return mTextureData->tiled();
-	std::shared_ptr<TextureData> data = sTextureDataManager.get(this);
+
+	std::shared_ptr<TextureData> data = sTextureDataManager.get(this, false);
 	return data->tiled();
 }
 
@@ -94,10 +95,8 @@ bool TextureResource::bind()
 		mTextureData->uploadAndBind();
 		return true;
 	}
-	else
-	{
-		return sTextureDataManager.bind(this);
-	}
+
+	return sTextureDataManager.bind(this);	
 }
 
 std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, bool tile, bool forceLoad, bool dynamic)
@@ -125,13 +124,8 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 	tex = std::shared_ptr<TextureResource>(new TextureResource(key.first, tile, dynamic));
 	std::shared_ptr<TextureData> data = sTextureDataManager.get(tex.get());
 
-	// is it an SVG?
-	if(key.first.substr(key.first.size() - 4, std::string::npos) != ".svg")
-	{
-		// Probably not. Add it to our map. We don't add SVGs because 2 svgs might be rasterized at different sizes
-		sTextureMap[key] = std::weak_ptr<TextureResource>(tex);
-	}
-
+	sTextureMap[key] = std::weak_ptr<TextureResource>(tex);
+	
 	// Add it to the reloadable list
 	rm->addReloadable(tex);
 
@@ -139,7 +133,9 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 	if (forceLoad)
 	{
 		tex->mForceLoad = forceLoad;
-		data->load();
+
+		if (data != nullptr && !data->isLoaded())
+			data->load();
 	}
 
 	return tex;
@@ -148,15 +144,22 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 // For scalable source images in textures we want to set the resolution to rasterize at
 void TextureResource::rasterizeAt(size_t width, size_t height)
 {
+	// Avoids crashing if a theme (in grids) defines negative sizes
+	if (width < 0) width = -width;
+	if (height < 0) height = -height;
+
 	std::shared_ptr<TextureData> data;
 	if (mTextureData != nullptr)
 		data = mTextureData;
 	else
 		data = sTextureDataManager.get(this);
+
 	mSourceSize = Vector2f((float)width, (float)height);
 	data->setSourceSize((float)width, (float)height);
+
 	if (mForceLoad || (mTextureData != nullptr))
-		data->load();
+		if (!data->isLoaded())
+			data->load();
 }
 
 Vector2f TextureResource::getSourceImageSize() const

@@ -52,6 +52,9 @@ bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length
 		return false;
 	}
 
+	if (svgImage->width == 0 || svgImage->height == 0)
+		return false;
+
 	// We want to rasterise this texture at a specific resolution. If the source size
 	// variables are set then use them otherwise set them from the parsed file
 	if ((mSourceWidth == 0.0f) && (mSourceHeight == 0.0f))
@@ -59,8 +62,11 @@ bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length
 		mSourceWidth = svgImage->width;
 		mSourceHeight = svgImage->height;
 	}
-	mWidth = (size_t)Math::round(mSourceWidth);
-	mHeight = (size_t)Math::round(mSourceHeight);
+	else
+		mSourceWidth = (mSourceHeight * svgImage->width) / svgImage->height; // FCA : Always compute width using source aspect ratio
+
+	mWidth = (int) mSourceWidth;
+	mHeight = (int) mSourceHeight;
 
 	if (mWidth == 0)
 	{
@@ -228,8 +234,8 @@ float TextureData::sourceHeight()
 void TextureData::setSourceSize(float width, float height)
 {
 	if (mScalable)
-	{
-		if ((mSourceWidth != width) || (mSourceHeight != height))
+	{	
+		if (mSourceHeight < height)
 		{
 			mSourceWidth = width;
 			mSourceHeight = height;
