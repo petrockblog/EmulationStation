@@ -24,6 +24,7 @@
 #ifdef WIN32
 #include <Windows.h>
 #endif
+#include "LocaleES.h"
 
 #include <FreeImage.h>
 
@@ -213,6 +214,28 @@ bool verifyHomeFolderExists()
 	return true;
 }
 
+void locales_init() {
+#ifdef HAVE_GETTEXT
+  char* btd;
+  char* cs;
+
+#define LOCALEDIR INSTALLATION_PREFIX_DIR "/share/locale"
+// local dir ; uncomment if you want to use locally compiled .mo files instead of .mo from the installation dir (present only after make install)
+//#define LOCALEDIR "./locale/lang"
+
+  setlocale (LC_MESSAGES, "");
+  textdomain("emulationstation");
+  if((btd=bindtextdomain("emulationstation", LOCALEDIR)) == NULL) {
+    return;
+  }
+
+  cs = bind_textdomain_codeset("emulationstation", "UTF-8");
+  if(cs == NULL) {
+    /* outch not enough memory, no real thing to do */
+  }
+#endif
+}
+
 // Returns true if everything is OK,
 bool loadSystemConfigFile(const char** errorString)
 {
@@ -304,6 +327,9 @@ int main(int argc, char* argv[])
 	//always close the log on exit
 	atexit(&onExit);
 
+	// Set locale
+	locales_init();
+
 	Window window;
 	SystemScreenSaver screensaver(&window);
 	PowerSaver::init();
@@ -325,9 +351,9 @@ int main(int argc, char* argv[])
 
 		if(splashScreen)
 		{
-			std::string progressText = "Loading...";
+			std::string progressText = _("Loading...");
 			if (splashScreenProgress)
-				progressText = "Loading system config...";
+				progressText = _("Loading system config...");
 			window.renderLoadingScreen(progressText);
 		}
 	}
@@ -347,7 +373,7 @@ int main(int argc, char* argv[])
 		// we can't handle es_systems.cfg file problems inside ES itself, so display the error message then quit
 		window.pushGui(new GuiMsgBox(&window,
 			errorMsg,
-			"QUIT", [] {
+			_("QUIT"), [] {
 				SDL_Event* quit = new SDL_Event();
 				quit->type = SDL_QUIT;
 				SDL_PushEvent(quit);
@@ -368,7 +394,7 @@ int main(int argc, char* argv[])
 	ViewController::get()->preload();
 
 	if(splashScreen && splashScreenProgress)
-		window.renderLoadingScreen("Done.");
+		window.renderLoadingScreen(_("Done."));
 
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
