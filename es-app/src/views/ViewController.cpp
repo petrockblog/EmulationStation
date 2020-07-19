@@ -235,6 +235,8 @@ void ViewController::launch(FileData* game, Vector3f center)
 			game->launchGame(mWindow);
 			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
+			if (mCurrentView)
+				mCurrentView->onShow();
 		});
 	} else if (transition_style == "slide"){
 		// move camera to zoom in on center + fade out, launch game, come back in
@@ -244,6 +246,8 @@ void ViewController::launch(FileData* game, Vector3f center)
 			mCamera = origCamera;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
+			if (mCurrentView)
+				mCurrentView->onShow();
 		});
 	} else { // instant
 		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, [this, origCamera, center, game]
@@ -252,6 +256,8 @@ void ViewController::launch(FileData* game, Vector3f center)
 			mCamera = origCamera;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
+			if (mCurrentView)
+				mCurrentView->onShow();
 		});
 	}
 }
@@ -360,7 +366,7 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 
 	// open menu
-	if(!UIModeController::getInstance()->isUIModeKid() && config->isMappedTo("start", input) && input.value != 0)
+	if(!(UIModeController::getInstance()->isUIModeKid() && Settings::getInstance()->getBool("DisableKidStartMenu")) && config->isMappedTo("start", input) && input.value != 0)
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));
@@ -527,7 +533,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 		return prompts;
 
 	prompts = mCurrentView->getHelpPrompts();
-	if(!UIModeController::getInstance()->isUIModeKid())
+	if(!(UIModeController::getInstance()->isUIModeKid() && Settings::getInstance()->getBool("DisableKidStartMenu")))
 		prompts.push_back(HelpPrompt("start", "menu"));
 
 	return prompts;

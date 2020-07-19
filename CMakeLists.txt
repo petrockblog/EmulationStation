@@ -114,10 +114,14 @@ endif()
 endif()
 
 if(${GLSystem} MATCHES "Desktop OpenGL")
-    add_definitions(-DUSE_OPENGL_21)
+    add_definitions(-DUSE_OPENGL_14)
 else()
     add_definitions(-DUSE_OPENGLES_10)
 endif()
+
+# Enable additional defines for the Debug build configuration
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
 
 #-------------------------------------------------------------------------------
 #add include directories

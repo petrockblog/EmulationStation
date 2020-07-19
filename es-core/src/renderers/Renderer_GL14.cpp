@@ -1,11 +1,11 @@
-#if defined(USE_OPENGLES_10)
+#if defined(USE_OPENGL_14)
 
 #include "renderers/Renderer.h"
 #include "math/Transform4x4f.h"
 #include "Log.h"
 #include "Settings.h"
 
-#include <SDL_opengles.h>
+#include <SDL_opengl.h>
 #include <SDL.h>
 
 namespace Renderer
@@ -78,9 +78,9 @@ namespace Renderer
 
 	void setupWindow()
 	{
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_ES);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
 
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,           8);
 		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,         8);
@@ -263,4 +263,4 @@ namespace Renderer
 
 } // Renderer::
 
-#endif // USE_OPENGLES_10
+#endif // USE_OPENGL_14

@@ -82,6 +82,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	mGrid.setEntry(mSubtitle1, Vector2i(0, 2), false, true);
 
 	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "HOLD ANY BUTTON TO SKIP", Font::get(FONT_SIZE_SMALL), 0x999999FF, ALIGN_CENTER);
+	mSubtitle2->setOpacity(GUI_INPUT_CONFIG_LIST[0].skippable * 255);
 	mGrid.setEntry(mSubtitle2, Vector2i(0, 3), false, true);
 
 	// 4 is a spacer row

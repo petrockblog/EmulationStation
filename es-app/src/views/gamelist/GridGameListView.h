@@ -6,12 +6,16 @@
 #include "components/RatingComponent.h"
 #include "components/ScrollableContainer.h"
 #include "components/ImageGridComponent.h"
+#include "components/VideoComponent.h"
 #include "views/gamelist/ISimpleGameListView.h"
 
 class GridGameListView : public ISimpleGameListView
 {
 public:
 	GridGameListView(Window* window, FileData* root);
+	virtual ~GridGameListView();
+
+	virtual void onShow() override;
 
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
@@ -26,6 +30,7 @@ public:
 	virtual void launch(FileData* game) override;
 
 protected:
+	virtual void update(int deltaTime) override;
 	virtual std::string getQuickSystemSelectRightButton() override;
 	virtual std::string getQuickSystemSelectLeftButton() override;
 	virtual void populateList(const std::vector<FileData*>& files) override;
@@ -43,6 +48,10 @@ private:
 
 	TextComponent mLblRating, mLblReleaseDate, mLblDeveloper, mLblPublisher, mLblGenre, mLblPlayers, mLblLastPlayed, mLblPlayCount;
 
+	ImageComponent mMarquee;
+	VideoComponent* mVideo;
+	bool mVideoPlaying;
+	ImageComponent mImage;
 	RatingComponent mRating;
 	DateTimeComponent mReleaseDate;
 	TextComponent mDeveloper;
