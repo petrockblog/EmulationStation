@@ -107,7 +107,11 @@ void CollectionSystemManager::saveCustomCollection(SystemData* sys)
 		if (sysData.needsSave)
 		{
 			std::ofstream configFile;
+#if defined(_WIN32)
+			configFile.open(Utils::FileSystem::convertToWideString(getCustomCollectionConfigPath(name)));
+#else
 			configFile.open(getCustomCollectionConfigPath(name));
+#endif
 			for(std::unordered_map<std::string, FileData*>::const_iterator iter = games.cbegin(); iter != games.cend(); ++iter)
 			{
 				std::string path =  iter->first;
@@ -761,7 +765,11 @@ void CollectionSystemManager::populateCustomCollection(CollectionSystemData* sys
 	FileFilterIndex* index = newSys->getIndex();
 
 	// get Configuration for this Custom System
+#if defined(_WIN32)
+	std::ifstream input(Utils::FileSystem::convertToWideString(path));
+#else
 	std::ifstream input(path);
+#endif
 
 	// get all files map
 	std::unordered_map<std::string,FileData*> allFilesMap = getAllGamesCollection()->getRootFolder()->getChildrenByFilename();

@@ -279,7 +279,11 @@ bool SystemData::loadConfig()
 
 void SystemData::writeExampleConfig(const std::string& path)
 {
+#if defined(_WIN32)
+	std::ofstream file(Utils::FileSystem::convertToWideString(path));
+#else
 	std::ofstream file(path.c_str());
+#endif
 
 	file << "<!-- This is the EmulationStation Systems configuration file.\n"
 			"All systems must be contained within the <systemList> tag.-->\n"
