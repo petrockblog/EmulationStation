@@ -200,7 +200,11 @@ void Settings::saveFile()
 		node.append_attribute("value").set_value(iter->second.c_str());
 	}
 
+#if defined(_WIN32)
+	doc.save_file(Utils::FileSystem::convertToWideString(path).c_str());
+#else
 	doc.save_file(path.c_str());
+#endif
 
 	Scripting::fireEvent("config-changed");
 	Scripting::fireEvent("settings-changed");
@@ -214,7 +218,11 @@ void Settings::loadFile()
 		return;
 
 	pugi::xml_document doc;
+#if defined(_WIN32)
+	pugi::xml_parse_result result = doc.load_file(Utils::FileSystem::convertToWideString(path).c_str());
+#else
 	pugi::xml_parse_result result = doc.load_file(path.c_str());
+#endif
 	if(!result)
 	{
 		LOG(LogError) << "Could not parse Settings file!\n   " << result.description();

@@ -238,8 +238,11 @@ namespace Utils
 			constexpr int path_max = 32767;
 #if defined(_WIN32)
 			std::wstring result(path_max, 0);
-			if(GetModuleFileNameW(nullptr, &result[0], path_max) != 0)
+			DWORD r;
+			if((r = GetModuleFileNameW(nullptr, (LPWSTR)result.data(), result.size())) != 0){
+				result.resize(r);
 				exePath = convertFromWideString(result);
+			}
 #else
 			std::string result(path_max, 0);
 			if(readlink("/proc/self/exe", &result[0], path_max) != -1)
@@ -554,10 +557,11 @@ namespace Utils
 			if(hFile != INVALID_HANDLE_VALUE)
 			{
 				std::wstring wresolved;
-				wresolved.resize(GetFinalPathNameByHandleW(hFile, nullptr, 0, FILE_NAME_NORMALIZED) + 1);
-				if(GetFinalPathNameByHandleW(hFile, (LPWSTR)wresolved.data(), (DWORD)wresolved.size(), FILE_NAME_NORMALIZED) > 0)
+				DWORD r;
+				wresolved.resize(GetFinalPathNameByHandleW(hFile, nullptr, 0, FILE_NAME_NORMALIZED));
+				if((r = GetFinalPathNameByHandleW(hFile, (LPWSTR)wresolved.data(), wresolved.size(), FILE_NAME_NORMALIZED)) > 0)
 				{
-					wresolved.resize(wresolved.size() - 1);
+					wresolved.resize(r);
 					resolved = convertFromWideString(wresolved);
 					resolved = getGenericPath(resolved);
 				}
