@@ -43,3 +43,9 @@ CPackSourceConfig.cmake
 
 # VSCode
 .vscode/
+/.vs
+*.manifest
+*.json
+*.exe
+*.lib
+
