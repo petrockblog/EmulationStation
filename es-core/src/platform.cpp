@@ -15,7 +15,9 @@ int runShutdownCommand()
 #ifdef WIN32 // windows
 	return system("shutdown -s -t 0");
 #else // osx / linux
-	return system("sudo shutdown -h now");
+	int pid = system("sudo omxplayer -b /opt/retropie/configs/all/emulationstation/video/poweroff.mp4");
+	pid = system("sudo shutdown -h now");
+	return pid;
 #endif
 }
 
@@ -24,7 +26,9 @@ int runRestartCommand()
 #ifdef WIN32 // windows
 	return system("shutdown -r -t 0");
 #else // osx / linux
-	return system("sudo shutdown -r now");
+	int pid = system("sudo omxplayer -b /opt/retropie/configs/all/emulationstation/video/restart.mp4");
+	pid = system("sudo shutdown -r now");
+	return pid;
 #endif
 }
 
