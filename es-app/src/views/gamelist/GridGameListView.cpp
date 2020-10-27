@@ -17,7 +17,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mImage(window),
 	mVideo(nullptr),
 	mVideoPlaying(false),
-	mDescContainer(window), mDescription(window),
+	mDescContainer(window, DESCRIPTION_SCROLL_DELAY), mDescription(window),
 
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window),
 	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window),
@@ -88,7 +88,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
-	
+
 	mMarquee.setOrigin(0.5f, 0.5f);
 	mMarquee.setPosition(mSize.x() * 0.25f, mSize.y() * 0.10f);
 	mMarquee.setMaxSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.18f);
@@ -320,7 +320,7 @@ void GridGameListView::updateInfoPanel()
 		mVideo->setImage(file->getThumbnailPath());
 		mMarquee.setImage(file->getMarqueePath());
 		mImage.setImage(file->getImagePath());
- 
+
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
@@ -377,7 +377,7 @@ void GridGameListView::addPlaceholder()
 }
 
 void GridGameListView::launch(FileData* game)
-{	
+{
 	float screenWidth = (float) Renderer::getScreenWidth();
 	float screenHeight = (float) Renderer::getScreenHeight();
 
@@ -394,7 +394,7 @@ void GridGameListView::launch(FileData* game)
 		 mImage.getPosition().y() < screenHeight && mImage.getPosition().y() > 2.0f))
 	{
 		target = Vector3f(mImage.getCenter().x(), mImage.getCenter().y(), 0);
-	}	
+	}
 	else if(mVideo->getPosition().x() < screenWidth && mVideo->getPosition().x() > 0.0f &&
 		 mVideo->getPosition().y() < screenHeight && mVideo->getPosition().y() > 0.0f)
 	{
@@ -493,4 +493,8 @@ void GridGameListView::onShow()
 {
 	GuiComponent::onShow();
 	updateInfoPanel();
+}
+
+void GridGameListView::onFocusLost() {
+	mDescContainer.reset();
 }

@@ -13,7 +13,7 @@
 
 VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),
-	mDescContainer(window), mDescription(window),
+	mDescContainer(window, DESCRIPTION_SCROLL_DELAY), mDescription(window),
 	mThumbnail(window),
 	mMarquee(window),
 	mImage(window),
@@ -395,4 +395,8 @@ void VideoGameListView::onShow()
 {
 	GuiComponent::onShow();
 	updateInfoPanel();
+}
+
+void VideoGameListView::onFocusLost() {
+	mDescContainer.reset();
 }
