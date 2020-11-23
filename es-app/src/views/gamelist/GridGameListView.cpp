@@ -88,27 +88,33 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
-	
-	mMarquee.setOrigin(0.5f, 0.5f);
-	mMarquee.setPosition(mSize.x() * 0.25f, mSize.y() * 0.10f);
-	mMarquee.setMaxSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.18f);
-	mMarquee.setDefaultZIndex(35);
-	mMarquee.setVisible(false);
-	addChild(&mMarquee);
 
+	// Image
+	// Default to off the screen
 	mImage.setOrigin(0.5f, 0.5f);
 	mImage.setPosition(2.0f, 2.0f);
-	mImage.setMaxSize(1.0f, 1.0f);
-	mImage.setDefaultZIndex(10);
+	mImage.setMaxSize(mSize.x(), mSize.y());
+	mImage.setDefaultZIndex(30);
 	mImage.setVisible(false);
 	addChild(&mImage);
 
+	// Video
+	// Default to off the screen
 	mVideo->setOrigin(0.5f, 0.5f);
-	mVideo->setPosition(mSize.x() * 0.25f, mSize.y() * 0.4f);
-	mVideo->setSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.4f);
-	mVideo->setDefaultZIndex(15);
+	mVideo->setPosition(2.0f, 2.0f);
+	mVideo->setSize(mSize.x(), mSize.y());
+	mVideo->setDefaultZIndex(30);
 	mVideo->setVisible(false);
 	addChild(mVideo);
+
+	// Marquee
+	// Default to off the screen
+	mMarquee.setOrigin(0.5f, 0.5f);
+	mMarquee.setPosition(2.0f, 2.0f);
+	mMarquee.setMaxSize(mSize.x(), mSize.y());
+	mMarquee.setDefaultZIndex(35);
+	mMarquee.setVisible(false);
+	addChild(&mMarquee);
 
 	initMDLabels();
 	initMDValues();
@@ -320,7 +326,7 @@ void GridGameListView::updateInfoPanel()
 		mVideo->setImage(file->getThumbnailPath());
 		mMarquee.setImage(file->getMarqueePath());
 		mImage.setImage(file->getImagePath());
- 
+
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
@@ -377,7 +383,7 @@ void GridGameListView::addPlaceholder()
 }
 
 void GridGameListView::launch(FileData* game)
-{	
+{
 	float screenWidth = (float) Renderer::getScreenWidth();
 	float screenHeight = (float) Renderer::getScreenHeight();
 
@@ -394,7 +400,7 @@ void GridGameListView::launch(FileData* game)
 		 mImage.getPosition().y() < screenHeight && mImage.getPosition().y() > 2.0f))
 	{
 		target = Vector3f(mImage.getCenter().x(), mImage.getCenter().y(), 0);
-	}	
+	}
 	else if(mVideo->getPosition().x() < screenWidth && mVideo->getPosition().x() > 0.0f &&
 		 mVideo->getPosition().y() < screenHeight && mVideo->getPosition().y() > 0.0f)
 	{
