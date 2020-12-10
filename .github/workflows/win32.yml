@@ -26,9 +26,7 @@ jobs:
 
       - name: setup directories
         working-directory: ${{runner.workspace}}
-        run: |
-          mkdir build
-          mkdir nuget
+        run: mkdir build nuget
 
       - uses: actions/checkout@v2
         with:
@@ -37,14 +35,7 @@ jobs:
       - uses: microsoft/setup-msbuild@v1.0.2
 
       - working-directory: ${{runner.workspace}}/nuget
-        run: |
-          nuget install -ExcludeVersion VideoLAN.LibVLC.Windows
-          cd VideoLAN.LibVLC.Windows/build/x86/include/vlc
-          copy libvlc_media.h libvlc_media.h.dist
-          echo typedef signed int ssize_t;>$ssize_t.h
-          copy /y $ssize_t.h + libvlc_media.h.dist libvlc_media.h
-          del $ssize_t.h
-
+        run: nuget install -ExcludeVersion VideoLAN.LibVLC.Windows
       - run: vcpkg install curl:x86-windows-static-md
       - run: vcpkg install freeimage:x86-windows-static-md
       - run: vcpkg install freetype:x86-windows-static-md
@@ -69,14 +60,18 @@ jobs:
       - working-directory: ${{runner.workspace}}
         run: cmake --build build --config %BUILD_TYPE%
 
-      - name: Create artifact
+      - name: Correct artifacts
         working-directory: ${{github.workspace}}/Release
         run: |
           cp ${{env.NUGET}}/VideoLAN.LibVLC.Windows/build/x86/libvlc.dll .
           cp ${{env.NUGET}}/VideoLAN.LibVLC.Windows/build/x86/libvlccore.dll .
           cp -r ${{github.workspace}}/resources resources
-          7z a ${{runner.workspace}}/EmulationStation.zip emulationstation.exe *.dll resources
 
       - uses: actions/upload-artifact@v2
         with:
-          path: ${{runner.workspace}}/EmulationStation.zip
+          name: EmulationStation
+          path: |
+            ${{github.workspace}}/Release/emulationstation.exe
+            ${{github.workspace}}/Release/libvlc.dll
+            ${{github.workspace}}/Release/libvlccore.dll
+            ${{github.workspace}}/Release/resources/

@@ -119,8 +119,8 @@ if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     add_definitions(-DNOMINMAX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4018 /wd4244 /wd4996") #multi-processor compilation
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP /wd4018 /wd4244 /wd4996") #multi-processor compilation
 
     # Set the start-up project to in VS to 'emulationstation'
     set(VS_STARTUP_PROJECT "emulationstation")
