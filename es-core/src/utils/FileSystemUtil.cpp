@@ -481,10 +481,12 @@ namespace Utils
 
 //////////////////////////////////////////////////////////////////////////
 
-		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
+		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome, const bool _searchParents)
 		{
 			const std::string path       = getGenericPath(_path);
-			const std::string relativeTo = isDirectory(_relativeTo) ? getGenericPath(_relativeTo) : getParent(_relativeTo);
+
+			// Do not invoke isDirectory() and touch the filesystem during gamelist processing or there will be significant loading delay
+			const std::string relativeTo = _searchParents ? (isDirectory(_relativeTo) ? getGenericPath(_relativeTo) : getParent(_relativeTo)) : getGenericPath(_relativeTo);
 
 			// nothing to resolve
 			if(!path.length())
@@ -505,10 +507,10 @@ namespace Utils
 
 //////////////////////////////////////////////////////////////////////////
 
-		std::string createRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
+		std::string createRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome, const bool _searchParents)
 		{
 			bool        contains = false;
-			std::string path     = removeCommonPath(_path, _relativeTo, contains);
+			std::string path     = removeCommonPath(_path, _relativeTo, contains, _searchParents);
 
 			// success
 			if(contains)
@@ -516,7 +518,7 @@ namespace Utils
 
 			if(_allowHome)
 			{
-				path = removeCommonPath(_path, getHomePath(), contains);
+				path = removeCommonPath(_path, getHomePath(), contains, _searchParents);
 
 				// success
 				if(contains)
@@ -530,10 +532,12 @@ namespace Utils
 
 //////////////////////////////////////////////////////////////////////////
 
-		std::string removeCommonPath(const std::string& _path, const std::string& _common, bool& _contains)
+		std::string removeCommonPath(const std::string& _path, const std::string& _common, bool& _contains, const bool _searchParents)
 		{
 			const std::string path   = getGenericPath(_path);
-			const std::string common = isDirectory(_common) ? getGenericPath(_common) : getParent(_common);
+
+			// Do not invoke isDirectory() and touch the filesystem during gamelist processing or there will be significant loading delay
+			const std::string common = _searchParents ? (isDirectory(_common) ? getGenericPath(_common) : getParent(_common)) : getGenericPath(_common);
 
 			// check if path contains common
 			if(path.find(common) == 0)
