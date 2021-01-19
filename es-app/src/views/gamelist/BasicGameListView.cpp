@@ -6,6 +6,8 @@
 #include "CollectionSystemManager.h"
 #include "Settings.h"
 #include "SystemData.h"
+#include "FileSorts.h"
+#include "FileData.h"
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
@@ -14,6 +16,10 @@ BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	mList.setPosition(0, mSize.y() * 0.2f);
 	mList.setDefaultZIndex(20);
 	addChild(&mList);
+
+	//Apply previously saved SortType to all game lists on startup
+	const FileData::SortType& sort = FileSorts::SortTypes.at(Settings::getInstance()->getInt("SortType"));
+	root->sort(sort);
 
 	populateList(root->getChildrenListToDisplay());
 }
@@ -54,6 +60,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	{
 		addPlaceholder();
 	}
+
 }
 
 FileData* BasicGameListView::getCursor()

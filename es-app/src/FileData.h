@@ -78,12 +78,13 @@ public:
 	typedef bool ComparisonFunction(const FileData* a, const FileData* b);
 	struct SortType
 	{
+		int id;
 		ComparisonFunction* comparisonFunction;
 		bool ascending;
 		std::string description;
 
-		SortType(ComparisonFunction* sortFunction, bool sortAscending, const std::string & sortDescription)
-			: comparisonFunction(sortFunction), ascending(sortAscending), description(sortDescription) {}
+		SortType(int id, ComparisonFunction* sortFunction, bool sortAscending, const std::string & sortDescription)
+			: id(id), comparisonFunction(sortFunction), ascending(sortAscending), description(sortDescription) {}
 	};
 
 	void sort(ComparisonFunction& comparator, bool ascending = true);

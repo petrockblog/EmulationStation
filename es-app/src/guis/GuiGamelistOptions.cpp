@@ -10,6 +10,7 @@
 #include "FileSorts.h"
 #include "GuiMetaDataEd.h"
 #include "SystemData.h"
+#include "FileData.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window),
 	mSystem(system), mMenu(window, "OPTIONS"), fromPlaceholder(false), mFiltersChanged(false)
@@ -68,13 +69,16 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 		// sort list by
 		mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
+		int selectedSortType = Settings::getInstance()->getInt("SortType");
 		for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
 		{
 			const FileData::SortType& sort = FileSorts::SortTypes.at(i);
-			mListSort->add(sort.description, &sort, i == 0); // TODO - actually make the sort type persistent
+			mListSort->add(sort.description, &sort, sort.id == selectedSortType);
 		}
 
 		mMenu.addWithLabel("SORT GAMES BY", mListSort);
+		addSaveFunc([this] { Settings::getInstance()->setInt("SortType", mListSort->getSelected()->id); });
+
 	}
 	// show filtered menu
 	if(!Settings::getInstance()->getBool("ForceDisableFilters"))
@@ -124,11 +128,21 @@ GuiGamelistOptions::~GuiGamelistOptions()
 {
 	// apply sort
 	if (!fromPlaceholder) {
-		FileData* root = mSystem->getRootFolder();
-		root->sort(*mListSort->getSelected()); // will also recursively sort children
 
-		// notify that the root folder was sorted
-		getGamelist()->onFileChanged(root, FILE_SORTED);
+		//Get the sort selection that was just applied via the GUI
+		const FileData::SortType& sortType = FileSorts::SortTypes.at(mListSort->getSelected()->id);
+
+		//Loop through all systems and apply the new SortType selection
+		for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++){
+			
+			FileData* root = (*it)->getRootFolder();
+			root->sort(sortType); // will also recursively sort children
+
+			// notify that the root folder was sorted (for each system)
+			ViewController::get()->getGameListView((*it)).get()->onFileChanged(root, FILE_SORTED);
+
+		}
+
 	}
 	if (mFiltersChanged)
 	{
@@ -137,6 +151,20 @@ GuiGamelistOptions::~GuiGamelistOptions()
 		// game is selected
 		ViewController::get()->reloadGameListView(mSystem);
 	}
+
+	save();
+
+}
+
+void GuiGamelistOptions::save()
+{
+	if(!mSaveFuncs.size())
+		return;
+
+	for(auto it = mSaveFuncs.cbegin(); it != mSaveFuncs.cend(); it++)
+		(*it)();
+
+	Settings::getInstance()->saveFile();
 }
 
 void GuiGamelistOptions::openGamelistFilter()

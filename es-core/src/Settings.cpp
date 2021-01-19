@@ -164,6 +164,8 @@ void Settings::setDefaults()
 	mIntMap["ScreenOffsetX"] = 0;
 	mIntMap["ScreenOffsetY"] = 0;
 	mIntMap["ScreenRotate"]  = 0;
+
+	mIntMap["SortType"]  = 0;
 }
 
 template <typename K, typename V>

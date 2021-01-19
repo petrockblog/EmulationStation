@@ -15,10 +15,11 @@ class GuiGamelistOptions : public GuiComponent
 public:
 	GuiGamelistOptions(Window* window, SystemData* system);
 	virtual ~GuiGamelistOptions();
-
+	void save();
 	virtual bool input(InputConfig* config, Input input) override;
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 	virtual HelpStyle getHelpStyle() override;
+	inline void addSaveFunc(const std::function<void()>& func) { mSaveFuncs.push_back(func); };
 
 private:
 	void openGamelistFilter();
@@ -39,6 +40,8 @@ private:
 	IGameListView* getGamelist();
 	bool fromPlaceholder;
 	bool mFiltersChanged;
+
+	std::vector< std::function<void()> > mSaveFuncs;
 };
 
 #endif // ES_APP_GUIS_GUI_GAME_LIST_OPTIONS_H
