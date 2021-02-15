@@ -4,7 +4,7 @@
 #include "resources/TextureResource.h"
 #include "ThemeData.h"
 
-GridTileComponent::GridTileComponent(Window* window) : GuiComponent(window), mBackground(window)
+GridTileComponent::GridTileComponent(Window* window) : GuiComponent(window), mBackground(window, ":/frame.png")
 {
 	mDefaultProperties.mSize = getDefaultTileSize();
 	mDefaultProperties.mPadding = Vector2f(16.0f, 16.0f);
@@ -68,7 +68,13 @@ void applyThemeToProperties(const ThemeData::ThemeElement* elem, GridTilePropert
 		properties->mSize = elem->get<Vector2f>("size") * screen;
 
 	if (elem->has("padding"))
-		properties->mPadding = elem->get<Vector2f>("padding");
+	{
+		properties->mPadding = elem->get<Vector2f>("padding") * screen;
+
+		// hack to fix broken themes now that this uses percentage rather than pixels
+		if(properties->mPadding.x() > screen.x())
+			properties->mPadding /= screen;
+	}
 
 	if (elem->has("imageColor"))
 		properties->mImageColor = elem->get<unsigned int>("imageColor");
@@ -77,7 +83,13 @@ void applyThemeToProperties(const ThemeData::ThemeElement* elem, GridTilePropert
 		properties->mBackgroundImage = elem->get<std::string>("backgroundImage");
 
 	if (elem->has("backgroundCornerSize"))
-		properties->mBackgroundCornerSize = elem->get<Vector2f>("backgroundCornerSize");
+	{
+		properties->mBackgroundCornerSize = elem->get<Vector2f>("backgroundCornerSize") * screen;
+
+		// hack to fix broken themes now that this uses percentage rather than pixels
+		if(properties->mBackgroundCornerSize.x() > screen.x())
+			properties->mBackgroundCornerSize /= screen;
+	}
 
 	if (elem->has("backgroundColor"))
 	{

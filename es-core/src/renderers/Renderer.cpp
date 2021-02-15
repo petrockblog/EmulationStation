@@ -10,6 +10,8 @@
 #include <SDL.h>
 #include <stack>
 
+//////////////////////////////////////////////////////////////////////////
+
 namespace Renderer
 {
 	static std::stack<Rect> clipStack;
@@ -23,11 +25,13 @@ namespace Renderer
 	static int              screenRotate       = 0;
 	static bool             initialCursorState = 1;
 
+//////////////////////////////////////////////////////////////////////////
+
 	static void setIcon()
 	{
 		size_t                     width   = 0;
 		size_t                     height  = 0;
-		ResourceData               resData = ResourceManager::getInstance()->getFileData(":/window_icon_256.png");
+		const ResourceData         resData = ResourceManager::getInstance()->getFileData(":/window_icon_256.png");
 		std::vector<unsigned char> rawData = ImageIO::loadFromMemoryRGBA32(resData.ptr.get(), resData.length, width, height);
 
 		if(!rawData.empty())
@@ -35,15 +39,15 @@ namespace Renderer
 			ImageIO::flipPixelsVert(rawData.data(), width, height);
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-			unsigned int rmask = 0xFF000000;
-			unsigned int gmask = 0x00FF0000;
-			unsigned int bmask = 0x0000FF00;
-			unsigned int amask = 0x000000FF;
+			const unsigned int rmask = 0xFF000000;
+			const unsigned int gmask = 0x00FF0000;
+			const unsigned int bmask = 0x0000FF00;
+			const unsigned int amask = 0x000000FF;
 #else
-			unsigned int rmask = 0x000000FF;
-			unsigned int gmask = 0x0000FF00;
-			unsigned int bmask = 0x00FF0000;
-			unsigned int amask = 0xFF000000;
+			const unsigned int rmask = 0x000000FF;
+			const unsigned int gmask = 0x0000FF00;
+			const unsigned int bmask = 0x00FF0000;
+			const unsigned int amask = 0xFF000000;
 #endif
 			// try creating SDL surface from logo data
 			SDL_Surface* logoSurface = SDL_CreateRGBSurfaceFrom((void*)rawData.data(), (int)width, (int)height, 32, (int)(width * 4), rmask, gmask, bmask, amask);
@@ -56,6 +60,8 @@ namespace Renderer
 		}
 
 	} // setIcon
+
+//////////////////////////////////////////////////////////////////////////
 
 	static bool createWindow()
 	{
@@ -81,7 +87,7 @@ namespace Renderer
 
 		setupWindow();
 
-		unsigned int windowFlags = (Settings::getInstance()->getBool("Windowed") ? 0 : (Settings::getInstance()->getBool("FullscreenBorderless") ? SDL_WINDOW_BORDERLESS : SDL_WINDOW_FULLSCREEN)) | getWindowFlags();
+		const unsigned int windowFlags = (Settings::getInstance()->getBool("Windowed") ? 0 : (Settings::getInstance()->getBool("FullscreenBorderless") ? SDL_WINDOW_BORDERLESS : SDL_WINDOW_FULLSCREEN)) | getWindowFlags();
 
 		if((sdlWindow = SDL_CreateWindow("EmulationStation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, windowFlags)) == nullptr)
 		{
@@ -99,6 +105,8 @@ namespace Renderer
 
 	} // createWindow
 
+//////////////////////////////////////////////////////////////////////////
+
 	static void destroyWindow()
 	{
 		destroyContext();
@@ -111,6 +119,8 @@ namespace Renderer
 		SDL_Quit();
 
 	} // destroyWindow
+
+//////////////////////////////////////////////////////////////////////////
 
 	bool init()
 	{
@@ -181,11 +191,15 @@ namespace Renderer
 
 	} // init
 
+//////////////////////////////////////////////////////////////////////////
+
 	void deinit()
 	{
 		destroyWindow();
 
 	} // deinit
+
+//////////////////////////////////////////////////////////////////////////
 
 	void pushClipRect(const Vector2i& _pos, const Vector2i& _size)
 	{
@@ -221,6 +235,8 @@ namespace Renderer
 
 	} // pushClipRect
 
+//////////////////////////////////////////////////////////////////////////
+
 	void popClipRect()
 	{
 		if(clipStack.empty())
@@ -235,6 +251,8 @@ namespace Renderer
 		else                  setScissor(clipStack.top());
 
 	} // popClipRect
+
+//////////////////////////////////////////////////////////////////////////
 
 	void drawRect(const float _x, const float _y, const float _w, const float _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
@@ -255,6 +273,8 @@ namespace Renderer
 		drawTriangleStrips(vertices, 4, _srcBlendFactor, _dstBlendFactor);
 
 	} // drawRect
+
+//////////////////////////////////////////////////////////////////////////
 
 	SDL_Window* getSDLWindow()     { return sdlWindow; }
 	int         getWindowWidth()   { return windowWidth; }

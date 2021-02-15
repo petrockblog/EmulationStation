@@ -10,8 +10,9 @@ option(USE_MESA_GLES "Set to ON to select the MESA OpenGL ES driver" ${USE_MESA_
 option(USE_GLES1 "Set to ON to force usage of the OpenGLES v1 renderer" ${USE_GLES1})
 
 # OpenGL library preference (https://cmake.org/cmake/help/git-stage/policy/CMP0072.html)
+# Set it to OLD to appease older proprietary drivers without libglvnd support
 if(POLICY CMP0072)
-   cmake_policy(SET CMP0072 NEW)
+   cmake_policy(SET CMP0072 OLD)
 endif()
 
 project(emulationstation-all)
@@ -56,10 +57,12 @@ elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/opt/vero3/lib/libMali.so")
     set(GLES_EXTRA_LIBRARIES EGL)
 
 #check if we're running on olinuxino / odroid / etc
-elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/libMali.so")
-    set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
-    set(HINT_GLES_LIBNAME Mali)
-
+elseif(
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/libMali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/libmali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/libMali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/mali-egl/libmali.so")
+        set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
 else()
     set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 endif(GLES)
@@ -71,16 +74,15 @@ if(${GLSystem} MATCHES "Desktop OpenGL")
     add_definitions(-DUSE_OPENGL_14)
 else()
     if(NOT USE_GLES1)
-      find_package(OpenGLES2 QUIET REQUIRED)
-      message(STATUS "Found GLESv2: ${OPENGLES2_LIBRARIES}")
-      set(OPENGLES_LIBRARIES ${OPENGLES2_LIBRARIES})
-      set(OPENGLES_INCLUDE_DIRS ${OPENGLES2_INCLUDE_DIRS})
-      add_definitions(-DUSE_OPENGLES_20)
+        find_package(OpenGLES2 QUIET REQUIRED)
+        message(STATUS "Found GLESv2: ${OPENGLES2_LIBRARIES}")
+        set(OPENGLES_LIBRARIES ${OPENGLES2_LIBRARIES})
+        set(OPENGLES_INCLUDE_DIRS ${OPENGLES2_INCLUDE_DIRS})
+        add_definitions(-DUSE_OPENGLES_20)
     else()
-      set(HINT_GLES_LIBNAME GLESv1_CM)
-      find_package(OpenGLES QUIET REQUIRED)
-      message(STATUS "Found GLES: ${OPENGLES_LIBRARIES}")
-      add_definitions(-DUSE_OPENGLES_10)
+        find_package(OpenGLES QUIET REQUIRED)
+        message(STATUS "Found GLES: ${OPENGLES_LIBRARIES}")
+        add_definitions(-DUSE_OPENGLES_10)
     endif()
 endif()
 
