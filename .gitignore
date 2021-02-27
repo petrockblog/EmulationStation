@@ -43,5 +43,3 @@ CPackSourceConfig.cmake
 
 # VSCode
 .vscode/
-/.vs/config
-/.vs
