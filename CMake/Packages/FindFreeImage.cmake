@@ -34,8 +34,9 @@ clear_if_changed(FreeImage_PREFIX_PATH
 
 set(FreeImage_LIBRARY_NAMES freeimage freeimageLib)
 get_debug_names(FreeImage_LIBRARY_NAMES)
-
-use_pkgconfig(FreeImage_PKGC freeimage)
+if(NOT WIN32)
+  use_pkgconfig(FreeImage_PKGC freeimage)
+endif(NOT WIN32)
 
 findpkg_framework(FreeImage)
 

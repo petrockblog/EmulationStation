@@ -29,15 +29,17 @@ if(NOT WIN32)
 endif(NOT WIN32)
 
 # TODO add argument support to pass version on find_package
-include(MacroEnsureVersion)
-macro_ensure_version(1.0.0 ${VLC_VERSION} VLC_VERSION_OK)
-if(VLC_VERSION_OK)
-  set(VLC_FOUND TRUE)
-  message(STATUS "VLC library found")
-else(VLC_VERSION_OK)
-  set(VLC_FOUND FALSE)
-  message(FATAL_ERROR "VLC library not found")
-endif(VLC_VERSION_OK)
+if(NOT WIN32)
+  include(MacroEnsureVersion)
+  macro_ensure_version(1.0.0 ${VLC_VERSION} VLC_VERSION_OK)
+  if(VLC_VERSION_OK)
+    set(VLC_FOUND TRUE)
+    message(STATUS "VLC library found")
+  else(VLC_VERSION_OK)
+    set(VLC_FOUND FALSE)
+    message(FATAL_ERROR "VLC library not found")
+  endif(VLC_VERSION_OK)
+endif(NOT WIN32)
 
 find_path(VLC_INCLUDE_DIR
           NAMES vlc.h
