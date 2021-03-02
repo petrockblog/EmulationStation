@@ -65,7 +65,7 @@ const std::map<PlatformId, std::string> gamesdb_new_platformid_map{
 	{ NINTENDO_DS, "8" },
 	{ FAMICOM_DISK_SYSTEM, "4936" },
 	{ NINTENDO_ENTERTAINMENT_SYSTEM, "7" },
-    { NINTENDO_POKEMON_MINI, "4957" },
+	{ NINTENDO_POKEMON_MINI, "4957" },
 	{ FAIRCHILD_CHANNELF, "4928" },
 	{ GAME_BOY, "4" },
 	{ GAME_BOY_ADVANCE, "5" },
