@@ -133,10 +133,18 @@ void screenscraper_generate_scraper_requests(const ScraperSearchParams& params,
 	std::vector<ScraperSearchResult>& results)
 {
 	std::string path;
+	std::string user;
+	std::string pass;
 
 	ScreenScraperRequest::ScreenScraperConfig ssConfig;
 
 	path = ssConfig.getGameSearchUrl(params.game->getFileName());
+	user = Settings::getInstance()->getString("ScreenScraperUser");
+	pass = Settings::getInstance()->getString("ScreenScraperPass");
+
+	if (!user.empty() && !pass.empty())
+		path = path + "&ssid=" + HttpReq::urlEncode(user) + "&sspassword=" + HttpReq::urlEncode(pass);
+
 	auto& platforms = params.system->getPlatformIds();
 	std::vector<unsigned short> p_ids;
 
