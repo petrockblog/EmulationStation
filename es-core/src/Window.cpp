@@ -322,7 +322,12 @@ void Window::renderLoadingScreen(std::string text, float percent, unsigned char 
 		float y = Renderer::getScreenHeight() - (Renderer::getScreenHeight() * 3 * baseHeight);
 
 		Renderer::drawRect(x, y, w, h, 0x25252500 | opacity, 0x25252500 | opacity);
-		Renderer::drawRect(x, y, (w*percent), h, 0x006C9E00 | opacity, 0x006C9E00 | opacity); // 0xFFFFFFFF
+
+		Renderer::Gradient::Mode mode = static_cast<Renderer::Gradient::Mode>(
+			Renderer::Gradient::Mode::TO_BOTTOM
+			| Renderer::Gradient::Mode::TO_RIGHT
+			| Renderer::Gradient::Mode::FLIP_TOPBTM);
+		Renderer::drawRect(x, y, (w*percent), h, mode, 0x00324a00 | opacity, 0x00a1b000 | opacity);
 	}
 
 	ImageComponent splash(this, true);
