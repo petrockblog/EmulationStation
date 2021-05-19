@@ -191,10 +191,6 @@ protected:
 	{
 		PowerSaver::setState(velocity == 0);
 
-		// generate an onCursorChanged event in the stopped state when the user lets go of the key
-		if(velocity == 0 && mScrollVelocity != 0)
-			onCursorChanged(CURSOR_STOPPED);
-
 		mScrollVelocity = velocity;
 		mScrollTier = 0;
 		mScrollTierAccumulator = 0;
@@ -302,7 +298,7 @@ protected:
 			onScroll(absAmt);
 
 		mCursor = cursor;
-		onCursorChanged((mScrollTier > 0) ? CURSOR_SCROLLING : CURSOR_STOPPED);
+		onCursorChanged((amt != 0) ? CURSOR_SCROLLING : CURSOR_STOPPED);
 	}
 
 	virtual void onCursorChanged(const CursorState& /*state*/) {}
