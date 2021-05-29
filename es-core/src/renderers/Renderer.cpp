@@ -254,16 +254,34 @@ namespace Renderer
 
 //////////////////////////////////////////////////////////////////////////
 
+	/* for backward compability */
 	void drawRect(const float _x, const float _y, const float _w, const float _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
+		Gradient::Mode mode = horizontalGradient ? Gradient::TO_BOTTOM : Gradient::TO_RIGHT;
+		drawRect(_x, _y, _w, _h, mode, _color, _colorEnd, _srcBlendFactor, _dstBlendFactor);
+	}
+
+	void drawRect(const float _x, const float _y, const float _w, const float _h, Gradient::Mode _mode, const unsigned int _color, const unsigned int _colorEnd, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
+	{
 		const unsigned int color    = convertColor(_color);
-		const unsigned int colorEnd = convertColor(_colorEnd);
+		const unsigned int colorEnd = convertColor(_mode == Gradient::NONE ? _color : _colorEnd);
 		Vertex             vertices[4];
 
 		vertices[0] = { { _x     ,_y      }, { 0.0f, 0.0f }, color };
-		vertices[1] = { { _x     ,_y + _h }, { 0.0f, 0.0f }, horizontalGradient ? colorEnd : color };
-		vertices[2] = { { _x + _w,_y      }, { 0.0f, 0.0f }, horizontalGradient ? color : colorEnd };
+		vertices[1] = { { _x     ,_y + _h }, { 0.0f, 0.0f }, _mode & Gradient::TO_BOTTOM ? colorEnd : color };
+		vertices[2] = { { _x + _w,_y      }, { 0.0f, 0.0f }, _mode & Gradient::TO_RIGHT ? colorEnd : color };
 		vertices[3] = { { _x + _w,_y + _h }, { 0.0f, 0.0f }, colorEnd };
+
+		if (_mode & Gradient::FLIP_LR) {
+			for(int i = 0; i < 4; ++i)  {
+				vertices[i].pos[0] = vertices[i].pos[0] + ((vertices[i].pos[0] == _x) ? _w : -_w);
+			}
+		}
+		if (_mode & Gradient::FLIP_TOPBTM) {
+			for(int i = 0; i < 4; ++i)  {
+				vertices[i].pos[1] = vertices[i].pos[1] + ((vertices[i].pos[1] == _y) ? _h : -_h);
+			}
+		}
 
 		// round vertices
 		for(int i = 0; i < 4; ++i)

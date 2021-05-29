@@ -2,6 +2,7 @@
 #ifndef ES_CORE_RENDERER_RENDERER_H
 #define ES_CORE_RENDERER_RENDERER_H
 
+#include <cstdint>
 #include "math/Vector2f.h"
 
 class  Transform4x4f;
@@ -28,6 +29,19 @@ namespace Renderer
 		}; // Factor
 
 	} // Blend::
+
+	namespace Gradient
+	{
+		enum Mode : uint8_t
+		{
+			NONE        = 0x00, // off, no gradient
+			TO_BOTTOM   = 0x01, // straight along y axis towards endcolor
+			TO_RIGHT    = 0x02, // straight along x axis towards endcolor
+			DEFAULT     = 0x04, // diagonal towards endcolor in bottom-right
+			FLIP_LR     = 0x08, // (diagonal) towards endcolor in left
+			FLIP_TOPBTM = 0x10  // (diagonal) towards endcolor in top
+		}; // Mode
+	} // Gradient::
 
 	namespace Texture
 	{
@@ -67,6 +81,7 @@ namespace Renderer
 	void        pushClipRect    (const Vector2i& _pos, const Vector2i& _size);
 	void        popClipRect     ();
 	void        drawRect        (const float _x, const float _y, const float _w, const float _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient = false, const Blend::Factor _srcBlendFactor = Blend::SRC_ALPHA, const Blend::Factor _dstBlendFactor = Blend::ONE_MINUS_SRC_ALPHA);
+	void        drawRect        (const float _x, const float _y, const float _w, const float _h, Gradient::Mode _mode, const unsigned int _color, const unsigned int _colorEnd, const Blend::Factor _srcBlendFactor = Blend::SRC_ALPHA, const Blend::Factor _dstBlendFactor = Blend::ONE_MINUS_SRC_ALPHA);
 
 	SDL_Window* getSDLWindow    ();
 	int         getWindowWidth  ();
