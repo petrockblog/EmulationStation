@@ -298,6 +298,7 @@ void FileData::launchGame(Window* window)
 
 	window->init();
 	VolumeControl::getInstance()->init();
+	AudioManager::getInstance()->init();
 	window->normalizeNextUpdate();
 
 	//update number of times the game has been launched
@@ -312,6 +313,8 @@ void FileData::launchGame(Window* window)
 	CollectionSystemManager::get()->refreshCollectionSystems(gameToUpdate);
 
 	gameToUpdate->mSystem->onMetaDataSavePoint();
+	
+	AudioManager::getInstance()->playRandomMusic();
 }
 
 CollectionFileData::CollectionFileData(FileData* file, SystemData* system)
