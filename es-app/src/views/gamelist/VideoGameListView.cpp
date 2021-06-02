@@ -13,7 +13,7 @@
 
 VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),
-	mDescContainer(window), mDescription(window),
+	mDescContainer(window, DESCRIPTION_SCROLL_DELAY), mDescription(window),
 	mThumbnail(window),
 	mMarquee(window),
 	mImage(window),
@@ -31,6 +31,7 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 
 	// Create the correct type of video window
 #ifdef _RPI_
+	Utils::FileSystem::removeFile(getTitlePath());
 	if (Settings::getInstance()->getBool("VideoOmxPlayer"))
 		mVideo = new VideoPlayerComponent(window, "");
 	else
@@ -247,8 +248,6 @@ void VideoGameListView::updateInfoPanel()
 {
 	FileData* file = (mList.size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
 
-	Utils::FileSystem::removeFile(getTitlePath());
-
 	bool fadingOut;
 	if(file == NULL)
 	{
@@ -398,4 +397,8 @@ void VideoGameListView::onShow()
 {
 	GuiComponent::onShow();
 	updateInfoPanel();
+}
+
+void VideoGameListView::onFocusLost() {
+	mDescContainer.reset();
 }

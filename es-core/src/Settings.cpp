@@ -22,6 +22,7 @@ std::vector<const char*> settings_dont_save {
 	{ "IgnoreGamelist" },
 	{ "HideConsole" },
 	{ "ShowExit" },
+	{ "ConfirmQuit" },
 	{ "SplashScreen" },
 	{ "SplashScreenProgress" },
 	{ "VSync" },
@@ -60,6 +61,7 @@ void Settings::setDefaults()
 	mBoolMap["ShowHiddenFiles"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
+	mBoolMap["ConfirmQuit"] = true;
 	mBoolMap["FullscreenBorderless"] = false;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["SplashScreen"] = true;
@@ -71,11 +73,14 @@ void Settings::setDefaults()
 
 	mBoolMap["EnableSounds"] = true;
 	mBoolMap["ShowHelpPrompts"] = true;
+	mBoolMap["DoublePressRemovesFromFavs"] = false;
 	mBoolMap["ScrapeRatings"] = true;
 	mBoolMap["IgnoreGamelist"] = false;
 	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
 	mBoolMap["MoveCarousel"] = true;
+
+	mBoolMap["ThreadedLoading"] = true;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
@@ -132,7 +137,7 @@ void Settings::setDefaults()
 
 	mBoolMap["VideoAudio"] = true;
 	mBoolMap["ScreenSaverVideoMute"] = false;
-	mBoolMap["CaptionsCompatibility"] = true;
+	mStringMap["VlcScreenSaverResolution"] = "original";
 	// Audio out device for Video playback using OMX player.
 	mStringMap["OMXAudioDev"] = "both";
 	mStringMap["CollectionSystemsAuto"] = "";
@@ -140,6 +145,7 @@ void Settings::setDefaults()
 	mBoolMap["CollectionShowSystemInfo"] = true;
 	mBoolMap["SortAllSystems"] = false;
 	mBoolMap["UseCustomCollectionsSystem"] = true;
+	mBoolMap["BackgroundIndexing"] = false;
 
 	mBoolMap["LocalArt"] = false;
 
@@ -164,6 +170,13 @@ void Settings::setDefaults()
 	mIntMap["ScreenOffsetX"] = 0;
 	mIntMap["ScreenOffsetY"] = 0;
 	mIntMap["ScreenRotate"]  = 0;
+
+	mBoolMap["UseFullscreenPaging"] = false;
+
+	mBoolMap["IgnoreLeadingArticles"] = false;
+	//No spaces!  Order is important!
+	//"The A Squad" given [a,an,the] will sort as "A Squad", but given [the,a,an] will sort as "Squad"
+	mStringMap["LeadingArticles"] = "a,an,the";
 }
 
 template <typename K, typename V>

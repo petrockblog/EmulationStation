@@ -144,6 +144,9 @@ public:
 
 	enum ElementPropertyType
 	{
+		RESOLUTION_RECT,
+		RESOLUTION_PAIR,
+		RESOLUTION_FLOAT,
 		NORMALIZED_RECT,
 		NORMALIZED_PAIR,
 		PATH,
@@ -172,6 +175,7 @@ private:
 
 	std::deque<std::string> mPaths;
 	float mVersion;
+	Vector2f mResolution;
 
 	void parseFeatures(const pugi::xml_node& themeRoot);
 	void parseIncludes(const pugi::xml_node& themeRoot);
@@ -181,6 +185,9 @@ private:
 	void parseElement(const pugi::xml_node& elementNode, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element);
 
 	std::map<std::string, ThemeView> mViews;
+
+	std::string resolvePlaceholders(const char* in);
+	std::map<std::string, std::string> mVariables;
 };
 
 #endif // ES_CORE_THEME_DATA_H

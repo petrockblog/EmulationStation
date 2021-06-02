@@ -4,6 +4,7 @@
 #include "utils/FileSystemUtil.h"
 #include "utils/StringUtil.h"
 #include "views/gamelist/IGameListView.h"
+#include "views/gamelist/ISimpleGameListView.h"
 #include "views/ViewController.h"
 #include "FileData.h"
 #include "FileFilterIndex.h"
@@ -128,7 +129,7 @@ void CollectionSystemManager::saveCustomCollection(SystemData* sys)
 
 /* Methods to load all Collections into memory, and handle enabling the active ones */
 // loads all Collection Systems
-void CollectionSystemManager::loadCollectionSystems()
+void CollectionSystemManager::loadCollectionSystems(bool async)
 {
 	initAutoCollectionSystems();
 	CollectionSystemDecl decl = mCollectionSystemDeclsIndex[myCollectionsName];
@@ -139,8 +140,10 @@ void CollectionSystemManager::loadCollectionSystems()
 	{
 		// Now see which ones are enabled
 		loadEnabledListFromSettings();
+
 		// add to the main System Vector, and create Views as needed
-		updateSystemsList();
+		if (!async)
+			updateSystemsList();
 	}
 }
 
@@ -457,7 +460,7 @@ void CollectionSystemManager::exitEditMode()
 }
 
 // adds or removes a game from a specific collection
-bool CollectionSystemManager::toggleGameInCollection(FileData* file)
+bool CollectionSystemManager::toggleGameInCollection(FileData* file, int presscount)
 {
 	if (file->getType() == GAME)
 	{
@@ -483,6 +486,9 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 			SystemData* systemViewToUpdate = getSystemToView(sysData);
 
 			if (found) {
+				if (needDoublePress(presscount)) {
+					return true;
+				}
 				adding = false;
 				// if we found it, we need to remove it
 				FileData* collectionEntry = children.at(key);
@@ -523,6 +529,9 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 			}
 			else
 			{
+				if (needDoublePress(presscount)) {
+					return true;
+				}
 				adding = false;
 				md->set("favorite", "false");
 			}
@@ -545,6 +554,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 	}
 	return false;
 }
+
 
 SystemData* CollectionSystemManager::getSystemToView(SystemData* sys)
 {
@@ -1048,6 +1058,17 @@ bool CollectionSystemManager::includeFileInAutoCollections(FileData* file)
 	// if/when there are more in the future, maybe this can be a more complex method, with a proper list
 	// but for now a simple string comparison is more performant
 	return file->getName() != "kodi" && file->getSystem()->isGameSystem();
+}
+
+
+bool CollectionSystemManager::needDoublePress(int presscount) {
+	if (Settings::getInstance()->getBool("DoublePressRemovesFromFavs") && presscount < 2) {
+		GuiInfoPopup* toast = new GuiInfoPopup(mWindow, "Press again to remove from '" + Utils::String::toUpper(mEditingCollection)
+		+ "'", ISimpleGameListView::DOUBLE_PRESS_DETECTION_DURATION, 100, 200);
+		mWindow->setInfoPopup(toast);
+		return true;
+	}
+	return false;
 }
 
 std::string getCustomCollectionConfigPath(std::string collectionName)

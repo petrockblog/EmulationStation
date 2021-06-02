@@ -4,6 +4,7 @@
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
 #include "utils/FileSystemUtil.h"
+#include "utils/ProfilingUtil.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "EmulationStation.h"
@@ -116,6 +117,9 @@ bool parseArgs(int argc, char* argv[])
 		}else if(strcmp(argv[i], "--no-exit") == 0)
 		{
 			Settings::getInstance()->setBool("ShowExit", false);
+		}else if(strcmp(argv[i], "--no-confirm-quit") == 0)
+		{
+			Settings::getInstance()->setBool("ConfirmQuit", false);
 		}else if(strcmp(argv[i], "--no-splash") == 0)
 		{
 			Settings::getInstance()->setBool("SplashScreen", false);
@@ -170,22 +174,27 @@ bool parseArgs(int argc, char* argv[])
 				"Written by Alec \"Aloshi\" Lofquist.\n"
 				"Version " << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING << "\n\n"
 				"Command line arguments:\n"
-				"--resolution [width] [height]	try and force a particular resolution\n"
-				"--gamelist-only			skip automatic game search, only read from gamelist.xml\n"
-				"--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n"
-				"--draw-framerate		display the framerate\n"
-				"--no-exit			don't show the exit option in the menu\n"
-				"--no-splash			don't show the splash screen\n"
-				"--debug				more logging, show console on Windows\n"
-				"--scrape			scrape using command line interface\n"
-				"--windowed			not fullscreen, should be used with --resolution\n"
-				"--vsync [1/on or 0/off]		turn vsync on or off (default is on)\n"
-				"--max-vram [size]		Max VRAM to use in Mb before swapping. 0 for unlimited\n"
-				"--force-kid		Force the UI mode to be Kid\n"
-				"--force-kiosk		Force the UI mode to be Kiosk\n"
-				"--force-disable-filters		Force the UI to ignore applied filters in gamelist\n"
-				"--home [path]		Directory to use as home path\n"
-				"--help, -h			summon a sentient, angry tuba\n\n"
+				"--resolution [width] [height]  try and force a particular resolution\n"
+				"--screenrotate [n]             rotate a quarter turn clockwise for each n\n"
+				"--screensize [width] [height]  for a canvas smaller than the full resolution,\n"
+				"                               or if rotating into portrait mode\n"
+				"--screenoffset [x] [y]         move the canvas by x,y pixels\n"
+				"--gamelist-only                skip automatic game search, only read from gamelist.xml\n"
+				"--ignore-gamelist              ignore the gamelist (useful for troubleshooting)\n"
+				"--draw-framerate               display the framerate\n"
+				"--no-exit                      don't show the exit option in the menu\n"
+				"--no-confirm-quit              omit confirm dialog on actions of quit menu\n"
+				"--no-splash                    don't show the splash screen\n"
+				"--debug                        more logging, show console on Windows\n"
+				"--scrape                       scrape using command line interface\n"
+				"--windowed                     not fullscreen, should be used with --resolution\n"
+				"--vsync [1/on or 0/off]        turn vsync on or off (default is on)\n"
+				"--max-vram [size]              max VRAM to use in MB before swapping. 0 for unlimited\n"
+				"--force-kid                    force the UI mode to be Kid\n"
+				"--force-kiosk                  force the UI mode to be Kiosk\n"
+				"--force-disable-filters        force the UI to ignore applied filters in gamelist\n"
+				"--home [path]                  directory to use as home path\n"
+				"--help, -h                     summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help
 		}
@@ -214,11 +223,11 @@ bool verifyHomeFolderExists()
 }
 
 // Returns true if everything is OK,
-bool loadSystemConfigFile(const char** errorString)
+bool loadSystemConfigFile(Window* window, const char** errorString)
 {
 	*errorString = NULL;
 
-	if(!SystemData::loadConfig())
+	if(!SystemData::loadConfig(window))
 	{
 		LOG(LogError) << "Error while parsing systems configuration file!";
 		*errorString = "IT LOOKS LIKE YOUR SYSTEMS CONFIGURATION FILE HAS NOT BEEN SET UP OR IS INVALID. YOU'LL NEED TO DO THIS BY HAND, UNFORTUNATELY.\n\n"
@@ -323,7 +332,7 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 
-		if(splashScreen)
+		if (splashScreen)
 		{
 			std::string progressText = "Loading...";
 			if (splashScreenProgress)
@@ -333,7 +342,7 @@ int main(int argc, char* argv[])
 	}
 
 	const char* errorMsg = NULL;
-	if(!loadSystemConfigFile(&errorMsg))
+	if(!loadSystemConfigFile(splashScreen && splashScreenProgress ? &window : nullptr, &errorMsg))
 	{
 		// something went terribly wrong
 		if(errorMsg == NULL)
@@ -360,9 +369,6 @@ int main(int argc, char* argv[])
 		return run_scraper_cmdline();
 	}
 
-	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
-	SDL_JoystickEventState(SDL_DISABLE);
-
 	// preload what we can right away instead of waiting for the user to select it
 	// this makes for no delays when accessing content, but a longer startup time
 	ViewController::get()->preload();
@@ -381,8 +387,15 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	//generate joystick events since we're done loading
-	SDL_JoystickEventState(SDL_ENABLE);
+	// flush any queued events before showing the UI and starting the input handling loop
+	const Uint32 event_list[] = {
+			SDL_JOYAXISMOTION, SDL_JOYBALLMOTION, SDL_JOYHATMOTION, SDL_JOYBUTTONDOWN, SDL_JOYBUTTONUP,
+			SDL_KEYDOWN, SDL_KEYUP
+		};
+	SDL_PumpEvents();
+	for(Uint32 ev_type: event_list) {
+		SDL_FlushEvent(ev_type);
+	}
 
 	int lastTime = SDL_GetTicks();
 	int ps_time = SDL_GetTicks();
@@ -455,6 +468,8 @@ int main(int argc, char* argv[])
 #endif
 
 	processQuitMode();
+
+	ProfileDump();
 
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
