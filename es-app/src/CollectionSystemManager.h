@@ -49,7 +49,7 @@ public:
 	static void deinit();
 	void saveCustomCollection(SystemData* sys);
 
-	void loadCollectionSystems();
+	void loadCollectionSystems(bool async=false);
 	void loadEnabledListFromSettings();
 	void updateSystemsList();
 
@@ -71,10 +71,12 @@ public:
 	void exitEditMode();
 	inline bool isEditing() { return mIsEditingCustom; };
 	inline std::string getEditingCollection() { return mEditingCollection; };
-	bool toggleGameInCollection(FileData* file);
+	bool toggleGameInCollection(FileData* file, int presscount);
 
 	SystemData* getSystemToView(SystemData* sys);
 	void updateCollectionFolderMetadata(SystemData* sys);
+
+	SystemData* getAllGamesCollection();
 
 private:
 	static CollectionSystemManager* sInstance;
@@ -89,7 +91,6 @@ private:
 
 	void initAutoCollectionSystems();
 	void initCustomCollectionSystems();
-	SystemData* getAllGamesCollection();
 	SystemData* createNewCollectionEntry(std::string name, CollectionSystemDecl sysDecl, bool index = true);
 	void populateAutoCollection(CollectionSystemData* sysData);
 	void populateCustomCollection(CollectionSystemData* sysData);
@@ -108,6 +109,8 @@ private:
 	bool themeFolderExists(std::string folder);
 
 	bool includeFileInAutoCollections(FileData* file);
+
+	bool needDoublePress(int presscount);
 
 	SystemData* mCustomCollectionsBundle;
 };

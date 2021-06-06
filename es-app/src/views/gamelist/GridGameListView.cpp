@@ -17,7 +17,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mImage(window),
 	mVideo(nullptr),
 	mVideoPlaying(false),
-	mDescContainer(window), mDescription(window),
+	mDescContainer(window, DESCRIPTION_SCROLL_DELAY), mDescription(window),
 
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window),
 	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window),
@@ -133,7 +133,7 @@ FileData* GridGameListView::getCursor()
 
 void GridGameListView::setCursor(FileData* file)
 {
-	if(!mGrid.setCursor(file))
+	if(!mGrid.setCursor(file) && (!file->isPlaceHolder()))
 	{
 		populateList(file->getParent()->getChildrenListToDisplay());
 		mGrid.setCursor(file);
@@ -499,4 +499,8 @@ void GridGameListView::onShow()
 {
 	GuiComponent::onShow();
 	updateInfoPanel();
+}
+
+void GridGameListView::onFocusLost() {
+	mDescContainer.reset();
 }

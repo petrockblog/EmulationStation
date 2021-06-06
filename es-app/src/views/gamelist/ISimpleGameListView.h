@@ -1,3 +1,4 @@
+
 #pragma once
 #ifndef ES_APP_VIEWS_GAME_LIST_ISIMPLE_GAME_LIST_VIEW_H
 #define ES_APP_VIEWS_GAME_LIST_ISIMPLE_GAME_LIST_VIEW_H
@@ -27,7 +28,11 @@ public:
 	virtual bool input(InputConfig* config, Input input) override;
 	virtual void launch(FileData* game) = 0;
 
+	static const int DOUBLE_PRESS_DETECTION_DURATION = 1500; // millis
+
 protected:
+	static const int DESCRIPTION_SCROLL_DELAY = 5 * 1000; // five secs
+
 	virtual std::string getQuickSystemSelectRightButton() = 0;
 	virtual std::string getQuickSystemSelectLeftButton() = 0;
 	virtual void populateList(const std::vector<FileData*>& files) = 0;
@@ -39,6 +44,10 @@ protected:
 	std::vector<GuiComponent*> mThemeExtras;
 
 	std::stack<FileData*> mCursorStack;
+
+private:
+	int getPressCountInDuration();
+	Uint32 firstPressMs = 0;
 };
 
 #endif // ES_APP_VIEWS_GAME_LIST_ISIMPLE_GAME_LIST_VIEW_H

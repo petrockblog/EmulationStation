@@ -19,28 +19,24 @@
 #include <SDL_events.h>
 #include <algorithm>
 #include "platform.h"
+#include "FileSorts.h"
+#include "views/gamelist/IGameListView.h"
+#include "guis/GuiInfoPopup.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
 	bool isFullUI = UIModeController::getInstance()->isUIModeFull();
 
-	if (isFullUI)
+	if (isFullUI) {
 		addEntry("SCRAPER", 0x777777FF, true, [this] { openScraperSettings(); });
-
-	addEntry("SOUND SETTINGS", 0x777777FF, true, [this] { openSoundSettings(); });
-
-
-	if (isFullUI)
+		addEntry("SOUND SETTINGS", 0x777777FF, true, [this] { openSoundSettings(); });
 		addEntry("UI SETTINGS", 0x777777FF, true, [this] { openUISettings(); });
-
-	if (isFullUI)
 		addEntry("GAME COLLECTION SETTINGS", 0x777777FF, true, [this] { openCollectionSystemSettings(); });
-
-	if (isFullUI)
 		addEntry("OTHER SETTINGS", 0x777777FF, true, [this] { openOtherSettings(); });
-
-	if (isFullUI)
 		addEntry("CONFIGURE INPUT", 0x777777FF, true, [this] { openConfigInput(); });
+	} else {
+		addEntry("SOUND SETTINGS", 0x777777FF, true, [this] { openSoundSettings(); });
+	}
 
 	addEntry("QUIT", 0x777777FF, true, [this] {openQuitMenu(); });
 
@@ -332,6 +328,40 @@ void GuiMenu::openUISettings()
 			ViewController::get()->reloadAll();
 	});
 
+	// Optionally ignore leading articles when sorting game titles
+	auto ignore_articles = std::make_shared<SwitchComponent>(mWindow);
+	ignore_articles->setState(Settings::getInstance()->getBool("IgnoreLeadingArticles"));
+	s->addWithLabel("IGNORE ARTICLES (NAME SORT ONLY)", ignore_articles);
+	s->addSaveFunc([ignore_articles, window] {
+		bool articles_are_ignored = Settings::getInstance()->getBool("IgnoreLeadingArticles");
+		Settings::getInstance()->setBool("IgnoreLeadingArticles", ignore_articles->getState());
+		if (ignore_articles->getState() != articles_are_ignored)
+		{
+			//For each system...
+			for (auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
+			{
+				//Apply sort recursively
+				FileData* root = (*it)->getRootFolder();
+				root->sort(getSortTypeFromString(root->getSortName()));
+
+				//Notify that the root folder was sorted
+				ViewController::get()->getGameListView((*it))->onFileChanged(root, FILE_SORTED);
+			}
+
+			//Display popup to inform user
+			GuiInfoPopup* popup = new GuiInfoPopup(window, "Files sorted", 4000);
+			window->setInfoPopup(popup);
+		}
+	});
+
+	// lb/rb uses full screen size paging instead of -10/+10 steps
+	auto use_fullscreen_paging = std::make_shared<SwitchComponent>(mWindow);
+	use_fullscreen_paging->setState(Settings::getInstance()->getBool("UseFullscreenPaging"));
+	s->addWithLabel("USE FULL SCREEN PAGING FOR LB/RB", use_fullscreen_paging);
+	s->addSaveFunc([use_fullscreen_paging] {
+		Settings::getInstance()->setBool("UseFullscreenPaging", use_fullscreen_paging->getState());
+	});
+
 	// Optionally start in selected system
 	auto systemfocus_list = std::make_shared< OptionListComponent<std::string> >(mWindow, "START ON SYSTEM", false);
 	systemfocus_list->add("NONE", "", Settings::getInstance()->getString("StartupSystem") == "");
@@ -453,6 +483,12 @@ void GuiMenu::openOtherSettings()
 
 #endif
 
+	// hidden files
+	auto background_indexing = std::make_shared<SwitchComponent>(mWindow);
+	background_indexing->setState(Settings::getInstance()->getBool("BackgroundIndexing"));
+	s->addWithLabel("INDEX FILES DURING SCREENSAVER", background_indexing);
+	s->addSaveFunc([background_indexing] { Settings::getInstance()->setBool("BackgroundIndexing", background_indexing->getState()); });
+
 	// framerate
 	auto framerate = std::make_shared<SwitchComponent>(mWindow);
 	framerate->setState(Settings::getInstance()->getBool("DrawFramerate"));
@@ -481,62 +517,86 @@ void GuiMenu::openQuitMenu()
 
 	Window* window = mWindow;
 
+	// command line switch
+	bool confirm_quit = Settings::getInstance()->getBool("ConfirmQuit");
+
 	ComponentListRow row;
 	if (UIModeController::getInstance()->isUIModeFull())
 	{
-		row.makeAcceptInputHandler([window] {
-			window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
-				[] {
-				Scripting::fireEvent("quit");
-				if(quitES(QuitMode::RESTART) != 0)
-					LOG(LogWarning) << "Restart terminated with non-zero result!";
-			}, "NO", nullptr));
-		});
+		auto static restart_es_fx = []() {
+			Scripting::fireEvent("quit");
+			if (quitES(QuitMode::RESTART)) {
+				LOG(LogWarning) << "Restart terminated with non-zero result!";
+			}
+		};
+
+		if (confirm_quit) {
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES", restart_es_fx, "NO", nullptr));
+			});
+		} else {
+			row.makeAcceptInputHandler(restart_es_fx);
+		}
 		row.addElement(std::make_shared<TextComponent>(window, "RESTART EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		s->addRow(row);
 
-
-
 		if(Settings::getInstance()->getBool("ShowExit"))
 		{
+			auto static quit_es_fx = [] {
+				Scripting::fireEvent("quit");
+				quitES();
+			};
+
 			row.elements.clear();
-			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY QUIT?", "YES",
-					[] {
-					Scripting::fireEvent("quit");
-					quitES();
-				}, "NO", nullptr));
-			});
+			if (confirm_quit) {
+				row.makeAcceptInputHandler([window] {
+					window->pushGui(new GuiMsgBox(window, "REALLY QUIT?", "YES", quit_es_fx, "NO", nullptr));
+				});
+			} else {
+				row.makeAcceptInputHandler(quit_es_fx);
+			}
 			row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			s->addRow(row);
 		}
 	}
+
+	auto static reboot_sys_fx = [] {
+		Scripting::fireEvent("quit", "reboot");
+		Scripting::fireEvent("reboot");
+		if (quitES(QuitMode::REBOOT)) {
+			LOG(LogWarning) << "Restart terminated with non-zero result!";
+		}
+	};
+
 	row.elements.clear();
-	row.makeAcceptInputHandler([window] {
-		window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
-			[] {
-			Scripting::fireEvent("quit", "reboot");
-			Scripting::fireEvent("reboot");
-			if (quitES(QuitMode::REBOOT) != 0)
-				LOG(LogWarning) << "Restart terminated with non-zero result!";
-		}, "NO", nullptr));
-	});
+	if (confirm_quit) {
+		row.makeAcceptInputHandler([window] {
+			window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES", {reboot_sys_fx}, "NO", nullptr));
+		});
+	} else {
+		row.makeAcceptInputHandler(reboot_sys_fx);
+	}
 	row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
 
+	auto static shutdown_sys_fx = [] {
+		Scripting::fireEvent("quit", "shutdown");
+		Scripting::fireEvent("shutdown");
+		if (quitES(QuitMode::SHUTDOWN)) {
+			LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+		}
+	};
+
 	row.elements.clear();
-	row.makeAcceptInputHandler([window] {
-		window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
-			[] {
-			Scripting::fireEvent("quit", "shutdown");
-			Scripting::fireEvent("shutdown");
-			if (quitES(QuitMode::SHUTDOWN) != 0)
-				LOG(LogWarning) << "Shutdown terminated with non-zero result!";
-		}, "NO", nullptr));
-	});
+	if (confirm_quit) {
+		row.makeAcceptInputHandler([window] {
+			window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES", shutdown_sys_fx, "NO", nullptr));
+		});
+	} else {
+		row.makeAcceptInputHandler(shutdown_sys_fx);
+	}
 	row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
-
 	mWindow->pushGui(s);
 }
 
