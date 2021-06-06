@@ -1,6 +1,10 @@
 //EmulationStation, a graphical front-end for ROM browsing. Created by Alec "Aloshi" Lofquist.
 //http://www.aloshi.com
 
+#ifdef WIN32
+#define SDL_MAIN_HANDLED // must precede SDL inclusion
+#endif
+
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
 #include "utils/FileSystemUtil.h"

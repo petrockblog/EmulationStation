@@ -4,6 +4,11 @@
 
 #include "VideoComponent.h"
 
+#if defined(_WIN32)
+#include <basetsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
 struct SDL_mutex;
 struct SDL_Surface;
 struct libvlc_instance_t;
