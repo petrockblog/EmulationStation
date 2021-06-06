@@ -142,10 +142,11 @@ endif()
 
 #-------------------------------------------------------------------------------
 # set up CPack install stuff so `make install` does something useful
-
+include(GNUInstallDirs)
 install(TARGETS emulationstation
     RUNTIME
-    DESTINATION bin)
+    DESTINATION "${CMAKE_INSTALL_BINDIR}")
+
 
 INCLUDE(InstallRequiredSystemLibraries)
 
