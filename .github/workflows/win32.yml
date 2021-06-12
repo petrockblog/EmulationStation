@@ -51,7 +51,7 @@ jobs:
           -DCURL_INCLUDE_DIR=%VCPKG%/include
           -DSDL2_INCLUDE_DIR=%VCPKG%/include/SDL2
           -DVLC_INCLUDE_DIR=%NUGET%/VideoLAN.LibVLC.Windows/build/x86/include
-          -DCURL_LIBRARY=%VCPKG%/lib/*.lib;Wldap32.Lib;Crypt32.Lib;Imm32.Lib;Version.lib;Setupapi.lib
+          -DCURL_LIBRARY=%VCPKG%/lib/*.lib
           -DSDL2_LIBRARY=%VCPKG%/lib/manual-link/SDL2main.lib
           -DVLC_LIBRARIES=%NUGET%/VideoLAN.LibVLC.Windows/build/x86/libvlc*.lib
           -DVLC_VERSION=3.0.11

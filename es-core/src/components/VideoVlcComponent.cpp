@@ -6,8 +6,8 @@
 #include "PowerSaver.h"
 #include "Settings.h"
 #ifdef WIN32
-#include <basetsd.h>
-typedef SSIZE_T ssize_t;
+ #include <basetsd.h>
+ typedef SSIZE_T ssize_t;
 #endif
 #include <vlc/vlc.h>
 #include <SDL_mutex.h>
