@@ -1,0 +1,50 @@
+pcg64_c1024:
+      -  result:      64-bit unsigned int
+      -  period:      2^65664   (* 2^127 streams)
+      -  size:        8224 bytes
+
+Round 1:
+  64bit: 0x200999d12bfbb05b 0x304c583ef1f0d4ec 0x58e7941ada40a827
+	 0x43491a838632e10a 0x95c900affaf14524 0x7d8b6a3e06b3386c
+  Coins: HTHHHHHHTHHHHHHHHHTTHTHHTTTHTHTTTHTTHTTTTHHHTHHHHTHTHHHTTHTHTHHHH
+  Rolls: 3 6 6 3 5 1 4 6 5 3 4 6 1 1 2 6 3 6 5 5 6 6 6 2 5 5 5 5 4 2 6 4 1
+  Cards: As 7c 3c 3s Qs 5s Kh Ks 2d Th 9c 8s Jh 6d 5d Ad 8d 9s 2c 2s 9d Jd
+	 Jc 7h 4s Ts Kd 6s Qc Js 3d Td 5c 8c Kc Ac 6c 4d Tc 2h Qd Qh 5h 7s
+	 3h 9h 6h Ah 8h 4c 4h 7d
+
+Round 2:
+  64bit: 0x25fd681dcf01e40e 0x15b20d676e3c3ad8 0xd62454123f18447b
+	 0xd2ed41a518ff61ba 0xf4625131fa78629c 0xcf5f2a2bc592ed41
+  Coins: TTTHHHHTHTTTHHHTTHHHTHHHHTTHHTTTHHHTHTTHTTHHHTTTHTTTHHTTHHTHHTTHT
+  Rolls: 1 5 3 5 3 1 5 5 5 3 5 2 1 2 2 1 4 5 3 2 3 6 5 5 2 4 1 4 4 2 5 2 6
+  Cards: 8h 9h Tc 5c 8d 7h 4d 4h 5d 2s Ad 6d Qs 8c 9s 6h 4c Th Qc Jc 3d 7c
+	 Td Js 3c Qh 2h Kh Kd 7s 5h Ks 8s As 6c 3s 9c Ah Jh Jd Ac 3h 9d 5s
+	 2c Qd Ts 2d 4s 6s Kc 7d
+
+Round 3:
+  64bit: 0x7246882f97ca618d 0x6bfacfdb29810ed3 0xece86a774cd51bfd
+	 0x52ef744f62744c94 0x62567a265fafb889 0xe1b1c00d183ee96a
+  Coins: THTHTHTTHHHHTHHTTHTTHTHTTTTTTHHTTTTHHTTHHHHTTTHTHHHHTHHHHHTTTTHTH
+  Rolls: 1 5 1 6 6 4 3 4 2 2 6 1 6 5 1 1 3 3 3 3 6 5 1 1 4 2 5 4 4 3 6 4 4
+  Cards: Td 4d Th 5h 3d Kc 9s 3s 4c 7c 4s Jd 7s Ac Ts Qh 2h 4h As 3h 5s 9c
+	 8d Qs Qd Qc 8s Js 2s Ad Jc 6d 2d 9h 2c 7h 8h Jh Tc 9d 5c 6c Ah Kh
+	 Ks 3c Kd 8c 7d 6h 6s 5d
+
+Round 4:
+  64bit: 0x8c19c475c51bd13b 0xd283cb08853371e7 0x123c48d92fa977f2
+	 0xcac972ff67005a54 0x2db2dd6e5f4cbba6 0xf22c80b048063362
+  Coins: TTHTTTHTHHHTHTHTTTTHHHHHHTHHTTTTTTHHTTHHHHHHHHTTTHTTHHHTTHTTTTTHT
+  Rolls: 5 1 4 3 4 5 5 4 1 6 2 5 5 1 3 4 2 3 3 6 2 1 3 3 5 5 3 2 6 4 6 2 1
+  Cards: Ah 4s 3h 6d Ad 3d Ks 3s Kh 4c 4h Kc Jd 6h 8d Qs Tc 4d Qd 5s Kd 5h
+	 Ts As 9h 7h 9d 2d 3c Td Th 7d 8s 7s 8c Js 2h Jh 2s 9s Qc 5c 6c 9c
+	 Ac 7c 5d 6s 2c 8h Jc Qh
+
+Round 5:
+  64bit: 0xcd297aeff4ebb56a 0xe7bac4baf02a88ae 0xb309261fdd99f0ee
+	 0x22801c7fe80eb42f 0xcf1a7245e5c59690 0x6aee2db8a6176987
+  Coins: TTTHHTTTTHTTHHTTTTTHHHHTTTTTHHTTHTHHTTTHHTHTTTTHHTTTHTTTTHTTHTTHT
+  Rolls: 3 3 5 2 1 1 2 5 4 3 3 4 6 5 3 2 4 3 2 6 6 2 3 5 4 2 2 5 6 2 5 6 4
+  Cards: 2c 3c Kd 2s Qs 6d Ad Qc Kc Js 3h 4c Jc 5h 9c 7h 8h 9s Ks Th 2d 9h
+	 Qd 7d 8d 8s 4d Tc Ah 5s Jd Ac 7s 6c 7c 2h 6s 8c 4s Qh 5d Td 5c Ts
+	 9d Kh 3s As 4h 3d Jh 6h
+

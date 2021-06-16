@@ -1,0 +1,45 @@
+pcg32_c1024:
+      -  result:      32-bit unsigned int
+      -  period:      2^32832   (* 2^63 streams)
+      -  size:        4112 bytes
+
+Round 1:
+  32bit: 0x9f2e1932 0x778f59b0 0x288e298c 0x7c86f454 0x5380867e 0xbc1ebfef
+  Coins: TTTTHTHTTHTTHHTTTTTTHHTHHHTTTHHHHHHTTTHHTTHHHTTTTTTHHHTHTTTTHTHHT
+  Rolls: 3 6 4 1 6 2 2 3 4 3 1 3 4 3 3 2 6 1 1 3 3 6 3 4 5 6 3 4 4 3 2 6 6
+  Cards: 8d 3c 8c Kh 5d 6s 6h Th 7s Ad 9s 3h 9h 9c 7h 5s Qd As Jc 8s 2h 6c
+	 Ah 5c Qh Kd Ts 7d Qs 8h 4h 4s Jd 3s Ac 5h Qc 2s 3d 7c 6d 9d 2c Js
+	 Td Kc 2d Ks Jh 4c 4d Tc
+
+Round 2:
+  32bit: 0x566843ac 0x905997f7 0x5b238391 0x66aed7fc 0xba6c7310 0x977fc9df
+  Coins: TTHTTTTHHTTHTHHTHTHTTTHHHHTHHHHTTHHHHTHTTTTTHHHHHHHTHHHTTHTTHTTHH
+  Rolls: 3 6 5 6 3 3 3 5 2 2 3 2 6 2 1 5 5 4 4 3 3 3 1 3 4 5 1 4 5 6 4 4 1
+  Cards: 2h As 2c Qh 7d 5s Jc 6s 7h Kh 9s 4h 3s 2d 6h Qc Kc 8c Ah Tc 4c 7c
+	 Ad 3c 7s 9c 3d 2s 5d 6c Qd 6d Jd 5h 9h 5c 8d Ks 8h 4s Ts Jh Th 8s
+	 Js 4d Ac Td Qs Kd 3h 9d
+
+Round 3:
+  32bit: 0xddea7331 0x79f2e4e5 0x60cc53a2 0xa5c5ccc5 0x3e3053ad 0x1434a470
+  Coins: TTTTTTTHHTHHHTHHTHHHTTTTHHTTHHHHTTTHTTTHTTHTHHHTHTHHTHTTHHTHTTTTT
+  Rolls: 5 6 1 5 3 2 4 1 4 3 4 2 4 2 2 2 5 6 6 3 5 4 3 4 2 1 3 1 1 1 3 2 2
+  Cards: 4s Kh 6c Qc 5s Jc 3d 2s 6h 7s Th 3s 5d Ts Ks 9c Jd 5c Qh Ah 8s Td
+	 7h Ac As 9s 2d 2c Ad 9h Qs 2h 8c 4h 6s 8h 5h 7d 3c Jh 9d Qd 7c 6d
+	 Kd 8d Tc Js Kc 3h 4d 4c
+
+Round 4:
+  32bit: 0x37d70079 0x274cad70 0xbcab1ee3 0x423840d4 0xf1becf52 0x26cfcace
+  Coins: HTHTHHTTHHTHHTHHTHTHHTTHTTTHTHHTHTTTHTTTHTHHTTTTTTTTHTHHHHTTHTHTT
+  Rolls: 5 5 5 2 1 1 1 2 2 1 3 2 5 5 3 1 6 5 5 2 3 4 6 1 4 4 5 3 1 5 6 5 4
+  Cards: Jh 8d 3s 5c 5d Ac 3c Kd 4s Jd Tc Qs Qd Js 8h 9h Th Kh Ts 7d Td 7h
+	 9c Kc 2s 7c 9d 6s 6d Qc 4d 3d 4c 3h Ad Ks 7s Jc 2d 2c 5s Qh 6c 4h
+	 8c Ah 6h 5h 9s 8s As 2h
+
+Round 5:
+  32bit: 0x85d178c2 0xc263a20b 0x232a5ea9 0xaf7570ce 0x2e0b0f69 0x11823de5
+  Coins: TTTHTHHHTTHTTHHHTHTTHHTTTHHTTHTTTHTTHHTTHTTTHTTHTTHHTHTHHHHTTTTTH
+  Rolls: 1 5 2 1 4 3 3 6 1 5 6 1 5 5 4 4 1 6 2 3 6 1 3 5 5 3 2 2 5 3 6 4 4
+  Cards: 3d 8c 2d 2s As 4s 4c Tc Kc 7c Jd 5s 3c 2h 7h 6c 8s 5c Ah 6h Jc 7d
+	 Qs Ac 9c 2c 6s Th Kd Jh 9d 8h Js Td Kh Ad 3s 4h 9s 4d 9h Qc Qh Ks
+	 Qd Ts 5d 3h 7s 8d 6d 5h
+

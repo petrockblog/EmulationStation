@@ -1,0 +1,45 @@
+pcg32_c64:
+      -  result:      32-bit unsigned int
+      -  period:      2^2112   (* 2^63 streams)
+      -  size:        272 bytes
+
+Round 1:
+  32bit: 0x020b2353 0x7a157379 0xada83160 0x2953c47e 0x77c0190d 0x3f19bcb1
+  Coins: TTTHHHHTTHHTHHHHTHHHHHTHTTHTTHTTHHTHTTTTTHHTTHHTHHHHHTHTTHHTHTHTT
+  Rolls: 4 3 2 1 6 2 3 6 2 2 3 6 3 6 2 1 4 4 2 1 4 5 1 4 6 2 4 1 2 5 6 2 4
+  Cards: Qc Jh 9c 5c 7s Kh 2c Ts 8h Ks Ad 5h Th Qs 4h 6d 2s Qh Js 6c 7c 5s
+	 8c Ac 2d 8d 9d Kc 3h 4c 9s 9h Kd 3s 6h 5d Td Ah As Qd 3d 4s 8s Jd
+	 2h Tc 6s 7d 3c Jc 4d 7h
+
+Round 2:
+  32bit: 0x24751219 0x62509dfc 0xad1edbf0 0x8358d34a 0x281bfe2a 0x6fb4e17d
+  Coins: HHTHTHTHTHHHHTHTTHTTHHTTHHTTTHHTHHHHTTHHTTTHTTHHHHHTHHHHHHTTTHTTT
+  Rolls: 6 1 5 3 1 3 4 6 3 3 3 2 6 1 3 1 3 6 5 2 4 2 3 6 6 3 4 3 4 4 6 5 3
+  Cards: 6c Jc Qh 7c Qd 5d 6s Ks Ts 5h 6d 2s 5c Kh 4d 8h As 9h 9s 2d Qc Jh
+	 Ah 8s Td 7s 2c Ad Qs 9c 2h Kd Kc 8d 5s Tc 4c Js 6h Th 8c 7d Jd 3h
+	 3d 7h 3c 9d 4h 4s 3s Ac
+
+Round 3:
+  32bit: 0xaefc5f6a 0x8837288e 0x99485a39 0x6b33e8ec 0x3b0d9da8 0xa22e1914
+  Coins: HTTHTHHTTHHTHHHTHHTHTHTTHTHTTTTHHTHHTHHHHHHHHHHHTHHTHHHTTTTTTTHHT
+  Rolls: 2 4 6 4 2 6 2 3 2 5 1 4 3 5 6 5 6 1 3 2 4 6 4 6 2 3 3 3 3 3 4 6 1
+  Cards: 7s 3c Ad Jh 7d Qs As 2d 4d 9d Kc 8h 9s 3s 2c 8c 5c 6h Jd Ah 9h Th
+	 Qh Tc 6c Js Kd 2h 4s 7h 6s 8s 5d Td Qc 4c Kh Qd Ks 5s Ts 8d Jc 2s
+	 4h 6d Ac 7c 9c 3d 3h 5h
+
+Round 4:
+  32bit: 0x910a66f1 0xfaea9f3a 0x1fb82293 0x4842083e 0xe10fbb53 0x9f265bdf
+  Coins: HHTTHHTHHHHHHTHHHHHTTHHTTHHTHTTTHHTHTHHHHHHTHHTTHHTHTTHHHHTTTHHTT
+  Rolls: 1 3 2 6 4 3 2 4 4 3 6 5 1 5 4 3 2 4 2 1 2 3 2 5 5 3 6 2 6 2 6 1 1
+  Cards: 5d 3s Ac Kd Qc Qs 4s 6s Ks 8h 3c Jc Th Ad 5h 9s 9c 5c 2s 9d 7h 4d
+	 2d Ah Tc 2c 4h 5s 9h Jd Td Ts Kh 6c 7c Qh 7d As 7s 3h 6d 8c Qd Kc
+	 3d 6h 8s 2h Js 4c Jh 8d
+
+Round 5:
+  32bit: 0xd8fe156d 0xeee08bf3 0x6e5beff9 0x1defb7b7 0xbc64b375 0x11e75f12
+  Coins: HHHHHTTTHTTHTHHHHHHHHHHHTHHTTTHHTHTTHHTHTHTHHTTHHTTTTTTHHHHHTTTTH
+  Rolls: 5 1 5 5 6 1 3 6 1 4 6 4 2 4 1 3 3 5 3 2 4 6 2 2 3 4 6 3 6 4 5 3 2
+  Cards: 7d 3s 2d Ac 9s 9d Qh Jh 5c 4c 6h 9c 9h 5h Td 5s 7h Jc 4d 6s 3d Js
+	 4s 7c 2h 8s Qd 6c 8d 7s Kc Qc Jd Ks 8h Qs 5d 2s Kd Ah Ad 4h 3c Tc
+	 6d 2c Kh Th 3h Ts 8c As
+

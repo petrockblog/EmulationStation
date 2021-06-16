@@ -1,0 +1,65 @@
+pcg64_k1024:
+      -  result:      64-bit unsigned int
+      -  period:      2^65664   (* 2^127 streams)
+      -  size:        8224 bytes
+
+Round 1:
+  64bit: 0x8d9706afa56d17d4 0x44a818481d01d2df 0x3a13d5e1754b6a96
+	 0xc21dcf2b4a6a4655 0x59c706aa47a07c78 0x7f0fc2a85642e319
+  Again: 0x8d9706afa56d17d4 0x44a818481d01d2df 0x3a13d5e1754b6a96
+	 0xc21dcf2b4a6a4655 0x59c706aa47a07c78 0x7f0fc2a85642e319
+  Coins: HHTHHHTHHTHHTHHHHTHHTTTHTTHTHHTTHTHHTTHTTTHHHHHHHTHTTHHHTTHTHTTHH
+  Rolls: 4 5 4 3 2 4 3 5 1 3 6 4 3 6 6 1 6 4 6 4 6 1 5 3 6 1 5 2 4 6 1 3 6
+   -->   rolling dice used 33 random numbers
+  Cards: 3h 5d 8s Kh 8d 9c 7s 2h 6c 6s Ac 8h Jc Ks Qh Td 5h 4d 4h 9h Ah Th
+	 6d Jd 2d 3s 8c 2c 3d Js 7d 7c 4s 3c Ts 9s 7h 6h 5s 9d 4c Kc Qs 2s
+	 Kd 5c Jh Qc Ad As Qd Tc
+
+Round 2:
+  64bit: 0x50638899fce02849 0xb7ce1bddfaba4e10 0x64b3829fcd739931
+	 0x66fd9a2569fcd08a 0x96976fd1c0d8cbb4 0xcdf58a9c465c4abf
+  Again: 0x50638899fce02849 0xb7ce1bddfaba4e10 0x64b3829fcd739931
+	 0x66fd9a2569fcd08a 0x96976fd1c0d8cbb4 0xcdf58a9c465c4abf
+  Coins: THTTHHTTHHTHHHTHTHHTTHTHHTTHTHHHHHHHHTTHTTHHTTTHHHTTHHHHTTHHTTTTT
+  Rolls: 5 1 2 1 6 5 4 5 4 5 4 2 3 1 3 1 5 1 5 3 2 1 2 3 6 5 5 3 1 2 5 4 3
+   -->   rolling dice used 33 random numbers
+  Cards: Td Ad 2c 7c 7h Jc 3s 6s Ts 8s 9h 4s Qd Ah 4h Ks Tc 6d 6c Qc 2d Jd
+	 Kd 2s 6h 7s 3d 5h Ac 4c Kc 9c 2h 9d 5s 8h Qs 7d 8d Jh 3h 5c 4d Qh
+	 3c As 8c 9s Kh Js Th 5d
+
+Round 3:
+  64bit: 0xeaceeac7d52650bd 0xf38d15184cc47e50 0xbf1ad446c85f7e68
+	 0x4dbcfd5bc51f94ef 0x78d33a2bb1990870 0x2db896fdc9338bdb
+  Again: 0xeaceeac7d52650bd 0xf38d15184cc47e50 0xbf1ad446c85f7e68
+	 0x4dbcfd5bc51f94ef 0x78d33a2bb1990870 0x2db896fdc9338bdb
+  Coins: HTTTTHHTHTHHHHTHTTTHTHTHHHHTHHHTTHTTTHTHTTTTTTHTHTHHTTHTTHHHHTTTH
+  Rolls: 5 2 2 1 6 5 5 5 6 3 4 3 1 3 5 2 2 5 5 2 3 6 3 5 6 5 4 2 5 5 2 6 3
+   -->   rolling dice used 33 random numbers
+  Cards: Tc Th 6d 8s Qd 4s 9h 9d Kc 3c 8c 8h 5h Ah Ks Ts 2d Kh 4c Qh 7s 9c
+	 4h 2s Jd 7h 9s 3h 6h Td As 5s Ac 2c 6c Ad Jh Js 6s 5c 3d 4d 2h Kd
+	 7d Jc Qs 3s 5d Qc 7c 8d
+
+Round 4:
+  64bit: 0xb0a33faf71a1f334 0x94f66590597ae5d8 0x3c7fe68cd26ebdf8
+	 0xa2180af6a8d1473c 0xc2688c12707e3b62 0xda672a42428bf0a4
+  Again: 0xb0a33faf71a1f334 0x94f66590597ae5d8 0x3c7fe68cd26ebdf8
+	 0xa2180af6a8d1473c 0xc2688c12707e3b62 0xda672a42428bf0a4
+  Coins: THHTHTHHTTHTTTTTHTTHTTTHTTTHHHHTHTTTTHTTTTTTHHTTTHHTHHTHTHHHTTHHT
+  Rolls: 2 6 4 1 2 5 3 2 2 4 1 5 3 3 1 3 6 3 1 1 2 1 5 4 3 1 2 2 2 2 5 2 2
+   -->   rolling dice used 33 random numbers
+  Cards: 4h 8s 4c Ad 9d Qh 2s Ts Jd Jh 6s 7h 9s Qc 2c As 8h 5d Ac 3d 8c Kc
+	 8d 5c Js 2d 9c Qs 3s 3c Td Kh 7s 7c 6d Ah 5h Jc Th 7d 4d Ks 9h 4s
+	 5s 2h 6c Kd 6h 3h Tc Qd
+
+Round 5:
+  64bit: 0x0e46cf5648162dac 0x085cfe3fc86e06af 0x7aa43a225abaf9c1
+	 0x898e076f83632286 0xaf1f07f02715ef10 0x9807752b8f8907b6
+  Again: 0x0e46cf5648162dac 0x085cfe3fc86e06af 0x7aa43a225abaf9c1
+	 0x898e076f83632286 0xaf1f07f02715ef10 0x9807752b8f8907b6
+  Coins: HHTTHHHTTTHTTTHTTTHTTHHTTHTHTHHHTHTHHTHTHHTHHHHTHTHHHHTHTTTTHTHHT
+  Rolls: 1 4 1 1 4 1 6 3 1 2 6 4 3 4 2 1 1 5 4 4 2 3 6 1 5 2 4 6 5 3 2 1 3
+   -->   rolling dice used 33 random numbers
+  Cards: Jc Ad Ts Qs Jh 7d 2h Ah 2d 4s Kc Qc 6s 5h 7s 6h Qd 3d 4d Jd 4c Js
+	 6c 4h 9d 8c 2s As 8s Ks 8h Kh 3h 3c 8d Th 9h Tc 7h 5d 6d 9s Td 9c
+	 5c Ac 7c 5s 2c Kd Qh 3s
+

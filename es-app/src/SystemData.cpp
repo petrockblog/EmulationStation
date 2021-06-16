@@ -11,6 +11,7 @@
 #include "ThemeData.h"
 #include "views/UIModeController.h"
 #include <fstream>
+#include <random>
 #include "utils/StringUtil.h"
 #include "utils/ThreadPool.h"
 #include "Window.h"
@@ -18,6 +19,10 @@
 using namespace Utils;
 
 std::vector<SystemData*> SystemData::sSystemVector;
+std::vector<uint8_t> SystemData::sGameSystemIndices;
+std::vector<uint8_t> SystemData::sGameSystemIdxShuffled;
+uint8_t SystemData::sGameSystemSize;
+pcg32 SystemData::sUrng;
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, SystemEnvironmentData* envData, const std::string& themeFolder, bool CollectionSystem) :
 	mName(name), mFullName(fullName), mEnvData(envData), mThemeFolder(themeFolder), mIsCollectionSystem(CollectionSystem), mIsGameSystem(true)
@@ -47,6 +52,9 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, Sys
 	}
 	setIsGameSystemStatus();
 	loadTheme();
+
+	pcg_extras::seed_seq_from<std::random_device> seed_source;
+	mUrng.seed(seed_source);
 }
 
 SystemData::~SystemData()
@@ -533,45 +541,46 @@ unsigned int SystemData::getGameCount() const
 
 SystemData* SystemData::getRandomSystem()
 {
-	//  this is a bit brute force. It might be more efficient to just to a while (!gameSystem) do random again...
-	unsigned int total = 0;
-	for(auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
-	{
-		if ((*it)->isGameSystem())
-			total ++;
-	}
-
-	// get random number in range
-	int target = (int)Math::round((std::rand() / (float)RAND_MAX) * (total - 1));
-	for (auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
-	{
-		if ((*it)->isGameSystem())
+	if (sGameSystemSize == 0) {
+		for (auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
 		{
-			if (target > 0)
-			{
-				target--;
-			}
-			else
-			{
-				return (*it);
+			if ((*it)->isGameSystem()) {
+				sGameSystemSize++;
+				int idx = std::distance(sSystemVector.cbegin(), it);
+				sGameSystemIndices.push_back(idx);
 			}
 		}
+		if (sGameSystemSize == 0) {
+			// if we end up here, there is no valid system
+			return NULL;
+		}
+		// called once
+		pcg_extras::seed_seq_from<std::random_device> seed_source;
+		sUrng.seed(seed_source);
 	}
 
-	// if we end up here, there is no valid system
-	return NULL;
+	if (sGameSystemIdxShuffled.empty()) {
+		sGameSystemIdxShuffled = sGameSystemIndices;
+		std::shuffle(std::begin(sGameSystemIdxShuffled), std::end(sGameSystemIdxShuffled), sUrng);
+	}
+	int idx = sGameSystemIdxShuffled.back();
+	sGameSystemIdxShuffled.pop_back();
+	auto it = sSystemVector.cbegin();
+	std::advance(it, idx);
+	return *it;
 }
 
 FileData* SystemData::getRandomGame()
 {
-	std::vector<FileData*> list = mRootFolder->getFilesRecursive(GAME, true);
-	unsigned int total = (int)list.size();
-	int target = 0;
-	// get random number in range
-	if (total == 0)
-		return NULL;
-	target = (int)Math::round((std::rand() / (float)RAND_MAX) * (total - 1));
-	return list.at(target);
+	if (mList.empty()) {
+		mList = mRootFolder->getFilesRecursive(GAME, true);
+		if (mList.empty())
+			return NULL;
+		std::shuffle(std::begin(mList), std::end(mList), mUrng);
+	}
+	auto game = mList.back();
+	mList.pop_back();
+	return game;
 }
 
 unsigned int SystemData::getDisplayedGameCount() const
