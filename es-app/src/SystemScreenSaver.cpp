@@ -11,7 +11,9 @@
 #include "FileData.h"
 #include "FileFilterIndex.h"
 #include "Log.h"
+#include "utils/ProfilingUtil.h"
 #include "PowerSaver.h"
+#include "Scripting.h"
 #include "Sound.h"
 #include "SystemData.h"
 #include <unordered_map>
@@ -106,7 +108,10 @@ void SystemScreenSaver::startScreenSaver()
 #else
 			mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
 #endif
-
+			if (mCurrentGame != NULL) 
+			{
+				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "randomvideo");
+			}
 			mVideoScreensaver->topWindow(true);
 			mVideoScreensaver->setOrigin(0.5f, 0.5f);
 			mVideoScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
@@ -183,6 +188,10 @@ void SystemScreenSaver::startScreenSaver()
 
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
+		if (mCurrentGame != NULL) 
+		{
+			Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "slideshow");
+		}
 		return;
 	}
 	// No videos. Just use a standard screensaver
