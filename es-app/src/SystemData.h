@@ -5,10 +5,10 @@
 #include "PlatformId.h"
 #include <algorithm>
 #include <memory>
+#include <random>
 #include <string>
 #include <vector>
 
-#include <pcgcpp/include/pcg_random.hpp>
 #include <pugixml/src/pugixml.hpp>
 
 class FileData;
@@ -78,11 +78,11 @@ public:
 private:
 	static SystemData* loadSystem(pugi::xml_node system);
 
-	// getRandomSystem()
+	// for getRandomSystem()
 	static std::vector<uint8_t> sGameSystemIndices;
 	static std::vector<uint8_t> sGameSystemIdxShuffled;
 	static uint8_t sGameSystemSize;
-	static pcg32 sUrng;
+	static std::ranlux48 sUrng;
 
 	bool mIsCollectionSystem;
 	bool mIsGameSystem;
@@ -101,7 +101,7 @@ private:
 
 	FileData* mRootFolder;
 	std::vector<FileData*> mList;
-	pcg32 mUrng;
+	std::ranlux48 mUrng;
 };
 
 #endif // ES_APP_SYSTEM_DATA_H

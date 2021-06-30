@@ -40,8 +40,8 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 		Utils::FileSystem::createDirectory(path);
 	mSwapTimeout = 30000;
 
-	pcg_extras::seed_seq_from<std::random_device> seed_source;
-	mUrng.seed(seed_source);
+	std::random_device seed_source;
+	mUrng.seed(seed_source());
 }
 
 SystemScreenSaver::~SystemScreenSaver()

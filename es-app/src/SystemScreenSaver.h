@@ -3,7 +3,7 @@
 #define ES_APP_SYSTEM_SCREEN_SAVER_H
 
 #include "Window.h"
-#include <pcgcpp/include/pcg_random.hpp>
+#include <random>
 #include <thread>
 
 class ImageComponent;
@@ -60,7 +60,7 @@ private:
 	std::vector<FileData*> 		mAllFiles;
 	std::vector<std::string>	mCustomImageFiles;
 	int 				mAllFilesSize;
-	pcg32				mUrng;
+	std::ranlux48			mUrng;
 	std::thread*				mThread;
 	bool 						mExit;
 };

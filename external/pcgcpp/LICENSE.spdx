@@ -1,6 +1,0 @@
-SPDXVersion: SPDX-2.1
-DataLicense: CC0-1.0
-PackageName: pcg-cpp
-PackageOriginator: Melissa O'Neill <oneill@pcg-random.org>
-PackageHomePage: http://www.pcg-random.org
-PackageLicenseDeclared: (MIT OR Apache-2.0)

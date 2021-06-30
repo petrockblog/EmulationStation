@@ -2,5 +2,4 @@
 # package managers are included with the project (in the 'external' folder)
 
 add_subdirectory("nanosvg")
-add_subdirectory("pcgcpp")
 add_subdirectory("pugixml")

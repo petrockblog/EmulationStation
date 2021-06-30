@@ -22,7 +22,7 @@ std::vector<SystemData*> SystemData::sSystemVector;
 std::vector<uint8_t> SystemData::sGameSystemIndices;
 std::vector<uint8_t> SystemData::sGameSystemIdxShuffled;
 uint8_t SystemData::sGameSystemSize;
-pcg32 SystemData::sUrng;
+std::ranlux48 SystemData::sUrng;
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, SystemEnvironmentData* envData, const std::string& themeFolder, bool CollectionSystem) :
 	mName(name), mFullName(fullName), mEnvData(envData), mThemeFolder(themeFolder), mIsCollectionSystem(CollectionSystem), mIsGameSystem(true)
@@ -53,8 +53,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, Sys
 	setIsGameSystemStatus();
 	loadTheme();
 
-	pcg_extras::seed_seq_from<std::random_device> seed_source;
-	mUrng.seed(seed_source);
+	std::random_device seed_source;
+	mUrng.seed(seed_source());
 }
 
 SystemData::~SystemData()
@@ -555,8 +555,8 @@ SystemData* SystemData::getRandomSystem()
 			return NULL;
 		}
 		// called once
-		pcg_extras::seed_seq_from<std::random_device> seed_source;
-		sUrng.seed(seed_source);
+		std::random_device seed_source;
+		sUrng.seed(seed_source());
 	}
 
 	if (sGameSystemIdxShuffled.empty()) {
