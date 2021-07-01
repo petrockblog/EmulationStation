@@ -253,21 +253,30 @@ void VideoVlcComponent::startVideo()
 			mMedia = libvlc_media_new_path(mVLC, path.c_str());
 			if (mMedia)
 			{
-				unsigned track_count;
 				// Get the media metadata so we can find the aspect ratio
-				libvlc_media_parse(mMedia);
-				libvlc_media_track_t** tracks;
-				track_count = libvlc_media_tracks_get(mMedia, &tracks);
-				for (unsigned track = 0; track < track_count; ++track)
+				if (libvlc_media_parse_with_options(mMedia, libvlc_media_fetch_local, -1) == 0)
 				{
-					if (tracks[track]->i_type == libvlc_track_video)
+					// Parsing is async, wait for completion
+					libvlc_media_parsed_status_t status;
+					while ((status = libvlc_media_get_parsed_status(mMedia)) == 0)
+						std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+					if (status == libvlc_media_parsed_status_done)
 					{
-						mVideoWidth = tracks[track]->video->i_width;
-						mVideoHeight = tracks[track]->video->i_height;
-						break;
+						libvlc_media_track_t** tracks;
+						unsigned track_count = libvlc_media_tracks_get(mMedia, &tracks);
+						for (unsigned track = 0; track < track_count; ++track)
+						{
+							if (tracks[track]->i_type == libvlc_track_video)
+							{
+								mVideoWidth = tracks[track]->video->i_width;
+								mVideoHeight = tracks[track]->video->i_height;
+								break;
+							}
+						}
+						libvlc_media_tracks_release(tracks, track_count);
 					}
 				}
-				libvlc_media_tracks_release(tracks, track_count);
 
 				// Make sure we found a valid video track
 				if ((mVideoWidth > 0) && (mVideoHeight > 0))
