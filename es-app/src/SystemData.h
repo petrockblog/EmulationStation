@@ -5,6 +5,7 @@
 #include "PlatformId.h"
 #include <algorithm>
 #include <memory>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -64,6 +65,7 @@ public:
 
 	SystemData* getNext() const;
 	SystemData* getPrev() const;
+
 	static SystemData* getRandomSystem();
 	FileData* getRandomGame();
 
@@ -75,6 +77,12 @@ public:
 
 private:
 	static SystemData* loadSystem(pugi::xml_node system);
+
+	// for getRandomSystem()
+	static std::vector<uint8_t> sGameSystemIndices;
+	static std::vector<uint8_t> sGameSystemIdxShuffled;
+	static uint8_t sGameSystemSize;
+	static std::ranlux48 sUrng;
 
 	bool mIsCollectionSystem;
 	bool mIsGameSystem;
@@ -92,6 +100,8 @@ private:
 	FileFilterIndex* mFilterIndex;
 
 	FileData* mRootFolder;
+	std::vector<FileData*> mList;
+	std::ranlux48 mUrng;
 };
 
 #endif // ES_APP_SYSTEM_DATA_H
